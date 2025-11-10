@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "penumbra_phantasm:block/umbrastone_top",
+    "side": "penumbra_phantasm:block/umbrastone"
+  }
+}

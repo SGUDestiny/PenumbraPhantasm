@@ -1,0 +1,39 @@
+modLoader="javafml"
+loaderVersion="[46,)"
+license="MIT License"
+
+[[mods]]
+modId="penumbra_phantasm"
+version="2.5"
+displayName="PENUMBRA PHANTASM"
+authors="Destiny"
+logoFile="assets/penumbra_phantasm/textures/misc/mod_logo.png"
+description='''Temp description'''
+
+[[dependencies.penumbra_phantasm]]
+    modId="forge"
+    mandatory=true
+    versionRange="[47.2.6,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.penumbra_phantasm]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.20.1]"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.penumbra_phantasm]]
+    modId="geckolib"
+    mandatory=true
+    versionRange="[4.4.9, )"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.penumbra_phantasm]]
+    modId="jei"
+    mandatory=false
+    versionRange="[15.20.0.112, )"
+    ordering="NONE"
+    side="BOTH"

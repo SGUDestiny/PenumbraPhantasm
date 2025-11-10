@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/night_dirt",
+    "particle": "penumbra_phantasm:block/night_dirt",
+    "side": "penumbra_phantasm:block/night_grass_block",
+    "top": "penumbra_phantasm:block/night_grass_block_top"
+  }
+}
