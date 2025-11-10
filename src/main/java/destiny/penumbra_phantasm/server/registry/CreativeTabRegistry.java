@@ -16,8 +16,8 @@ public class CreativeTabRegistry {
             .displayItems((parameters, output) -> {
                 output.accept(ItemRegistry.BLACK_KNIFE.get());
 
-                output.accept(BlockRegistry.CRIMSON_LEAVES.get());
-                output.accept(BlockRegistry.CRIMSON_LOG.get());
+                output.accept(BlockRegistry.SCARLET_LEAVES.get());
+                output.accept(BlockRegistry.SCARLET_LOG.get());
 
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());

@@ -1,8 +1,8 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.block.CrimsonLeavesBlock;
-import destiny.penumbra_phantasm.server.block.CrimsonLogBlock;
+import destiny.penumbra_phantasm.server.block.ScarletLeavesBlock;
+import destiny.penumbra_phantasm.server.block.ScarletLogBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
@@ -37,12 +37,12 @@ public class BlockRegistry {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
 
-    public static final RegistryObject<Block> CRIMSON_LEAVES = registerBlock("crimson_leaves",
-            () -> new CrimsonLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
+    public static final RegistryObject<Block> SCARLET_LEAVES = registerBlock("scarlet_leaves",
+            () -> new ScarletLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES)));
 
-    public static final RegistryObject<Block> CRIMSON_LOG = registerBlock("crimson_log",
-            () -> new CrimsonLogBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+    public static final RegistryObject<Block> SCARLET_LOG = registerBlock("scarlet_log",
+            () -> new ScarletLogBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

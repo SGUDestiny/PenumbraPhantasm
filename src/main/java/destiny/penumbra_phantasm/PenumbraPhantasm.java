@@ -1,7 +1,7 @@
 package destiny.penumbra_phantasm;
 
 import com.mojang.logging.LogUtils;
-import destiny.penumbra_phantasm.client.render.particles.CrimsonLeafParticle;
+import destiny.penumbra_phantasm.client.render.particles.ScarletLeafParticle;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraftforge.api.distmarker.Dist;
@@ -62,7 +62,7 @@ public class PenumbraPhantasm
 
         @SubscribeEvent
         public static void registerParticleProvider(RegisterParticleProvidersEvent event) {
-            event.registerSpriteSet(ParticleTypeRegistry.CRIMSON_LEAF_PARTICLE_TYPE.get(), CrimsonLeafParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.SCARLET_LEAF_PARTICLE.get(), ScarletLeafParticle.Provider::new);
         }
     }
 }

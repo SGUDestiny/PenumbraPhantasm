@@ -4,9 +4,9 @@
 	"parent": "minecraft:block/block",
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"0": "penumbra_phantasm:block/crimson_leaves_inner",
-		"1": "penumbra_phantasm:block/crimson_leaves_outer",
-		"particle": "penumbra_phantasm:block/crimson_leaves_outer"
+		"0": "penumbra_phantasm:block/scarlet_leaves_inner",
+		"1": "penumbra_phantasm:block/scarlet_leaves_outer",
+		"particle": "penumbra_phantasm:block/scarlet_leaves_outer"
 	},
 	"elements": [
 		{

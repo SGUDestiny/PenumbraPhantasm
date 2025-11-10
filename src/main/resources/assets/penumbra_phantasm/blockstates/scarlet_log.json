@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "penumbra_phantasm:block/scarlet_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "penumbra_phantasm:block/scarlet_log"
+    },
+    "axis=z": {
+      "model": "penumbra_phantasm:block/scarlet_log",
+      "x": 90
+    }
+  }
+}

@@ -9,8 +9,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class CrimsonLeavesBlock extends LeavesBlock {
-    public CrimsonLeavesBlock(Properties properties) {
+public class ScarletLeavesBlock extends LeavesBlock {
+    public ScarletLeavesBlock(Properties properties) {
         super(properties);
     }
 
@@ -21,7 +21,7 @@ public class CrimsonLeavesBlock extends LeavesBlock {
             BlockPos posBelow = pos.below();
             BlockState stateBelow = level.getBlockState(posBelow);
             if (!isFaceFull(stateBelow.getCollisionShape(level, posBelow), Direction.UP)) {
-                ParticleUtils.spawnParticleBelow(level, pos, randomSource, ParticleTypeRegistry.CRIMSON_LEAF_PARTICLE_TYPE.get());
+                ParticleUtils.spawnParticleBelow(level, pos, randomSource, ParticleTypeRegistry.SCARLET_LEAF_PARTICLE.get());
             }
         }
     }
