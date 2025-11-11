@@ -119,7 +119,7 @@ public class FriendItem extends Item {
                             newFriend.getOrCreateTag().putBoolean("reset", false);
 
                             ArrayList<Integer> emptySlots = findEmptySlots(player);
-                            int emptySlot = emptySlots.get(level.random.nextInt(0, emptySlots.size() + 1));
+                            int emptySlot = emptySlots.get(level.random.nextInt(0, emptySlots.size()));
 
                             player.getInventory().setItem(emptySlot, newFriend);
                         } else if (animation >= 9 && animation < 18) {
