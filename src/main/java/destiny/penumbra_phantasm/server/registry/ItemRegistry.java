@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.item.BlackKnifeItem;
+import destiny.penumbra_phantasm.server.item.FriendItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,4 +21,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> DARK_CANDY = ITEMS.register("dark_candy",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationMod(8).fast().alwaysEat().build())));
+
+    public static final RegistryObject<Item> FRIEND = ITEMS.register("friend",
+            () -> new FriendItem(new Item.Properties().stacksTo(1)));
 }

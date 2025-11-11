@@ -1,0 +1,28 @@
+{
+  "base":
+  {
+    "parent": "penumbra_phantasm:item/friend_idle"
+  },
+  "overrides":
+  [
+    { "predicate": { "penumbra_phantasm:animation": 0.0 }, "model": "penumbra_phantasm:item/friend_appear_0"},
+    { "predicate": { "penumbra_phantasm:animation": 0.01 }, "model": "penumbra_phantasm:item/friend_appear_1"},
+    { "predicate": { "penumbra_phantasm:animation": 0.02 }, "model": "penumbra_phantasm:item/friend_appear_2"},
+    { "predicate": { "penumbra_phantasm:animation": 0.03 }, "model": "penumbra_phantasm:item/friend_appear_3"},
+    { "predicate": { "penumbra_phantasm:animation": 0.04 }, "model": "penumbra_phantasm:item/friend_appear_4"},
+    { "predicate": { "penumbra_phantasm:animation": 0.05 }, "model": "penumbra_phantasm:item/friend_idle"},
+    { "predicate": { "penumbra_phantasm:animation": 0.06 }, "model": "penumbra_phantasm:item/friend_look_left"},
+    { "predicate": { "penumbra_phantasm:animation": 0.07 }, "model": "penumbra_phantasm:item/friend_look_up"},
+    { "predicate": { "penumbra_phantasm:animation": 0.08 }, "model": "penumbra_phantasm:item/friend_look_right"},
+    { "predicate": { "penumbra_phantasm:animation": 0.09 }, "model": "penumbra_phantasm:item/friend_disappear_0"},
+    { "predicate": { "penumbra_phantasm:animation": 0.10 }, "model": "penumbra_phantasm:item/friend_disappear_1"},
+    { "predicate": { "penumbra_phantasm:animation": 0.11 }, "model": "penumbra_phantasm:item/friend_disappear_2"},
+    { "predicate": { "penumbra_phantasm:animation": 0.12 }, "model": "penumbra_phantasm:item/friend_disappear_3"},
+    { "predicate": { "penumbra_phantasm:animation": 0.13 }, "model": "penumbra_phantasm:item/friend_disappear_4"},
+    { "predicate": { "penumbra_phantasm:animation": 0.14 }, "model": "penumbra_phantasm:item/friend_disappear_5"},
+    { "predicate": { "penumbra_phantasm:animation": 0.15 }, "model": "penumbra_phantasm:item/friend_disappear_6"},
+    { "predicate": { "penumbra_phantasm:animation": 0.16 }, "model": "penumbra_phantasm:item/friend_disappear_7"},
+    { "predicate": { "penumbra_phantasm:animation": 0.17 }, "model": "penumbra_phantasm:item/friend_disappear_8"},
+    { "predicate": { "penumbra_phantasm:animation": 0.18 }, "model": "penumbra_phantasm:item/friend_disappear_9"}
+  ]
+}

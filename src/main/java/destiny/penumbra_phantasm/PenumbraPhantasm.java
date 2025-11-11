@@ -4,7 +4,10 @@ import com.mojang.logging.LogUtils;
 import destiny.penumbra_phantasm.client.render.particles.FountainTargetParticle;
 import destiny.penumbra_phantasm.client.render.particles.ScarletLeafParticle;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
+import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -59,6 +62,9 @@ public class PenumbraPhantasm
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
+            event.enqueueWork(() -> {
+                ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());
+            });
         }
 
         @SubscribeEvent
