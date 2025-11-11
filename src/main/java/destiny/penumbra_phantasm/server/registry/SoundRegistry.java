@@ -11,7 +11,10 @@ public class SoundRegistry {
 
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, PenumbraPhantasm.MODID);
 
-    public static RegistryObject<SoundEvent> ARMORERS_ANVIL_HIT = registerSoundEvent("armorers_anvil_hit");
+    public static RegistryObject<SoundEvent> FOUNTAIN_MAKE = registerSoundEvent("fountain_make");
+    public static RegistryObject<SoundEvent> FOUNTAIN_TARGET = registerSoundEvent("fountain_target");
+    public static RegistryObject<SoundEvent> FOUNTAIN_WIND = registerSoundEvent("fountain_wind");
+    public static RegistryObject<SoundEvent> FOUNTAIN_MUSIC = registerSoundEvent("fountain_music");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {

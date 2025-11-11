@@ -1,0 +1,30 @@
+{
+  "fountain_make": {
+    "subtitle": "sound.penumbra_phantasm.fountain_make",
+    "sounds":
+    [
+      "penumbra_phantasm:fountain_make"
+    ]
+  },
+  "fountain_target": {
+    "subtitle": "sound.penumbra_phantasm.fountain_target",
+    "sounds":
+    [
+      "penumbra_phantasm:fountain_target"
+    ]
+  },
+  "fountain_wind": {
+    "subtitle": "sound.penumbra_phantasm.fountain_wind",
+    "sounds":
+    [
+      "penumbra_phantasm:fountain_wind"
+    ]
+  },
+  "fountain_music": {
+    "subtitle": "sound.penumbra_phantasm.fountain_music",
+    "sounds":
+    [
+      "penumbra_phantasm:fountain_music"
+    ]
+  }
+}

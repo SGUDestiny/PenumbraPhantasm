@@ -21,7 +21,7 @@ public class ScarletLeavesBlock extends LeavesBlock {
             BlockPos posBelow = pos.below();
             BlockState stateBelow = level.getBlockState(posBelow);
             if (!isFaceFull(stateBelow.getCollisionShape(level, posBelow), Direction.UP)) {
-                ParticleUtils.spawnParticleBelow(level, pos, randomSource, ParticleTypeRegistry.SCARLET_LEAF_PARTICLE.get());
+                ParticleUtils.spawnParticleBelow(level, pos, randomSource, ParticleTypeRegistry.SCARLET_LEAF.get());
             }
         }
     }

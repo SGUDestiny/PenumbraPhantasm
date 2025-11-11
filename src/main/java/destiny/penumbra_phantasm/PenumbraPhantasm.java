@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm;
 
 import com.mojang.logging.LogUtils;
+import destiny.penumbra_phantasm.client.render.particles.FountainTargetParticle;
 import destiny.penumbra_phantasm.client.render.particles.ScarletLeafParticle;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.registry.*;
@@ -62,7 +63,8 @@ public class PenumbraPhantasm
 
         @SubscribeEvent
         public static void registerParticleProvider(RegisterParticleProvidersEvent event) {
-            event.registerSpriteSet(ParticleTypeRegistry.SCARLET_LEAF_PARTICLE.get(), ScarletLeafParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.SCARLET_LEAF.get(), ScarletLeafParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), FountainTargetParticle.Provider::new);
         }
     }
 }

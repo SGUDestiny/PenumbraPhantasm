@@ -15,6 +15,7 @@ public class CreativeTabRegistry {
             .title(Component.translatable("itemGroup.penumbra_phantasm.main"))
             .displayItems((parameters, output) -> {
                 output.accept(ItemRegistry.BLACK_KNIFE.get());
+                output.accept(ItemRegistry.DARK_CANDY.get());
 
                 output.accept(BlockRegistry.SCARLET_LEAVES.get());
                 output.accept(BlockRegistry.SCARLET_LOG.get());
