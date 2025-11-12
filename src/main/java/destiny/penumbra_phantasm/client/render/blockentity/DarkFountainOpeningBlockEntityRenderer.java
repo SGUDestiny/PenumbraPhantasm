@@ -26,8 +26,8 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
         ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom.png");
         ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
 
-        float time = (level.getGameTime() + v) * 1.5f; // Reduced multiplier for smoother animation
-        float pulse = 1.0f + 0.05f * (float) Math.sin(time); // Pulsates between 0.8 and 1.2
+        float time = (level.getGameTime() + v) * 2f; // Reduced multiplier for smoother animation
+        float pulse = 1.0f + 0.025f * (float) Math.sin(time); // Pulsates between 0.8 and 1.2
 
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
@@ -36,5 +36,16 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
         this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(RenderTypes.fountain(textureBottom)),
                 LightTexture.FULL_BRIGHT, i1, 1F, 1F, 1F, 1F);
         poseStack.popPose();
+
+
+        for (int segment = 0; segment < length; segment++) {
+            poseStack.pushPose();
+            poseStack.translate(0.5f, 0.5f, 0.5f);
+            poseStack.translate(0f, 3 + 5 + (5 * segment), 0f);
+            poseStack.scale(pulse, 1.0f, pulse); // Apply pulsating scale
+            this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(RenderTypes.fountain(textureMiddle)),
+                    LightTexture.FULL_BRIGHT, i1, 1F, 1F, 1F, 1F);
+            poseStack.popPose();
+        }
     }
 }
