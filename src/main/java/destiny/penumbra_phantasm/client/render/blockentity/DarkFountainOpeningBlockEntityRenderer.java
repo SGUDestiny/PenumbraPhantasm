@@ -3,23 +3,25 @@ package destiny.penumbra_phantasm.client.render.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.RenderTypes;
+import destiny.penumbra_phantasm.client.render.model.DarkFountainGroundCrackModel;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainModel;
 import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainOpeningBlockEntity;
-import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRenderer<DarkFountainOpeningBlockEntity> {
-    private DarkFountainModel model;
-    public  DarkFountainOpeningBlockEntityRenderer(DarkFountainModel model)
+    private DarkFountainModel fountainModel;
+    private DarkFountainGroundCrackModel fountainCrackModel;
+
+    public  DarkFountainOpeningBlockEntityRenderer(DarkFountainModel fountainModel, DarkFountainGroundCrackModel fountainCrackModel)
     {
-        this.model = model;
+        this.fountainModel = fountainModel;
+        this.fountainCrackModel = fountainCrackModel;
     }
 
     @Override
@@ -32,6 +34,7 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
         ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
         ResourceLocation textureDarkBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom_shadow.png");
         ResourceLocation textureDarkMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle_shadow.png");
+        ResourceLocation textureCrack = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_ground_crack.png");
 
         float animTime = darkFountainOpeningBlockEntity.getAnimationTimer() + partialTick;
         float expandTime = 5f; // 0.5 seconds at 20 ticks/second
@@ -74,14 +77,22 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
             }
         }
 
+        // Render cracks
+        poseStack.pushPose();
+        poseStack.translate(0.5f, 0.5f, 0.5f);
+        poseStack.translate(0f, -1.9f, 0f);
+        this.fountainCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+                LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
+        poseStack.popPose();
+
         // Render bottom
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.translate(0f, 3f, 0f);
         poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-        this.model.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
+        this.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
                 LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
-        this.model.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureDarkBottom)),
+        this.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureDarkBottom)),
                 LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, alphaDark);
         poseStack.popPose();
 
@@ -91,9 +102,9 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
             poseStack.translate(0.5f, 0.5f, 0.5f);
             poseStack.translate(0f, 3 + 5 + (5 * segment), 0f);
             poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-            this.model.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
+            this.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
                     LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
-            this.model.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureDarkMiddle)),
+            this.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureDarkMiddle)),
                     LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, alphaDark);
             poseStack.popPose();
         }

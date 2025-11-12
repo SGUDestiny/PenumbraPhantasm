@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.server.item;
 
+import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -19,6 +20,11 @@ public class BlackKnifeItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+
+        if (!player.onGround()) {
+            return InteractionResultHolder.fail(stack);
+        }
+
         CompoundTag tag = stack.getOrCreateTag();
         tag.putInt("tick", 0);
 
@@ -31,7 +37,9 @@ public class BlackKnifeItem extends Item {
         tag.putDouble("initY", initY);
         tag.putDouble("initZ", initZ);
 
-        return super.use(level, player, hand);
+        player.push(0, 0.6, 0);
+
+        return InteractionResultHolder.sidedSuccess(stack, false);
     }
 
     @Override
@@ -46,6 +54,10 @@ public class BlackKnifeItem extends Item {
 
             if (tick >= 14) {
                 tag.putInt("tick", -2);
+                if (!level.getBlockState(player.getOnPos()).isAir()) {
+                    level.setBlockAndUpdate(player.getOnPos().above(), BlockRegistry.DARK_FOUNTAIN_OPENING.get().defaultBlockState());
+                }
+
             } else if (tick >= 0) {
                 float initYaw = tag.getFloat("initYaw");
                 double initX = tag.getDouble("initX");

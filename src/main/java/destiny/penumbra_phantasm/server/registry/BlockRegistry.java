@@ -47,7 +47,7 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
 
     public static final RegistryObject<Block> DARK_FOUNTAIN_OPENING = registerBlock("dark_fountain_opening",
-            () -> new DarkFountainOpeningBlock(BlockBehaviour.Properties.of().noOcclusion()));
+            () -> new DarkFountainOpeningBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission()));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
