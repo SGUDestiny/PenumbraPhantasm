@@ -20,7 +20,7 @@ public class BlackKnifeItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
-        if (!player.onGround()) {
+        if (!player.onGround() || level.dimension().equals("penumbra_phantasm:dark_depths")) {
             return InteractionResultHolder.fail(stack);
         }
 

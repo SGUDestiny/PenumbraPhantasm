@@ -1,10 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.block.DarkFountainBlock;
-import destiny.penumbra_phantasm.server.block.DarkFountainOpeningBlock;
-import destiny.penumbra_phantasm.server.block.ScarletLeavesBlock;
-import destiny.penumbra_phantasm.server.block.ScarletLogBlock;
+import destiny.penumbra_phantasm.server.block.*;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
@@ -20,11 +17,11 @@ public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, PenumbraPhantasm.MODID);
 
     public static final RegistryObject<Block> NIGHT_GRASS_BLOCK = registerBlock("night_grass_block",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
+            () -> new GrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
                     .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRASS)));
 
     public static final RegistryObject<Block> NIGHT_GRASS = registerBlock("night_grass",
-            () -> new GrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
+            () -> new TallGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
                     .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRASS)));
 
     public static final RegistryObject<Block> NIGHT_DIRT = registerBlock("night_dirt",
