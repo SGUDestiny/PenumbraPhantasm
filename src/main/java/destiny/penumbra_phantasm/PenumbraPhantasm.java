@@ -1,6 +1,8 @@
 package destiny.penumbra_phantasm;
 
 import com.mojang.logging.LogUtils;
+import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainOpeningBlockEntityRenderer;
+import destiny.penumbra_phantasm.client.render.model.DarkFountainModel;
 import destiny.penumbra_phantasm.client.render.particles.FountainTargetParticle;
 import destiny.penumbra_phantasm.client.render.particles.ScarletLeafParticle;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
@@ -9,6 +11,7 @@ import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -59,6 +62,25 @@ public class PenumbraPhantasm
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
+        public static DarkFountainModel fountainModel;
+
+        @SubscribeEvent
+        public static void bakeModels(EntityRenderersEvent.RegisterLayerDefinitions event)
+        {
+            event.registerLayerDefinition(DarkFountainModel.LAYER_LOCATION, DarkFountainModel::createBodyLayer);
+        }
+
+        @SubscribeEvent
+        public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event)
+        {
+
+
+            event.registerBlockEntityRenderer(BlockEntityRegistry.DARK_FOUNTAIN_OPENING.get(),
+                    context -> {fountainModel = new DarkFountainModel(context.bakeLayer(DarkFountainModel.LAYER_LOCATION));
+                        return new DarkFountainOpeningBlockEntityRenderer(fountainModel);
+                    });
+        }
+
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {

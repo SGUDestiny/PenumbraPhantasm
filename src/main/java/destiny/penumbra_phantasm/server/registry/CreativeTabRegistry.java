@@ -26,6 +26,8 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.NIGHT_DIRT.get());
                 output.accept(BlockRegistry.UMBRASTONE.get());
                 output.accept(BlockRegistry.COBBLED_UMBRASTONE.get());
+
+                output.accept(BlockRegistry.DARK_FOUNTAIN_OPENING.get());
             })
             .build()
     );
