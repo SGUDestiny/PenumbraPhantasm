@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.block.DarkFountainBlock;
 import destiny.penumbra_phantasm.server.block.DarkFountainOpeningBlock;
 import destiny.penumbra_phantasm.server.block.ScarletLeavesBlock;
 import destiny.penumbra_phantasm.server.block.ScarletLogBlock;
@@ -47,7 +48,10 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
 
     public static final RegistryObject<Block> DARK_FOUNTAIN_OPENING = registerBlock("dark_fountain_opening",
-            () -> new DarkFountainOpeningBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission()));
+            () -> new DarkFountainOpeningBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission().lightLevel(state -> (15))));
+
+    public static final RegistryObject<Block> DARK_FOUNTAIN = registerBlock("dark_fountain",
+            () -> new DarkFountainBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission().lightLevel(state -> (15))));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

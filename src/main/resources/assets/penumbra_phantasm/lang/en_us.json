@@ -11,5 +11,8 @@
   "block.penumbra_phantasm.scarlet_leaves": "Scarlet Leaves",
   "block.penumbra_phantasm.scarlet_log": "Scarlet Log",
 
-  "itemGroup.penumbra_phantasm.main": "PENUMBRA PHANTASM"
+  "itemGroup.penumbra_phantasm.main": "PENUMBRA PHANTASM",
+
+  "sound.penumbra_phantasm.fountain_make": "The ground cracks open from determination",
+  "sound.penumbra_phantasm.fountain_target": "Fountain"
 }

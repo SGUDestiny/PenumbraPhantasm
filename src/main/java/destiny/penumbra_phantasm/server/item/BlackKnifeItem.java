@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 
 public class BlackKnifeItem extends Item {
     public BlackKnifeItem(Properties properties) {
@@ -55,7 +54,9 @@ public class BlackKnifeItem extends Item {
             if (tick >= 14) {
                 tag.putInt("tick", -2);
                 if (!level.getBlockState(player.getOnPos()).isAir()) {
-                    level.setBlockAndUpdate(player.getOnPos().above(), BlockRegistry.DARK_FOUNTAIN_OPENING.get().defaultBlockState());
+                    if (!level.isClientSide()) {
+                        level.setBlockAndUpdate(player.getOnPos().above(), BlockRegistry.DARK_FOUNTAIN_OPENING.get().defaultBlockState());
+                    }
                 }
 
             } else if (tick >= 0) {

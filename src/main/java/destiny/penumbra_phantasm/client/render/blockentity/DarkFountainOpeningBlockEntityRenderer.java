@@ -4,9 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.RenderTypes;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainGroundCrackModel;
-import destiny.penumbra_phantasm.client.render.model.DarkFountainModel;
+import destiny.penumbra_phantasm.client.render.model.DarkFountainOpeningModel;
 import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainOpeningBlockEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
@@ -15,10 +14,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRenderer<DarkFountainOpeningBlockEntity> {
-    private DarkFountainModel fountainModel;
+    private DarkFountainOpeningModel fountainModel;
     private DarkFountainGroundCrackModel fountainCrackModel;
 
-    public  DarkFountainOpeningBlockEntityRenderer(DarkFountainModel fountainModel, DarkFountainGroundCrackModel fountainCrackModel)
+    public  DarkFountainOpeningBlockEntityRenderer(DarkFountainOpeningModel fountainModel, DarkFountainGroundCrackModel fountainCrackModel)
     {
         this.fountainModel = fountainModel;
         this.fountainCrackModel = fountainCrackModel;
@@ -29,7 +28,7 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
         Level level = darkFountainOpeningBlockEntity.getLevel();
         if (level == null) return; // Safety check
 
-        int length = level.getHeight();
+        int length = level.getHeight() / 2;
         ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom.png");
         ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
         ResourceLocation textureDarkBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom_shadow.png");
@@ -42,7 +41,7 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
         float shrinkTime = 5; // 0.5 seconds (assuming symmetric to expand)
         float totalTime = expandTime + pulsateTime + shrinkTime;
         float pulseAmp = 0.025f;
-        float pulseFreq = 2f; // Matches your original frequency
+        float pulseFreq = 2f;
 
         if (animTime >= totalTime) {
             return; // Animation complete, don't render
@@ -80,7 +79,7 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
         // Render cracks
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
-        poseStack.translate(0f, -1.9f, 0f);
+        poseStack.translate(0f, -1.95f, 0f);
         this.fountainCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
                 LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
         poseStack.popPose();
@@ -112,11 +111,11 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
 
     @Override
     public int getViewDistance() {
-        return Minecraft.getInstance().options.getEffectiveRenderDistance()*16;
+        return 256;
     }
 
     @Override
-    public boolean shouldRender(DarkFountainOpeningBlockEntity p_173568_, Vec3 p_173569_) {
+    public boolean shouldRender(DarkFountainOpeningBlockEntity entity, Vec3 vec) {
         return true;
     }
 
