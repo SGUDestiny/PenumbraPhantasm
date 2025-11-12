@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm;
 
 import com.mojang.logging.LogUtils;
+import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainOpeningBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainEdgesModel;
@@ -16,6 +17,7 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -91,6 +93,13 @@ public class PenumbraPhantasm
                     context -> {fountainModel = new DarkFountainModel(context.bakeLayer(DarkFountainModel.LAYER_LOCATION)); fountainEdgesModel = new DarkFountainEdgesModel(context.bakeLayer(DarkFountainEdgesModel.LAYER_LOCATION)); fountainGroundCrackModel = new DarkFountainGroundCrackModel(context.bakeLayer(DarkFountainGroundCrackModel.LAYER_LOCATION));
                         return new DarkFountainBlockEntityRenderer(fountainModel, fountainEdgesModel, fountainGroundCrackModel);
                     });
+        }
+
+        @SubscribeEvent
+        public static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
+            DarkDepthsDimensionEffects dark_depths = new DarkDepthsDimensionEffects();
+
+            event.register(DarkDepthsDimensionEffects.DARK_DEPTHS_EFFECT, dark_depths);
         }
 
         @SubscribeEvent
