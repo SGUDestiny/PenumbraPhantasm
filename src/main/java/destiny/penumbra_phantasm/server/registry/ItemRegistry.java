@@ -1,8 +1,10 @@
 package destiny.penumbra_phantasm.server.registry;
 
+import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.item.KnifeItem;
 import destiny.penumbra_phantasm.server.item.FriendItem;
+import destiny.penumbra_phantasm.server.item.RealKnifeItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
@@ -29,7 +31,7 @@ public class ItemRegistry {
             () -> new KnifeItem(Tiers.NETHERITE, 0, -2, true, true, basicItem()));
 
     public static final RegistryObject<Item> REAL_KNIFE = ITEMS.register("real_knife",
-            () -> new KnifeItem(Tiers.NETHERITE, 5, -2, true, true, basicItem()));
+            () -> new RealKnifeItem(Tiers.NETHERITE, 4,-2, true, true, basicItem()));
 
     public static final RegistryObject<Item> BLACK_KNIFE = ITEMS.register("black_knife",
             () -> new KnifeItem(Tiers.NETHERITE, 0, -2, false, false, basicItem()));

@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.server.event;
 
+import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.server.registry.ItemRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
@@ -27,9 +28,12 @@ public class CommonEvents {
         if (stack.getItem() == ItemRegistry.REAL_KNIFE.get()) {
             level.addParticle(ParticleTypeRegistry.REAL_KNIFE_SLASH.get(), vec.x, vec.y, vec.z, 0, 0, 0);
             level.playLocalSound(target.getX(), target.getEyeY(), target.getZ(), SoundRegistry.REAL_KNIFE_HIT.get(), SoundSource.AMBIENT, 1f, 1f, false);
-        }
-        for (int i = 0; i < level.random.nextInt(3, 6); i++) {
-            level.addParticle(ParticleTypeRegistry.REAL_KNIFE_HIT.get(), target.getX(), target.getY() + 1, target.getZ(), -0.15 + level.random.nextDouble() * 0.3, 0.3, -0.15 + level.random.nextDouble() * 0.3);
+
+            int addition = Config.realKnifeOP ? 5 : 0;
+
+            for (int i = 0; i < level.random.nextInt(3, 6) + addition; i++) {
+                level.addParticle(ParticleTypeRegistry.REAL_KNIFE_HIT.get(), target.getX(), target.getY() + 1, target.getZ(), -0.15 + level.random.nextDouble() * 0.3, 0.3, -0.15 + level.random.nextDouble() * 0.3);
+            }
         }
     }
 }
