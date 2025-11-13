@@ -9,6 +9,7 @@ import destiny.penumbra_phantasm.client.render.model.DarkFountainGroundCrackMode
 import destiny.penumbra_phantasm.client.render.model.DarkFountainModel;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainOpeningModel;
 import destiny.penumbra_phantasm.client.render.particles.FountainTargetParticle;
+import destiny.penumbra_phantasm.client.render.particles.RealKnifeHitParticle;
 import destiny.penumbra_phantasm.client.render.particles.RealKnifeSlashParticle;
 import destiny.penumbra_phantasm.client.render.particles.ScarletLeafParticle;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
@@ -118,6 +119,7 @@ public class PenumbraPhantasm
             event.registerSpriteSet(ParticleTypeRegistry.SCARLET_LEAF.get(), ScarletLeafParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), FountainTargetParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.REAL_KNIFE_SLASH.get(), RealKnifeSlashParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.REAL_KNIFE_HIT.get(), RealKnifeHitParticle.Provider::new);
         }
     }
 }
