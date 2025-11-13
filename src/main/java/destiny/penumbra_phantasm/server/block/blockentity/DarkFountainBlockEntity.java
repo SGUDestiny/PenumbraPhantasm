@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.server.block.blockentity;
 
+import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
@@ -9,11 +10,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
+import javax.annotation.Nullable;
+
 public class DarkFountainBlockEntity extends BlockEntity {
     private int animationTimer = 0;
     private int frame = 0;
     private int windTicker = 102;
     private int musicTicker = 1066;
+    @Nullable
+    public SoundWrapper musicSound = null;
 
     public DarkFountainBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
         super(BlockEntityRegistry.DARK_FOUNTAIN.get(), p_155229_, p_155230_);
@@ -43,6 +48,17 @@ public class DarkFountainBlockEntity extends BlockEntity {
             entity.musicTicker++;
         }
     }
+
+    public void playRotationSound()
+    {
+        if(!this.musicSound.isPlaying())
+        {
+            this.musicSound.stopSound();
+            this.musicSound.playSound();
+        }
+    }
+
+    public void stopRotationSound(){}
 
     public int getAnimationTimer() {
         return animationTimer;

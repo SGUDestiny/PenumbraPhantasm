@@ -38,6 +38,8 @@ public class PenumbraPhantasm
 {
     public static final String MODID = "penumbra_phantasm";
     private static final Logger LOGGER = LogUtils.getLogger();
+    public static final ResourceLocation EMPTY_LOCATION = new ResourceLocation(MODID, "empty");
+    public static final String EMPTY = EMPTY_LOCATION.toString();
 
     public PenumbraPhantasm()
     {
