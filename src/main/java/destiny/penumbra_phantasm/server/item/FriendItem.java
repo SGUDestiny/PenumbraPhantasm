@@ -22,7 +22,7 @@ public class FriendItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean b) {
-        if (level instanceof ServerLevel) {
+        if (!level.isClientSide()) {
             if (entity instanceof Player player) {
                 if (stack.getTag() == null) {
                     stack.getOrCreateTag().putInt("animation", 5);

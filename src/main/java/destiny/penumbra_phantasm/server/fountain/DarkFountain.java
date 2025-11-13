@@ -1,4 +1,87 @@
 package destiny.penumbra_phantasm.server.fountain;
 
-public class DarkFountain extends Object{
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+
+public class DarkFountain {
+    public static final String FOUNTAIN_POS = "fountainPos";
+    public static final String FOUNTAIN_DIMENSION = "fountainDimension";
+    public static final String DESTINATION_POS = "destinationPos";
+    public static final String DESTINATION_DIMENSION = "destinationDimension";
+    public static final String ANIMATION_TICK = "animationTick";
+
+    BlockPos fountainPos;
+    ResourceKey<Level> fountainDimension;
+    BlockPos destinationPos;
+    ResourceKey<Level> destinationDimension;
+    int animationTick;
+
+    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTick) {
+        this.fountainPos = fountainPos;
+        this.fountainDimension = fountainDimension;
+        this.destinationPos = destinationPos;
+        this.destinationDimension = destinationDimension;
+        this.animationTick = animationTick;
+    }
+
+    public CompoundTag save()
+    {
+        CompoundTag tag = new CompoundTag();
+
+        tag.put(FOUNTAIN_POS, NbtUtils.writeBlockPos(fountainPos));
+        tag.putString(FOUNTAIN_DIMENSION, fountainDimension.location().toString());
+        tag.put(DESTINATION_POS, NbtUtils.writeBlockPos(destinationPos));
+        tag.putString(DESTINATION_DIMENSION, destinationDimension.location().toString());
+        tag.putInt(ANIMATION_TICK, animationTick);
+
+        return tag;
+    }
+
+    public static DarkFountain load(CompoundTag tag) {
+        BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
+        ResourceKey<Level> fountainDimension = stringToDimension(tag.getString(FOUNTAIN_DIMENSION));
+        BlockPos destinationPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS));
+        ResourceKey<Level> destinationDimension = stringToDimension(tag.getString(DESTINATION_DIMENSION));
+        int animationTick = tag.getInt(ANIMATION_TICK);
+
+        return new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTick);
+    }
+
+    public BlockPos getFountainPos() {
+        return fountainPos;
+    }
+
+    public ResourceKey<Level> getFountainDimension() {
+        return fountainDimension;
+    }
+
+    public BlockPos getDestinationPos() {
+        return destinationPos;
+    }
+
+    public ResourceKey<Level> getDestinationDimension() {
+        return destinationDimension;
+    }
+
+    public int getAnimationTick() {
+        return animationTick;
+    }
+
+    public static ResourceKey<Level> stringToDimension(String dimensionString)
+    {
+        String[] split = dimensionString.split(":");
+
+        if(split.length > 1)
+            return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("minecraft", "dimension")), new ResourceLocation(split[0], split[1]));
+
+        return null;
+    }
+
+    public static void tick() {
+
+    }
 }
