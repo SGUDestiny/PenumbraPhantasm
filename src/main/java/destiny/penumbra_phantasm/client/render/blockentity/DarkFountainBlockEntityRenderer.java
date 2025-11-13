@@ -36,7 +36,7 @@ public class DarkFountainBlockEntityRenderer implements BlockEntityRenderer<Dark
         float pulse_opposite = 1.0f - 0.1f * (float) Math.sin(time);
         float scaleXZ = 1.0f;
         float animationTime = darkFountainBlockEntity.getAnimationTimer() + partialTick;
-        int length = level.getHeight() / 4;
+        int length = level.getHeight() / 8;
         int frame = darkFountainBlockEntity.getFrame();
 
         ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom.png");

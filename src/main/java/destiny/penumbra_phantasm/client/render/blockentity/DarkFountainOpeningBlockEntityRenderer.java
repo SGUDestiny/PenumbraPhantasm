@@ -28,7 +28,7 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
         Level level = darkFountainOpeningBlockEntity.getLevel();
         if (level == null) return; // Safety check
 
-        int length = level.getHeight() / 4;
+        int length = level.getHeight() / 6;
         ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom.png");
         ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
         ResourceLocation textureDarkBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom_shadow.png");
