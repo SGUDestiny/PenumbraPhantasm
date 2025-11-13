@@ -55,12 +55,12 @@
     [],
     [],
     [
-      "minecraft:trees_plains",
+      "penumbra_phantasm:tree/scarlet_tree_field",
       "penumbra_phantasm:night_grass_patch"
     ],
     []
   ],
-  "has_precipitation": true,
+  "has_precipitation": false,
   "spawn_costs": {},
   "spawners": {
     "ambient": [],

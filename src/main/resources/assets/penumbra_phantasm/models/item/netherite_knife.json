@@ -1,6 +1,6 @@
 {
   "parent": "penumbra_phantasm:item/handheld_knife",
   "textures": {
-    "layer0": "penumbra_phantasm:item/black_knife"
+    "layer0": "penumbra_phantasm:item/netherite_knife"
   }
 }

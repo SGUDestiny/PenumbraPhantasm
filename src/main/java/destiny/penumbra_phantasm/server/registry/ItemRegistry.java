@@ -1,7 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.item.BlackKnifeItem;
+import destiny.penumbra_phantasm.server.item.KnifeItem;
 import destiny.penumbra_phantasm.server.item.FriendItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -16,12 +16,27 @@ public class ItemRegistry {
         return new Item.Properties().stacksTo(1);
     }
 
+    public static final RegistryObject<Item> GOLD_KNIFE = ITEMS.register("gold_knife",
+            () -> new KnifeItem(Tiers.GOLD, 0, -2, true, true, basicItem()));
+
+    public static final RegistryObject<Item> IRON_KNIFE = ITEMS.register("iron_knife",
+            () -> new KnifeItem(Tiers.IRON, 0, -2, true, true, basicItem()));
+
+    public static final RegistryObject<Item> DIAMOND_KNIFE = ITEMS.register("diamond_knife",
+            () -> new KnifeItem(Tiers.DIAMOND, 0, -2, true, true, basicItem()));
+
+    public static final RegistryObject<Item> NETHERITE_KNIFE = ITEMS.register("netherite_knife",
+            () -> new KnifeItem(Tiers.NETHERITE, 0, -2, true, true, basicItem()));
+
+    public static final RegistryObject<Item> REAL_KNIFE = ITEMS.register("real_knife",
+            () -> new KnifeItem(Tiers.NETHERITE, 0, -2, true, true, basicItem()));
+
     public static final RegistryObject<Item> BLACK_KNIFE = ITEMS.register("black_knife",
-            () -> new BlackKnifeItem(basicItem().durability(-1)));
+            () -> new KnifeItem(Tiers.NETHERITE, 0, -2, false, false, basicItem()));
 
     public static final RegistryObject<Item> DARK_CANDY = ITEMS.register("dark_candy",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationMod(8).fast().alwaysEat().build())));
 
     public static final RegistryObject<Item> FRIEND = ITEMS.register("friend",
-            () -> new FriendItem(new Item.Properties().stacksTo(1)));
+            () -> new FriendItem(basicItem()));
 }

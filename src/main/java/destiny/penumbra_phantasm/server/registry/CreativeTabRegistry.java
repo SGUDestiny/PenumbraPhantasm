@@ -14,7 +14,13 @@ public class CreativeTabRegistry {
             .icon(() -> BlockRegistry.NIGHT_GRASS_BLOCK.get().asItem().getDefaultInstance())
             .title(Component.translatable("itemGroup.penumbra_phantasm.main"))
             .displayItems((parameters, output) -> {
+                output.accept(ItemRegistry.GOLD_KNIFE.get());
+                output.accept(ItemRegistry.IRON_KNIFE.get());
+                output.accept(ItemRegistry.DIAMOND_KNIFE.get());
+                output.accept(ItemRegistry.NETHERITE_KNIFE.get());
+                output.accept(ItemRegistry.REAL_KNIFE.get());
                 output.accept(ItemRegistry.BLACK_KNIFE.get());
+
                 output.accept(ItemRegistry.DARK_CANDY.get());
                 output.accept(ItemRegistry.FRIEND.get());
 

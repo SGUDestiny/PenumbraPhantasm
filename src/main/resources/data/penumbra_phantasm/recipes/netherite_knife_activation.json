@@ -1,0 +1,16 @@
+{
+    "type": "minecraft:crafting_shapeless",
+    "ingredients": [
+        {
+            "item": "penumbra_phantasm:netherite_knife"
+        },
+        {
+            "item": "minecraft:nether_star"
+        }
+    ],
+    "result": {
+        "item": "penumbra_phantasm:netherite_knife",
+        "nbt": "{determination:true}",
+        "count": 1
+    }
+}

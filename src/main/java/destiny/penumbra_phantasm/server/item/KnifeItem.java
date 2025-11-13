@@ -6,25 +6,34 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 
-public class BlackKnifeItem extends Item {
-    public BlackKnifeItem(Properties properties) {
-        super(properties);
+public class KnifeItem extends SwordItem {
+    public boolean isSingleUse;
+    public boolean needsNetherStar;
+    public KnifeItem(Tier tier, int damage, float speed, boolean isSingleUse, boolean needsNetherStar, Properties properties) {
+        super(tier, damage, speed, properties);
+        this.isSingleUse = isSingleUse;
+        this.needsNetherStar = needsNetherStar;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+        CompoundTag tag = stack.getOrCreateTag();
 
-        if (!player.onGround() || level.dimension().equals("penumbra_phantasm:dark_depths")) {
+        if (!player.onGround() || level.dimension().location().toString().equals("penumbra_phantasm:dark_depths")) {
             return InteractionResultHolder.fail(stack);
         }
 
-        CompoundTag tag = stack.getOrCreateTag();
+        if (needsNetherStar && !tag.getBoolean("determination")) {
+            return InteractionResultHolder.fail(stack);
+        }
         tag.putInt("tick", 0);
 
         float initYaw = player.getYHeadRot() * -1;
@@ -56,6 +65,15 @@ public class BlackKnifeItem extends Item {
                 if (!level.getBlockState(player.getOnPos()).isAir()) {
                     if (!level.isClientSide()) {
                         level.setBlockAndUpdate(player.getOnPos().above(), BlockRegistry.DARK_FOUNTAIN_OPENING.get().defaultBlockState());
+                        player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
+
+                        if (needsNetherStar) {
+                            tag.putBoolean("determination", false);
+                        }
+
+                        if (isSingleUse) {
+                            stack.hurtAndBreak(stack.getMaxDamage(), player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                        }
                     }
                 }
 
@@ -97,5 +115,11 @@ public class BlackKnifeItem extends Item {
                 tag.putInt("tick", tick);
             }
         }
+    }
+
+    @Override
+    public boolean isFoil(ItemStack stack) {
+        CompoundTag tag = stack.getTag();
+        return tag != null && tag.getBoolean("determination") || super.isFoil(stack);
     }
 }

@@ -54,8 +54,34 @@ public class ScarletTrunkPlacer extends TrunkPlacer {
         trackPos = trackPos.above();
         this.placeLog(level, biConsumer, randomSource, trackPos, treeConfiguration);
         trackPos = trackPos.above();
-
         foliageAttachment.add(new FoliagePlacer.FoliageAttachment(trackPos, 0, false));
+
+        BlockPos branch = trackPos;
+        branch = branch.below();
+        branch = branch.below();
+        branch = branch.relative(direction);
+        this.placeLog(level, biConsumer, randomSource, branch, treeConfiguration, (state) -> state.setValue(RotatedPillarBlock.AXIS, direction.getAxis()));
+        branch = branch.relative(direction);
+        this.placeLog(level, biConsumer, randomSource, branch, treeConfiguration, (state) -> state.setValue(RotatedPillarBlock.AXIS, direction.getAxis()));
+        branch = branch.above();
+        this.placeLog(level, biConsumer, randomSource, branch, treeConfiguration);
+        branch = branch.above();
+        this.placeLog(level, biConsumer, randomSource, branch, treeConfiguration);
+
+        BlockPos bushLower = trackPos;
+        bushLower = bushLower.above();
+        bushLower = bushLower.relative(direction);
+        bushLower = bushLower.relative(direction);
+        foliageAttachment.add(new FoliagePlacer.FoliageAttachment(bushLower, 0, false));
+
+        Direction directionOpposite = direction.getOpposite();
+
+        BlockPos bushUpper = trackPos;
+        bushUpper = bushUpper.below();
+        bushUpper = bushUpper.relative(directionOpposite);
+        bushUpper = bushUpper.relative(directionOpposite);
+        bushUpper = bushUpper.relative(directionOpposite.getClockWise());
+        foliageAttachment.add(new FoliagePlacer.FoliageAttachment(bushUpper, 0, false));
 
         return foliageAttachment;
     }

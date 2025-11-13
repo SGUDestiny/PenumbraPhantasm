@@ -26,5 +26,19 @@
     [
       "penumbra_phantasm:fountain_music"
     ]
+  },
+  "real_knife_slash": {
+    "subtitle": "sound.penumbra_phantasm.real_knife_slash",
+    "sounds":
+    [
+      "penumbra_phantasm:real_knife_slash"
+    ]
+  },
+  "real_knife_hit": {
+    "subtitle": "sound.penumbra_phantasm.real_knife_hit",
+    "sounds":
+    [
+      "penumbra_phantasm:real_knife_hit"
+    ]
   }
 }

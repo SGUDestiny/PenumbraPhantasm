@@ -1,5 +1,10 @@
 {
-  "item.penumbra_phantasm.black_knife": "Black Knife",
+  "item.penumbra_phantasm.gold_knife": "Gold Knife",
+  "item.penumbra_phantasm.iron_knife": "Iron Knife",
+  "item.penumbra_phantasm.diamond_knife": "Diamond Knife",
+  "item.penumbra_phantasm.netherite_knife": "Netherite Knife",
+  "item.penumbra_phantasm.real_knife": "§4Real Knife§r",
+  "item.penumbra_phantasm.black_knife": "§0Black Knife§r",
   "item.penumbra_phantasm.dark_candy": "Dark Candy",
   "item.penumbra_phantasm.friend": "§dFRI§r§eEND§r",
 

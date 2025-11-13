@@ -32,15 +32,6 @@ public class ScarletFoliagePlacer extends FoliagePlacer {
     protected void createFoliage(LevelSimulatedReader level, FoliageSetter foliageSetter, RandomSource randomSource, TreeConfiguration treeConfiguration, int i, FoliageAttachment foliageAttachment, int foliageHeight, int foliageRadius, int offset) {
         this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos(), 1, offset, false);
         this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos().below(), 1, offset, false);
-
-        Direction direction = Direction.from3DDataValue(randomSource.nextInt(2, 6));
-
-        BlockPos trackPos = foliageAttachment.pos().below();
-        trackPos.relative(direction);
-        trackPos.relative(direction);
-        trackPos.relative(direction.getClockWise());
-
-        this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, trackPos, 2, offset, false);
     }
 
     @Override
