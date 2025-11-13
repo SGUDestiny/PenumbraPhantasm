@@ -21,7 +21,7 @@ public class DarkFountainOpeningBlockEntity extends BlockEntity {
         if (entity.animationTimer == 0) {
             level.playSound(null, pos, SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
         }
-        if (entity.animationTimer >= 130) {
+        if (entity.animationTimer >= 140) {
             if (!level.isClientSide()) {
                 level.setBlockAndUpdate(pos, BlockRegistry.DARK_FOUNTAIN.get().defaultBlockState());
             }

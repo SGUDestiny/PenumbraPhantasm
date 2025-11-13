@@ -37,7 +37,7 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
 
         float animTime = darkFountainOpeningBlockEntity.getAnimationTimer() + partialTick;
         float expandTime = 5f; // 0.5 seconds at 20 ticks/second
-        float pulsateTime = 120f; // 5 seconds
+        float pulsateTime = 130f; // 5 seconds
         float shrinkTime = 5; // 0.5 seconds (assuming symmetric to expand)
         float totalTime = expandTime + pulsateTime + shrinkTime;
         float pulseAmp = 0.025f;
