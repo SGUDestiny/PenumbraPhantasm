@@ -4,8 +4,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
+import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -59,15 +61,26 @@ public class DarkDepthsDimensionEffects extends DimensionSpecialEffects {
 
     @Override
     public boolean renderSky(ClientLevel level, int ticks, float partialTick, PoseStack poseStack, Camera camera, Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
+        Vec3 skyColor = level.getSkyColor(Minecraft.getInstance().gameRenderer.getMainCamera().getPosition(), partialTick);
+        float skyX = (float)skyColor.x;
+        float skyY = (float)skyColor.y;
+        float skyZ = (float)skyColor.z;
+        FogRenderer.levelFogColor();
+        RenderSystem.depthMask(false);
+        RenderSystem.setShaderColor(skyX, skyY, skyZ, 1.0F);
+
         this.skyBuffer.bind();
         this.skyBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
+
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.depthMask(true);
 
         return true;
     }
 
     @Override
     public Vec3 getBrightnessDependentFogColor(Vec3 vec3, float v) {
-        return null;
+        return vec3.multiply(v * 0.94F + 0.06F, v * 0.94F + 0.06F, v * 0.91F + 0.09F);
     }
 
     @Override

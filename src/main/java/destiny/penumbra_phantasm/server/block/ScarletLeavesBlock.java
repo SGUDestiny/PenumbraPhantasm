@@ -25,4 +25,9 @@ public class ScarletLeavesBlock extends LeavesBlock {
             }
         }
     }
+
+    @Override
+    protected boolean decaying(BlockState p_221386_) {
+        return super.decaying(p_221386_);
+    }
 }

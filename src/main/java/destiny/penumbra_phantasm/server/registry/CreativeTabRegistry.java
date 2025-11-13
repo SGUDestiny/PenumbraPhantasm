@@ -20,6 +20,7 @@ public class CreativeTabRegistry {
 
                 output.accept(BlockRegistry.SCARLET_LEAVES.get());
                 output.accept(BlockRegistry.SCARLET_LOG.get());
+                output.accept(BlockRegistry.SCARLET_SAPLING.get());
 
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());

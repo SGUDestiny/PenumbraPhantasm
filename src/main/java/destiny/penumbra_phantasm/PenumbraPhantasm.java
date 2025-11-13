@@ -50,6 +50,8 @@ public class PenumbraPhantasm
         BlockEntityRegistry.BLOCK_ENTITIES.register(modEventBus);
         EffectRegistry.DEF_REG.register(modEventBus);
         ParticleTypeRegistry.PARTICLE_TYPES.register(modEventBus);
+        FeatureRegistry.FOLIAGES.register(modEventBus);
+        FeatureRegistry.TRUNKS.register(modEventBus);
 
         MinecraftForge.EVENT_BUS.register(this);
     }
