@@ -25,8 +25,11 @@ public class DarkFountainOpeningBlockEntity extends BlockEntity {
             if (!level.isClientSide()) {
                 level.setBlockAndUpdate(pos, BlockRegistry.DARK_FOUNTAIN.get().defaultBlockState());
             }
+            entity.animationTimer = -1;
         }
-        entity.animationTimer++;
+        if (entity.animationTimer >= 0) {
+            entity.animationTimer++;
+        }
     }
 
     public int getAnimationTimer() {

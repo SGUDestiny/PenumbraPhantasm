@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.client.sounds;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainBlockEntity;
+import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainFullBlockEntity;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -39,6 +40,48 @@ public class SoundAccess {
             if(fountain.windSound == null)
             {
                 fountain.windSound = new DarkFountainSoundWrapper.DarkFountainWind(fountain);
+            }
+
+            if(stop)
+                fountain.stopWind();
+            else
+                fountain.playWind();
+        }
+    }
+
+
+
+    public static SoundEvent getFountainFullWind(DarkFountainFullBlockEntity fountain) {
+        return SoundRegistry.FOUNTAIN_WIND.get();
+    }
+
+    public static void playFountainFullMusic(BlockPos pos, boolean stop)
+    {
+        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountainFullBlockEntity fountain)
+        {
+            if(fountain.musicSound == null)
+            {
+                fountain.musicSound = new DarkFountainFullSoundWrapper.DarkFountainMusic(fountain);
+            }
+
+            if(stop)
+                fountain.stopMusic();
+            else
+                fountain.playMusic();
+        }
+    }
+
+    public static SoundEvent getFountainFullMusic(DarkFountainFullBlockEntity fountain) {
+        return SoundRegistry.FOUNTAIN_MUSIC.get();
+    }
+
+    public static void playFountainFullWind(BlockPos pos, boolean stop)
+    {
+        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountainFullBlockEntity fountain)
+        {
+            if(fountain.windSound == null)
+            {
+                fountain.windSound = new DarkFountainFullSoundWrapper.DarkFountainWind(fountain);
             }
 
             if(stop)

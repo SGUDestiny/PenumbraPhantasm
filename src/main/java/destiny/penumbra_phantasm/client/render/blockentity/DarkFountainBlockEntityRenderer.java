@@ -35,7 +35,8 @@ public class DarkFountainBlockEntityRenderer implements BlockEntityRenderer<Dark
         float pulse = 1.0f + 0.1f * (float) Math.sin(time);
         float pulse_opposite = 1.0f - 0.1f * (float) Math.sin(time);
         float scaleXZ = 1.0f;
-        float animationTime = darkFountainBlockEntity.getAnimationTimer() + partialTick;
+        float animTimeInitial = darkFountainBlockEntity.getAnimationTimer();
+        float animationTime = animTimeInitial + partialTick;
         int length = level.getHeight() / 8;
         int frame = darkFountainBlockEntity.getFrame();
 
@@ -44,7 +45,7 @@ public class DarkFountainBlockEntityRenderer implements BlockEntityRenderer<Dark
         ResourceLocation textureMiddleEdges = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle_edges/fountain_middle_edges_" + frame + ".png");
         ResourceLocation textureCrack = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_ground_crack.png");
 
-        if (animationTime < 5f) {
+        if (animTimeInitial != -1) {
             scaleXZ = animationTime / 5f;
         }
 

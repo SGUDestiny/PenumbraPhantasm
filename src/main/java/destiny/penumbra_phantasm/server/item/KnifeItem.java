@@ -11,6 +11,7 @@ import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -76,6 +77,7 @@ public class KnifeItem extends SwordItem {
         {
             if(entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 256)
             {
+                player.displayClientMessage(Component.literal("Too close to another Dark Fountain"), true);
                 return InteractionResultHolder.fail(stack); // If fountain within 16 blocks of this(16 squared is 256)
             }
         }
@@ -126,7 +128,7 @@ public class KnifeItem extends SwordItem {
                             return;
                         }
 
-                        level.setBlockAndUpdate(player.getOnPos().above(), BlockRegistry.DARK_FOUNTAIN_OPENING.get().defaultBlockState());
+                        level.setBlockAndUpdate(player.getOnPos().above(), BlockRegistry.DARK_FOUNTAIN_FULL.get().defaultBlockState());
                         ResourceKey<Level> finalTarget = target;
                         level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(uuid, player.getOnPos().above(), player.level().dimension(), player.getOnPos().above(), finalTarget, 0));
 

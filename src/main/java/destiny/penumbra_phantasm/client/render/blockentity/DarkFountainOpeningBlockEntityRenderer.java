@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRenderer<DarkFountainOpeningBlockEntity> {
+public class DarkFountainOpeningBlockEntityRenderer implements BlockEntityRenderer<DarkFountainOpeningBlockEntity> {
     private DarkFountainOpeningModel fountainModel;
     private DarkFountainGroundCrackModel fountainCrackModel;
 
@@ -35,15 +35,15 @@ public class DarkFountainOpeningBlockEntityRenderer implements  BlockEntityRende
         ResourceLocation textureDarkMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle_shadow.png");
         ResourceLocation textureCrack = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_ground_crack.png");
 
-        float animTime = darkFountainOpeningBlockEntity.getAnimationTimer() + partialTick;
+        float animTimeInitial = darkFountainOpeningBlockEntity.getAnimationTimer();
+        float animTime = animTimeInitial + partialTick;
         float expandTime = 5f; // 0.5 seconds at 20 ticks/second
         float pulsateTime = 130f; // 5 seconds
         float shrinkTime = 5; // 0.5 seconds (assuming symmetric to expand)
-        float totalTime = expandTime + pulsateTime + shrinkTime;
         float pulseAmp = 0.025f;
         float pulseFreq = 2f;
 
-        if (animTime >= totalTime) {
+        if (animTimeInitial == -1) {
             return; // Animation complete, don't render
         }
 

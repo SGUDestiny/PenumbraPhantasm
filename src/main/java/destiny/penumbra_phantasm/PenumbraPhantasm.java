@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm;
 import com.mojang.logging.LogUtils;
 import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainBlockEntityRenderer;
+import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainFullBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainOpeningBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainEdgesModel;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainGroundCrackModel;
@@ -103,6 +104,10 @@ public class PenumbraPhantasm
             event.registerBlockEntityRenderer(BlockEntityRegistry.DARK_FOUNTAIN.get(),
                     context -> {fountainModel = new DarkFountainModel(context.bakeLayer(DarkFountainModel.LAYER_LOCATION)); fountainEdgesModel = new DarkFountainEdgesModel(context.bakeLayer(DarkFountainEdgesModel.LAYER_LOCATION)); fountainGroundCrackModel = new DarkFountainGroundCrackModel(context.bakeLayer(DarkFountainGroundCrackModel.LAYER_LOCATION));
                         return new DarkFountainBlockEntityRenderer(fountainModel, fountainEdgesModel, fountainGroundCrackModel);
+                    });
+            event.registerBlockEntityRenderer(BlockEntityRegistry.DARK_FOUNTAIN_FULL.get(),
+                    context -> {fountainOpeningModel = new DarkFountainOpeningModel(context.bakeLayer(DarkFountainOpeningModel.LAYER_LOCATION)); fountainModel = new DarkFountainModel(context.bakeLayer(DarkFountainModel.LAYER_LOCATION)); fountainEdgesModel = new DarkFountainEdgesModel(context.bakeLayer(DarkFountainEdgesModel.LAYER_LOCATION)); fountainGroundCrackModel = new DarkFountainGroundCrackModel(context.bakeLayer(DarkFountainGroundCrackModel.LAYER_LOCATION));
+                        return new DarkFountainFullBlockEntityRenderer(fountainOpeningModel, fountainModel, fountainEdgesModel, fountainGroundCrackModel);
                     });
         }
 

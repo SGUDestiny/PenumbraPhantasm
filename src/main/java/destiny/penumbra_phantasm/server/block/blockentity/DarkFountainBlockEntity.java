@@ -4,9 +4,8 @@ import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
-import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,46 +16,59 @@ import javax.annotation.Nullable;
 
 public class DarkFountainBlockEntity extends BlockEntity {
     private int animationTimer = 0;
+    private int frameTimer = 0;
     private int frame = 0;
-    private int windTicker = 102;
-    private int musicTicker = 1066;
     @Nullable
     public SoundWrapper musicSound = null;
     @Nullable
     public SoundWrapper windSound = null;
 
-    public DarkFountainBlockEntity(BlockPos p_155229_, BlockState p_155230_) {
-        super(BlockEntityRegistry.DARK_FOUNTAIN.get(), p_155229_, p_155230_);
+    public DarkFountainBlockEntity(BlockPos pos, BlockState state) {
+        super(BlockEntityRegistry.DARK_FOUNTAIN.get(), pos, state);
     }
 
     public static void clientTick(Level level, BlockPos pos, BlockState state, DarkFountainBlockEntity entity) {
-        if (entity.animationTimer % 3 == 0) {
+        if (entity.frameTimer % 3 == 0) {
             if (entity.frame >= 13) {
                 entity.frame = 0;
             } else {
                 entity.frame++;
             }
         }
-        entity.animationTimer++;
 
-        if (entity.windTicker == 102) {
-            //level.playSound(null, pos, SoundRegistry.FOUNTAIN_WIND.get(), SoundSource.AMBIENT, 0.2f, 1f);
-            entity.windTicker = 0;
+        if (entity.frameTimer >= 13 * 3) {
+            entity.frameTimer = 0;
         } else {
-            entity.windTicker++;
+            entity.frameTimer++;
         }
 
-        if (entity.musicTicker == 1066) {
-            //level.playSound(null, pos, SoundRegistry.FOUNTAIN_MUSIC.get(), SoundSource.AMBIENT, 0.5f, 1f);
-            entity.musicTicker = 0;
-        } else {
-            entity.musicTicker++;
+        if (entity.animationTimer >= 4) {
+            entity.animationTimer = -1;
+        }
+        if (entity.animationTimer >= 0) {
+            entity.animationTimer++;
         }
 
         if (!level.isClientSide()) {
             PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainMusic(entity.worldPosition, false));
             PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainWind(entity.worldPosition, false));
         }
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.putInt("frame", frame);
+        tag.putInt("frameTimer", frameTimer);
+        tag.putInt("animationTimer", animationTimer);
+    }
+
+    @Override
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        frame = tag.getInt("frame");
+        frameTimer = tag.getInt("frameTimer");
+        animationTimer = tag.getInt("animationTimer");
     }
 
     public void playMusic()
