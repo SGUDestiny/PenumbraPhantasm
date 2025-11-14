@@ -8,7 +8,7 @@ public class DarkFountainWindSound extends DarkFountainSound<DarkFountainBlockEn
     private static final float VOLUME_MAX = 0.2F;
 
     public DarkFountainWindSound(DarkFountainBlockEntity fountain, SoundEvent soundEvent) {
-        super(fountain, soundEvent, 24, 48);
+        super(fountain, soundEvent, 23, 32);
         this.looping = true;
         this.volume = VOLUME_MIN;
     }
@@ -33,12 +33,12 @@ public class DarkFountainWindSound extends DarkFountainSound<DarkFountainBlockEn
     private void fadeIn()
     {
         if(this.volume < VOLUME_MAX)
-            this.volume += 0.05F;
+            this.volume += 0.01F;
     }
 
     private void fadeOut()
     {
         if(this.volume > VOLUME_MIN)
-            this.volume -= 0.05F;
+            this.volume -= 0.01F;
     }
 }

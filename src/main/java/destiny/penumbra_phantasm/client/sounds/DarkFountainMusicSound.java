@@ -8,7 +8,7 @@ public class DarkFountainMusicSound extends DarkFountainSound<DarkFountainBlockE
     private static final float VOLUME_MAX = 0.4F;
 
     public DarkFountainMusicSound(DarkFountainBlockEntity fountain, SoundEvent soundEvent) {
-        super(fountain, soundEvent, 16, 32);
+        super(fountain, soundEvent, 16, 24);
         this.looping = true;
         this.volume = VOLUME_MIN;
     }
@@ -16,7 +16,7 @@ public class DarkFountainMusicSound extends DarkFountainSound<DarkFountainBlockE
     @Override
     public void tick()
     {
-        if(getDistanceFromSource() <= 16)
+        if(getDistanceFromSource() <= 24)
             fadeIn();
         else
             fadeOut();
@@ -33,12 +33,12 @@ public class DarkFountainMusicSound extends DarkFountainSound<DarkFountainBlockE
     private void fadeIn()
     {
         if(this.volume < VOLUME_MAX)
-            this.volume += 0.05F;
+            this.volume += 0.01F;
     }
 
     private void fadeOut()
     {
         if(this.volume > VOLUME_MIN)
-            this.volume -= 0.05F;
+            this.volume -= 0.01F;
     }
 }
