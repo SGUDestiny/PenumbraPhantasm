@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.item;
 
 import destiny.penumbra_phantasm.server.registry.ItemRegistry;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -44,13 +43,6 @@ public class FriendItem extends Item {
                 if (level.getGameTime() % 10 == 0 && level.random.nextFloat() > 0.7 && fun == 0) {
                     fun = level.random.nextInt(2, 6);
 
-                    if (fun == 5) {
-                        ArrayList<Integer> emptySlots = findEmptySlots(player);
-
-                        if (emptySlots.isEmpty()) {
-                            fun = level.random.nextInt(2, 5);
-                        }
-                    }
                     stack.getOrCreateTag().putInt("fun", fun);
                 }
 
@@ -109,7 +101,15 @@ public class FriendItem extends Item {
 
                     //Disappear
                     if (fun == 5) {
+                        ArrayList<Integer> slots = getTravelSlots(player);
+                        int chosenSlot = slots.get(level.random.nextInt(0, slots.size()));
+                        int currentSlot = getCurrentSlot(player, stack);
+
+                        ItemStack oldItem = player.getInventory().getItem(chosenSlot).copy();
+
                         if (!reset) {
+                            stack.getOrCreateTag().put("item", oldItem.serializeNBT());
+
                             stack.getOrCreateTag().putInt("animation", 9);
                             stack.getOrCreateTag().putBoolean("reset", true);
 
@@ -118,14 +118,11 @@ public class FriendItem extends Item {
                             newFriend.getOrCreateTag().putInt("fun", 1);
                             newFriend.getOrCreateTag().putBoolean("reset", false);
 
-                            ArrayList<Integer> emptySlots = findEmptySlots(player);
-                            int emptySlot = emptySlots.get(level.random.nextInt(0, emptySlots.size()));
-
-                            player.getInventory().setItem(emptySlot, newFriend);
+                            player.getInventory().setItem(chosenSlot, newFriend);
                         } else if (animation >= 9 && animation < 18) {
                             stack.getOrCreateTag().putInt("animation", animation + 1);
                         } else if (animation == 18) {
-                            stack.setCount(0);
+                            player.getInventory().setItem(currentSlot, ItemStack.of(stack.getTag().getCompound("item")));
                         }
                     }
                 }
@@ -133,14 +130,23 @@ public class FriendItem extends Item {
         }
     }
 
-    public ArrayList<Integer> findEmptySlots(Player player) {
-        ArrayList<Integer> emptySlots = new ArrayList<>();
+    public ArrayList<Integer> getTravelSlots(Player player) {
+        ArrayList<Integer> slots = new ArrayList<>();
 
         for (int i = 0; i < player.getInventory().items.size(); i++) {
-            if (player.getInventory().items.get(i).isEmpty()) {
-                emptySlots.add(i);
+            if (player.getInventory().items.get(i).getItem() != ItemRegistry.FRIEND.get()) {
+                slots.add(i);
             }
         }
-        return emptySlots;
+        return slots;
+    }
+
+    public int getCurrentSlot(Player player, ItemStack stack) {
+        for (int i = 0; i < player.getInventory().items.size(); i++) {
+            if (player.getInventory().items.get(i) == stack) {
+                return i;
+            }
+        }
+        return 0;
     }
 }

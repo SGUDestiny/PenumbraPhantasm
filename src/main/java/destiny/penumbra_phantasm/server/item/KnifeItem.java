@@ -3,9 +3,15 @@ package destiny.penumbra_phantasm.server.item;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -19,6 +25,9 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
+
+import java.util.Iterator;
+import java.util.UUID;
 
 public class KnifeItem extends SwordItem {
     public boolean isSingleUse;
@@ -87,7 +96,23 @@ public class KnifeItem extends SwordItem {
                 tag.putInt("tick", -2);
                 if (!level.getBlockState(player.getOnPos()).isAir()) {
                     if (!level.isClientSide()) {
+                        UUID uuid = UUID.randomUUID();
+                        Iterator<ResourceKey<Level>> set = player.level().getServer().levelKeys().iterator();
+                        ResourceKey<Level> target = null;
+                        while(set.hasNext()) {
+                            ResourceKey<Level> current = set.next();
+                            if(current.equals(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))))
+                                target = current;
+                        }
+
+                        if (target == null) {
+                            return;
+                        }
+
                         level.setBlockAndUpdate(player.getOnPos().above(), BlockRegistry.DARK_FOUNTAIN_OPENING.get().defaultBlockState());
+                        ResourceKey<Level> finalTarget = target;
+                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(uuid, player.getOnPos().above(), player.level().dimension(), player.getOnPos().above(), finalTarget, 0));
+
                         player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
 
                         if (needsNetherStar) {

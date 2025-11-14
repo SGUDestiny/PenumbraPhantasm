@@ -1,11 +1,14 @@
 package destiny.penumbra_phantasm.server.fountain;
 
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -41,6 +44,12 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
     public void removeDarkFountain(UUID uuid) {
         this.darkFountains.remove(uuid);
     }
+
+/*    @Nonnull
+    public static DarkFountainCapability get(Level level)
+    {
+        return level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+    }*/
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
