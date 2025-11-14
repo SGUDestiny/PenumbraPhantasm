@@ -22,14 +22,30 @@ public class SoundAccess {
             }
 
             if(stop)
-                fountain.stopRotationSound();
+                fountain.stopMusic();
             else
-                fountain.playRotationSound();
+                fountain.playMusic();
         }
     }
 
     public static SoundEvent getFountainMusic(DarkFountainBlockEntity fountain) {
         return SoundRegistry.FOUNTAIN_MUSIC.get();
+    }
+
+    public static void playFountainWind(BlockPos pos, boolean stop)
+    {
+        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountainBlockEntity fountain)
+        {
+            if(fountain.windSound == null)
+            {
+                fountain.windSound = new DarkFountainSoundWrapper.DarkFountainMusic(fountain);
+            }
+
+            if(stop)
+                fountain.stopWind();
+            else
+                fountain.playWind();
+        }
     }
 
     public static SoundEvent getFountainWind(DarkFountainBlockEntity fountain) {
