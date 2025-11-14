@@ -34,8 +34,12 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         return objectsTag;
     }
 
-    public void addRocketPad(UUID uuid, BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTick) {
+    public void addDarkFountain(UUID uuid, BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTick) {
         this.darkFountains.put(uuid, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTick));
+    }
+
+    public void removeDarkFountain(UUID uuid) {
+        this.darkFountains.remove(uuid);
     }
 
     @Override
