@@ -61,7 +61,7 @@ public abstract class DarkFountainSoundWrapper <T extends DarkFountainBlockEntit
     {
         public DarkFountainWind(DarkFountainBlockEntity fountain)
         {
-            super(fountain, new DarkFountainMusicSound(fountain, SoundAccess.getFountainWind(fountain)));
+            super(fountain, new DarkFountainWindSound(fountain, SoundAccess.getFountainWind(fountain)));
         }
     }
 }

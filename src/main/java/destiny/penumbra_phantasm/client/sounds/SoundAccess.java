@@ -38,7 +38,7 @@ public class SoundAccess {
         {
             if(fountain.windSound == null)
             {
-                fountain.windSound = new DarkFountainSoundWrapper.DarkFountainMusic(fountain);
+                fountain.windSound = new DarkFountainSoundWrapper.DarkFountainWind(fountain);
             }
 
             if(stop)
