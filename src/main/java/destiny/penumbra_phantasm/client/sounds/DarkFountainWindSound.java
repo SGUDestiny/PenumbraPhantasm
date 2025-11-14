@@ -17,7 +17,7 @@ public class DarkFountainWindSound extends DarkFountainSound<DarkFountainBlockEn
     @Override
     public void tick()
     {
-        if(getDistanceFromSource() <= 16)
+        if(getDistanceFromSource() <= 32)
             fadeIn();
         else
             fadeOut();
