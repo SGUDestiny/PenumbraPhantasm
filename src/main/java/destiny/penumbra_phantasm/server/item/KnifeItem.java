@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -25,8 +26,10 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 public class KnifeItem extends SwordItem {
@@ -61,6 +64,20 @@ public class KnifeItem extends SwordItem {
 
         if (!player.onGround() || level.dimension().location().toString().equals("penumbra_phantasm:dark_depths")) {
             return InteractionResultHolder.fail(stack);
+        }
+
+        DarkFountainCapability cap;
+        LazyOptional<DarkFountainCapability> lazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
+            cap = lazyCapability.resolve().get();
+        else return InteractionResultHolder.fail(stack); // If capability isn't present
+
+        for(Map.Entry<UUID, DarkFountain> entry : cap.darkFountains.entrySet())
+        {
+            if(entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 256)
+            {
+                return InteractionResultHolder.fail(stack); // If fountain within 16 blocks of this(16 squared is 256)
+            }
         }
 
         if (needsNetherStar && !tag.getBoolean("determination")) {
