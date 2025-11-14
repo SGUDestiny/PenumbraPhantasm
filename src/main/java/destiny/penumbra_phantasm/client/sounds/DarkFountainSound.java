@@ -14,8 +14,10 @@ public class DarkFountainSound<T extends DarkFountainBlockEntity> extends Abstra
     protected T fountain;
     protected BlockPos fountainPos;
     protected Minecraft minecraft = Minecraft.getInstance();
+    protected int fullDistance = 0;
+    protected int maxDistance = 0;
 
-    public DarkFountainSound(T fountain, SoundEvent soundEvent) {
+    public DarkFountainSound(T fountain, SoundEvent soundEvent, int fullDistance, int maxDistance) {
         super(soundEvent, SoundSource.AMBIENT, SoundInstance.createUnseededRandom());
 
         this.fountain = fountain;
@@ -24,6 +26,8 @@ public class DarkFountainSound<T extends DarkFountainBlockEntity> extends Abstra
         this.y = fountain.getBlockPos().getCenter().y;
         this.z = fountain.getBlockPos().getCenter().z;
         this.relative = true;
+        this.fullDistance = fullDistance;
+        this.maxDistance = maxDistance;
     }
 
     @Override
@@ -61,8 +65,8 @@ public class DarkFountainSound<T extends DarkFountainBlockEntity> extends Abstra
         float localVolume = 0.0F;
         double distanceFromSource = getDistanceFromSource();
 
-        float fullDistance = 8f;
-        float maxDistance = 16f;
+        float fullDistance = this.fullDistance;
+        float maxDistance = this.maxDistance;
 
         if(fullDistance >= maxDistance)
             maxDistance = fullDistance + 1;

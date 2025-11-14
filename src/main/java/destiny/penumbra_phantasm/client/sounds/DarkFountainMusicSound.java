@@ -5,14 +5,13 @@ import net.minecraft.sounds.SoundEvent;
 
 public class DarkFountainMusicSound extends DarkFountainSound<DarkFountainBlockEntity>{
     private static final float VOLUME_MIN = 0.0F;
-    private static final float VOLUME_MAX = 0.5F;
+    private static final float VOLUME_MAX = 0.4F;
 
     public DarkFountainMusicSound(DarkFountainBlockEntity fountain, SoundEvent soundEvent) {
-        super(fountain, soundEvent);
+        super(fountain, soundEvent, 16, 32);
         this.looping = true;
         this.volume = VOLUME_MIN;
     }
-
 
     @Override
     public void tick()
@@ -28,7 +27,7 @@ public class DarkFountainMusicSound extends DarkFountainSound<DarkFountainBlockE
     @Override
     public boolean canStartSilent()
     {
-        return true;
+        return false;
     }
 
     private void fadeIn()

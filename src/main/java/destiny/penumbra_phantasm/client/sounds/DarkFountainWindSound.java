@@ -5,14 +5,13 @@ import net.minecraft.sounds.SoundEvent;
 
 public class DarkFountainWindSound extends DarkFountainSound<DarkFountainBlockEntity>{
     private static final float VOLUME_MIN = 0.0F;
-    private static final float VOLUME_MAX = 0.3F;
+    private static final float VOLUME_MAX = 0.2F;
 
     public DarkFountainWindSound(DarkFountainBlockEntity fountain, SoundEvent soundEvent) {
-        super(fountain, soundEvent);
+        super(fountain, soundEvent, 24, 48);
         this.looping = true;
         this.volume = VOLUME_MIN;
     }
-
 
     @Override
     public void tick()
@@ -28,7 +27,7 @@ public class DarkFountainWindSound extends DarkFountainSound<DarkFountainBlockEn
     @Override
     public boolean canStartSilent()
     {
-        return true;
+        return false;
     }
 
     private void fadeIn()
