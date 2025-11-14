@@ -27,7 +27,7 @@ public class DarkFountainMusicSound extends DarkFountainSound<DarkFountainBlockE
     @Override
     public boolean canStartSilent()
     {
-        return false;
+        return true;
     }
 
     private void fadeIn()
