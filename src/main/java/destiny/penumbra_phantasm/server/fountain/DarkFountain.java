@@ -18,24 +18,27 @@ public class DarkFountain {
     public static final String FOUNTAIN_DIMENSION = "fountainDimension";
     public static final String DESTINATION_POS = "destinationPos";
     public static final String DESTINATION_DIMENSION = "destinationDimension";
-    public static final String ANIMATION_TICK = "animationTick";
+    public static final String ANIMATION_TIMER = "animationTimer";
+    public static final String FRAME_TIMER = "frameTimer";
+    public static final String FRAME = "frame";
 
     BlockPos fountainPos;
     ResourceKey<Level> fountainDimension;
     BlockPos destinationPos;
     ResourceKey<Level> destinationDimension;
-    int animationTick;
 
     public int animationTimer;
     public int frameTimer;
     public int frame;
 
-    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTick) {
+    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame) {
         this.fountainPos = fountainPos;
         this.fountainDimension = fountainDimension;
         this.destinationPos = destinationPos;
         this.destinationDimension = destinationDimension;
-        this.animationTick = animationTick;
+        this.animationTimer = animationTimer;
+        this.frameTimer = frameTimer;
+        this.frame = frame;
     }
 
     public CompoundTag save()
@@ -46,7 +49,9 @@ public class DarkFountain {
         tag.putString(FOUNTAIN_DIMENSION, fountainDimension.location().toString());
         tag.put(DESTINATION_POS, NbtUtils.writeBlockPos(destinationPos));
         tag.putString(DESTINATION_DIMENSION, destinationDimension.location().toString());
-        tag.putInt(ANIMATION_TICK, animationTick);
+        tag.putInt(ANIMATION_TIMER, animationTimer);
+        tag.putInt(FRAME_TIMER, frameTimer);
+        tag.putInt(FRAME, frame);
 
         return tag;
     }
@@ -56,9 +61,11 @@ public class DarkFountain {
         ResourceKey<Level> fountainDimension = stringToDimension(tag.getString(FOUNTAIN_DIMENSION));
         BlockPos destinationPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS));
         ResourceKey<Level> destinationDimension = stringToDimension(tag.getString(DESTINATION_DIMENSION));
-        int animationTick = tag.getInt(ANIMATION_TICK);
+        int animationTimer = tag.getInt(ANIMATION_TIMER);
+        int frameTimer = tag.getInt(FRAME_TIMER);
+        int frame = tag.getInt(FRAME);
 
-        return new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTick);
+        return new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame);
     }
 
     public BlockPos getFountainPos() {
@@ -77,8 +84,8 @@ public class DarkFountain {
         return destinationDimension;
     }
 
-    public int getAnimationTick() {
-        return animationTick;
+    public int getAnimationTimer() {
+        return animationTimer;
     }
 
     public static ResourceKey<Level> stringToDimension(String dimensionString)
@@ -93,40 +100,46 @@ public class DarkFountain {
 
     public void tick(Level level)
     {
-        if (this.animationTimer == 0) {
-            level.playSound(null, getFountainPos(), SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
-        }
+        if (!level.isClientSide()) {
+            System.out.println(frameTimer);
 
-        if (this.frameTimer % 3 == 0) {
-            if (this.frame >= 13) {
-                this.frame = 0;
-            } else {
-                this.frame++;
+            if (this.animationTimer == 0) {
+                level.playSound(null, getFountainPos(), SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
             }
-        }
 
-        if (this.frameTimer >= 13 * 3) {
-            this.frameTimer = 0;
-        } else {
-            this.frameTimer++;
-        }
-
-        if (this.animationTimer >= 144) {
-            this.animationTimer = -1;
-        }
-        if (this.animationTimer >= 0) {
-            this.animationTimer++;
-        }
-
-        if (this.animationTimer > 140 || this.animationTimer == -1) {
-            if (!level.isClientSide()) {
-                if (Config.darkFountainMusic) {
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getDestinationPos())), new ClientBoundSoundPackets.FountainFullMusic(this.getFountainPos(), false));
+            if (this.frameTimer % 3 == 0) {
+                if (this.frame >= 13) {
+                    this.frame = 0;
+                } else {
+                    this.frame++;
                 }
-                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getDestinationPos())), new ClientBoundSoundPackets.FountainFullWind(this.getFountainPos(), false));
+            }
+
+            if (this.frameTimer >= 13 * 3) {
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer++;
+            }
+
+            if (this.animationTimer >= 144) {
+                this.animationTimer = -1;
+            }
+            if (this.animationTimer >= 0) {
+                this.animationTimer++;
+            }
+
+            if (this.animationTimer > 140 || this.animationTimer == -1) {
+                if (Config.darkFountainMusic) {
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainFullMusic(this.getFountainPos(), false));
+                }
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainFullWind(this.getFountainPos(), false));
             }
         }
     }
+    public int getFrameTimer() {
+        return frameTimer;
+    }
+
 
     public int getFrame() {
         return frame;

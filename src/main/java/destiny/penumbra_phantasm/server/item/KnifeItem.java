@@ -129,7 +129,7 @@ public class KnifeItem extends SwordItem {
                         }
 
                         ResourceKey<Level> finalTarget = target;
-                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(uuid, player.getOnPos().above(), player.level().dimension(), player.getOnPos().above(), finalTarget, 0));
+                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(uuid, player.getOnPos().above(), player.level().dimension(), player.getOnPos().above(), finalTarget, 0, 0, 0));
 
                         player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
 

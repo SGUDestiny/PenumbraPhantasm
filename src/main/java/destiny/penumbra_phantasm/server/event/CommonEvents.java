@@ -39,15 +39,16 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void levelTick(TickEvent.LevelTickEvent event)
-    {
-        Level level = event.level;
+    public void levelTick(TickEvent.LevelTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            Level level = event.level;
 
-        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(level::dimension), new ClientBoundFountainData(cap.darkFountains));
-            cap.darkFountains.forEach((uid, fountain) -> {
-                fountain.tick(level);
+            level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(level::dimension), new ClientBoundFountainData(cap.darkFountains));
+                cap.darkFountains.forEach((uid, fountain) -> {
+                    fountain.tick(level);
+                });
             });
-        });
+        }
     }
 }

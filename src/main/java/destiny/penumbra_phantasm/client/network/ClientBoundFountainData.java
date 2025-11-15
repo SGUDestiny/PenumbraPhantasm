@@ -5,7 +5,6 @@ import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
@@ -37,10 +36,9 @@ public class ClientBoundFountainData
 			writer.writeBlockPos(fountain.getDestinationPos());
 			writer.writeResourceKey(fountain.getDestinationDimension());
 
-			writer.writeInt(fountain.animationTimer);
-			writer.writeInt(fountain.getAnimationTick());
-			writer.writeInt(fountain.frameTimer);
-			writer.writeInt(fountain.frame);
+			writer.writeInt(fountain.getAnimationTimer());
+			writer.writeInt(fountain.getFrameTimer());
+			writer.writeInt(fountain.getFrame());
 		});
 	}
 
@@ -55,15 +53,11 @@ public class ClientBoundFountainData
 			BlockPos targetPos = reader.readBlockPos();
 			ResourceKey<Level> targetDim = reader.readResourceKey(Registries.DIMENSION);
 
-			int animTimer = reader.readInt();
-			int animTick = reader.readInt();
+			int animationTimer = reader.readInt();
 			int frameTimer = reader.readInt();
 			int frame = reader.readInt();
 
-			DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animTick);
-			fountain.animationTimer = animTimer;
-			fountain.frame = frame;
-			fountain.frameTimer = frameTimer;
+			DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animationTimer, frameTimer, frame);
 
 			return Map.entry(uuid, fountain);
 		});
