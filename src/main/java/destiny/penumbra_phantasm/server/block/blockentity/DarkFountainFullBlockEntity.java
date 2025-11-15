@@ -1,10 +1,7 @@
 package destiny.penumbra_phantasm.server.block.blockentity;
 
-import destiny.penumbra_phantasm.Config;
-import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
-import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +13,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 
@@ -37,39 +33,30 @@ public class DarkFountainFullBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, DarkFountainFullBlockEntity entity) {
-            if (entity.animationTimer == 0) {
-                level.playSound(null, pos, SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
-            }
+        if (entity.animationTimer == 0) {
+            level.playSound(null, pos, SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
+        }
 
-            if (entity.frameTimer % 3 == 0) {
-                if (entity.frame >= 13) {
-                    entity.frame = 0;
-                } else {
-                    entity.frame++;
-                }
-            }
-
-            if (entity.frameTimer >= 13 * 3) {
-                entity.frameTimer = 0;
+        if (entity.frameTimer % 3 == 0) {
+            if (entity.frame >= 13) {
+                entity.frame = 0;
             } else {
-                entity.frameTimer++;
+                entity.frame++;
             }
+        }
 
-            if (entity.animationTimer >= 144) {
-                entity.animationTimer = -1;
-            }
-            if (entity.animationTimer >= 0) {
-                entity.animationTimer++;
-            }
+        if (entity.frameTimer >= 13 * 3) {
+            entity.frameTimer = 0;
+        } else {
+            entity.frameTimer++;
+        }
 
-            if (entity.animationTimer > 140 || entity.animationTimer == -1) {
-                if (!level.isClientSide()) {
-                    if (Config.darkFountainMusic) {
-                        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainFullMusic(entity.worldPosition, false));
-                    }
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainFullWind(entity.worldPosition, false));
-                }
-            }
+        if (entity.animationTimer >= 144) {
+            entity.animationTimer = -1;
+        }
+        if (entity.animationTimer >= 0) {
+            entity.animationTimer++;
+        }
     }
 
     @Override

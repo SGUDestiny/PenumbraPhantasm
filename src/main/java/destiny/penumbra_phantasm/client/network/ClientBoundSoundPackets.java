@@ -1,30 +1,29 @@
 package destiny.penumbra_phantasm.client.network;
 
 import destiny.penumbra_phantasm.client.sounds.SoundAccess;
-import net.minecraft.core.BlockPos;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public abstract class ClientBoundSoundPackets {
-    public final BlockPos pos;
+    public final DarkFountain fountain;
     public final boolean stop;
 
-    public ClientBoundSoundPackets(BlockPos pos, boolean stop)
+    public ClientBoundSoundPackets(DarkFountain fountain, boolean stop)
     {
-        this.pos = pos;
+        this.fountain = fountain;
         this.stop = stop;
     }
 
     public ClientBoundSoundPackets(FriendlyByteBuf buffer)
     {
-        this(buffer.readBlockPos(), buffer.readBoolean());
+        this(buffer.read, buffer.readBoolean());
     }
 
     public void encode(FriendlyByteBuf buffer)
     {
-        buffer.writeBlockPos(this.pos);
         buffer.writeBoolean(this.stop);
     }
 
@@ -32,9 +31,9 @@ public abstract class ClientBoundSoundPackets {
 
     public static class FountainMusic extends ClientBoundSoundPackets
     {
-        public FountainMusic(BlockPos pos, boolean stop)
+        public FountainMusic(DarkFountain fountain, boolean stop)
         {
-            super(pos, stop);
+            super(fountain, stop);
         }
         public FountainMusic(FriendlyByteBuf buffer)
         {
@@ -46,7 +45,7 @@ public abstract class ClientBoundSoundPackets {
         {
             ctx.get().enqueueWork(() ->
             {
-                SoundAccess.playFountainMusic(pos, stop);
+                SoundAccess.playFountainMusic(fountain, stop);
             });
             return true;
         }
@@ -54,9 +53,9 @@ public abstract class ClientBoundSoundPackets {
 
     public static class FountainWind extends ClientBoundSoundPackets
     {
-        public FountainWind(BlockPos pos, boolean stop)
+        public FountainWind(DarkFountain fountain, boolean stop)
         {
-            super(pos, stop);
+            super(fountain, stop);
         }
         public FountainWind(FriendlyByteBuf buffer)
         {
@@ -68,7 +67,7 @@ public abstract class ClientBoundSoundPackets {
         {
             ctx.get().enqueueWork(() ->
             {
-                SoundAccess.playFountainWind(pos, stop);
+                SoundAccess.playFountainWind(fountain, stop);
             });
             return true;
         }

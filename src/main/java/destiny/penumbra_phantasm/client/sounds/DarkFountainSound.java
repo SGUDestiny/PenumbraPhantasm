@@ -30,7 +30,7 @@ public class DarkFountainSound<T extends DarkFountain> extends AbstractTickableS
     @Override
     public void tick()
     {
-        if(!(Minecraft.getInstance().level.getBlockEntity(fountainPos) instanceof DarkFountain))
+        if(fountain == null)
             this.stop();
     }
 
@@ -45,16 +45,11 @@ public class DarkFountainSound<T extends DarkFountain> extends AbstractTickableS
         this.stop();
     }
 
-    public Vec3 getPosition()
-    {
-        return new Vec3(x, y, z);
-    }
-
     public double getDistanceFromSource()
     {
         LocalPlayer player = minecraft.player;
         Vec3 playerPos = player.position();
-        return getPosition().distanceTo(playerPos);
+        return fountainPos.getCenter().distanceTo(playerPos);
     }
 
     public float getVolume()

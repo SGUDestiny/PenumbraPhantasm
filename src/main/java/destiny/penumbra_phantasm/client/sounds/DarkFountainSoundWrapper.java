@@ -7,13 +7,13 @@ public class DarkFountainSoundWrapper<T extends DarkFountain> extends SoundWrapp
 {
     protected static Minecraft minecraft = Minecraft.getInstance();
 
-    protected T stargate;
+    protected T fountain;
     protected DarkFountainSound<?> sound;
     protected boolean playingSound = false;
 
-    protected DarkFountainSoundWrapper(T stargate, DarkFountainSound sound)
+    protected DarkFountainSoundWrapper(T fountain, DarkFountainSound sound)
     {
-        this.stargate = stargate;
+        this.fountain = fountain;
         this.sound = sound;
     }
 

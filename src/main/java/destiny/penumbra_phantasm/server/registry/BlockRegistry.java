@@ -42,7 +42,7 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES)));
 
     public static final RegistryObject<Block> SCARLET_LOG = registerBlock("scarlet_log",
-            () -> new ScarletLogBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
 
     public static final RegistryObject<Block> SCARLET_SAPLING = registerBlock("scarlet_sapling",
