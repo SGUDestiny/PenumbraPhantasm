@@ -1,17 +1,18 @@
 package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.Config;
-import destiny.penumbra_phantasm.server.registry.ItemRegistry;
-import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
-import destiny.penumbra_phantasm.server.registry.SoundRegistry;
+import destiny.penumbra_phantasm.client.network.ClientBoundFountainData;
+import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 public class CommonEvents {
     @SubscribeEvent
@@ -35,5 +36,18 @@ public class CommonEvents {
                 level.addParticle(ParticleTypeRegistry.REAL_KNIFE_HIT.get(), target.getX(), target.getY() + 1, target.getZ(), -0.15 + level.random.nextDouble() * 0.3, 0.3, -0.15 + level.random.nextDouble() * 0.3);
             }
         }
+    }
+
+    @SubscribeEvent
+    public void levelTick(TickEvent.LevelTickEvent event)
+    {
+        Level level = event.level;
+
+        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(level::dimension), new ClientBoundFountainData(cap.darkFountains));
+            cap.darkFountains.forEach((uid, fountain) -> {
+                fountain.tick(level);
+            });
+        });
     }
 }

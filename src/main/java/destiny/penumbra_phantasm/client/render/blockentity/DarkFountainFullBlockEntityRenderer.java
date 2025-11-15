@@ -46,7 +46,7 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
         }
     }
 
-    public void renderOpeningFoutain(float animationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+    public static void renderOpeningFoutain(float animationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
         ResourceLocation textureFountainOpeningBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom.png");
         ResourceLocation textureFountainOpeningMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
         ResourceLocation textureFountainOpeningBottomShadow = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom_shadow.png");
@@ -91,7 +91,7 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.translate(0f, -1.95f, 0f);
-        this.fountainCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+        PenumbraPhantasm.ClientModEvents.fountainGroundCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
                 LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
         poseStack.popPose();
 
@@ -100,9 +100,9 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.translate(0f, 3f, 0f);
         poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-        this.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainOpeningBottom)),
+        PenumbraPhantasm.ClientModEvents.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainOpeningBottom)),
                 LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
-        this.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureFountainOpeningBottomShadow)),
+        PenumbraPhantasm.ClientModEvents.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureFountainOpeningBottomShadow)),
                 LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, alphaDark);
         poseStack.popPose();
 
@@ -112,15 +112,15 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
             poseStack.translate(0.5f, 0.5f, 0.5f);
             poseStack.translate(0f, 3 + 5 + (5 * segment), 0f);
             poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-            this.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainOpeningMiddle)),
+            PenumbraPhantasm.ClientModEvents.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainOpeningMiddle)),
                     LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
-            this.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureFountainOpeningMiddleShadow)),
+            PenumbraPhantasm.ClientModEvents.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureFountainOpeningMiddleShadow)),
                     LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, alphaDark);
             poseStack.popPose();
         }
     }
 
-    public void renderOpenFountain(DarkFountainFullBlockEntity darkFountainFullBlockEntity, Level level, float animationTime, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+    public static void renderOpenFountain(DarkFountainFullBlockEntity darkFountainFullBlockEntity, Level level, float animationTime, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
         float pixel = 1f / 16f;
         float time = (level.getGameTime() + partialTick) * 0.1f;
         float pulse = 1.0f + 0.1f * (float) Math.sin(time);
@@ -141,7 +141,7 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
         poseStack.pushPose();
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.translate(0f, -1.95f, 0f);
-        this.fountainCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+        PenumbraPhantasm.ClientModEvents.fountainGroundCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
                 LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
         poseStack.popPose();
 
@@ -150,7 +150,7 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
         poseStack.translate(0.5f, 0.5f, 0.5f);
         poseStack.translate(0f, 7 - (4 * pixel), 0f);
         poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-        this.fountainOpenModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
+        PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
                 LightTexture.FULL_BRIGHT, overlay, 1F, 0F, 0F, 1F);
         poseStack.popPose();
 
@@ -165,7 +165,7 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
             poseStack.translate(0f, -20f * pixel, 0f);
             poseStack.translate(0f, offset, 0f);
             poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-            this.fountainOpenModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
+            PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
                     LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
             poseStack.popPose();
 
@@ -176,7 +176,7 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
             poseStack.translate(0f, offset, 0f);
             poseStack.scale(scaleXZ, 1.0f, scaleXZ);
             poseStack.scale(pulse, 1.0f, pulse);
-            this.fountainOpenEdgesModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
+            PenumbraPhantasm.ClientModEvents.fountainEdgesModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
                     LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
             poseStack.popPose();
 
@@ -187,7 +187,7 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
             poseStack.translate(0f, offset, 0f);
             poseStack.scale(scaleXZ, 1.0f, scaleXZ);
             poseStack.scale(pulse_opposite, 1.0f, pulse_opposite);
-            this.fountainOpenEdgesModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
+            PenumbraPhantasm.ClientModEvents.fountainEdgesModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
                     LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
             poseStack.popPose();
         }

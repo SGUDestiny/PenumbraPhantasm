@@ -1,11 +1,17 @@
 package destiny.penumbra_phantasm.server.fountain;
 
+import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
+import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.PacketDistributor;
 
 public class DarkFountain {
     public static final String FOUNTAIN_POS = "fountainPos";
@@ -19,6 +25,10 @@ public class DarkFountain {
     BlockPos destinationPos;
     ResourceKey<Level> destinationDimension;
     int animationTick;
+
+    public int animationTimer;
+    public int frameTimer;
+    public int frame;
 
     public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTick) {
         this.fountainPos = fountainPos;
@@ -81,7 +91,44 @@ public class DarkFountain {
         return null;
     }
 
-    public static void tick() {
+    public void tick(Level level)
+    {
+        if (this.animationTimer == 0) {
+            level.playSound(null, getFountainPos(), SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
+        }
 
+        if (this.frameTimer % 3 == 0) {
+            if (this.frame >= 13) {
+                this.frame = 0;
+            } else {
+                this.frame++;
+            }
+        }
+
+        if (this.frameTimer >= 13 * 3) {
+            this.frameTimer = 0;
+        } else {
+            this.frameTimer++;
+        }
+
+        if (this.animationTimer >= 144) {
+            this.animationTimer = -1;
+        }
+        if (this.animationTimer >= 0) {
+            this.animationTimer++;
+        }
+
+        if (this.animationTimer > 140 || this.animationTimer == -1) {
+            if (!level.isClientSide()) {
+                if (Config.darkFountainMusic) {
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getDestinationPos())), new ClientBoundSoundPackets.FountainFullMusic(this.getFountainPos(), false));
+                }
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getDestinationPos())), new ClientBoundSoundPackets.FountainFullWind(this.getFountainPos(), false));
+            }
+        }
+    }
+
+    public int getFrame() {
+        return frame;
     }
 }

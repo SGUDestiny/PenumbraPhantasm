@@ -128,7 +128,6 @@ public class KnifeItem extends SwordItem {
                             return;
                         }
 
-                        level.setBlockAndUpdate(player.getOnPos().above(), BlockRegistry.DARK_FOUNTAIN_FULL.get().defaultBlockState());
                         ResourceKey<Level> finalTarget = target;
                         level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(uuid, player.getOnPos().above(), player.level().dimension(), player.getOnPos().above(), finalTarget, 0));
 
