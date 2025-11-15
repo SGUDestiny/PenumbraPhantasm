@@ -1,0 +1,253 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"0": "penumbra_phantasm:block/dark_candy_block_5",
+		"particle": "penumbra_phantasm:block/dark_candy_block_5"
+	},
+	"elements": [
+		{
+			"name": "dark_candy_block_5_0",
+			"from": [9, 0, 15],
+			"to": [11, 15, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [5, 1, 7, 16], "texture": "#0"},
+				"east": {"uv": [5, 1, 6, 16], "texture": "#0"},
+				"south": {"uv": [7, 1, 5, 16], "texture": "#0"},
+				"west": {"uv": [6, 1, 7, 16], "texture": "#0"},
+				"up": {"uv": [7, 2, 5, 1], "texture": "#0"},
+				"down": {"uv": [7, 16, 5, 15], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_1",
+			"from": [11, 2, 15],
+			"to": [12, 14, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [4, 2, 5, 14], "texture": "#0"},
+				"east": {"uv": [4, 2, 5, 14], "texture": "#0"},
+				"south": {"uv": [5, 2, 4, 14], "texture": "#0"},
+				"west": {"uv": [4, 2, 5, 14], "texture": "#0"},
+				"up": {"uv": [5, 3, 4, 2], "texture": "#0"},
+				"down": {"uv": [5, 14, 4, 13], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_2",
+			"from": [7, 2, 15],
+			"to": [9, 14, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [7, 2, 9, 14], "texture": "#0"},
+				"east": {"uv": [7, 2, 8, 14], "texture": "#0"},
+				"south": {"uv": [9, 2, 7, 14], "texture": "#0"},
+				"west": {"uv": [8, 2, 9, 14], "texture": "#0"},
+				"up": {"uv": [9, 3, 7, 2], "texture": "#0"},
+				"down": {"uv": [9, 14, 7, 13], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_3",
+			"from": [2, 4, 15],
+			"to": [7, 13, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [9, 3, 14, 12], "texture": "#0"},
+				"east": {"uv": [9, 3, 10, 12], "texture": "#0"},
+				"south": {"uv": [14, 3, 9, 12], "texture": "#0"},
+				"west": {"uv": [13, 3, 14, 12], "texture": "#0"},
+				"up": {"uv": [14, 4, 9, 3], "texture": "#0"},
+				"down": {"uv": [14, 12, 9, 11], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_4",
+			"from": [12, 4, 15],
+			"to": [13, 11, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [3, 5, 4, 12], "texture": "#0"},
+				"east": {"uv": [3, 5, 4, 12], "texture": "#0"},
+				"south": {"uv": [4, 5, 3, 12], "texture": "#0"},
+				"west": {"uv": [3, 5, 4, 12], "texture": "#0"},
+				"up": {"uv": [4, 6, 3, 5], "texture": "#0"},
+				"down": {"uv": [4, 12, 3, 11], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_5",
+			"from": [1, 5, 15],
+			"to": [2, 10, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [14, 6, 15, 11], "texture": "#0"},
+				"east": {"uv": [14, 6, 15, 11], "texture": "#0"},
+				"south": {"uv": [15, 6, 14, 11], "texture": "#0"},
+				"west": {"uv": [14, 6, 15, 11], "texture": "#0"},
+				"up": {"uv": [15, 7, 14, 6], "texture": "#0"},
+				"down": {"uv": [15, 11, 14, 10], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_6",
+			"from": [13, 4, 15],
+			"to": [14, 9, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [2, 7, 3, 12], "texture": "#0"},
+				"east": {"uv": [2, 7, 3, 12], "texture": "#0"},
+				"south": {"uv": [3, 7, 2, 12], "texture": "#0"},
+				"west": {"uv": [2, 7, 3, 12], "texture": "#0"},
+				"up": {"uv": [3, 8, 2, 7], "texture": "#0"},
+				"down": {"uv": [3, 12, 2, 11], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_7",
+			"from": [14, 5, 15],
+			"to": [15, 8, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [1, 8, 2, 11], "texture": "#0"},
+				"east": {"uv": [1, 8, 2, 11], "texture": "#0"},
+				"south": {"uv": [2, 8, 1, 11], "texture": "#0"},
+				"west": {"uv": [1, 8, 2, 11], "texture": "#0"},
+				"up": {"uv": [2, 9, 1, 8], "texture": "#0"},
+				"down": {"uv": [2, 11, 1, 10], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_8",
+			"from": [0, 5, 15],
+			"to": [1, 8, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [15, 8, 16, 11], "texture": "#0"},
+				"east": {"uv": [15, 8, 16, 11], "texture": "#0"},
+				"south": {"uv": [16, 8, 15, 11], "texture": "#0"},
+				"west": {"uv": [15, 8, 16, 11], "texture": "#0"},
+				"up": {"uv": [16, 9, 15, 8], "texture": "#0"},
+				"down": {"uv": [16, 11, 15, 10], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_9",
+			"from": [15, 6, 15],
+			"to": [16, 7, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [0, 9, 1, 10], "texture": "#0"},
+				"east": {"uv": [0, 9, 1, 10], "texture": "#0"},
+				"south": {"uv": [1, 9, 0, 10], "texture": "#0"},
+				"west": {"uv": [0, 9, 1, 10], "texture": "#0"},
+				"up": {"uv": [1, 10, 0, 9], "texture": "#0"},
+				"down": {"uv": [1, 10, 0, 9], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_10",
+			"from": [4, 3, 15],
+			"to": [7, 4, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [9, 12, 12, 13], "texture": "#0"},
+				"east": {"uv": [9, 12, 10, 13], "texture": "#0"},
+				"south": {"uv": [12, 12, 9, 13], "texture": "#0"},
+				"west": {"uv": [11, 12, 12, 13], "texture": "#0"},
+				"up": {"uv": [12, 13, 9, 12], "texture": "#0"},
+				"down": {"uv": [12, 13, 9, 12], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_11",
+			"from": [6, 2, 15],
+			"to": [7, 3, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [9, 13, 10, 14], "texture": "#0"},
+				"east": {"uv": [9, 13, 10, 14], "texture": "#0"},
+				"south": {"uv": [10, 13, 9, 14], "texture": "#0"},
+				"west": {"uv": [9, 13, 10, 14], "texture": "#0"},
+				"up": {"uv": [10, 14, 9, 13], "texture": "#0"},
+				"down": {"uv": [10, 14, 9, 13], "texture": "#0"}
+			}
+		},
+		{
+			"name": "dark_candy_block_5_12",
+			"from": [8, 1, 15],
+			"to": [9, 2, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [16, 0, 16]},
+			"faces": {
+				"north": {"uv": [7, 14, 8, 15], "texture": "#0"},
+				"east": {"uv": [7, 14, 8, 15], "texture": "#0"},
+				"south": {"uv": [8, 14, 7, 15], "texture": "#0"},
+				"west": {"uv": [7, 14, 8, 15], "texture": "#0"},
+				"up": {"uv": [8, 15, 7, 14], "texture": "#0"},
+				"down": {"uv": [8, 15, 7, 14], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "dark_candy_block_5",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+		}
+	]
+}

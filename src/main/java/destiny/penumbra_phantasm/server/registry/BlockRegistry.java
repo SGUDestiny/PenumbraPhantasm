@@ -49,6 +49,18 @@ public class BlockRegistry {
             () -> new SaplingBlock(new ScarletGrower(), BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_SAPLING)));
 
+    public static final RegistryObject<Block> DARK_CANDY_BLOCK = registerBlock("dark_candy_block",
+            () -> new DarkCandyBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission().noOcclusion().instabreak().randomTicks()));
+
+    public static final RegistryObject<Block> DARK_CANDY_LEAVES = registerBlock("dark_candy_leaves",
+            () -> new DarkCandyLeaves(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()));
+
+    public static final RegistryObject<Block> DARK_CANDY_LOG = registerBlock("dark_candy_log",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
+
     public static final RegistryObject<Block> DARK_FOUNTAIN_OPENING = registerBlock("dark_fountain_opening",
             () -> new DarkFountainOpeningBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission().lightLevel(state -> (15))));
 

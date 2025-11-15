@@ -1,0 +1,157 @@
+{
+  "variants": {
+    "facing=down,age=1": {
+      "model": "penumbra_phantasm:block/dark_candy_block_1",
+      "x": 90
+    },
+    "facing=east,age=1": {
+      "model": "penumbra_phantasm:block/dark_candy_block_1",
+      "y": 90
+    },
+    "facing=north,age=1": {
+      "model": "penumbra_phantasm:block/dark_candy_block_1"
+    },
+    "facing=south,age=1": {
+      "model": "penumbra_phantasm:block/dark_candy_block_1",
+      "y": 180
+    },
+    "facing=up,age=1": {
+      "model": "penumbra_phantasm:block/dark_candy_block_1",
+      "x": 270
+    },
+    "facing=west,age=1": {
+      "model": "penumbra_phantasm:block/dark_candy_block_1",
+      "y": 270
+    },
+
+
+
+    "facing=down,age=2": {
+      "model": "penumbra_phantasm:block/dark_candy_block_2",
+      "x": 90
+    },
+    "facing=east,age=2": {
+      "model": "penumbra_phantasm:block/dark_candy_block_2",
+      "y": 90
+    },
+    "facing=north,age=2": {
+      "model": "penumbra_phantasm:block/dark_candy_block_2"
+    },
+    "facing=south,age=2": {
+      "model": "penumbra_phantasm:block/dark_candy_block_2",
+      "y": 180
+    },
+    "facing=up,age=2": {
+      "model": "penumbra_phantasm:block/dark_candy_block_2",
+      "x": 270
+    },
+    "facing=west,age=2": {
+      "model": "penumbra_phantasm:block/dark_candy_block_2",
+      "y": 270
+    },
+
+
+
+    "facing=down,age=3": {
+      "model": "penumbra_phantasm:block/dark_candy_block_3",
+      "x": 90
+    },
+    "facing=east,age=3": {
+      "model": "penumbra_phantasm:block/dark_candy_block_3",
+      "y": 90
+    },
+    "facing=north,age=3": {
+      "model": "penumbra_phantasm:block/dark_candy_block_3"
+    },
+    "facing=south,age=3": {
+      "model": "penumbra_phantasm:block/dark_candy_block_3",
+      "y": 180
+    },
+    "facing=up,age=3": {
+      "model": "penumbra_phantasm:block/dark_candy_block_3",
+      "x": 270
+    },
+    "facing=west,age=3": {
+      "model": "penumbra_phantasm:block/dark_candy_block_3",
+      "y": 270
+    },
+
+
+
+    "facing=down,age=4": {
+      "model": "penumbra_phantasm:block/dark_candy_block_4",
+      "x": 90
+    },
+    "facing=east,age=4": {
+      "model": "penumbra_phantasm:block/dark_candy_block_4",
+      "y": 90
+    },
+    "facing=north,age=4": {
+      "model": "penumbra_phantasm:block/dark_candy_block_4"
+    },
+    "facing=south,age=4": {
+      "model": "penumbra_phantasm:block/dark_candy_block_4",
+      "y": 180
+    },
+    "facing=up,age=4": {
+      "model": "penumbra_phantasm:block/dark_candy_block_4",
+      "x": 270
+    },
+    "facing=west,age=4": {
+      "model": "penumbra_phantasm:block/dark_candy_block_4",
+      "y": 270
+    },
+
+
+
+    "facing=down,age=5": {
+      "model": "penumbra_phantasm:block/dark_candy_block_5",
+      "x": 90
+    },
+    "facing=east,age=5": {
+      "model": "penumbra_phantasm:block/dark_candy_block_5",
+      "y": 90
+    },
+    "facing=north,age=5": {
+      "model": "penumbra_phantasm:block/dark_candy_block_5"
+    },
+    "facing=south,age=5": {
+      "model": "penumbra_phantasm:block/dark_candy_block_5",
+      "y": 180
+    },
+    "facing=up,age=5": {
+      "model": "penumbra_phantasm:block/dark_candy_block_5",
+      "x": 270
+    },
+    "facing=west,age=5": {
+      "model": "penumbra_phantasm:block/dark_candy_block_5",
+      "y": 270
+    },
+
+
+
+    "facing=down,age=6": {
+      "model": "penumbra_phantasm:block/dark_candy_block_6",
+      "x": 90
+    },
+    "facing=east,age=6": {
+      "model": "penumbra_phantasm:block/dark_candy_block_6",
+      "y": 90
+    },
+    "facing=north,age=6": {
+      "model": "penumbra_phantasm:block/dark_candy_block_6"
+    },
+    "facing=south,age=6": {
+      "model": "penumbra_phantasm:block/dark_candy_block_6",
+      "y": 180
+    },
+    "facing=up,age=6": {
+      "model": "penumbra_phantasm:block/dark_candy_block_6",
+      "x": 270
+    },
+    "facing=west,age=6": {
+      "model": "penumbra_phantasm:block/dark_candy_block_6",
+      "y": 270
+    }
+  }
+}
