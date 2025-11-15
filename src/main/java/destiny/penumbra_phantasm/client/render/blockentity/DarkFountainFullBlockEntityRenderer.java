@@ -37,7 +37,7 @@ public class DarkFountainFullBlockEntityRenderer implements BlockEntityRenderer<
         ResourceLocation textureCrack = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_ground_crack.png");
 
         float animTimeInitial = darkFountainFullBlockEntity.animationTimer;
-        float animationTime = animTimeInitial;
+        float animationTime = animTimeInitial + partialTick;
 
         if (animTimeInitial < 140 && animTimeInitial >= 0) {
             renderOpeningFoutain(animationTime, length, textureCrack, poseStack, buffer, overlay);

@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.server.block.blockentity;
 
+import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
@@ -36,7 +37,6 @@ public class DarkFountainFullBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, DarkFountainFullBlockEntity entity) {
-        if (!level.isClientSide()) {
             if (entity.animationTimer == 0) {
                 level.playSound(null, pos, SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
             }
@@ -63,11 +63,13 @@ public class DarkFountainFullBlockEntity extends BlockEntity {
             }
 
             if (entity.animationTimer > 140 || entity.animationTimer == -1) {
-                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainFullMusic(entity.worldPosition, false));
-                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainFullWind(entity.worldPosition, false));
+                if (!level.isClientSide()) {
+                    if (Config.darkFountainMusic) {
+                        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainFullMusic(entity.worldPosition, false));
+                    }
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainFullWind(entity.worldPosition, false));
+                }
             }
-            entity.markUpdated();
-        }
     }
 
     @Override

@@ -13,12 +13,18 @@ public class Config {
             .comment("Should Real Knife have canonical damage")
             .define("real_knife_op", false);
 
+    private static final ForgeConfigSpec.BooleanValue DARK_FOUNTAIN_MUSIC = BUILDER
+            .comment("Should music be played in the vicinity of Dark Fountains")
+            .define("dark_fountain_music", true);
+
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean realKnifeOP;
+    public static boolean darkFountainMusic;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         realKnifeOP = REAL_KNIFE_OP.get();
+        darkFountainMusic = DARK_FOUNTAIN_MUSIC.get();
     }
 }
