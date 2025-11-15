@@ -40,7 +40,7 @@ public class CommonEvents {
 
     @SubscribeEvent
     public void levelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase == TickEvent.Phase.START) {
+        if (event.phase == TickEvent.Phase.END) {
             Level level = event.level;
 
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {

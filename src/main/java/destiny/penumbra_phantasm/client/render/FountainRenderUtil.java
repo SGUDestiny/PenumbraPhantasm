@@ -11,12 +11,13 @@ import net.minecraft.world.level.Level;
 
 public class FountainRenderUtil
 {
-	public static void renderOpeningFoutain(float animationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+	public static void renderOpeningFoutain(float partialTick, float initialAnimationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
 		ResourceLocation textureFountainOpeningBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom.png");
 		ResourceLocation textureFountainOpeningMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
 		ResourceLocation textureFountainOpeningBottomShadow = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom_shadow.png");
 		ResourceLocation textureFountainOpeningMiddleShadow = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle_shadow.png");
 
+		float animationTime = initialAnimationTime + partialTick;
 		float expandTime = 5f; // 0.5 seconds at 20 ticks/second
 		float pulsateTime = 130f; // 5 seconds
 		float shrinkTime = 5; // 0.5 seconds (assuming symmetric to expand)

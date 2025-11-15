@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -29,6 +30,8 @@ public class ClientEvents {
 			ClientLevel level = Minecraft.getInstance().level;
 			if(level == null)
 				return;
+
+			float partialTick = event.getPartialTick();
 
 			Camera camera = event.getCamera();
 
@@ -45,17 +48,15 @@ public class ClientEvents {
 						stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
 								fountain.getFountainPos().getZ());
 
-						float animTimeInitial = fountain.animationTimer;
-						float animationTime = animTimeInitial + event.getPartialTick();
+						float animationTime = fountain.animationTimer;
 
-						if(animTimeInitial < 140 && animTimeInitial >= 0)
+						if(animationTime < 140 && animationTime >= 0)
 						{
-							FountainRenderUtil.renderOpeningFoutain(animationTime, length, textureCrack, stack, buffer,
+							FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
 									OverlayTexture.NO_OVERLAY);
 						} else
 						{
-							FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack,
-									event.getPartialTick(), stack, buffer, OverlayTexture.NO_OVERLAY);
+							FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
 						}
 
 						stack.popPose();
