@@ -86,20 +86,20 @@ public class FountainRenderUtil
 		}
 	}
 
-	public static void renderOpenFountain(DarkFountain fountain, Level level, float animationTime, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+	public static void renderOpenFountain(DarkFountain fountain, Level level, float initialAnimationTime, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
 		float pixel = 1f / 16f;
 		float time = (level.getGameTime() + partialTick) * 0.1f;
 		float pulse = 1.0f + 0.1f * (float) Math.sin(time);
 		float pulse_opposite = 1.0f - 0.1f * (float) Math.sin(time);
 		float scaleXZ = 1.0f;
-		float animTimeInitial = fountain.animationTimer;
+		float animationTime = fountain.animationTimer + partialTick;
 		int frame = fountain.getFrame();
 
 		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom.png");
 		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_" + frame + ".png");
 		ResourceLocation textureMiddleEdges = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle_edges/fountain_middle_edges_" + frame + ".png");
 
-		if (animTimeInitial != -1) {
+		if (initialAnimationTime != -1) {
 			scaleXZ = (animationTime - 140) / 5f;
 		}
 
@@ -154,6 +154,52 @@ public class FountainRenderUtil
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 			poseStack.scale(pulse_opposite, 1.0f, pulse_opposite);
 			PenumbraPhantasm.ClientModEvents.fountainEdgesModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
+					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
+			poseStack.popPose();
+		}
+	}
+
+	public static void renderOpenFountainOptimized(DarkFountain fountain, float partialTick, float initialAnimationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+		float pixel = 1f / 16f;
+		float scaleXZ = 1.0f;
+		float animationTime = fountain.animationTimer + partialTick;
+
+		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom.png");
+		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_0.png");
+
+		if (initialAnimationTime != -1) {
+			scaleXZ = (animationTime - 140) / 5f;
+		}
+
+		// Render cracks
+		poseStack.pushPose();
+		poseStack.translate(0.5f, 0.5f, 0.5f);
+		poseStack.translate(0f, -1.95f, 0f);
+		PenumbraPhantasm.ClientModEvents.fountainGroundCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
+		poseStack.popPose();
+
+		// Render bottom
+		poseStack.pushPose();
+		poseStack.translate(0.5f, 0.5f, 0.5f);
+		poseStack.translate(0f, 7 - (4 * pixel), 0f);
+		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
+		PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
+				LightTexture.FULL_BRIGHT, overlay, 1F, 0F, 0F, 1F);
+		poseStack.popPose();
+
+		// Render middle segments
+		for (int segment = 0; segment < length; segment++) {
+			float spriteHeight = 140 * pixel;
+			float offset = spriteHeight + (spriteHeight * segment);
+
+			// Render middle
+			poseStack.pushPose();
+			poseStack.translate(0.5f, 0.5f, 0.5f);
+			poseStack.translate(0f, -20f * pixel, 0f);
+			poseStack.translate(0f, offset, 0f);
+			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
+			PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
 					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
 			poseStack.popPose();
 		}
