@@ -48,11 +48,6 @@ public class DarkFountainBlockEntity extends BlockEntity {
         if (entity.animationTimer >= 0) {
             entity.animationTimer++;
         }
-
-        if (!level.isClientSide()) {
-            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainMusic(entity.worldPosition, false));
-            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(entity.worldPosition)), new ClientBoundSoundPackets.FountainWind(entity.worldPosition, false));
-        }
     }
 
     @Override

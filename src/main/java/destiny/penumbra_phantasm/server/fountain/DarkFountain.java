@@ -15,8 +15,10 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class DarkFountain {
+    public static final String FOUNTAIN_UUID = "fountainUuid";
     public static final String FOUNTAIN_POS = "fountainPos";
     public static final String FOUNTAIN_DIMENSION = "fountainDimension";
     public static final String DESTINATION_POS = "destinationPos";
@@ -25,6 +27,7 @@ public class DarkFountain {
     public static final String FRAME_TIMER = "frameTimer";
     public static final String FRAME = "frame";
 
+    UUID fountainUuid;
     BlockPos fountainPos;
     ResourceKey<Level> fountainDimension;
     BlockPos destinationPos;
@@ -39,7 +42,8 @@ public class DarkFountain {
     @Nullable
     public SoundWrapper windSound = null;
 
-    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame) {
+    public DarkFountain(UUID fountainUuid, BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame) {
+        this.fountainUuid = fountainUuid;
         this.fountainPos = fountainPos;
         this.fountainDimension = fountainDimension;
         this.destinationPos = destinationPos;
@@ -53,6 +57,7 @@ public class DarkFountain {
     {
         CompoundTag tag = new CompoundTag();
 
+        tag.putUUID(FOUNTAIN_UUID, fountainUuid);
         tag.put(FOUNTAIN_POS, NbtUtils.writeBlockPos(fountainPos));
         tag.putString(FOUNTAIN_DIMENSION, fountainDimension.location().toString());
         tag.put(DESTINATION_POS, NbtUtils.writeBlockPos(destinationPos));
@@ -65,6 +70,7 @@ public class DarkFountain {
     }
 
     public static DarkFountain load(CompoundTag tag) {
+        UUID fountainUuid = tag.getUUID(FOUNTAIN_UUID);
         BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
         ResourceKey<Level> fountainDimension = stringToDimension(tag.getString(FOUNTAIN_DIMENSION));
         BlockPos destinationPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS));
@@ -73,7 +79,7 @@ public class DarkFountain {
         int frameTimer = tag.getInt(FRAME_TIMER);
         int frame = tag.getInt(FRAME);
 
-        return new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame);
+        return new DarkFountain(fountainUuid, fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame);
     }
 
     public BlockPos getFountainPos() {
@@ -109,8 +115,6 @@ public class DarkFountain {
     public void tick(Level level)
     {
         if (!level.isClientSide()) {
-            System.out.println(frameTimer);
-
             if (this.animationTimer == 0) {
                 level.playSound(null, getFountainPos(), SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
             }
@@ -138,9 +142,9 @@ public class DarkFountain {
 
             if (this.animationTimer > 140 || this.animationTimer == -1) {
                 if (Config.darkFountainMusic) {
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainMusic(this.getFountainPos(), false));
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainMusic(this.fountainUuid, false));
                 }
-                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainWind(this.getFountainPos(), false));
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainWind(this.fountainUuid, false));
             }
         }
     }

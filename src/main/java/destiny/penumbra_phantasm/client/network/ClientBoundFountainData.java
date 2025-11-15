@@ -57,7 +57,7 @@ public class ClientBoundFountainData
 			int frameTimer = reader.readInt();
 			int frame = reader.readInt();
 
-			DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animationTimer, frameTimer, frame);
+			DarkFountain fountain = new DarkFountain(uuid, fountainPos, fountainDim, targetPos, targetDim, animationTimer, frameTimer, frame);
 
 			return Map.entry(uuid, fountain);
 		});
