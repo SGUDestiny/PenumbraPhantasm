@@ -2,14 +2,13 @@ package destiny.penumbra_phantasm.client.sounds;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
-import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvent;
 
+import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class SoundAccess {
     public static final String EMPTY = PenumbraPhantasm.EMPTY;
@@ -61,16 +60,11 @@ public class SoundAccess {
     }
 
     public static DarkFountain getFountain(UUID fountainUuid) {
-        DarkFountain fountain = null;
-        AtomicReference<DarkFountainCapability> atomicCapability = null;
-        minecraft.level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> atomicCapability.set(cap));
-
-        DarkFountainCapability capability = atomicCapability.get();
-
-        if (capability != null) {
-            fountain = capability.darkFountains.get(fountainUuid);
-        }
-
-        return fountain;
+        return Optional.ofNullable(minecraft.level)
+                .flatMap(level ->
+                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).resolve()
+                ).map(cap ->
+                        cap.darkFountains.get(fountainUuid)
+                ).orElse(null);
     }
 }
