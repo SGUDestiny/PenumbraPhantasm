@@ -1,9 +1,9 @@
 package destiny.penumbra_phantasm.client.sounds;
 
-import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainBlockEntity;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.client.Minecraft;
 
-public abstract class DarkFountainSoundWrapper <T extends DarkFountainBlockEntity> extends SoundWrapper
+public class DarkFountainSoundWrapper<T extends DarkFountain> extends SoundWrapper
 {
     protected static Minecraft minecraft = Minecraft.getInstance();
 
@@ -49,17 +49,17 @@ public abstract class DarkFountainSoundWrapper <T extends DarkFountainBlockEntit
         }
     }
 
-    public static class DarkFountainMusic extends DarkFountainSoundWrapper<DarkFountainBlockEntity>
+    public static class DarkFountainMusic extends DarkFountainSoundWrapper<DarkFountain>
     {
-        public DarkFountainMusic(DarkFountainBlockEntity fountain)
+        public DarkFountainMusic(DarkFountain fountain)
         {
             super(fountain, new DarkFountainMusicSound(fountain, SoundAccess.getFountainMusic(fountain)));
         }
     }
 
-    public static class DarkFountainWind extends DarkFountainSoundWrapper<DarkFountainBlockEntity>
+    public static class DarkFountainWind extends DarkFountainSoundWrapper<DarkFountain>
     {
-        public DarkFountainWind(DarkFountainBlockEntity fountain)
+        public DarkFountainWind(DarkFountain fountain)
         {
             super(fountain, new DarkFountainWindSound(fountain, SoundAccess.getFountainWind(fountain)));
         }

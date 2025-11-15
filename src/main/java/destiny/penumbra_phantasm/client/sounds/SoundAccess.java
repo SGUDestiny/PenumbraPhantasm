@@ -1,8 +1,7 @@
 package destiny.penumbra_phantasm.client.sounds;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainBlockEntity;
-import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainFullBlockEntity;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -15,7 +14,7 @@ public class SoundAccess {
 
     public static void playFountainMusic(BlockPos pos, boolean stop)
     {
-        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountainBlockEntity fountain)
+        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountain fountain)
         {
             if(fountain.musicSound == null)
             {
@@ -29,13 +28,13 @@ public class SoundAccess {
         }
     }
 
-    public static SoundEvent getFountainMusic(DarkFountainBlockEntity fountain) {
+    public static SoundEvent getFountainMusic(DarkFountain fountain) {
         return SoundRegistry.FOUNTAIN_MUSIC.get();
     }
 
     public static void playFountainWind(BlockPos pos, boolean stop)
     {
-        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountainBlockEntity fountain)
+        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountain fountain)
         {
             if(fountain.windSound == null)
             {
@@ -51,17 +50,17 @@ public class SoundAccess {
 
 
 
-    public static SoundEvent getFountainFullWind(DarkFountainFullBlockEntity fountain) {
+    public static SoundEvent getFountainFullWind(DarkFountain fountain) {
         return SoundRegistry.FOUNTAIN_WIND.get();
     }
 
     public static void playFountainFullMusic(BlockPos pos, boolean stop)
     {
-        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountainFullBlockEntity fountain)
+        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountain fountain)
         {
             if(fountain.musicSound == null)
             {
-                fountain.musicSound = new DarkFountainFullSoundWrapper.DarkFountainMusic(fountain);
+                fountain.musicSound = new DarkFountainSoundWrapper.DarkFountainMusic(fountain);
             }
 
             if(stop)
@@ -71,17 +70,17 @@ public class SoundAccess {
         }
     }
 
-    public static SoundEvent getFountainFullMusic(DarkFountainFullBlockEntity fountain) {
+    public static SoundEvent getFountainFullMusic(DarkFountain fountain) {
         return SoundRegistry.FOUNTAIN_MUSIC.get();
     }
 
     public static void playFountainFullWind(BlockPos pos, boolean stop)
     {
-        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountainFullBlockEntity fountain)
+        if(minecraft.level.getBlockEntity(pos) instanceof DarkFountain fountain)
         {
             if(fountain.windSound == null)
             {
-                fountain.windSound = new DarkFountainFullSoundWrapper.DarkFountainWind(fountain);
+                fountain.windSound = new DarkFountainSoundWrapper.DarkFountainWind(fountain);
             }
 
             if(stop)
@@ -91,7 +90,7 @@ public class SoundAccess {
         }
     }
 
-    public static SoundEvent getFountainWind(DarkFountainBlockEntity fountain) {
+    public static SoundEvent getFountainWind(DarkFountain fountain) {
         return SoundRegistry.FOUNTAIN_WIND.get();
     }
 }

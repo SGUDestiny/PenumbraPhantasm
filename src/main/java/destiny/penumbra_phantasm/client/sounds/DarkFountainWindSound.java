@@ -1,13 +1,13 @@
 package destiny.penumbra_phantasm.client.sounds;
 
-import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainBlockEntity;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.sounds.SoundEvent;
 
-public class DarkFountainWindSound extends DarkFountainSound<DarkFountainBlockEntity>{
+public class DarkFountainWindSound extends DarkFountainSound<DarkFountain>{
     private static final float VOLUME_MIN = 0.0F;
     private static final float VOLUME_MAX = 0.2F;
 
-    public DarkFountainWindSound(DarkFountainBlockEntity fountain, SoundEvent soundEvent) {
+    public DarkFountainWindSound(DarkFountain fountain, SoundEvent soundEvent) {
         super(fountain, soundEvent, 23, 32);
         this.looping = true;
         this.volume = VOLUME_MIN;

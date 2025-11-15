@@ -1,6 +1,6 @@
 package destiny.penumbra_phantasm.client.sounds;
 
-import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainBlockEntity;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -10,7 +10,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
 
-public class DarkFountainSound<T extends DarkFountainBlockEntity> extends AbstractTickableSoundInstance {
+public class DarkFountainSound<T extends DarkFountain> extends AbstractTickableSoundInstance {
     protected T fountain;
     protected BlockPos fountainPos;
     protected Minecraft minecraft = Minecraft.getInstance();
@@ -21,10 +21,7 @@ public class DarkFountainSound<T extends DarkFountainBlockEntity> extends Abstra
         super(soundEvent, SoundSource.AMBIENT, SoundInstance.createUnseededRandom());
 
         this.fountain = fountain;
-        this.fountainPos = fountain.getBlockPos();
-        this.x = fountain.getBlockPos().getCenter().x;
-        this.y = fountain.getBlockPos().getCenter().y;
-        this.z = fountain.getBlockPos().getCenter().z;
+        this.fountainPos = fountain.getFountainPos();
         this.relative = true;
         this.fullDistance = fullDistance;
         this.maxDistance = maxDistance;
@@ -33,7 +30,7 @@ public class DarkFountainSound<T extends DarkFountainBlockEntity> extends Abstra
     @Override
     public void tick()
     {
-        if(!(Minecraft.getInstance().level.getBlockEntity(fountainPos) instanceof DarkFountainBlockEntity))
+        if(!(Minecraft.getInstance().level.getBlockEntity(fountainPos) instanceof DarkFountain))
             this.stop();
     }
 
