@@ -1,0 +1,148 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"parent": "minecraft:block/block",
+	"texture_size": [32, 32],
+	"elements": [
+		{
+			"from": [4, 14, 4],
+			"to": [12, 17, 12],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 16, 0]},
+			"faces": {
+				"north": {"uv": [0, 4.5, 4, 6], "texture": "#0"},
+				"east": {"uv": [0, 4.5, 4, 6], "texture": "#0"},
+				"south": {"uv": [0, 4.5, 4, 6], "texture": "#0"},
+				"west": {"uv": [0, 4.5, 4, 6], "texture": "#0"},
+				"up": {"uv": [4, 4, 8, 8], "texture": "#0"},
+				"down": {"uv": [8, 4, 12, 8], "texture": "#0"}
+			}
+		},
+		{
+			"from": [5, 4, 5],
+			"to": [11, 18, 11],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 10, 0]},
+			"faces": {
+				"north": {"uv": [13, 6, 16, 13], "texture": "#0"},
+				"east": {"uv": [13, 6, 16, 13], "texture": "#0"},
+				"south": {"uv": [13, 6, 16, 13], "texture": "#0"},
+				"west": {"uv": [13, 6, 16, 13], "texture": "#0"}
+			}
+		},
+		{
+			"from": [4, 5, 4],
+			"to": [12, 7, 12],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 4, 0]},
+			"faces": {
+				"north": {"uv": [0, 6, 4, 7], "texture": "#0"},
+				"east": {"uv": [0, 6, 4, 7], "texture": "#0"},
+				"south": {"uv": [0, 6, 4, 7], "texture": "#0"},
+				"west": {"uv": [0, 6, 4, 7], "texture": "#0"},
+				"up": {"uv": [0, 7, 4, 11], "texture": "#0"},
+				"down": {"uv": [8, 4, 12, 8], "texture": "#0"}
+			}
+		},
+		{
+			"from": [4, 18, 4],
+			"to": [12, 24, 12],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 19, 0]},
+			"faces": {
+				"north": {"uv": [0, 0, 4, 3], "texture": "#0"},
+				"east": {"uv": [0, 0, 4, 3], "texture": "#0"},
+				"south": {"uv": [0, 0, 4, 3], "texture": "#0"},
+				"west": {"uv": [0, 0, 4, 3], "texture": "#0"},
+				"up": {"uv": [4, 0, 8, 4], "texture": "#0"},
+				"down": {"uv": [8, 0, 12, 4], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6.5, 24, 6.5],
+			"to": [9.5, 25, 9.5],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 21, 0]},
+			"faces": {
+				"north": {"uv": [1.5, 3, 3, 3.5], "texture": "#0"},
+				"east": {"uv": [1.5, 3, 3, 3.5], "texture": "#0"},
+				"south": {"uv": [1.5, 3, 3, 3.5], "texture": "#0"},
+				"west": {"uv": [1.5, 3, 3, 3.5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6.5, 28, 6.5],
+			"to": [9.5, 30, 9.5],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 25, 0]},
+			"faces": {
+				"north": {"uv": [12, 0, 13.5, 1], "texture": "#0"},
+				"east": {"uv": [12, 0, 13.5, 1], "texture": "#0"},
+				"south": {"uv": [12, 0, 13.5, 1], "texture": "#0"},
+				"west": {"uv": [12, 0, 13.5, 1], "texture": "#0"},
+				"up": {"uv": [13.5, 0, 15, 1.5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [4.5, 25, 6.5],
+			"to": [11.5, 28, 9.5],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 22, 0]},
+			"faces": {
+				"north": {"uv": [12, 1.5, 15.5, 3], "texture": "#0"},
+				"east": {"uv": [0, 3, 1.5, 4.5], "texture": "#0"},
+				"south": {"uv": [12, 1.5, 15.5, 3], "texture": "#0"},
+				"west": {"uv": [0, 3, 1.5, 4.5], "texture": "#0"},
+				"up": {"uv": [12, 3, 15.5, 4.5], "texture": "#0"},
+				"down": {"uv": [12, 4.5, 15.5, 6], "texture": "#0"}
+			}
+		},
+		{
+			"from": [3, 0, 3],
+			"to": [13, 4, 13],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [0, 1, 0]},
+			"faces": {
+				"north": {"uv": [4, 8, 9, 10], "texture": "#0"},
+				"east": {"uv": [4, 8, 9, 10], "texture": "#0"},
+				"south": {"uv": [4, 8, 9, 10], "texture": "#0"},
+				"west": {"uv": [4, 8, 9, 10], "texture": "#0"},
+				"up": {"uv": [0, 11, 5, 16], "texture": "#0"},
+				"down": {"uv": [5, 10, 10, 15], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "King",
+			"origin": [0, 9, 0],
+			"color": 0,
+			"children": [0, 1, 2, 3, 4, 5, 6, 7]
+		}
+	]
+}

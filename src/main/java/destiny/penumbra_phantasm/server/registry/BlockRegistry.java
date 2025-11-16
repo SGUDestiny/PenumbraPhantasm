@@ -61,6 +61,62 @@ public class BlockRegistry {
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
 
+    public static final RegistryObject<Block> SCARLET_MARBLE = registerBlock("scarlet_marble",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> DARK_MARBLE = registerBlock("dark_marble",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> SCARLET_MARBLE_PAWN = registerBlock("scarlet_marble_pawn",
+            () -> new ChessPawnBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> SCARLET_MARBLE_ROOK = registerBlock("scarlet_marble_rook",
+            () -> new ChessRookBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> SCARLET_MARBLE_KNIGHT = registerBlock("scarlet_marble_knight",
+            () -> new ChessKnightBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> SCARLET_MARBLE_BISHOP = registerBlock("scarlet_marble_bishop",
+            () -> new ChessBishopBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> SCARLET_MARBLE_QUEEN = registerBlock("scarlet_marble_queen",
+            () -> new ChessQueenBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> SCARLET_MARBLE_KING = registerBlock("scarlet_marble_king",
+            () -> new ChessKingBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> DARK_MARBLE_PAWN = registerBlock("dark_marble_pawn",
+            () -> new ChessPawnBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> DARK_MARBLE_ROOK = registerBlock("dark_marble_rook",
+            () -> new ChessRookBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> DARK_MARBLE_KNIGHT = registerBlock("dark_marble_knight",
+            () -> new ChessKnightBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> DARK_MARBLE_BISHOP = registerBlock("dark_marble_bishop",
+            () -> new ChessBishopBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> DARK_MARBLE_QUEEN = registerBlock("dark_marble_queen",
+            () -> new ChessQueenBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
+
+    public static final RegistryObject<Block> DARK_MARBLE_KING = registerBlock("dark_marble_king",
+            () -> new ChessKingBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
+
     public static final RegistryObject<Block> DARK_FOUNTAIN_OPENING = registerBlock("dark_fountain_opening",
             () -> new DarkFountainOpeningBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission().lightLevel(state -> (15))));
 

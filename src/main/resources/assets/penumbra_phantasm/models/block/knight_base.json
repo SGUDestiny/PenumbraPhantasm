@@ -1,0 +1,160 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
+	"texture_size": [32, 32],
+	"elements": [
+		{
+			"from": [5, 4, 5],
+			"to": [11, 14, 11],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 9, 3, 14], "texture": "#0"},
+				"east": {"uv": [0, 9, 3, 14], "texture": "#0"},
+				"south": {"uv": [0, 9, 3, 14], "texture": "#0"},
+				"west": {"uv": [0, 9, 3, 14], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 12.39523, 14.06774],
+			"to": [10, 18.39523, 16.06774],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 3], "texture": "#0"},
+				"east": {"uv": [15, 4, 14, 7], "texture": "#0"},
+				"south": {"uv": [1, 6, 3, 9], "texture": "#0"},
+				"west": {"uv": [14, 4, 15, 7], "texture": "#0"},
+				"up": {"uv": [1, 6, 0, 8], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [4, 6, 3, 8], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [4, 12.39523, 6.06774],
+			"to": [12, 18.39523, 14.06774],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 3, 4, 6], "texture": "#0"},
+				"east": {"uv": [4, 0, 0, 3], "texture": "#0"},
+				"south": {"uv": [4, 4, 8, 7], "texture": "#0"},
+				"west": {"uv": [0, 0, 4, 3], "texture": "#0"},
+				"up": {"uv": [8, 0, 4, 4], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 3, 8, 7], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [5, 12.39523, 2.06774],
+			"to": [11, 18.39523, 6.06774],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [8, 0, 11, 3], "texture": "#0"},
+				"east": {"uv": [13, 0, 11, 3], "texture": "#0"},
+				"west": {"uv": [11, 0, 13, 3], "texture": "#0"},
+				"up": {"uv": [15.5, 0, 13.5, 3], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 4, 14, 7], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [5, 18.39523, 13.06774],
+			"to": [7, 20.39523, 14.06774],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [12, 3, 13, 4], "texture": "#0"},
+				"east": {"uv": [13, 3, 13.5, 4], "texture": "#0"},
+				"south": {"uv": [14.5, 3, 13.5, 4], "texture": "#0"},
+				"west": {"uv": [13, 3, 13.5, 4], "texture": "#0"},
+				"up": {"uv": [13.5, 3, 14, 4], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [0, 0, 0.5, 1], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [9, 18.39523, 13.06774],
+			"to": [11, 20.39523, 14.06774],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": -22.5, "axis": "x", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [13, 3, 12, 4], "texture": "#0"},
+				"east": {"uv": [13.5, 3, 13, 4], "texture": "#0"},
+				"south": {"uv": [13.5, 3, 14.5, 4], "texture": "#0"},
+				"west": {"uv": [13.5, 3, 13, 4], "texture": "#0"},
+				"up": {"uv": [13.5, 4, 14, 3], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [0, 1, 0.5, 0], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [3, 0, 3],
+			"to": [13, 4, 13],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [3, 8, 8, 10], "texture": "#0"},
+				"east": {"uv": [3, 8, 8, 10], "texture": "#0"},
+				"south": {"uv": [3, 8, 8, 10], "texture": "#0"},
+				"west": {"uv": [3, 8, 8, 10], "texture": "#0"},
+				"up": {"uv": [3, 10, 8, 15], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [8, 11, 13, 16], "rotation": 90, "texture": "#0"}
+			}
+		},
+		{
+			"from": [4, 9, 4],
+			"to": [12, 11, 12],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [4, 7, 8, 8], "texture": "#0"},
+				"east": {"uv": [4, 7, 8, 8], "texture": "#0"},
+				"south": {"uv": [4, 7, 8, 8], "texture": "#0"},
+				"west": {"uv": [4, 7, 8, 8], "texture": "#0"},
+				"up": {"uv": [8, 7, 12, 11], "rotation": 270, "texture": "#0"},
+				"down": {"uv": [12, 7, 16, 11], "rotation": 90, "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Knight",
+			"origin": [32, 9, 0],
+			"color": 0,
+			"children": [
+				0,
+				{
+					"name": "KnightHead",
+					"origin": [29, 14, 2],
+					"rotation": [0, 0, -22.5],
+					"color": 0,
+					"children": [1, 2, 3, 4, 5]
+				},
+				6,
+				7
+			]
+		}
+	]
+}

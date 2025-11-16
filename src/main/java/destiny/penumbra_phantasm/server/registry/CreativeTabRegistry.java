@@ -38,6 +38,23 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.UMBRASTONE.get());
                 output.accept(BlockRegistry.COBBLED_UMBRASTONE.get());
 
+                output.accept(BlockRegistry.SCARLET_MARBLE.get());
+                output.accept(BlockRegistry.DARK_MARBLE.get());
+
+                output.accept(BlockRegistry.SCARLET_MARBLE_PAWN.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_ROOK.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_KNIGHT.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_BISHOP.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_QUEEN.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_KING.get());
+
+                output.accept(BlockRegistry.DARK_MARBLE_PAWN.get());
+                output.accept(BlockRegistry.DARK_MARBLE_ROOK.get());
+                output.accept(BlockRegistry.DARK_MARBLE_KNIGHT.get());
+                output.accept(BlockRegistry.DARK_MARBLE_BISHOP.get());
+                output.accept(BlockRegistry.DARK_MARBLE_QUEEN.get());
+                output.accept(BlockRegistry.DARK_MARBLE_KING.get());
+
                 output.accept(BlockRegistry.DARK_FOUNTAIN_OPENING.get());
                 output.accept(BlockRegistry.DARK_FOUNTAIN.get());
                 output.accept(BlockRegistry.DARK_FOUNTAIN_FULL.get());

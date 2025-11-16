@@ -59,8 +59,7 @@ public class DarkCandyBlock extends Block {
     }
 
     @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext)
-    {
+    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         switch (pState.getValue(FACING)) {
             case NORTH:
                 return SHAPE_NORTH;

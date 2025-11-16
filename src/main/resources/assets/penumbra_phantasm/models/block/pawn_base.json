@@ -1,0 +1,82 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
+	"texture_size": [32, 32],
+	"elements": [
+		{
+			"from": [3, 0, 3],
+			"to": [13, 4, 13],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [45, 1, 8]},
+			"faces": {
+				"north": {"uv": [0, 4, 5, 6], "texture": "#0"},
+				"east": {"uv": [0, 4, 5, 6], "texture": "#0"},
+				"south": {"uv": [0, 4, 5, 6], "texture": "#0"},
+				"west": {"uv": [0, 4, 5, 6], "texture": "#0"},
+				"up": {"uv": [5, 4, 10, 9], "texture": "#0"},
+				"down": {"uv": [10, 4, 15, 9], "texture": "#0"}
+			}
+		},
+		{
+			"from": [5, 4, 5],
+			"to": [11, 10, 11],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [43, 4, 8]},
+			"faces": {
+				"north": {"uv": [0, 6, 3, 9], "texture": "#0"},
+				"east": {"uv": [0, 6, 3, 9], "texture": "#0"},
+				"south": {"uv": [0, 6, 3, 9], "texture": "#0"},
+				"west": {"uv": [0, 6, 3, 9], "texture": "#0"}
+			}
+		},
+		{
+			"from": [4, 7, 4],
+			"to": [12, 9, 12],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [44, 6, 8]},
+			"faces": {
+				"north": {"uv": [0, 9, 4, 10], "texture": "#0"},
+				"east": {"uv": [0, 9, 4, 10], "texture": "#0"},
+				"south": {"uv": [0, 9, 4, 10], "texture": "#0"},
+				"west": {"uv": [0, 9, 4, 10], "texture": "#0"},
+				"up": {"uv": [4, 9, 8, 13], "texture": "#0"},
+				"down": {"uv": [8, 9, 12, 13], "texture": "#0"}
+			}
+		},
+		{
+			"from": [4, 10, 4],
+			"to": [12, 18, 12],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [44, 9, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"east": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"south": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"west": {"uv": [0, 0, 4, 4], "texture": "#0"},
+				"up": {"uv": [8, 0, 12, 4], "texture": "#0"},
+				"down": {"uv": [4, 0, 8, 4], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "Pawn",
+			"origin": [64, 9, 0],
+			"color": 0,
+			"children": [0, 1, 2, 3]
+		}
+	]
+}

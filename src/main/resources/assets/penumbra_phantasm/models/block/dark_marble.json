@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/cube_all_emissive",
+  "textures": {
+    "all": "penumbra_phantasm:block/dark_marble"
+  }
+}

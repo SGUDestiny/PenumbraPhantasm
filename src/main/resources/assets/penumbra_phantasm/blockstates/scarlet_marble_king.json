@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "penumbra_phantasm:block/scarlet_marble_king",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "penumbra_phantasm:block/scarlet_marble_king"
+    },
+    "facing=south": {
+      "model": "penumbra_phantasm:block/scarlet_marble_king",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "penumbra_phantasm:block/scarlet_marble_king",
+      "y": 270
+    }
+  }
+}

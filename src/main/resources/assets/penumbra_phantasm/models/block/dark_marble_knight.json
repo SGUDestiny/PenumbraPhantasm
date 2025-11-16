@@ -1,0 +1,10 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"parent": "penumbra_phantasm:block/knight_base",
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"0": "penumbra_phantasm:block/dark_marble_knight",
+		"particle": "penumbra_phantasm:block/dark_marble_knight"
+	}
+}

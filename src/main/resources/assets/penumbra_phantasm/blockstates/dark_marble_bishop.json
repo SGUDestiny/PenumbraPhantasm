@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "penumbra_phantasm:block/dark_marble_bishop",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "penumbra_phantasm:block/dark_marble_bishop"
+    },
+    "facing=south": {
+      "model": "penumbra_phantasm:block/dark_marble_bishop",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "penumbra_phantasm:block/dark_marble_bishop",
+      "y": 270
+    }
+  }
+}

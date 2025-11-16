@@ -1,0 +1,10 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"parent": "penumbra_phantasm:block/queen_base",
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"0": "penumbra_phantasm:block/scarlet_marble_queen",
+		"particle": "penumbra_phantasm:block/scarlet_marble_queen"
+	}
+}
