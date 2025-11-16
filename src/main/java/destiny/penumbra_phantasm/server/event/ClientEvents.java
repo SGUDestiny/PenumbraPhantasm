@@ -10,7 +10,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,9 +54,10 @@ public class ClientEvents {
 							double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
 							if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
-								FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
+								//FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
+								FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
 							} else {
-								FountainRenderUtil.renderOpenFountainOptimized(fountain, partialTick, animationTime, length, textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
+								//FountainRenderUtil.renderOpenFountainOptimized(fountain, partialTick, animationTime, length, textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
 							}
 						}
 

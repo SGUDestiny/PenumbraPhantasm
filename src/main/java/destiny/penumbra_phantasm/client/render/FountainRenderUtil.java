@@ -21,8 +21,8 @@ public class FountainRenderUtil
 		float expandTime = 5f; // 0.5 seconds at 20 ticks/second
 		float pulsateTime = 130f; // 5 seconds
 		float shrinkTime = 5; // 0.5 seconds (assuming symmetric to expand)
-		float pulseAmp = 0.025f;
-		float pulseFreq = 2.5f;
+		float pulseAmp = 0.04f;
+		float pulseFreq = 2.0f;
 
 		float baseScale = 1f;
 		boolean applyPulse = false;
@@ -203,5 +203,15 @@ public class FountainRenderUtil
 					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
 			poseStack.popPose();
 		}
+	}
+
+	public static void renderLightWorldOpenFountain(ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+		// Render cracks
+		poseStack.pushPose();
+		poseStack.translate(0.5f, 0.5f, 0.5f);
+		poseStack.translate(0f, -1.95f, 0f);
+		PenumbraPhantasm.ClientModEvents.fountainGroundCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
+		poseStack.popPose();
 	}
 }
