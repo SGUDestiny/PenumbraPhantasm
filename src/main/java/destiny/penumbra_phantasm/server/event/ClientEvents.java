@@ -39,25 +39,42 @@ public class ClientEvents {
 			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
 				cap.darkFountains.forEach((key, fountain) ->
 					{
-						stack.pushPose();
-						stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-						stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
-								fountain.getFountainPos().getZ());
-
 						float animationTime = fountain.animationTimer;
 
-						if(animationTime < 140 && animationTime >= 0)
-						{
-							FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
-									OverlayTexture.NO_OVERLAY);
-						} else {
-							double viewDistance = event.getLevelRenderer().getLastViewDistance();
+						if (level.dimension() == fountain.getFountainDimension()) {
+							stack.pushPose();
+							stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
+							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
+									fountain.getFountainPos().getZ());
 
-							if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
-								//FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
-								FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
+							if (animationTime < 140 && animationTime >= 0) {
+								FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
+										OverlayTexture.NO_OVERLAY);
 							} else {
-								//FountainRenderUtil.renderOpenFountainOptimized(fountain, partialTick, animationTime, length, textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
+								double viewDistance = event.getLevelRenderer().getLastViewDistance();
+
+								if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
+									FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
+								}
+							}
+						}
+						if (level.dimension() == fountain.getDestinationDimension()) {
+							stack.pushPose();
+							stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
+							stack.translate(fountain.getDestinationPos().getX(), fountain.getDestinationPos().getY(),
+									fountain.getDestinationPos().getZ());
+
+							if (animationTime < 140 && animationTime >= 0) {
+								FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
+										OverlayTexture.NO_OVERLAY);
+							} else {
+								double viewDistance = event.getLevelRenderer().getLastViewDistance();
+
+								if (fountain.getDestinationPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
+									FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
+								} else {
+									FountainRenderUtil.renderOpenFountainOptimized(fountain, partialTick, animationTime, length, textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
+								}
 							}
 						}
 
