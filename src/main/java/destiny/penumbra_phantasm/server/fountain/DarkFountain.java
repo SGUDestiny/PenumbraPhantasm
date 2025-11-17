@@ -10,9 +10,11 @@ import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -173,7 +175,11 @@ public class DarkFountain {
 
                         if (!this.teleportedEntities.contains(entity.getUUID())) {
                             if (destinationFountain != null) {
-                                destinationFountain.teleportedEntities.add(entity.changeDimension(destinationLevel).getUUID());
+                                if (entity instanceof ServerPlayer player) {
+                                    destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel).getUUID());
+                                } else {
+                                    destinationFountain.teleportedEntities.add(teleportEntity(entity, destinationLevel).getUUID());
+                                }
                             }
                         }
                         teleportBoxEntities.add(entity.getUUID());
@@ -206,6 +212,17 @@ public class DarkFountain {
                 level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), fountainPos.getX() + 0.5f, fountainPos.getY(), fountainPos.getZ() + 0.5f, ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f), ModUtil.getBoundRandomFloatStatic(level, 0f, 0.1f), ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f));
             }
         }
+    }
+
+    public Entity teleportPlayer(ServerPlayer player, ServerLevel destinationLevel) {
+        player.teleportTo(destinationLevel, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), (float)Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270), player.getXRot());
+        player.connection.send(new ClientboundSetEntityMotionPacket(player));
+
+        return player;
+    }
+
+    public Entity teleportEntity(Entity entity, ServerLevel destinationLevel) {
+        return entity.changeDimension(destinationLevel);
     }
 
     public void playMusic()
