@@ -19,7 +19,7 @@ public class FountainRenderUtil
 
 		float animationTime = initialAnimationTime + partialTick;
 		float expandTime = 5f; // 0.5 seconds at 20 ticks/second
-		float pulsateTime = 130f; // 5 seconds
+		float pulsateTime = 120f; // 5 seconds
 		float shrinkTime = 5; // 0.5 seconds (assuming symmetric to expand)
 		float pulseAmp = 0.04f;
 		float pulseFreq = 2.0f;

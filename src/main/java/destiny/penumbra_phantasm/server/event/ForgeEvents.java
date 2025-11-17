@@ -13,8 +13,9 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = PenumbraPhantasm.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeEvents {
     @SubscribeEvent
-    public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event)
-    {
-        event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountains"), new GenericProvider<>(CapabilityRegistry.DARK_FOUNTAIN, new DarkFountainCapability()));
+    public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event) {
+        if (event.getObject().dimension().location().toString().equals("minecraft:overworld")) {
+            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountains"), new GenericProvider<>(CapabilityRegistry.DARK_FOUNTAIN, new DarkFountainCapability()));
+        }
     }
 }

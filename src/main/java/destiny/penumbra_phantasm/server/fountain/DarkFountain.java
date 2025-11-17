@@ -139,11 +139,7 @@ public class DarkFountain {
                 this.animationTimer++;
             }
 
-            if (this.animationTimer > 140 || this.animationTimer == -1) {
-                if (level.getGameTime() % 5 == 0) {
-                    level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), fountainPos.getX(), fountainPos.getY() - 0.5f, fountainPos.getZ(), -0.15 + level.random.nextDouble() * 0.3, 0f, -0.15 + level.random.nextDouble() * 0.3);
-                }
-
+            if (this.animationTimer > 130 || this.animationTimer == -1) {
                 if (Config.darkFountainMusic) {
                     //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainMusic(this.fountainUuid, false));
                 }
@@ -151,7 +147,7 @@ public class DarkFountain {
             }
         }
 
-        if (this.animationTimer > 140 || this.animationTimer == -1) {
+        if (this.animationTimer > 125 || this.animationTimer == -1) {
             if (level.getGameTime() % 2 == 0) {
                 level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), fountainPos.getX() + 0.5f, fountainPos.getY(), fountainPos.getZ() + 0.5f, ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f), ModUtil.getBoundRandomFloatStatic(level, 0f, 0.1f), ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f));
                 level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), fountainPos.getX() + 0.5f, fountainPos.getY(), fountainPos.getZ() + 0.5f, ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f), ModUtil.getBoundRandomFloatStatic(level, 0f, 0.1f), ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f));

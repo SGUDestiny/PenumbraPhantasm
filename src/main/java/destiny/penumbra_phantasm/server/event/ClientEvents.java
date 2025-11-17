@@ -47,7 +47,7 @@ public class ClientEvents {
 							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
 									fountain.getFountainPos().getZ());
 
-							if (animationTime < 140 && animationTime >= 0) {
+							if (animationTime < 130 && animationTime >= 0) {
 								FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
 										OverlayTexture.NO_OVERLAY);
 							} else {
@@ -64,7 +64,7 @@ public class ClientEvents {
 							stack.translate(fountain.getDestinationPos().getX(), fountain.getDestinationPos().getY(),
 									fountain.getDestinationPos().getZ());
 
-							if (animationTime < 140 && animationTime >= 0) {
+							if (animationTime < 130 && animationTime >= 0) {
 								FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
 										OverlayTexture.NO_OVERLAY);
 							} else {
