@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 
@@ -134,6 +135,11 @@ public class DarkFountain {
     public void tick(Level level)
     {
         if (!level.isClientSide()) {
+            if (level instanceof ServerLevel serverLevel) {
+                ChunkPos fountainChunk = serverLevel.getChunk(destinationPos).getPos();
+                serverLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
+            }
+
             if (this.animationTimer == 0) {
                 level.playSound(null, getFountainPos(), SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
             }
