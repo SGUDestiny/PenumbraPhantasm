@@ -37,6 +37,8 @@ public class ClientBoundFountainData
 			writer.writeInt(fountain.getAnimationTimer());
 			writer.writeInt(fountain.getFrameTimer());
 			writer.writeInt(fountain.getFrame());
+
+			writer.writeCollection(fountain.teleportedEntities, FriendlyByteBuf::writeUUID);
 		});
 	}
 
@@ -53,7 +55,9 @@ public class ClientBoundFountainData
 			int frameTimer = reader.readInt();
 			int frame = reader.readInt();
 
-			DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animationTimer, frameTimer, frame);
+			HashSet<UUID> teleportedEntities = reader.readCollection(ii -> new HashSet<>(), FriendlyByteBuf::readUUID);
+
+			DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animationTimer, frameTimer, frame, teleportedEntities);
 
 			return Map.entry(fountainPos, fountain);
 		});

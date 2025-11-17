@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.UUID;
 
 public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
@@ -35,8 +36,8 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         return objectsTag;
     }
 
-    public void addDarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame) {
-        this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame));
+    public void addDarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame, HashSet<UUID> teleportedEntities) {
+        this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, teleportedEntities));
     }
 
     public void removeDarkFountain(BlockPos fountainPos) {

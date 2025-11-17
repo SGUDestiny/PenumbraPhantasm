@@ -31,9 +31,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class KnifeItem extends SwordItem {
     public boolean isSingleUse;
@@ -141,12 +139,14 @@ public class KnifeItem extends SwordItem {
                         BlockPos fountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, player.getOnPos());
 
                         //Make Light World fountain
-                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(player.getOnPos().above(), level.dimension(), fountainPos, finalTarget, 0, 0, 0));
+                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(player.getOnPos().above(), level.dimension(), fountainPos, finalTarget, 0, 0, 0, new HashSet<>()));
+
+                        targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
 
                         //Make Dark World fountain
                         targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(
                                 cap -> cap.addDarkFountain(fountainPos,
-                                        targetLevel.dimension(), player.getOnPos().above(), level.dimension(), 0, 0, 0));
+                                        targetLevel.dimension(), player.getOnPos().above(), level.dimension(), 0, 0, 0, new HashSet<>()));
 
                         targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
                         player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);

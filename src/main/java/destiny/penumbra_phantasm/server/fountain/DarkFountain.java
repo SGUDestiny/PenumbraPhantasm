@@ -3,19 +3,25 @@ package destiny.penumbra_phantasm.server.fountain;
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.UUID;
 
 public class DarkFountain {
@@ -26,6 +32,7 @@ public class DarkFountain {
     public static final String ANIMATION_TIMER = "animationTimer";
     public static final String FRAME_TIMER = "frameTimer";
     public static final String FRAME = "frame";
+    public static final String TELEPORTED_ENTITIES = "teleportedEntities";
 
     BlockPos fountainPos;
     ResourceKey<Level> fountainDimension;
@@ -36,12 +43,14 @@ public class DarkFountain {
     public int frameTimer;
     public int frame;
 
+    public HashSet<UUID> teleportedEntities;
+
     @Nullable
     public SoundWrapper musicSound = null;
     @Nullable
     public SoundWrapper windSound = null;
 
-    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame) {
+    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame, HashSet<UUID> teleportedEntities) {
         this.fountainPos = fountainPos;
         this.fountainDimension = fountainDimension;
         this.destinationPos = destinationPos;
@@ -49,6 +58,7 @@ public class DarkFountain {
         this.animationTimer = animationTimer;
         this.frameTimer = frameTimer;
         this.frame = frame;
+        this.teleportedEntities = teleportedEntities;
     }
 
     public CompoundTag save()
@@ -62,6 +72,11 @@ public class DarkFountain {
         tag.putInt(ANIMATION_TIMER, animationTimer);
         tag.putInt(FRAME_TIMER, frameTimer);
         tag.putInt(FRAME, frame);
+        ListTag teleportedEntitiesList = new ListTag();
+        for (UUID uuid : teleportedEntities) {
+            teleportedEntitiesList.add(StringTag.valueOf(uuid.toString()));
+        }
+        tag.put(TELEPORTED_ENTITIES, teleportedEntitiesList);
 
         return tag;
     }
@@ -74,8 +89,14 @@ public class DarkFountain {
         int animationTimer = tag.getInt(ANIMATION_TIMER);
         int frameTimer = tag.getInt(FRAME_TIMER);
         int frame = tag.getInt(FRAME);
+        HashSet<UUID> teleportedEntities = new HashSet<>();
+        ListTag teleportedEntitiesTag = tag.getList(TELEPORTED_ENTITIES, Tag.TAG_STRING);
+        for (Tag tg : teleportedEntitiesTag) {
+            UUID uuid = UUID.fromString(tg.getAsString());
+            teleportedEntities.add(uuid);
+        }
 
-        return new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame);
+        return new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, teleportedEntities);
     }
 
     public BlockPos getFountainPos() {
@@ -136,7 +157,39 @@ public class DarkFountain {
                 this.animationTimer++;
             }
 
-            if (this.animationTimer > 130 || this.animationTimer == -1) {
+            if (this.animationTimer > 125 || this.animationTimer == -1) {
+                AABB teleportBox = new AABB(fountainPos).inflate(1);
+                HashSet<UUID> teleportBoxEntities = new HashSet<>();
+
+                ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
+                if (destinationLevel == null) {
+                    return;
+                }
+
+                destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+                    DarkFountain destinationFountain = cap.darkFountains.get(this.destinationPos);
+
+                    for (Entity entity : level.getEntitiesOfClass(Entity.class, teleportBox)) {
+
+                        if (!this.teleportedEntities.contains(entity.getUUID())) {
+                            if (destinationFountain != null) {
+                                destinationFountain.teleportedEntities.add(entity.changeDimension(destinationLevel).getUUID());
+                            }
+                        }
+                        teleportBoxEntities.add(entity.getUUID());
+                    }
+                });
+
+                HashSet<UUID> newTeleportedEntities = new HashSet<>();
+
+                for (UUID teleportedEntities : teleportBoxEntities) {
+                    if (teleportBoxEntities.contains(teleportedEntities)) {
+                        newTeleportedEntities.add(teleportedEntities);
+                    }
+                }
+
+                this.teleportedEntities = newTeleportedEntities;
+
                 if (Config.darkFountainMusic) {
                     //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainMusic(this.fountainUuid, false));
                 }
