@@ -5,6 +5,7 @@ import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 
 import java.util.Optional;
@@ -15,9 +16,9 @@ public class SoundAccess {
 
     protected static Minecraft minecraft = Minecraft.getInstance();
 
-    public static void playFountainMusic(UUID fountainUuid, boolean stop)
+    public static void playFountainMusic(BlockPos fountainPos, boolean stop)
     {
-        DarkFountain fountain = getFountain(fountainUuid);
+        DarkFountain fountain = getFountain(fountainPos);
 
         if(fountain != null)
         {
@@ -37,9 +38,9 @@ public class SoundAccess {
         return SoundRegistry.FOUNTAIN_MUSIC.get();
     }
 
-    public static void playFountainWind(UUID fountainUuid, boolean stop)
+    public static void playFountainWind(BlockPos fountainPos, boolean stop)
     {
-        DarkFountain fountain = getFountain(fountainUuid);
+        DarkFountain fountain = getFountain(fountainPos);
 
         if(fountain != null)
         {
@@ -59,12 +60,12 @@ public class SoundAccess {
         return SoundRegistry.FOUNTAIN_WIND.get();
     }
 
-    public static DarkFountain getFountain(UUID fountainUuid) {
+    public static DarkFountain getFountain(BlockPos fountainPos) {
         return Optional.ofNullable(minecraft.level)
                 .flatMap(level ->
                         level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).resolve()
                 ).map(cap ->
-                        cap.darkFountains.get(fountainUuid)
+                        cap.darkFountains.get(fountainPos)
                 ).orElse(null);
     }
 }

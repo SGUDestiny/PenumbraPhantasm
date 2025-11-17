@@ -2,11 +2,9 @@ package destiny.penumbra_phantasm.server.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
-import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import net.minecraft.core.BlockPos;
@@ -31,7 +29,6 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.ForgeMod;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Iterator;
@@ -78,7 +75,7 @@ public class KnifeItem extends SwordItem {
             cap = lazyCapability.resolve().get();
         else return InteractionResultHolder.fail(stack); // If capability isn't present
 
-        for(Map.Entry<UUID, DarkFountain> entry : cap.darkFountains.entrySet())
+        for(Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet())
         {
             if(entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 256)
             {
@@ -144,11 +141,11 @@ public class KnifeItem extends SwordItem {
                         BlockPos fountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, player.getOnPos());
 
                         //Make Light World fountain
-                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(uuid, player.getOnPos().above(), level.dimension(), fountainPos, finalTarget, 0, 0, 0));
+                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(player.getOnPos().above(), level.dimension(), fountainPos, finalTarget, 0, 0, 0));
 
                         //Make Dark World fountain
                         targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(
-                                cap -> cap.addDarkFountain(UUID.randomUUID(), fountainPos,
+                                cap -> cap.addDarkFountain(fountainPos,
                                         targetLevel.dimension(), player.getOnPos().above(), level.dimension(), 0, 0, 0));
 
                         targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);

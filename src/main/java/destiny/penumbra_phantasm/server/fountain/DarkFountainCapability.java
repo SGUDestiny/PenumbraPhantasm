@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.fountain;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -13,7 +14,7 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
 
     private static final String DARK_FOUNTAINS = "dark_fountains";
 
-    public HashMap<UUID, DarkFountain> darkFountains = new HashMap<>();
+    public HashMap<BlockPos, DarkFountain> darkFountains = new HashMap<>();
 
     @Override
     public CompoundTag serializeNBT() {
@@ -27,19 +28,19 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
     private CompoundTag serializeDarkFountains() {
         CompoundTag objectsTag = new CompoundTag();
 
-        this.darkFountains.forEach((uuid, fountain) -> {
-            objectsTag.put(uuid.toString(), fountain.save());
+        this.darkFountains.forEach((pos, fountain) -> {
+            objectsTag.put(NbtUtils.writeBlockPos(pos).toString(), fountain.save());
         });
 
         return objectsTag;
     }
 
-    public void addDarkFountain(UUID uuid, BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame) {
-        this.darkFountains.put(uuid, new DarkFountain(uuid, fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame));
+    public void addDarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame) {
+        this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame));
     }
 
-    public void removeDarkFountain(UUID uuid) {
-        this.darkFountains.remove(uuid);
+    public void removeDarkFountain(BlockPos fountainPos) {
+        this.darkFountains.remove(fountainPos);
     }
 
     @Override
@@ -49,7 +50,7 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
 
     private void deserializeDarkFountains(CompoundTag tag) {
         for(String key : tag.getAllKeys()) {
-            this.darkFountains.put(UUID.fromString(key), DarkFountain.load(tag.getCompound(key)));
+            this.darkFountains.put(NbtUtils.readBlockPos(tag.getCompound(key)), DarkFountain.load(tag.getCompound(key)));
         }
     }
 }

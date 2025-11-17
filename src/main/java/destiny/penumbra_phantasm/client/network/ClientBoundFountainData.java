@@ -16,9 +16,9 @@ import java.util.function.Supplier;
 
 public class ClientBoundFountainData
 {
-	public HashMap<UUID, DarkFountain> fountains;
+	public HashMap<BlockPos, DarkFountain> fountains;
 
-	public ClientBoundFountainData(HashMap<UUID, DarkFountain> fountains)
+	public ClientBoundFountainData(HashMap<BlockPos, DarkFountain> fountains)
 	{
 		this.fountains = fountains;
 	}
@@ -27,8 +27,6 @@ public class ClientBoundFountainData
 	{
 		buffer.writeCollection(this.fountains.entrySet(), (writer, entry) -> {
 			DarkFountain fountain = entry.getValue();
-
-			writer.writeUUID(entry.getKey());
 
 			writer.writeBlockPos(fountain.getFountainPos());
 			writer.writeResourceKey(fountain.getFountainDimension());
@@ -44,9 +42,7 @@ public class ClientBoundFountainData
 
 	public static ClientBoundFountainData decode(FriendlyByteBuf buffer)
 	{
-		List<Map.Entry<UUID, DarkFountain>> darkFountains = buffer.readCollection(i -> new ArrayList<>(), reader -> {
-			UUID uuid = reader.readUUID();
-
+		List<Map.Entry<BlockPos, DarkFountain>> darkFountains = buffer.readCollection(i -> new ArrayList<>(), reader -> {
 			BlockPos fountainPos = reader.readBlockPos();
 			ResourceKey<Level> fountainDim = reader.readResourceKey(Registries.DIMENSION);
 
@@ -57,11 +53,11 @@ public class ClientBoundFountainData
 			int frameTimer = reader.readInt();
 			int frame = reader.readInt();
 
-			DarkFountain fountain = new DarkFountain(uuid, fountainPos, fountainDim, targetPos, targetDim, animationTimer, frameTimer, frame);
+			DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animationTimer, frameTimer, frame);
 
-			return Map.entry(uuid, fountain);
+			return Map.entry(fountainPos, fountain);
 		});
-		HashMap<UUID, DarkFountain> fountainMap = new HashMap<>();
+		HashMap<BlockPos, DarkFountain> fountainMap = new HashMap<>();
 		darkFountains.forEach(entry -> fountainMap.put(entry.getKey(), entry.getValue()));
 
 		return new ClientBoundFountainData(fountainMap);
