@@ -141,8 +141,6 @@ public class KnifeItem extends SwordItem {
                         //Make Light World fountain
                         level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(player.getOnPos().above(), level.dimension(), fountainPos, finalTarget, 0, 0, 0, new HashSet<>()));
 
-                        targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
-
                         //Make Dark World fountain
                         targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(
                                 cap -> cap.addDarkFountain(fountainPos,
