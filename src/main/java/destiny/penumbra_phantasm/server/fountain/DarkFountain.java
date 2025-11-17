@@ -172,7 +172,6 @@ public class DarkFountain {
                     DarkFountain destinationFountain = cap.darkFountains.get(this.destinationPos);
 
                     for (Entity entity : level.getEntitiesOfClass(Entity.class, teleportBox)) {
-
                         if (!this.teleportedEntities.contains(entity.getUUID())) {
                             if (destinationFountain != null) {
                                 if (entity instanceof ServerPlayer player) {
@@ -188,9 +187,9 @@ public class DarkFountain {
 
                 HashSet<UUID> newTeleportedEntities = new HashSet<>();
 
-                for (UUID teleportedEntities : teleportBoxEntities) {
-                    if (teleportBoxEntities.contains(teleportedEntities)) {
-                        newTeleportedEntities.add(teleportedEntities);
+                for (UUID entity : teleportedEntities) {
+                    if (teleportBoxEntities.contains(entity)) {
+                        newTeleportedEntities.add(entity);
                     }
                 }
 
