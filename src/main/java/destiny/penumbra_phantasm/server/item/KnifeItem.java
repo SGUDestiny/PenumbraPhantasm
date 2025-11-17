@@ -9,11 +9,13 @@ import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -25,8 +27,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Iterator;
@@ -116,7 +121,7 @@ public class KnifeItem extends SwordItem {
                 if (!level.getBlockState(player.getOnPos()).isAir()) {
                     if (!level.isClientSide()) {
                         UUID uuid = UUID.randomUUID();
-                        Iterator<ResourceKey<Level>> set = player.level().getServer().levelKeys().iterator();
+                        Iterator<ResourceKey<Level>> set = level.getServer().levelKeys().iterator();
                         ResourceKey<Level> target = null;
                         while(set.hasNext()) {
                             ResourceKey<Level> current = set.next();
@@ -129,8 +134,21 @@ public class KnifeItem extends SwordItem {
                         }
 
                         ResourceKey<Level> finalTarget = target;
-                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(uuid, player.getOnPos().above(), player.level().dimension(), player.getOnPos().above(), finalTarget, 0, 0, 0));
+                        ServerLevel targetLevel = level.getServer().getLevel(finalTarget);
+                        if(targetLevel == null)
+                            return;
 
+                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(uuid, player.getOnPos().above(), level.dimension(), player.getOnPos().above(), finalTarget, 0, 0, 0));
+
+                        ChunkPos fountainChunk = level.getChunk(player.blockPosition()).getPos();
+                        targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
+
+                        BlockPos fountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, player.getOnPos());
+                        targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(
+                                cap -> cap.addDarkFountain(UUID.randomUUID(), fountainPos,
+                                        targetLevel.dimension(), player.getOnPos().above(), level.dimension(), 0, 0, 0));
+
+                        targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
                         player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
 
                         if (needsNetherStar) {

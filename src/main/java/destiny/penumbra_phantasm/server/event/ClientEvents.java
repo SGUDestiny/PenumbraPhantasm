@@ -9,6 +9,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -41,7 +43,7 @@ public class ClientEvents {
 					{
 						float animationTime = fountain.animationTimer;
 
-						if (level.dimension() == fountain.getFountainDimension()) {
+						if (level.dimension() != ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))) {
 							stack.pushPose();
 							stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
 							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
@@ -58,11 +60,12 @@ public class ClientEvents {
 								}
 							}
 						}
-						if (level.dimension() == fountain.getDestinationDimension()) {
+						else
+						{
 							stack.pushPose();
 							stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-							stack.translate(fountain.getDestinationPos().getX(), fountain.getDestinationPos().getY(),
-									fountain.getDestinationPos().getZ());
+							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
+									fountain.getFountainPos().getZ());
 
 							if (animationTime < 130 && animationTime >= 0) {
 								FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
