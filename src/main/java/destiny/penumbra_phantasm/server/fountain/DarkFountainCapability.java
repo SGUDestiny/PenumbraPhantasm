@@ -30,7 +30,7 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         CompoundTag objectsTag = new CompoundTag();
 
         this.darkFountains.forEach((pos, fountain) -> {
-            objectsTag.put(pos.toString(), fountain.save());
+            objectsTag.put(NbtUtils.writeBlockPos(pos).toString(), fountain.save());
         });
 
         return objectsTag;

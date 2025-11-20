@@ -136,7 +136,7 @@ public class KnifeItem extends SwordItem {
                         ChunkPos fountainChunk = level.getChunk(player.blockPosition()).getPos();
                         targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
 
-                        BlockPos fountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, player.getOnPos());
+                        BlockPos fountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
 
                         //Make Light World fountain
                         level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(player.getOnPos().above(), level.dimension(), fountainPos, finalTarget, 0, 0, 0, new HashSet<>()));
