@@ -2,7 +2,9 @@ package destiny.penumbra_phantasm.server.fountain;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -28,10 +30,12 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
 
     private CompoundTag serializeDarkFountains() {
         CompoundTag objectsTag = new CompoundTag();
+        ListTag fountainTag = new ListTag();
 
         this.darkFountains.forEach((pos, fountain) -> {
-            objectsTag.put(NbtUtils.writeBlockPos(pos).toString(), fountain.save());
+            fountainTag.add(fountain.save());
         });
+        objectsTag.put("fountains", fountainTag);
 
         return objectsTag;
     }
@@ -49,9 +53,15 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         deserializeDarkFountains(tag.getCompound(DARK_FOUNTAINS));
     }
 
-    private void deserializeDarkFountains(CompoundTag tag) {
-        for(String key : tag.getAllKeys()) {
-            this.darkFountains.put(NbtUtils.readBlockPos(tag.getCompound(key)), DarkFountain.load(tag.getCompound(key)));
+    private void deserializeDarkFountains(CompoundTag tag)
+    {
+        ListTag fountainTags = tag.getList("fountains", ListTag.TAG_COMPOUND);
+        for(Tag nbt : fountainTags)
+        {
+            CompoundTag fountainTag = ((CompoundTag) nbt);
+            DarkFountain fountain = DarkFountain.load(fountainTag);
+
+            this.darkFountains.put(fountain.fountainPos, fountain);
         }
     }
 }
