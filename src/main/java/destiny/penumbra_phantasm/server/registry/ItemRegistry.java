@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.item.KnifeItem;
 import destiny.penumbra_phantasm.server.item.FriendItem;
+import destiny.penumbra_phantasm.server.item.NetheriteKnifeItem;
 import destiny.penumbra_phantasm.server.item.RealKnifeItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -19,16 +20,16 @@ public class ItemRegistry {
     }
 
     public static final RegistryObject<Item> GOLD_KNIFE = ITEMS.register("gold_knife",
-            () -> new KnifeItem(Tiers.GOLD, 0, -2, true, true, basicItem()));
+            () -> new KnifeItem(Tiers.GOLD, 2, -2, true, true, basicItem()));
 
     public static final RegistryObject<Item> IRON_KNIFE = ITEMS.register("iron_knife",
-            () -> new KnifeItem(Tiers.IRON, 0, -2, true, true, basicItem()));
+            () -> new KnifeItem(Tiers.IRON, 3, -2, true, true, basicItem()));
 
     public static final RegistryObject<Item> DIAMOND_KNIFE = ITEMS.register("diamond_knife",
-            () -> new KnifeItem(Tiers.DIAMOND, 0, -2, true, true, basicItem()));
+            () -> new KnifeItem(Tiers.DIAMOND, 4, -2, true, true, basicItem()));
 
     public static final RegistryObject<Item> NETHERITE_KNIFE = ITEMS.register("netherite_knife",
-            () -> new KnifeItem(Tiers.NETHERITE, 0, -2, true, true, basicItem()));
+            () -> new NetheriteKnifeItem(Tiers.NETHERITE, 5, -2, true, true, basicItem()));
 
     public static final RegistryObject<Item> REAL_KNIFE = ITEMS.register("real_knife",
             () -> new RealKnifeItem(Tiers.NETHERITE, 4,-2, true, true, basicItem()));

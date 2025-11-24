@@ -39,5 +39,10 @@
   "sound.penumbra_phantasm.fountain_make": "The ground cracks open with determination",
   "sound.penumbra_phantasm.fountain_target": "Fountain searches for location",
   "sound.penumbra_phantasm.fountain_wind": "Strong winds blow from the fountain",
-  "sound.penumbra_phantasm.fountain_music": "Being near a dark fountain fills you with determination"
+  "sound.penumbra_phantasm.real_knife_slash": "Air is slashed with determination",
+  "sound.penumbra_phantasm.real_knife_hit": "Heavy damage",
+  "sound.penumbra_phantasm.level_up": "Your LOVE has increased",
+
+  "tooltip.penumbra_phantasm.netherite_knife.lv": "LV:",
+  "tooltip.penumbra_phantasm.netherite_knife.exp": "EXP:"
 }

@@ -17,6 +17,7 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> FOUNTAIN_MUSIC = registerSoundEvent("fountain_music");
     public static RegistryObject<SoundEvent> REAL_KNIFE_SLASH = registerSoundEvent("real_knife_slash");
     public static RegistryObject<SoundEvent> REAL_KNIFE_HIT = registerSoundEvent("real_knife_hit");
+    public static RegistryObject<SoundEvent> LEVEL_UP = registerSoundEvent("level_up");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {

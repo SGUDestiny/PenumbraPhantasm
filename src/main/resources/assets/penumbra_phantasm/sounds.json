@@ -40,5 +40,12 @@
     [
       "penumbra_phantasm:real_knife_hit"
     ]
+  },
+  "level_up": {
+    "subtitle": "sound.penumbra_phantasm.level_up",
+    "sounds":
+    [
+      "penumbra_phantasm:level_up"
+    ]
   }
 }
