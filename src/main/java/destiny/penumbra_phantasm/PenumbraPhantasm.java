@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm;
 
 import com.mojang.logging.LogUtils;
 import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
+import destiny.penumbra_phantasm.client.render.DarknessOverlay;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainFullBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainOpeningBlockEntityRenderer;
@@ -18,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -106,6 +108,12 @@ public class PenumbraPhantasm
                     context -> {fountainOpeningModel = new DarkFountainOpeningModel(context.bakeLayer(DarkFountainOpeningModel.LAYER_LOCATION)); fountainModel = new DarkFountainModel(context.bakeLayer(DarkFountainModel.LAYER_LOCATION)); fountainEdgesModel = new DarkFountainEdgesModel(context.bakeLayer(DarkFountainEdgesModel.LAYER_LOCATION)); fountainGroundCrackModel = new DarkFountainGroundCrackModel(context.bakeLayer(DarkFountainGroundCrackModel.LAYER_LOCATION));
                         return new DarkFountainFullBlockEntityRenderer(fountainOpeningModel, fountainModel, fountainEdgesModel, fountainGroundCrackModel);
                     });
+        }
+
+        @SubscribeEvent
+        public static void registerOverlays(RegisterGuiOverlaysEvent event)
+        {
+            event.registerAboveAll("darkness", DarknessOverlay.OVERLAY);
         }
 
         @SubscribeEvent
