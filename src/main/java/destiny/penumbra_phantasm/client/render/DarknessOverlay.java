@@ -6,16 +6,13 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
-import destiny.penumbra_phantasm.server.util.RenderBlitUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -41,7 +38,7 @@ public class DarknessOverlay {
 
         for(Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet())
         {
-            if(entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 64)
+            if((entry.getValue().animationTimer > 125 || entry.getValue().animationTimer == -1) && entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 64)
             {
                 fountain = entry.getValue();
                 break; // If fountain within 8 blocks of this(8 squared is 64)
