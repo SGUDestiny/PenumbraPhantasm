@@ -19,11 +19,15 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.util.ITeleporter;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class DarkFountain {
     public static final String FOUNTAIN_POS = "fountainPos";
@@ -225,7 +229,8 @@ public class DarkFountain {
     }
 
     public Entity teleportEntity(Entity entity, ServerLevel destinationLevel) {
-        return entity.changeDimension(destinationLevel);
+        return entity.changeDimension(destinationLevel, new DarkFountainTeleporter(destinationPos.getCenter(), entity.getDeltaMovement(),
+                entity.getYRot(), entity.getXRot()));
     }
 
     public void playMusic()
@@ -261,5 +266,33 @@ public class DarkFountain {
 
     public int getFrame() {
         return frame;
+    }
+
+    public static class DarkFountainTeleporter implements ITeleporter
+    {
+        private Vec3 pos;
+        private Vec3 momentum;
+        private float newYRot;
+        private float newXRot;
+
+        public DarkFountainTeleporter(Vec3 pos, Vec3 momentum, float newYRot, float newXRot)
+        {
+            this.pos = pos;
+            this.momentum = momentum;
+            this.newYRot = newYRot;
+            this.newXRot = newXRot;
+        }
+
+        @Override
+        public @Nullable PortalInfo getPortalInfo(Entity entity, ServerLevel destWorld, Function<ServerLevel, PortalInfo> defaultPortalInfo)
+        {
+            return new PortalInfo(pos, momentum, newYRot, newXRot);
+        }
+
+        @Override
+        public boolean playTeleportSound(ServerPlayer player, ServerLevel sourceWorld, ServerLevel destWorld)
+        {
+            return false;
+        }
     }
 }
