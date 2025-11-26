@@ -176,6 +176,8 @@ dependencies {
 
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
 
+    implementation fg.deobf("curse.maven:playeranimator-658587:4587214")
+
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     // compile against the JEI API but do not include it at runtime

@@ -7,6 +7,13 @@ import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
+import dev.kosmx.playerAnim.api.layered.IAnimation;
+import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
+import dev.kosmx.playerAnim.api.layered.ModifierLayer;
+import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
+import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -96,7 +103,7 @@ public class KnifeItem extends SwordItem {
         tag.putDouble("initY", initY);
         tag.putDouble("initZ", initZ);
 
-        player.push(0, 0.6, 0);
+        //player.push(0, 0.6, 0);
 
         return InteractionResultHolder.sidedSuccess(stack, false);
     }
@@ -147,7 +154,10 @@ public class KnifeItem extends SwordItem {
                                         targetLevel.dimension(), player.getOnPos().above(), level.dimension(), 0, 0, 0, new HashSet<>()));
 
                         targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
-                        player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
+
+                        if (!player.isCreative()) {
+                            player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
+                        }
 
                         if (needsNetherStar) {
                             tag.putBoolean("determination", false);
@@ -160,6 +170,22 @@ public class KnifeItem extends SwordItem {
                 }
 
             } else if (tick >= 0) {
+                if (tick == 0) {
+                    if (level.isClientSide()) {
+                        //Get the animation for that player
+                        ModifierLayer<IAnimation> animation = (ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData((AbstractClientPlayer) player).get(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"));
+
+                        if (animation != null) {
+                            //You can set an animation from anywhere ON THE CLIENT
+                            //Do not attempt to do this on a server, that will only fail
+
+                            animation.setAnimation(new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))));
+                            //You might use  animation.replaceAnimationWithFade(); to create fade effect instead of sudden change
+                            //See javadoc for details
+                        }
+                    }
+                }
+
                 float initYaw = tag.getFloat("initYaw");
                 double initX = tag.getDouble("initX");
                 double initY = tag.getDouble("initY");

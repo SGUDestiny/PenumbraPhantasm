@@ -37,3 +37,10 @@ description='''Temp description'''
     versionRange="[15.20.0.112, )"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.penumbra_phantasm]]
+    modId="playeranimator"
+    mandatory=true
+    versionRange="[1.0.2-rc1+1.20, )"
+    ordering="NONE"
+    side="BOTH"
