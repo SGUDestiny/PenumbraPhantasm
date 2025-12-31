@@ -8,7 +8,7 @@
     "Name": "penumbra_phantasm:umbrastone"
   },
   "default_fluid": {
-    "Name": "minecraft:water",
+    "Name": "penumbra_phantasm:luminescent_water",
     "Properties": {
       "level": "0"
     }

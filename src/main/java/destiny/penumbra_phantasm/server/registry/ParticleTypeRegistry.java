@@ -15,4 +15,5 @@ public class ParticleTypeRegistry {
     public static final RegistryObject<SimpleParticleType> REAL_KNIFE_SLASH = PARTICLE_TYPES.register("real_knife_slash", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> REAL_KNIFE_HIT = PARTICLE_TYPES.register("real_knife_hit", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> FOUNTAIN_DARKNESS = PARTICLE_TYPES.register("fountain_darkness", () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> LUMINESCENT_PARTICLE = PARTICLE_TYPES.register("luminescent_particle", () -> new SimpleParticleType(true));
 }

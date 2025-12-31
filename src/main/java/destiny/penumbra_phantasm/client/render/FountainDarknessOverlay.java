@@ -18,8 +18,8 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Map;
 
-public class DarknessOverlay {
-    public static final ResourceLocation TEXTURE = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/darkness.png");
+public class FountainDarknessOverlay {
+    public static final ResourceLocation TEXTURE = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/fountain_darkness.png");
 
     public static final IGuiOverlay OVERLAY = ((gui, guiGraphics, partialTick, screenWidth, screenHeight)
             -> {

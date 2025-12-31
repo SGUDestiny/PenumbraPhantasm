@@ -2,7 +2,7 @@ package destiny.penumbra_phantasm;
 
 import com.mojang.logging.LogUtils;
 import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
-import destiny.penumbra_phantasm.client.render.DarknessOverlay;
+import destiny.penumbra_phantasm.client.render.FountainDarknessOverlay;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainFullBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainOpeningBlockEntityRenderer;
@@ -52,6 +52,8 @@ public class PenumbraPhantasm
         EntityRegistry.ENTITY_TYPES.register(modEventBus);
         ItemRegistry.ITEMS.register(modEventBus);
         BlockRegistry.BLOCKS.register(modEventBus);
+        FluidRegistry.FLUIDS.register(modEventBus);
+        FluidTypeRegistry.FLUID_TYPES.register(modEventBus);
         CreativeTabRegistry.DEF_REG.register(modEventBus);
         BlockEntityRegistry.BLOCK_ENTITIES.register(modEventBus);
         EffectRegistry.DEF_REG.register(modEventBus);
@@ -113,7 +115,7 @@ public class PenumbraPhantasm
         @SubscribeEvent
         public static void registerOverlays(RegisterGuiOverlaysEvent event)
         {
-            event.registerAboveAll("darkness", DarknessOverlay.OVERLAY);
+            event.registerAboveAll("fountain_darkness", FountainDarknessOverlay.OVERLAY);
         }
 
         @SubscribeEvent
@@ -138,6 +140,7 @@ public class PenumbraPhantasm
             event.registerSpriteSet(ParticleTypeRegistry.REAL_KNIFE_SLASH.get(), RealKnifeSlashParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.REAL_KNIFE_HIT.get(), RealKnifeHitParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), FountainDarknessParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.LUMINESCENT_PARTICLE.get(), LuminescentParticle.Provider::new);
         }
     }
 }

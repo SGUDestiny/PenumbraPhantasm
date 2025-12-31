@@ -142,10 +142,6 @@ public class DarkFountain {
                 serverLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
             }
 
-            if (this.animationTimer == 0) {
-                level.playSound(null, getFountainPos(), SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 1, 1);
-            }
-
             if (this.frameTimer % 3 == 0) {
                 if (this.frame >= 13) {
                     this.frame = 0;
@@ -168,7 +164,7 @@ public class DarkFountain {
             }
 
             if (this.animationTimer > 125 || this.animationTimer == -1) {
-                AABB teleportBox = new AABB(fountainPos).inflate(1);
+                AABB teleportBox = new AABB(fountainPos).inflate(1).setMaxY(128);
                 HashSet<UUID> teleportBoxEntities = new HashSet<>();
 
                 ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
@@ -207,6 +203,14 @@ public class DarkFountain {
                     //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainMusic(this.fountainUuid, false));
                 }
                 //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainWind(this.fountainUuid, false));
+            }
+        } else {
+            if (this.animationTimer == 0) {
+                level.players().forEach(player -> {
+                    if (player.level().dimension() == fountainDimension) {
+                        player.playSound(SoundRegistry.FOUNTAIN_MAKE.get());
+                    }
+                });
             }
         }
 

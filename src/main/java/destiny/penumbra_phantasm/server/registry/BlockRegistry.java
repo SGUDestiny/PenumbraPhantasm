@@ -126,6 +126,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> DARK_FOUNTAIN_FULL = registerBlock("dark_fountain_full",
             () -> new DarkFountainFullBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission().lightLevel(state -> (15))));
 
+    public static final RegistryObject<LiquidBlock> LUMINESCENT_WATER = BLOCKS.register("luminescent_water",
+            () -> new LuminescentWaterFluidBlock(FluidRegistry.SOURCE_LUMINESCENT_WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable().lightLevel(state -> 15).randomTicks()));
+
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
