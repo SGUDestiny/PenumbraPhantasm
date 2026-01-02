@@ -7,7 +7,7 @@ modId="penumbra_phantasm"
 version="2.5"
 displayName="PENUMBRA PHANTASM"
 authors="Destiny"
-logoFile="assets/penumbra_phantasm/textures/misc/mod_logo.png"
+logoFile="assets/penumbra_phantasm/textures/misc/penumbra_phantasm_logo.gif"
 description='''Temp description'''
 
 [[dependencies.penumbra_phantasm]]
