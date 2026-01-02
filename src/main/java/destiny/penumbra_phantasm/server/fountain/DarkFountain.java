@@ -142,15 +142,24 @@ public class DarkFountain {
                 serverLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
             }
 
+            if (this.animationTimer == 1) {
+                level.players().forEach(player -> {
+                    if (player.level().dimension() == fountainDimension) {
+                        level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 0.75f, 1f);
+                        //player.playSound(SoundRegistry.FOUNTAIN_MAKE.get(), 0.75f, 1f);
+                    }
+                });
+            }
+
             if (this.frameTimer % 3 == 0) {
-                if (this.frame >= 13) {
+                if (this.frame >= 27) {
                     this.frame = 0;
                 } else {
                     this.frame++;
                 }
             }
 
-            if (this.frameTimer >= 13 * 3) {
+            if (this.frameTimer >= 27 * 3) {
                 this.frameTimer = 0;
             } else {
                 this.frameTimer++;
@@ -203,14 +212,6 @@ public class DarkFountain {
                     //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainMusic(this.fountainUuid, false));
                 }
                 //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainWind(this.fountainUuid, false));
-            }
-        } else {
-            if (this.animationTimer == 0) {
-                level.players().forEach(player -> {
-                    if (player.level().dimension() == fountainDimension) {
-                        player.playSound(SoundRegistry.FOUNTAIN_MAKE.get());
-                    }
-                });
             }
         }
 
