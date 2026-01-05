@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -84,6 +85,16 @@ public class ClientEvents {
 						stack.popPose();
 					});
 			});
+		}
+	}
+
+	@SubscribeEvent
+	public static void clientTick(TickEvent.ClientTickEvent event)
+	{
+		if(event.phase == TickEvent.Phase.END)
+		{
+			FountainRenderUtil.fountainHue += 0.01F;
+			FountainRenderUtil.fountainHue %= 1F;
 		}
 	}
 }

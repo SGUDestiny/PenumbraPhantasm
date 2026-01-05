@@ -1,16 +1,25 @@
 package destiny.penumbra_phantasm.client.render;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainFullBlockEntity;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
+
+import java.awt.*;
 
 public class FountainRenderUtil
 {
+	public static float fountainHue = 0F;
+
 	public static void renderOpeningFoutain(float partialTick, float initialAnimationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
 		ResourceLocation textureFountainOpeningBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom.png");
 		ResourceLocation textureFountainOpeningMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
@@ -95,6 +104,27 @@ public class FountainRenderUtil
 		float animationTime = fountain.animationTimer + partialTick;
 		int frame = fountain.getFrame();
 
+		Player player = Minecraft.getInstance().player;
+
+		Color color = Color.getHSBColor(fountainHue, 0.8f, 0.8f);
+
+		float red = color.getRed()/255f;
+		float blue = color.getBlue()/255f;
+		float green = color.getGreen()/255f;
+
+		if(player != null)
+		{
+			double playerX = player.getX();
+			double playerZ = player.getZ();
+
+			double fountainX = fountain.getDestinationPos().getX();
+			double fountainZ = fountain.getDestinationPos().getZ();
+
+			Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
+			Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
+			if(flatPlayerPos.distanceToSqr(flatFountainPos) < Math.pow(16, 2))
+				RenderSystem.setShaderColor(red, green, blue, 1F);
+		}
 		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_" + frame + ".png");
 		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_" + frame + ".png");
 		ResourceLocation textureMiddleEdges = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle_edges/fountain_middle_edges_" + frame + ".png");
@@ -108,7 +138,7 @@ public class FountainRenderUtil
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
 		PenumbraPhantasm.ClientModEvents.fountainGroundCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
-				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
+				LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
 		poseStack.popPose();
 
 		// Render bottom
@@ -117,7 +147,7 @@ public class FountainRenderUtil
 		poseStack.translate(0f, 7 - (4 * pixel), 0f);
 		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 		PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
-				LightTexture.FULL_BRIGHT, overlay, 1F, 0F, 0F, 1F);
+				LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
 		poseStack.popPose();
 
 		// Render middle segments
@@ -131,8 +161,10 @@ public class FountainRenderUtil
 			poseStack.translate(0f, -20f * pixel, 0f);
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
+
 			PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
-					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
+					LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
+
 			poseStack.popPose();
 
 			// Render edges
@@ -143,7 +175,7 @@ public class FountainRenderUtil
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 			poseStack.scale(pulse, 1.0f, pulse);
 			PenumbraPhantasm.ClientModEvents.fountainEdgesModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
+					LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
 			poseStack.popPose();
 
 			// Render opposite edges
@@ -154,7 +186,7 @@ public class FountainRenderUtil
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 			poseStack.scale(pulse_opposite, 1.0f, pulse_opposite);
 			PenumbraPhantasm.ClientModEvents.fountainEdgesModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
+					LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
 			poseStack.popPose();
 		}
 	}

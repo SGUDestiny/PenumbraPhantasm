@@ -13,10 +13,10 @@ public class RenderTypes extends RenderType {
 
     public static RenderType fountain(ResourceLocation rl)
     {
-        return create("fountain", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
+        return create("fountain", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_ALPHA_SHADER)
+                        .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
                         .setTextureState(new TextureStateShard(rl, false, false))
                         .setCullState(CULL)
                         .createCompositeState(true));
