@@ -139,7 +139,7 @@ public class FountainRenderUtil
 			Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
 			Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
 			if(flatPlayerPos.distanceToSqr(flatFountainPos) < Math.pow(16, 2)) {
-				//RenderSystem.setShaderColor(red, green, blue, 1F);
+				RenderSystem.setShaderColor(middleColor.getRed() / 255f, middleColor.getGreen() / 255f, middleColor.getBlue() / 255f, 1F);
 			}
 		}
 
