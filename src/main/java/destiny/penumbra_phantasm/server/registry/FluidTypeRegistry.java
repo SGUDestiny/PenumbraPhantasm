@@ -15,6 +15,10 @@ public class FluidTypeRegistry {
     public static final ResourceLocation LUMINESCENT_WATER_FLOW = new ResourceLocation(PenumbraPhantasm.MODID, "block/luminescent_water_flow");
     public static final ResourceLocation LUMINESCENT_WATER_OVERLAY = new ResourceLocation(PenumbraPhantasm.MODID, "misc/luminescent_water_overlay");
 
+    public static final ResourceLocation PURE_DARKNESS_STILL = new ResourceLocation(PenumbraPhantasm.MODID, "block/pure_darkness_still");
+    public static final ResourceLocation PURE_DARKNESS_FLOW = new ResourceLocation(PenumbraPhantasm.MODID, "block/pure_darkness_flow");
+    public static final ResourceLocation PURE_DARKNESS_OVERLAY = new ResourceLocation(PenumbraPhantasm.MODID, "misc/pure_darkness_overlay");
+
     public static final DeferredRegister<FluidType> FLUID_TYPES =
             DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, PenumbraPhantasm.MODID);
 
@@ -22,6 +26,11 @@ public class FluidTypeRegistry {
             new LuminescentWaterFluidType(LUMINESCENT_WATER_STILL, LUMINESCENT_WATER_FLOW, LUMINESCENT_WATER_OVERLAY, 0xFFFFFFFF,
                     new Vector3f(21f / 255f, 18f / 255f, 38f / 255f),
                     FluidType.Properties.create().lightLevel(15).viscosity(4).density(7).canExtinguish(true)));
+
+    public static final RegistryObject<FluidType> PURE_DARKNESS = registerFluidType("pure_darkness",
+            new LuminescentWaterFluidType(PURE_DARKNESS_STILL, PURE_DARKNESS_FLOW, PURE_DARKNESS_OVERLAY, 0xFFFFFFFF,
+                    new Vector3f(21f / 255f, 18f / 255f, 38f / 255f),
+                    FluidType.Properties.create().lightLevel(15).viscosity(7).density(14).canExtinguish(true)));
 
     private static RegistryObject<FluidType> registerFluidType(String name, FluidType fluidType) {
         return FLUID_TYPES.register(name, () -> fluidType);

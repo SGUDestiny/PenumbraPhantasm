@@ -18,11 +18,22 @@ public class FluidRegistry {
     public static final RegistryObject<FlowingFluid> FLOWING_LUMINESCENT_WATER = FLUIDS.register("flowing_luminescent_water",
             () -> new ForgeFlowingFluid.Flowing(FluidRegistry.LUMINESCENT_WATER_PROPERTIES));
 
+    public static final RegistryObject<FlowingFluid> SOURCE_PURE_DARKNESS = FLUIDS.register("pure_darkness",
+            () -> new ForgeFlowingFluid.Source(FluidRegistry.PURE_DARKNESS_PROPERTIES));
+    public static final RegistryObject<FlowingFluid> FLOWING_PURE_DARKNESS = FLUIDS.register("flowing_pure_darkness",
+            () -> new ForgeFlowingFluid.Flowing(FluidRegistry.PURE_DARKNESS_PROPERTIES));
+
+
 
     public static final ForgeFlowingFluid.Properties LUMINESCENT_WATER_PROPERTIES = new ForgeFlowingFluid.Properties(
             FluidTypeRegistry.LUMINESCENT_WATER, SOURCE_LUMINESCENT_WATER, FLOWING_LUMINESCENT_WATER)
             .slopeFindDistance(2).levelDecreasePerBlock(1).block(BlockRegistry.LUMINESCENT_WATER);
             //.bucket(ItemInit.CELESTIAL_OIL_BUCKET);
+
+    public static final ForgeFlowingFluid.Properties PURE_DARKNESS_PROPERTIES = new ForgeFlowingFluid.Properties(
+            FluidTypeRegistry.PURE_DARKNESS, SOURCE_PURE_DARKNESS, FLOWING_PURE_DARKNESS)
+            .slopeFindDistance(2).levelDecreasePerBlock(2).block(BlockRegistry.PURE_DARKNESS);
+    //.bucket(ItemInit.CELESTIAL_OIL_BUCKET);
 
 
     public static void register(IEventBus eventBus) {

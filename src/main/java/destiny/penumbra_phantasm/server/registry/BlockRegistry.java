@@ -7,6 +7,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -117,17 +118,10 @@ public class BlockRegistry {
             () -> new ChessKingBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
                     .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
 
-    public static final RegistryObject<Block> DARK_FOUNTAIN_OPENING = registerBlock("dark_fountain_opening",
-            () -> new DarkFountainOpeningBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission().lightLevel(state -> (15))));
-
-    public static final RegistryObject<Block> DARK_FOUNTAIN = registerBlock("dark_fountain",
-            () -> new DarkFountainBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission().lightLevel(state -> (15))));
-
-    public static final RegistryObject<Block> DARK_FOUNTAIN_FULL = registerBlock("dark_fountain_full",
-            () -> new DarkFountainFullBlock(BlockBehaviour.Properties.copy(Blocks.BARRIER).noOcclusion().noCollission().lightLevel(state -> (15))));
-
     public static final RegistryObject<LiquidBlock> LUMINESCENT_WATER = BLOCKS.register("luminescent_water",
             () -> new LuminescentWaterFluidBlock(FluidRegistry.SOURCE_LUMINESCENT_WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable().lightLevel(state -> 15).randomTicks()));
+    public static final RegistryObject<LiquidBlock> PURE_DARKNESS = BLOCKS.register("pure_darkness",
+            () -> new LiquidBlock(FluidRegistry.SOURCE_PURE_DARKNESS, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable().lightLevel(state -> 15)));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

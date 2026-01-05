@@ -3,20 +3,28 @@ package destiny.penumbra_phantasm.server.event;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
@@ -93,8 +101,49 @@ public class ClientEvents {
 	{
 		if(event.phase == TickEvent.Phase.END)
 		{
-			FountainRenderUtil.fountainHue += 0.01F;
-			FountainRenderUtil.fountainHue %= 1F;
+			LocalPlayer player = Minecraft.getInstance().player;
+			ClientLevel level = Minecraft.getInstance().level;
+			if (player == null) return;
+
+			DarkFountainCapability cap;
+			LazyOptional<DarkFountainCapability> lazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+			if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
+				cap = lazyCapability.resolve().get();
+			else return; // If capability isn't present
+
+			DarkFountain fountain = null;
+
+			for(Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet())
+			{
+				if(entry.getValue().animationTimer == -1 && entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 64)
+				{
+					fountain = entry.getValue();
+					break; // If fountain within 8 blocks of this(8 squared is 64)
+				}
+			}
+
+			if (fountain == null)
+				return;
+
+			double playerX = player.getX();
+			double playerZ = player.getZ();
+
+			boolean isInDarkWorld = player.level().dimension().equals(fountain.getDestinationDimension());
+
+			double fountainX = isInDarkWorld ? fountain.getDestinationPos().getX() : fountain.getFountainPos().getX();
+			double fountainZ = isInDarkWorld ? fountain.getDestinationPos().getZ() : fountain.getFountainPos().getZ();
+
+			Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
+			Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
+			float distance = flatPlayerPos.distanceToSqr(flatFountainPos);
+
+			if (distance < Math.pow(16, 2)) {
+				if (FountainRenderUtil.fountainHueAlpha != 1F) {
+					FountainRenderUtil.fountainHueAlpha += 0.01F;
+				}
+			} else if (FountainRenderUtil.fountainHueAlpha != 0F) {
+				FountainRenderUtil.fountainHueAlpha -= 0.01F;
+			}
 		}
 	}
 }

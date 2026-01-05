@@ -3,24 +3,27 @@ package destiny.penumbra_phantasm.client.render;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.block.blockentity.DarkFountainFullBlockEntity;
+import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
-import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
 
 public class FountainRenderUtil
 {
-	public static float fountainHue = 0F;
+	public static float fountainHueAlpha = 0F;
 
 	public static void renderOpeningFoutain(float partialTick, float initialAnimationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+		DarkFountainGroundCrackModel crackModel = new DarkFountainGroundCrackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_crack_model"), "main")));
+		DarkFountainOpeningModel openingModel = new DarkFountainOpeningModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_opening_model"), "main")));
+
 		ResourceLocation textureFountainOpeningBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom.png");
 		ResourceLocation textureFountainOpeningMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
 		ResourceLocation textureFountainOpeningBottomShadow = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom_shadow.png");
@@ -66,7 +69,7 @@ public class FountainRenderUtil
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
-		PenumbraPhantasm.ClientModEvents.fountainGroundCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+		crackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
 				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
 		poseStack.popPose();
 
@@ -75,9 +78,9 @@ public class FountainRenderUtil
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, 3f, 0f);
 		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-		PenumbraPhantasm.ClientModEvents.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainOpeningBottom)),
+		openingModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainOpeningBottom)),
 				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
-		PenumbraPhantasm.ClientModEvents.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureFountainOpeningBottomShadow)),
+		openingModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureFountainOpeningBottomShadow)),
 				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, alphaDark);
 		poseStack.popPose();
 
@@ -87,30 +90,42 @@ public class FountainRenderUtil
 			poseStack.translate(0.5f, 0.5f, 0.5f);
 			poseStack.translate(0f, 3 + 5 + (5 * segment), 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-			PenumbraPhantasm.ClientModEvents.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainOpeningMiddle)),
+			openingModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainOpeningMiddle)),
 					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
-			PenumbraPhantasm.ClientModEvents.fountainOpeningModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureFountainOpeningMiddleShadow)),
+			openingModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureFountainOpeningMiddleShadow)),
 					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, alphaDark);
 			poseStack.popPose();
 		}
 	}
 
 	public static void renderOpenFountain(DarkFountain fountain, Level level, float initialAnimationTime, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+		DarkFountainGroundCrackModel crackModel = new DarkFountainGroundCrackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_crack_model"), "main")));
+		DarkFountainBackModel backModel = new DarkFountainBackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_back_model"), "main")));
+		DarkFountainMiddleModel middleModel = new DarkFountainMiddleModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_middle_model"), "main")));
+		DarkFountainFrontModel frontModel = new DarkFountainFrontModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_front_model"), "main")));
+
+		int frame = fountain.getFrame();
+
+		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_" + frame + ".png");
+		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_" + frame + ".png");
+		ResourceLocation textureMiddleEdges = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle_edges/fountain_middle_edges_" + frame + ".png");
+
 		float pixel = 1f / 16f;
 		float time = (level.getGameTime() + partialTick) * 0.1f;
-		float pulse = 1.0f + 0.1f * (float) Math.sin(time);
-		float pulse_opposite = 1.0f - 0.1f * (float) Math.sin(time);
+		float pulse = (1.0f + 0.08f * (float) Math.sin(time * 1.2)) / 0.92f;
+		float pulse_front = (1.0f - 0.08f * (float) Math.sin(time * 1.2)) / 1.08f;
+		float brightness_front = 0.9f - 0.1f * (float) Math.sin(time * 1.2);
+		float brightness_middle = 0.8f - 0.2f * (float) Math.sin(time * 1.2);
+		float brightness_back = 0.7f - 0.3f * (float) Math.sin(time * 1.2);
 		float scaleXZ = 1.0f;
 		float animationTime = fountain.animationTimer + partialTick;
-		int frame = fountain.getFrame();
+		float fountainHue = time * 0.03f % 1f;
 
 		Player player = Minecraft.getInstance().player;
 
-		Color color = Color.getHSBColor(fountainHue, 0.8f, 0.8f);
-
-		float red = color.getRed()/255f;
-		float blue = color.getBlue()/255f;
-		float green = color.getGreen()/255f;
+		Color frontColor = Color.getHSBColor(fountainHue, 0.8f, brightness_front);
+		Color middleColor = Color.getHSBColor(fountainHue, 0.8f, brightness_middle);
+		Color backColor = Color.getHSBColor(fountainHue, 0.8f, brightness_back);
 
 		if(player != null)
 		{
@@ -122,12 +137,10 @@ public class FountainRenderUtil
 
 			Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
 			Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
-			if(flatPlayerPos.distanceToSqr(flatFountainPos) < Math.pow(16, 2))
-				RenderSystem.setShaderColor(red, green, blue, 1F);
+			if(flatPlayerPos.distanceToSqr(flatFountainPos) < Math.pow(16, 2)) {
+				//RenderSystem.setShaderColor(red, green, blue, 1F);
+			}
 		}
-		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_" + frame + ".png");
-		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_" + frame + ".png");
-		ResourceLocation textureMiddleEdges = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle_edges/fountain_middle_edges_" + frame + ".png");
 
 		if (initialAnimationTime != -1) {
 			scaleXZ = (animationTime - 140) / 5f;
@@ -137,8 +150,8 @@ public class FountainRenderUtil
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
-		PenumbraPhantasm.ClientModEvents.fountainGroundCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
-				LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
+		crackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, 1F);
 		poseStack.popPose();
 
 		// Render bottom
@@ -146,8 +159,8 @@ public class FountainRenderUtil
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, 7 - (4 * pixel), 0f);
 		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-		PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
-				LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
+		middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
+				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, 1F);
 		poseStack.popPose();
 
 		// Render middle segments
@@ -161,43 +174,64 @@ public class FountainRenderUtil
 			poseStack.translate(0f, -20f * pixel, 0f);
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-
-			PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
-					LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
-
+			middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
+					LightTexture.FULL_BRIGHT, overlay, middleColor.getRed() / 255f, middleColor.getGreen() / 255f, middleColor.getGreen() / 255f, 1F);
+			poseStack.popPose();
+			// Render middle edges
+			poseStack.pushPose();
+			poseStack.translate(0.5f, 0.5f, 0.5f);
+			poseStack.translate(0f, -20f * pixel, 0f);
+			poseStack.translate(0f, offset, 0f);
+			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
+			middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureMiddleEdges)),
+					LightTexture.FULL_BRIGHT, overlay, middleColor.getRed() / 255f, middleColor.getGreen() / 255f, middleColor.getGreen() / 255f, 1F);
 			poseStack.popPose();
 
-			// Render edges
+			// Render back
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.5f, 0.5f);
 			poseStack.translate(0f, -20f * pixel, 0f);
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 			poseStack.scale(pulse, 1.0f, pulse);
-			PenumbraPhantasm.ClientModEvents.fountainEdgesModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-					LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
+			backModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
+					LightTexture.FULL_BRIGHT, overlay, backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, 1F);
 			poseStack.popPose();
-
-			// Render opposite edges
+			// Render back edges
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.5f, 0.5f);
 			poseStack.translate(0f, -20f * pixel, 0f);
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-			poseStack.scale(pulse_opposite, 1.0f, pulse_opposite);
-			PenumbraPhantasm.ClientModEvents.fountainEdgesModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-					LightTexture.FULL_BRIGHT, overlay, red, green, blue, 1F);
+			poseStack.scale(pulse, 1.0f, pulse);
+			backModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureMiddleEdges)),
+					LightTexture.FULL_BRIGHT, overlay, backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, 1F);
+			poseStack.popPose();
+
+			// Render front edges
+			poseStack.pushPose();
+			poseStack.translate(0.5f, 0.5f, 0.5f);
+			poseStack.translate(0f, -20f * pixel, 0f);
+			poseStack.translate(0f, offset, 0f);
+			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
+			poseStack.scale(pulse_front, 1.0f, pulse_front);
+			frontModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureMiddleEdges)),
+					LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, 1F);
 			poseStack.popPose();
 		}
 	}
 
 	public static void renderOpenFountainOptimized(DarkFountain fountain, float partialTick, float initialAnimationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
-		float pixel = 1f / 16f;
-		float scaleXZ = 1.0f;
-		float animationTime = fountain.animationTimer + partialTick;
+		DarkFountainGroundCrackModel crackModel = new DarkFountainGroundCrackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_crack_model"), "main")));
+		DarkFountainBackModel backModel = new DarkFountainBackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_back_model"), "main")));
+		DarkFountainMiddleModel middleModel = new DarkFountainMiddleModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_middle_model"), "main")));
 
 		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_0.png");
 		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_0.png");
+
+		float pixel = 1f / 16f;
+		float scaleXZ = 1.0f;
+		float animationTime = fountain.animationTimer + partialTick;
 
 		if (initialAnimationTime != -1) {
 			scaleXZ = (animationTime - 140) / 5f;
@@ -207,7 +241,7 @@ public class FountainRenderUtil
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
-		PenumbraPhantasm.ClientModEvents.fountainGroundCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+		crackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
 				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
 		poseStack.popPose();
 
@@ -216,8 +250,8 @@ public class FountainRenderUtil
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, 7 - (4 * pixel), 0f);
 		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-		PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
-				LightTexture.FULL_BRIGHT, overlay, 1F, 0F, 0F, 1F);
+		middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
+				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
 		poseStack.popPose();
 
 		// Render middle segments
@@ -231,18 +265,20 @@ public class FountainRenderUtil
 			poseStack.translate(0f, -20f * pixel, 0f);
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-			PenumbraPhantasm.ClientModEvents.fountainModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
+			backModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
 					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
 			poseStack.popPose();
 		}
 	}
 
 	public static void renderLightWorldOpenFountain(ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+		DarkFountainGroundCrackModel crackModel = new DarkFountainGroundCrackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_crack_model"), "main")));
+
 		// Render cracks
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
-		PenumbraPhantasm.ClientModEvents.fountainGroundCrackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+		crackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
 				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
 		poseStack.popPose();
 	}

@@ -24,10 +24,10 @@ public class RenderTypes extends RenderType {
 
     public static RenderType fountainDark(ResourceLocation rl)
     {
-        return create("fountain_dark", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256,
+        return create("fountain_dark", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+                        .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
                         .setTextureState(new TextureStateShard(rl, false, false))
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setCullState(CULL)

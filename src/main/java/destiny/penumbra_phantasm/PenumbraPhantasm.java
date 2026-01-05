@@ -3,15 +3,10 @@ package destiny.penumbra_phantasm;
 import com.mojang.logging.LogUtils;
 import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
 import destiny.penumbra_phantasm.client.render.FountainDarknessOverlay;
-import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainBlockEntityRenderer;
-import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainFullBlockEntityRenderer;
-import destiny.penumbra_phantasm.client.render.blockentity.DarkFountainOpeningBlockEntityRenderer;
-import destiny.penumbra_phantasm.client.render.model.DarkFountainEdgesModel;
-import destiny.penumbra_phantasm.client.render.model.DarkFountainGroundCrackModel;
-import destiny.penumbra_phantasm.client.render.model.DarkFountainModel;
-import destiny.penumbra_phantasm.client.render.model.DarkFountainOpeningModel;
+import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.particles.*;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -81,35 +76,14 @@ public class PenumbraPhantasm
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents
     {
-        public static DarkFountainOpeningModel fountainOpeningModel;
-        public static DarkFountainGroundCrackModel fountainGroundCrackModel;
-        public static DarkFountainModel fountainModel;
-        public static DarkFountainEdgesModel fountainEdgesModel;
-
         @SubscribeEvent
         public static void bakeModels(EntityRenderersEvent.RegisterLayerDefinitions event)
         {
             event.registerLayerDefinition(DarkFountainOpeningModel.LAYER_LOCATION, DarkFountainOpeningModel::createBodyLayer);
             event.registerLayerDefinition(DarkFountainGroundCrackModel.LAYER_LOCATION, DarkFountainGroundCrackModel::createBodyLayer);
-            event.registerLayerDefinition(DarkFountainModel.LAYER_LOCATION, DarkFountainModel::createBodyLayer);
-            event.registerLayerDefinition(DarkFountainEdgesModel.LAYER_LOCATION, DarkFountainEdgesModel::createBodyLayer);
-        }
-
-        @SubscribeEvent
-        public static void registerRenderer(EntityRenderersEvent.RegisterRenderers event)
-        {
-            event.registerBlockEntityRenderer(BlockEntityRegistry.DARK_FOUNTAIN_OPENING.get(),
-                    context -> {fountainOpeningModel = new DarkFountainOpeningModel(context.bakeLayer(DarkFountainOpeningModel.LAYER_LOCATION)); fountainGroundCrackModel = new DarkFountainGroundCrackModel(context.bakeLayer(DarkFountainGroundCrackModel.LAYER_LOCATION));
-                        return new DarkFountainOpeningBlockEntityRenderer(fountainOpeningModel, fountainGroundCrackModel);
-                    });
-            event.registerBlockEntityRenderer(BlockEntityRegistry.DARK_FOUNTAIN.get(),
-                    context -> {fountainModel = new DarkFountainModel(context.bakeLayer(DarkFountainModel.LAYER_LOCATION)); fountainEdgesModel = new DarkFountainEdgesModel(context.bakeLayer(DarkFountainEdgesModel.LAYER_LOCATION)); fountainGroundCrackModel = new DarkFountainGroundCrackModel(context.bakeLayer(DarkFountainGroundCrackModel.LAYER_LOCATION));
-                        return new DarkFountainBlockEntityRenderer(fountainModel, fountainEdgesModel, fountainGroundCrackModel);
-                    });
-            event.registerBlockEntityRenderer(BlockEntityRegistry.DARK_FOUNTAIN_FULL.get(),
-                    context -> {fountainOpeningModel = new DarkFountainOpeningModel(context.bakeLayer(DarkFountainOpeningModel.LAYER_LOCATION)); fountainModel = new DarkFountainModel(context.bakeLayer(DarkFountainModel.LAYER_LOCATION)); fountainEdgesModel = new DarkFountainEdgesModel(context.bakeLayer(DarkFountainEdgesModel.LAYER_LOCATION)); fountainGroundCrackModel = new DarkFountainGroundCrackModel(context.bakeLayer(DarkFountainGroundCrackModel.LAYER_LOCATION));
-                        return new DarkFountainFullBlockEntityRenderer(fountainOpeningModel, fountainModel, fountainEdgesModel, fountainGroundCrackModel);
-                    });
+            event.registerLayerDefinition(DarkFountainBackModel.LAYER_LOCATION, DarkFountainBackModel::createBodyLayer);
+            event.registerLayerDefinition(DarkFountainMiddleModel.LAYER_LOCATION, DarkFountainMiddleModel::createBodyLayer);
+            event.registerLayerDefinition(DarkFountainFrontModel.LAYER_LOCATION, DarkFountainFrontModel::createBodyLayer);
         }
 
         @SubscribeEvent

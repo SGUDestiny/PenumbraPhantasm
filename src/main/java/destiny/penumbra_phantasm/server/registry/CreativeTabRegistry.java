@@ -54,10 +54,6 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.DARK_MARBLE_BISHOP.get());
                 output.accept(BlockRegistry.DARK_MARBLE_QUEEN.get());
                 output.accept(BlockRegistry.DARK_MARBLE_KING.get());
-
-                output.accept(BlockRegistry.DARK_FOUNTAIN_OPENING.get());
-                output.accept(BlockRegistry.DARK_FOUNTAIN.get());
-                output.accept(BlockRegistry.DARK_FOUNTAIN_FULL.get());
             })
             .build()
     );
