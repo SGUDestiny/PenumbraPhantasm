@@ -124,7 +124,8 @@ public class FountainRenderUtil
 		Player player = Minecraft.getInstance().player;
 
 		Color frontColor = Color.getHSBColor(fountainHue, 0.8f, brightness_front);
-		Color middleColor = Color.getHSBColor(fountainHue, 0.8f, brightness_middle);
+		Color middleColor = Color.getHSBColor(fountainHue, 0.8f, 1f);
+		Color middleEdgesColor = Color.getHSBColor(fountainHue, 0.8f, brightness_middle);
 		Color backColor = Color.getHSBColor(fountainHue, 0.8f, brightness_back);
 
 		if(player != null)
@@ -184,7 +185,7 @@ public class FountainRenderUtil
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 			middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureMiddleEdges)),
-					LightTexture.FULL_BRIGHT, overlay, middleColor.getRed() / 255f, middleColor.getGreen() / 255f, middleColor.getGreen() / 255f, 1F);
+					LightTexture.FULL_BRIGHT, overlay, middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, 1F);
 			poseStack.popPose();
 
 			// Render back
