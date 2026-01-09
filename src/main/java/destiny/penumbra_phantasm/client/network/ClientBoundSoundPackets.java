@@ -74,4 +74,26 @@ public abstract class ClientBoundSoundPackets {
             return true;
         }
     }
+
+    public static class FountainDarkness extends ClientBoundSoundPackets
+    {
+        public FountainDarkness(BlockPos fountainPos, boolean stop)
+        {
+            super(fountainPos, stop);
+        }
+        public FountainDarkness(FriendlyByteBuf buffer)
+        {
+            super(buffer);
+        }
+
+        @Override
+        public boolean handle(Supplier<NetworkEvent.Context> ctx)
+        {
+            ctx.get().enqueueWork(() ->
+            {
+                SoundAccess.playFountainDarkness(fountainPos, stop);
+            });
+            return true;
+        }
+    }
 }
