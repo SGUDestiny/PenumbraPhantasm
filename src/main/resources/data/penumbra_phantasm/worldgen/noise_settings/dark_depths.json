@@ -43,15 +43,15 @@
       "type": "minecraft:add",
       "argument1": {
         "type": "minecraft:y_clamped_gradient",
-        "from_y": 48,
-        "to_y": 80,
+        "from_y": 50,
+        "to_y": 82,
         "from_value": 2,
         "to_value": -2
       },
       "argument2": {
         "type": "minecraft:noise",
         "noise": "minecraft:surface",
-        "xz_scale": 1,
+        "xz_scale": 0.5,
         "y_scale": 0
       }
     },
@@ -91,13 +91,13 @@
             "above_bottom": 0
           },
           "false_at_and_above": {
-            "above_bottom": 8
+            "above_bottom": 12
           }
         },
         "then_run": {
           "type": "minecraft:block",
           "result_state": {
-            "Name": "minecraft:deepslate",
+            "Name": "penumbra_phantasm:pure_darkness",
             "Properties": {
               "axis": "y"
             }

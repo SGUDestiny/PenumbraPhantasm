@@ -27,6 +27,13 @@
       "penumbra_phantasm:fountain_music"
     ]
   },
+  "fountain_darkness": {
+    "subtitle": "sound.penumbra_phantasm.fountain_darkness",
+    "sounds":
+    [
+      "penumbra_phantasm:fountain_darkness"
+    ]
+  },
   "real_knife_slash": {
     "subtitle": "sound.penumbra_phantasm.real_knife_slash",
     "sounds":
