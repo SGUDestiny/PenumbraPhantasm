@@ -17,14 +17,20 @@ public class Config {
             .comment("Should music be played in the vicinity of Dark Fountains")
             .define("dark_fountain_music", true);
 
+    private static final ForgeConfigSpec.BooleanValue ALTERNATE_DARK_FOUNTAIN_MUSIC = BUILDER
+            .comment("Should an alternate version of THE HOLY be played instead? (Has extended Penumbra Phantasm motif)")
+            .define("alternate_dark_fountain_music", true);
+
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean realKnifeOP;
     public static boolean darkFountainMusic;
+    public static boolean alternateDarkFountainMusic;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
         realKnifeOP = REAL_KNIFE_OP.get();
         darkFountainMusic = DARK_FOUNTAIN_MUSIC.get();
+        alternateDarkFountainMusic = ALTERNATE_DARK_FOUNTAIN_MUSIC.get();
     }
 }
