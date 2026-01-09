@@ -11,14 +11,17 @@ public class Config {
 
     private static final ForgeConfigSpec.BooleanValue REAL_KNIFE_OP = BUILDER
             .comment("Should Real Knife have canonical damage")
+            .comment("Default: false")
             .define("real_knife_op", false);
 
     private static final ForgeConfigSpec.BooleanValue DARK_FOUNTAIN_MUSIC = BUILDER
             .comment("Should music be played in the vicinity of Dark Fountains")
+            .comment("Default: true")
             .define("dark_fountain_music", true);
 
     private static final ForgeConfigSpec.BooleanValue ALTERNATE_DARK_FOUNTAIN_MUSIC = BUILDER
             .comment("Should an alternate version of THE HOLY be played instead? (Has extended Penumbra Phantasm motif)")
+            .comment("Default: true")
             .define("alternate_dark_fountain_music", true);
 
     static final ForgeConfigSpec SPEC = BUILDER.build();

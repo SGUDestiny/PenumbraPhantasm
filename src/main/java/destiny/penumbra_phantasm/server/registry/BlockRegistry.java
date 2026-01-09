@@ -19,8 +19,8 @@ public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, PenumbraPhantasm.MODID);
 
     public static final RegistryObject<Block> NIGHT_GRASS_BLOCK = registerBlock("night_grass_block",
-            () -> new GrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
-                    .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRASS)));
+            () -> new NightGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
+                    .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRASS).randomTicks()));
 
     public static final RegistryObject<Block> NIGHT_GRASS = registerBlock("night_grass",
             () -> new TallGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
