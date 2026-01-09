@@ -19,7 +19,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -59,6 +58,8 @@ public class DarkFountain {
     public SoundWrapper musicSound = null;
     @Nullable
     public SoundWrapper windSound = null;
+    @Nullable
+    public SoundWrapper darknessSound = null;
 
     public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame, HashSet<UUID> teleportedEntities) {
         this.fountainPos = fountainPos;
@@ -195,39 +196,45 @@ public class DarkFountain {
 
             if (this.animationTimer > 125 || this.animationTimer == -1)
             {
-                AABB teleportBox = new AABB(fountainPos).inflate(1).setMaxY(128);
+                AABB teleportBox;
+                if (destinationDimension == ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))) {
+                    teleportBox = new AABB(fountainPos.above()).inflate(1);
+                } else {
+                    teleportBox = new AABB(destinationPos.above()).inflate(1).setMaxY(128);
+                }
                 HashSet<UUID> teleportBoxEntities = new HashSet<>();
-
+                ServerLevel fountainLevel = level.getServer().getLevel(this.fountainDimension);
                 ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
-                if(destinationLevel == null)
+
+                if(fountainLevel == null || destinationLevel == null)
                 {
                     return;
                 }
 
                 destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap ->
-                    {
-                        DarkFountain destinationFountain = cap.darkFountains.get(this.destinationPos);
+                {
+                    DarkFountain destinationFountain = cap.darkFountains.get(this.destinationPos);
 
-                        for(Entity entity : level.getEntitiesOfClass(Entity.class, teleportBox))
+                    for(Entity entity : level.getEntitiesOfClass(Entity.class, teleportBox))
+                    {
+                        if(!this.teleportedEntities.contains(entity.getUUID()))
                         {
-                            if(!this.teleportedEntities.contains(entity.getUUID()))
+                            if(destinationFountain != null)
                             {
-                                if(destinationFountain != null)
+                                if(entity instanceof ServerPlayer player)
                                 {
-                                    if(entity instanceof ServerPlayer player)
-                                    {
-                                        destinationFountain.teleportedEntities.add(
-                                                teleportPlayer(player, destinationLevel).getUUID());
-                                    } else
-                                    {
-                                        destinationFountain.teleportedEntities.add(
-                                                teleportEntity(entity, destinationLevel).getUUID());
-                                    }
+                                    destinationFountain.teleportedEntities.add(
+                                            teleportPlayer(player, destinationLevel).getUUID());
+                                } else
+                                {
+                                    destinationFountain.teleportedEntities.add(
+                                            teleportEntity(entity, destinationLevel).getUUID());
                                 }
                             }
-                            teleportBoxEntities.add(entity.getUUID());
                         }
-                    });
+                        teleportBoxEntities.add(entity.getUUID());
+                    }
+                });
 
                 HashSet<UUID> newTeleportedEntities = new HashSet<>();
 
@@ -249,11 +256,15 @@ public class DarkFountain {
                                 PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
                                 new ClientBoundSoundPackets.FountainMusic(this.fountainPos, false));
                     }
+
+                    PacketHandlerRegistry.INSTANCE.send(
+                            PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
+                            new ClientBoundSoundPackets.FountainWind(this.fountainPos, false));
                 }
 
                 PacketHandlerRegistry.INSTANCE.send(
                         PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
-                        new ClientBoundSoundPackets.FountainWind(this.fountainPos, false));
+                        new ClientBoundSoundPackets.FountainDarkness(this.fountainPos, false));
             }
 
         }
@@ -305,6 +316,19 @@ public class DarkFountain {
 
     public void stopWind(){
         this.windSound.stopSound();
+    }
+
+    public void playDarkness()
+    {
+        if(!this.darknessSound.isPlaying())
+        {
+            this.darknessSound.stopSound();
+            this.darknessSound.playSound();
+        }
+    }
+
+    public void stopDarkness(){
+        this.darknessSound.stopSound();
     }
 
     public int getFrameTimer() {

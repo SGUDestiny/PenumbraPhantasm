@@ -37,7 +37,7 @@ public class SoundAccess {
         }
     }
 
-    public static SoundEvent getFountainMusic(DarkFountain fountain) {
+    public static SoundEvent getFountainMusic() {
         return Config.alternateDarkFountainMusic ? SoundRegistry.FOUNTAIN_MUSIC_ALTERNATE.get() : SoundRegistry.FOUNTAIN_MUSIC.get();
     }
 
@@ -59,11 +59,30 @@ public class SoundAccess {
         }
     }
 
-    public static SoundEvent getFountainWind(DarkFountain fountain) {
-        return fountain.getFountainDimension().location()
-                       .equals(new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths")) ?
-                       SoundRegistry.FOUNTAIN_WIND.get() :
-                       SoundRegistry.FOUNTAIN_DARKNESS.get();
+    public static SoundEvent getFountainWind() {
+        return SoundRegistry.FOUNTAIN_WIND.get();
+    }
+
+    public static void playFountainDarkness(BlockPos fountainPos, boolean stop)
+    {
+        DarkFountain fountain = getFountain(fountainPos);
+
+        if(fountain != null)
+        {
+            if(fountain.darknessSound == null)
+            {
+                fountain.darknessSound = new DarkFountainSoundWrapper.DarkFountainDarkness(fountain);
+            }
+
+            if(stop)
+                fountain.stopDarkness();
+            else
+                fountain.playDarkness();
+        }
+    }
+
+    public static SoundEvent getFountainDarkness() {
+        return SoundRegistry.FOUNTAIN_DARKNESS.get();
     }
 
     public static DarkFountain getFountain(BlockPos fountainPos) {

@@ -8,7 +8,7 @@ version="2.5"
 displayName="PENUMBRA PHANTASM"
 authors="Destiny"
 logoFile="assets/penumbra_phantasm/textures/misc/penumbra_phantasm_logo.gif"
-description='''Temp description'''
+description='''AT 'SHADOW'S EDGE,' SHATTER THE TWILIGHT REVERIE.'''
 
 [[dependencies.penumbra_phantasm]]
     modId="forge"

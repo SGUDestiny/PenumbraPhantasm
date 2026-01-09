@@ -32,6 +32,12 @@ public class PacketHandlerRegistry {
                 .consumerMainThread(ClientBoundSoundPackets.FountainWind::handle)
                 .add();
 
+        INSTANCE.messageBuilder(ClientBoundSoundPackets.FountainDarkness.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundSoundPackets.FountainDarkness::encode)
+                .decoder(ClientBoundSoundPackets.FountainDarkness::new)
+                .consumerMainThread(ClientBoundSoundPackets.FountainDarkness::handle)
+                .add();
+
         INSTANCE.messageBuilder(ClientBoundSingleFountainData.class, index++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(ClientBoundSingleFountainData::encode)
                 .decoder(ClientBoundSingleFountainData::decode)

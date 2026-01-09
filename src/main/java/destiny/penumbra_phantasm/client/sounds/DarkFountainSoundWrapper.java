@@ -53,7 +53,7 @@ public class DarkFountainSoundWrapper<T extends DarkFountain> extends SoundWrapp
     {
         public DarkFountainMusic(DarkFountain fountain)
         {
-            super(fountain, new DarkFountainMusicSound(fountain, SoundAccess.getFountainMusic(fountain)));
+            super(fountain, new DarkFountainMusicSound(fountain, SoundAccess.getFountainMusic()));
         }
     }
 
@@ -61,7 +61,15 @@ public class DarkFountainSoundWrapper<T extends DarkFountain> extends SoundWrapp
     {
         public DarkFountainWind(DarkFountain fountain)
         {
-            super(fountain, new DarkFountainWindSound(fountain, SoundAccess.getFountainWind(fountain)));
+            super(fountain, new DarkFountainWindSound(fountain, SoundAccess.getFountainWind()));
+        }
+    }
+
+    public static class DarkFountainDarkness extends DarkFountainSoundWrapper<DarkFountain>
+    {
+        public DarkFountainDarkness(DarkFountain fountain)
+        {
+            super(fountain, new DarkFountainDarknessSound(fountain, SoundAccess.getFountainDarkness()));
         }
     }
 }
