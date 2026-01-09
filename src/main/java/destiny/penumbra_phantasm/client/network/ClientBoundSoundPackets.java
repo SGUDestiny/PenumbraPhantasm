@@ -53,13 +53,13 @@ public abstract class ClientBoundSoundPackets {
         }
     }
 
-    public static class FountainDarkWind extends ClientBoundSoundPackets
+    public static class FountainWind extends ClientBoundSoundPackets
     {
-        public FountainDarkWind(BlockPos fountainPos, boolean stop)
+        public FountainWind(BlockPos fountainPos, boolean stop)
         {
             super(fountainPos, stop);
         }
-        public FountainDarkWind(FriendlyByteBuf buffer)
+        public FountainWind(FriendlyByteBuf buffer)
         {
             super(buffer);
         }
@@ -69,30 +69,8 @@ public abstract class ClientBoundSoundPackets {
         {
             ctx.get().enqueueWork(() ->
             {
-                SoundAccess.playFountainDarkWind(fountainPos, stop);
+                SoundAccess.playFountainWind(fountainPos, stop);
             });
-            return true;
-        }
-    }
-
-    public static class FountainLightWind extends ClientBoundSoundPackets
-    {
-        public FountainLightWind(BlockPos fountainPos, boolean stop)
-        {
-            super(fountainPos, stop);
-        }
-        public FountainLightWind(FriendlyByteBuf buffer)
-        {
-            super(buffer);
-        }
-
-        @Override
-        public boolean handle(Supplier<NetworkEvent.Context> ctx)
-        {
-            ctx.get().enqueueWork(() ->
-                {
-                    SoundAccess.playFountainLightWind(fountainPos, stop);
-                });
             return true;
         }
     }

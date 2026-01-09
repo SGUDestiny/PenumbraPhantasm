@@ -5,7 +5,6 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
-import destiny.penumbra_phantasm.server.util.FountainSoundUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -24,17 +23,15 @@ public class SoundAccess {
 
         if(fountain != null)
         {
-            DarkFountainSoundWrapper.DarkFountainMusic fountainMusic = FountainSoundUtil.getAmbientMusicSound(fountainPos);
-            if(fountainMusic == null)
+            if(fountain.musicSound == null)
             {
-                fountainMusic = new DarkFountainSoundWrapper.DarkFountainMusic(fountain);
-                FountainSoundUtil.setAmbientSound(fountainMusic, fountainPos);
+                fountain.musicSound = new DarkFountainSoundWrapper.DarkFountainMusic(fountain);
             }
 
             if(stop)
-                fountainMusic.stopSound();
-            else if(!fountainMusic.isPlaying())
-                fountainMusic.playSound();
+                fountain.stopMusic();
+            else
+                fountain.playMusic();
         }
     }
 
@@ -42,43 +39,21 @@ public class SoundAccess {
         return Config.alternateDarkFountainMusic ? SoundRegistry.FOUNTAIN_MUSIC_ALTERNATE.get() : SoundRegistry.FOUNTAIN_MUSIC.get();
     }
 
-    public static void playFountainDarkWind(BlockPos fountainPos, boolean stop)
+    public static void playFountainWind(BlockPos fountainPos, boolean stop)
     {
         DarkFountain fountain = getFountain(fountainPos);
 
         if(fountain != null)
         {
-            DarkFountainSoundWrapper.DarkFountainWind darkFountainWind = FountainSoundUtil.getDarkWindSound(fountainPos);
-            if(darkFountainWind == null)
+            if(fountain.windSound == null)
             {
-                darkFountainWind = new DarkFountainSoundWrapper.DarkFountainWind(fountain);
-                FountainSoundUtil.setDarkWindSound(darkFountainWind, fountainPos);
+                fountain.windSound = new DarkFountainSoundWrapper.DarkFountainWind(fountain);
             }
 
             if(stop)
-                darkFountainWind.stopSound();
-            else if(!darkFountainWind.isPlaying())
-                darkFountainWind.playSound();
-        }
-    }
-
-    public static void playFountainLightWind(BlockPos fountainPos, boolean stop)
-    {
-        DarkFountain fountain = getFountain(fountainPos);
-
-        if(fountain != null)
-        {
-            DarkFountainSoundWrapper.DarkFountainWind lightFountainWind = FountainSoundUtil.getLightWindSound(fountainPos);
-            if(lightFountainWind == null)
-            {
-                lightFountainWind = new DarkFountainSoundWrapper.DarkFountainWind(fountain);
-                FountainSoundUtil.setLightWindSound(lightFountainWind, fountainPos);
-            }
-
-            if(stop)
-                lightFountainWind.stopSound();
-            else if(!lightFountainWind.isPlaying())
-                lightFountainWind.playSound();
+                fountain.stopWind();
+            else
+                fountain.playWind();
         }
     }
 

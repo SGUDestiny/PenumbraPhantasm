@@ -2,11 +2,7 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.client.network.ClientBoundFountainData;
-import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
-import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.*;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -18,11 +14,8 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
-
-import java.util.Map;
 
 public class CommonEvents {
     @SubscribeEvent
@@ -92,36 +85,6 @@ public class CommonEvents {
                         stack.getOrCreateTag().putInt("EXP", exp);
                     }
                 }
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void changeDimensions(PlayerEvent.PlayerChangedDimensionEvent event)
-    {
-        Player player = event.getEntity();
-        Level level = player.level();
-
-        if(level instanceof ServerLevel serverLevel)
-        {
-            for(ServerLevel allLevel : serverLevel.getServer().getAllLevels())
-            {
-                allLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap ->
-                    {
-                        for(Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet())
-                        {
-                            BlockPos fountainPos = entry.getKey();
-
-                            if (Config.darkFountainMusic) {
-                                PacketHandlerRegistry.INSTANCE.send(
-                                        PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(fountainPos)), new ClientBoundSoundPackets.FountainMusic(fountainPos, true));
-                            }
-                            if(!level.dimension().equals(Level.OVERWORLD))
-                                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(fountainPos)), new ClientBoundSoundPackets.FountainDarkWind(fountainPos, true));
-                            else PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(fountainPos)), new ClientBoundSoundPackets.FountainLightWind(fountainPos, true));
-
-                        }
-                    });
             }
         }
     }

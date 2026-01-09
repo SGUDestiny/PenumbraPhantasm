@@ -2,10 +2,8 @@ package destiny.penumbra_phantasm.server.fountain;
 
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
-import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import destiny.penumbra_phantasm.server.util.ModUtil;
@@ -26,7 +24,6 @@ import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.ITeleporter;
-import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -213,12 +210,9 @@ public class DarkFountain {
                 this.teleportedEntities = newTeleportedEntities;
 
                 if (Config.darkFountainMusic) {
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainMusic(this.fountainPos, false));
+                    //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainMusic(this.fountainUuid, false));
                 }
-                if(!level.dimension().equals(Level.OVERWORLD))
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainDarkWind(this.fountainPos, false));
-                else PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainLightWind(this.fountainPos, false));
+                //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainWind(this.fountainUuid, false));
             }
         }
 
@@ -243,6 +237,32 @@ public class DarkFountain {
     public Entity teleportEntity(Entity entity, ServerLevel destinationLevel) {
         return entity.changeDimension(destinationLevel, new DarkFountainTeleporter(destinationPos.getCenter(), entity.getDeltaMovement(),
                 entity.getYRot(), entity.getXRot()));
+    }
+
+    public void playMusic()
+    {
+        if(!this.musicSound.isPlaying())
+        {
+            this.musicSound.stopSound();
+            this.musicSound.playSound();
+        }
+    }
+
+    public void stopMusic(){
+        this.musicSound.stopSound();
+    }
+
+    public void playWind()
+    {
+        if(!this.windSound.isPlaying())
+        {
+            this.windSound.stopSound();
+            this.windSound.playSound();
+        }
+    }
+
+    public void stopWind(){
+        this.windSound.stopSound();
     }
 
     public int getFrameTimer() {
