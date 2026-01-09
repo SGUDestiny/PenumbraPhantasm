@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -50,18 +51,26 @@ public class FountainDarknessOverlay {
         }
 
         double playerX = player.getX();
+        double playerY = player.getY();
         double playerZ = player.getZ();
 
         boolean isInDarkWorld = player.level().dimension().equals(fountain.getDestinationDimension());
 
-        double fountainX = isInDarkWorld ? fountain.getDestinationPos().getX() : fountain.getFountainPos().getX();
-        double fountainZ = isInDarkWorld ? fountain.getDestinationPos().getZ() : fountain.getFountainPos().getZ();
+        double fountainX = fountain.getFountainPos().getX();
+        double fountainY = fountain.getFountainPos().getY();
+        double fountainZ = fountain.getFountainPos().getZ();
 
         Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
         Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
-        float distance = flatPlayerPos.distanceToSqr(flatFountainPos);
 
-        float alpha = Mth.lerp(distance / 24f, 3.5f, 0f);
+        float distance = flatPlayerPos.distanceToSqr(flatFountainPos) / 24f;
+        if(!isInDarkWorld)
+            distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos())) / 8F;
+
+        if(isInDarkWorld && playerY > fountainY)
+            distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos())) / 8F;
+
+        float alpha = Mth.lerp(distance, 3.5f, 0f);
 
         PoseStack pose = guiGraphics.pose();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

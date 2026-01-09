@@ -13,6 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 
 import java.awt.*;
 
@@ -131,16 +132,23 @@ public class FountainRenderUtil
 		if(player != null)
 		{
 			double playerX = player.getX();
+			double playerY = player.getY();
 			double playerZ = player.getZ();
 
-			double fountainX = fountain.getDestinationPos().getX();
-			double fountainZ = fountain.getDestinationPos().getZ();
+			double fountainX = fountain.getFountainPos().getX();
+			double fountainY = fountain.getFountainPos().getY();
+			double fountainZ = fountain.getFountainPos().getZ();
 
 			Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
 			Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
-			if(flatPlayerPos.distanceToSqr(flatFountainPos) < Math.pow(16, 2)) {
+
+			float distance = flatPlayerPos.distanceToSqr(flatFountainPos);
+			if(playerY > fountainY)
+				distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos()));
+
+			if(distance < Math.pow(16, 2))
 				RenderSystem.setShaderColor(middleColor.getRed() / 255f, middleColor.getGreen() / 255f, middleColor.getBlue() / 255f, 1F);
-			}
+
 		}
 
 		if (initialAnimationTime != -1) {
