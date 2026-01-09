@@ -7,7 +7,9 @@ import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -58,7 +60,10 @@ public class SoundAccess {
     }
 
     public static SoundEvent getFountainWind(DarkFountain fountain) {
-        return SoundRegistry.FOUNTAIN_WIND.get();
+        return fountain.getFountainDimension().location()
+                       .equals(new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths")) ?
+                       SoundRegistry.FOUNTAIN_WIND.get() :
+                       SoundRegistry.FOUNTAIN_DARKNESS.get();
     }
 
     public static DarkFountain getFountain(BlockPos fountainPos) {

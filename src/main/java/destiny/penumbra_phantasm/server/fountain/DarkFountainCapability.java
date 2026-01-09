@@ -3,7 +3,6 @@ package destiny.penumbra_phantasm.server.fountain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
@@ -40,11 +39,14 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         return objectsTag;
     }
 
-    public void addDarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame, HashSet<UUID> teleportedEntities) {
+    public void addDarkFountain(Level level, BlockPos fountainPos, ResourceKey<Level> fountainDimension,
+                                BlockPos destinationPos, ResourceKey<Level> destinationDimension,
+                                int animationTimer, int frameTimer, int frame, HashSet<UUID> teleportedEntities) {
         this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, teleportedEntities));
     }
 
-    public void removeDarkFountain(BlockPos fountainPos) {
+    public void removeDarkFountain(Level level, BlockPos fountainPos)
+    {
         this.darkFountains.remove(fountainPos);
     }
 

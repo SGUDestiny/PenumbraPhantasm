@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.Config;
-import destiny.penumbra_phantasm.client.network.ClientBoundFountainData;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -14,6 +13,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -95,7 +95,6 @@ public class CommonEvents {
             Level level = event.level;
 
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(level::dimension), new ClientBoundFountainData(cap.darkFountains));
                 cap.darkFountains.forEach((uid, fountain) -> {
                     fountain.tick(level);
                 });

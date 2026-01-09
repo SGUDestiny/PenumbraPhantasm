@@ -2,8 +2,11 @@ package destiny.penumbra_phantasm.server.fountain;
 
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.network.ClientBoundSingleFountainData;
+import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import destiny.penumbra_phantasm.server.util.ModUtil;
@@ -24,6 +27,7 @@ import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.ITeleporter;
+import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -105,6 +109,20 @@ public class DarkFountain {
         return new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, teleportedEntities);
     }
 
+    public void sync(DarkFountain fountain)
+    {
+        this.fountainPos = fountain.fountainPos;
+        this.destinationPos = fountain.destinationPos;
+        this.fountainDimension = fountain.fountainDimension;
+        this.destinationDimension = fountain.destinationDimension;
+
+        this.frame = fountain.frame;
+        this.animationTimer = fountain.animationTimer;
+        this.frameTimer = fountain.frameTimer;
+
+        this.teleportedEntities = fountain.teleportedEntities;
+    }
+
     public BlockPos getFountainPos() {
         return fountainPos;
     }
@@ -173,47 +191,71 @@ public class DarkFountain {
                 this.animationTimer++;
             }
 
-            if (this.animationTimer > 125 || this.animationTimer == -1) {
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(fountainPos)), new ClientBoundSingleFountainData(this));
+
+            if (this.animationTimer > 125 || this.animationTimer == -1)
+            {
                 AABB teleportBox = new AABB(fountainPos).inflate(1).setMaxY(128);
                 HashSet<UUID> teleportBoxEntities = new HashSet<>();
 
                 ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
-                if (destinationLevel == null) {
+                if(destinationLevel == null)
+                {
                     return;
                 }
 
-                destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                    DarkFountain destinationFountain = cap.darkFountains.get(this.destinationPos);
+                destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap ->
+                    {
+                        DarkFountain destinationFountain = cap.darkFountains.get(this.destinationPos);
 
-                    for (Entity entity : level.getEntitiesOfClass(Entity.class, teleportBox)) {
-                        if (!this.teleportedEntities.contains(entity.getUUID())) {
-                            if (destinationFountain != null) {
-                                if (entity instanceof ServerPlayer player) {
-                                    destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel).getUUID());
-                                } else {
-                                    destinationFountain.teleportedEntities.add(teleportEntity(entity, destinationLevel).getUUID());
+                        for(Entity entity : level.getEntitiesOfClass(Entity.class, teleportBox))
+                        {
+                            if(!this.teleportedEntities.contains(entity.getUUID()))
+                            {
+                                if(destinationFountain != null)
+                                {
+                                    if(entity instanceof ServerPlayer player)
+                                    {
+                                        destinationFountain.teleportedEntities.add(
+                                                teleportPlayer(player, destinationLevel).getUUID());
+                                    } else
+                                    {
+                                        destinationFountain.teleportedEntities.add(
+                                                teleportEntity(entity, destinationLevel).getUUID());
+                                    }
                                 }
                             }
+                            teleportBoxEntities.add(entity.getUUID());
                         }
-                        teleportBoxEntities.add(entity.getUUID());
-                    }
-                });
+                    });
 
                 HashSet<UUID> newTeleportedEntities = new HashSet<>();
 
-                for (UUID entity : teleportedEntities) {
-                    if (teleportBoxEntities.contains(entity)) {
+                for(UUID entity : teleportedEntities)
+                {
+                    if(teleportBoxEntities.contains(entity))
+                    {
                         newTeleportedEntities.add(entity);
                     }
                 }
 
                 this.teleportedEntities = newTeleportedEntities;
 
-                if (Config.darkFountainMusic) {
-                    //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainMusic(this.fountainUuid, false));
+                if(level.dimension().location().equals(new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths")))
+                {
+                    if(Config.darkFountainMusic)
+                    {
+                        PacketHandlerRegistry.INSTANCE.send(
+                                PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
+                                new ClientBoundSoundPackets.FountainMusic(this.fountainPos, false));
+                    }
                 }
-                //PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())), new ClientBoundSoundPackets.FountainWind(this.fountainUuid, false));
+
+                PacketHandlerRegistry.INSTANCE.send(
+                        PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
+                        new ClientBoundSoundPackets.FountainWind(this.fountainPos, false));
             }
+
         }
 
         if (level.dimension() != ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))

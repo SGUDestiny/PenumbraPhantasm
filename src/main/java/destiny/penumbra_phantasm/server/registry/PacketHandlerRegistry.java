@@ -1,7 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.network.ClientBoundFountainData;
+import destiny.penumbra_phantasm.client.network.ClientBoundSingleFountainData;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
@@ -32,10 +32,10 @@ public class PacketHandlerRegistry {
                 .consumerMainThread(ClientBoundSoundPackets.FountainWind::handle)
                 .add();
 
-        INSTANCE.messageBuilder(ClientBoundFountainData.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(ClientBoundFountainData::encode)
-                .decoder(ClientBoundFountainData::decode)
-                .consumerMainThread(ClientBoundFountainData::handle)
+        INSTANCE.messageBuilder(ClientBoundSingleFountainData.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundSingleFountainData::encode)
+                .decoder(ClientBoundSingleFountainData::decode)
+                .consumerMainThread(ClientBoundSingleFountainData::handle)
                 .add();
     }
 }
