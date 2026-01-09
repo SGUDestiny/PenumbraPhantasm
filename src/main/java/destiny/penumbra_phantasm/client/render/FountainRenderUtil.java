@@ -143,7 +143,7 @@ public class FountainRenderUtil
 			Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
 
 			float distance = flatPlayerPos.distanceToSqr(flatFountainPos);
-			if(playerY > fountainY)
+			if(playerY < fountainY)
 				distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos()));
 
 			if(distance < Math.pow(16, 2))

@@ -11,6 +11,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
@@ -40,10 +42,22 @@ public class FountainDarknessOverlay {
 
         for(Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet())
         {
-            if((entry.getValue().animationTimer > 125 || entry.getValue().animationTimer == -1) && entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 64)
+            if(entry.getValue().animationTimer > 125 || entry.getValue().animationTimer == -1)
             {
-                fountain = entry.getValue();
-                break; // If fountain within 8 blocks of this(8 squared is 64)
+                double playerX = player.getX();
+                double playerZ = player.getZ();
+
+                BlockPos fountainPos = entry.getValue().getFountainPos();
+                double fountainX = fountainPos.getX();
+                double fountainZ = fountainPos.getZ();
+
+                Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
+                Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
+
+                if (flatFountainPos.distanceToSqr(flatPlayerPos) < 64) {
+                    fountain = entry.getValue();
+                    break; // If fountain within 8 blocks of this(8 squared is 64)
+                }
             }
         }
         if (fountain == null) {
@@ -54,7 +68,7 @@ public class FountainDarknessOverlay {
         double playerY = player.getY();
         double playerZ = player.getZ();
 
-        boolean isInDarkWorld = player.level().dimension().equals(fountain.getDestinationDimension());
+        boolean isInDarkWorld = player.level().dimension() == ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"));
 
         double fountainX = fountain.getFountainPos().getX();
         double fountainY = fountain.getFountainPos().getY();
@@ -63,12 +77,12 @@ public class FountainDarknessOverlay {
         Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
         Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
 
-        float distance = flatPlayerPos.distanceToSqr(flatFountainPos) / 24f;
+        float distance = flatPlayerPos.distanceToSqr(flatFountainPos) / 16F;
         if(!isInDarkWorld)
-            distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos())) / 8F;
+            distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos())) / 16F;
 
-        if(isInDarkWorld && playerY > fountainY)
-            distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos())) / 8F;
+        if(isInDarkWorld && playerY < fountainY)
+            distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos())) / 16F;
 
         float alpha = Mth.lerp(distance, 3.5f, 0f);
 
