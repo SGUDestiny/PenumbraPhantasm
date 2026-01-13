@@ -2,20 +2,19 @@ package destiny.penumbra_phantasm;
 
 import com.mojang.logging.LogUtils;
 import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
+import destiny.penumbra_phantasm.client.models.item.DeltashieldModel;
 import destiny.penumbra_phantasm.client.render.FountainDarknessOverlay;
+import destiny.penumbra_phantasm.client.render.item.DeltashieldRenderer;
 import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.particles.*;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
-import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
-import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -29,15 +28,13 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 @Mod(PenumbraPhantasm.MODID)
-public class PenumbraPhantasm
-{
+public class PenumbraPhantasm {
     public static final String MODID = "penumbra_phantasm";
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final ResourceLocation EMPTY_LOCATION = new ResourceLocation(MODID, "empty");
     public static final String EMPTY = EMPTY_LOCATION.toString();
 
-    public PenumbraPhantasm()
-    {
+    public PenumbraPhantasm() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::commonSetup);
 
@@ -62,33 +59,27 @@ public class PenumbraPhantasm
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event)
-    {
-
-    }
-
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
-    {
-
-    }
+    private void commonSetup(final FMLCommonSetupEvent event) {}
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ClientModEvents
-    {
+    public static class ClientModEvents {
         @SubscribeEvent
-        public static void bakeModels(EntityRenderersEvent.RegisterLayerDefinitions event)
-        {
+        public static void bakeModels(EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(DarkFountainOpeningModel.LAYER_LOCATION, DarkFountainOpeningModel::createBodyLayer);
             event.registerLayerDefinition(DarkFountainGroundCrackModel.LAYER_LOCATION, DarkFountainGroundCrackModel::createBodyLayer);
             event.registerLayerDefinition(DarkFountainBackModel.LAYER_LOCATION, DarkFountainBackModel::createBodyLayer);
             event.registerLayerDefinition(DarkFountainMiddleModel.LAYER_LOCATION, DarkFountainMiddleModel::createBodyLayer);
             event.registerLayerDefinition(DarkFountainFrontModel.LAYER_LOCATION, DarkFountainFrontModel::createBodyLayer);
+            event.registerLayerDefinition(DeltashieldModel.LAYER_LOCATION, DeltashieldModel::createBodyLayer);
         }
 
         @SubscribeEvent
-        public static void registerOverlays(RegisterGuiOverlaysEvent event)
-        {
+        public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
+            event.registerReloadListener(DeltashieldRenderer.INSTANCE);
+        }
+
+        @SubscribeEvent
+        public static void registerOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAboveAll("fountain_darkness", FountainDarknessOverlay.OVERLAY);
         }
 
@@ -100,10 +91,12 @@ public class PenumbraPhantasm
         }
 
         @SubscribeEvent
-        public static void onClientSetup(FMLClientSetupEvent event)
-        {
+        public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());
+                ItemProperties.register(ItemRegistry.DELTASHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
+                    return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F;
+                });
             });
         }
 

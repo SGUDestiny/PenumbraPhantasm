@@ -16,6 +16,9 @@ public class CreativeTabRegistry {
             .displayItems((parameters, output) -> {
                 output.accept(ItemRegistry.SOUL_HEARTH.get());
 
+                output.accept(ItemRegistry.DELTASHIELD.get());
+                output.accept(ItemRegistry.FAMILIAR_SWORD.get());
+
                 output.accept(ItemRegistry.GOLD_KNIFE.get());
                 output.accept(ItemRegistry.IRON_KNIFE.get());
                 output.accept(ItemRegistry.DIAMOND_KNIFE.get());
@@ -29,6 +32,8 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.DARK_CANDY_LOG.get());
 
                 output.accept(ItemRegistry.FRIEND.get());
+
+                output.accept(ItemRegistry.SHADOW_CRYSTAL.get());
 
                 output.accept(BlockRegistry.SCARLET_LEAVES.get());
                 output.accept(BlockRegistry.SCARLET_LOG.get());
