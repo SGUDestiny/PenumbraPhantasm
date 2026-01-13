@@ -1,11 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
-import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.item.KnifeItem;
-import destiny.penumbra_phantasm.server.item.FriendItem;
-import destiny.penumbra_phantasm.server.item.NetheriteKnifeItem;
-import destiny.penumbra_phantasm.server.item.RealKnifeItem;
+import destiny.penumbra_phantasm.server.item.*;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraftforge.registries.DeferredRegister;
@@ -42,4 +38,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> FRIEND = ITEMS.register("friend",
             () -> new FriendItem(basicItem()));
+
+    public static final RegistryObject<Item> SOUL_HEARTH = ITEMS.register("soul_hearth",
+            () -> new SoulHearthItem(basicItem()));
 }
