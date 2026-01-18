@@ -1,0 +1,18 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "file": "penumbra_phantasm:font/8_bit_operator.png",
+      "height": 10,
+      "ascent": 9,
+      "chars": [
+        " !\"#$%&'()*+,-./",
+        "0123456789:;<=>?",
+        "@ABCDEFGHIJKLMNO",
+        "PQRSTUVWXYZ[\\]^_",
+        "`abcdefghijklmno",
+        "pqrstuvwxyz{|}~\u0000"
+      ]
+    }
+  ]
+}

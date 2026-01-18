@@ -1,6 +1,9 @@
 package destiny.penumbra_phantasm.server.item;
 
+import destiny.penumbra_phantasm.PenumbraPhantasm;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TooltipFlag;
@@ -23,8 +26,8 @@ public class NetheriteKnifeItem extends KnifeItem {
                     int exp = stack.getTag().getInt("EXP");
                     int nextexp = 20 * lv;
 
-                    list.add(Component.translatable("tooltip.penumbra_phantasm.netherite_knife.lv").append(Component.literal(" " + lv)));
-                    list.add(Component.translatable("tooltip.penumbra_phantasm.netherite_knife.exp").append(Component.literal(" " + exp + " / " + nextexp)));
+                    list.add(Component.translatable("tooltip.penumbra_phantasm.netherite_knife.lv").append(Component.literal(" " + lv).withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "font/8_bit_operator_ttf")))));
+                    list.add(Component.translatable("tooltip.penumbra_phantasm.netherite_knife.exp").append(Component.literal(" " + exp + " / " + nextexp)).withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "font/8_bit_operator"))));
                 }
             }
         }
