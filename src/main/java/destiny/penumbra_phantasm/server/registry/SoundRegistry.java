@@ -20,6 +20,10 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> REAL_KNIFE_SLASH = registerSoundEvent("real_knife_slash");
     public static RegistryObject<SoundEvent> REAL_KNIFE_HIT = registerSoundEvent("real_knife_hit");
     public static RegistryObject<SoundEvent> LEVEL_UP = registerSoundEvent("level_up");
+    public static RegistryObject<SoundEvent> INTRO_ANOTHER_HIM = registerSoundEvent("intro_another_him");
+    public static RegistryObject<SoundEvent> INTRO_APPEARANCE = registerSoundEvent("intro_appearance");
+    public static RegistryObject<SoundEvent> INTRO_DRONE = registerSoundEvent("intro_drone");
+    public static RegistryObject<SoundEvent> OCEAN = registerSoundEvent("ocean");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {

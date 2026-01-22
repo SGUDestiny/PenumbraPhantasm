@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.render;
+package destiny.penumbra_phantasm.client.render.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;

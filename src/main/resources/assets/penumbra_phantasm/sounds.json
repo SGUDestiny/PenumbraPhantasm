@@ -61,5 +61,40 @@
     [
       "penumbra_phantasm:level_up"
     ]
+  },
+  "dontforget": {
+    "subtitle": "sound.penumbra_phantasm.dontforget",
+    "sounds":
+    [
+      "penumbra_phantasm:dontforget"
+    ]
+  },
+  "intro_another_him": {
+    "subtitle": "sound.penumbra_phantasm.intro_another_him",
+    "sounds":
+    [
+      "penumbra_phantasm:intro_another_him"
+    ]
+  },
+  "intro_appearance": {
+    "subtitle": "sound.penumbra_phantasm.intro_appearance",
+    "sounds":
+    [
+      "penumbra_phantasm:intro_appearance"
+    ]
+  },
+  "intro_drone": {
+    "subtitle": "sound.penumbra_phantasm.intro_drone",
+    "sounds":
+    [
+      "penumbra_phantasm:intro_drone"
+    ]
+  },
+  "ocean": {
+    "subtitle": "sound.penumbra_phantasm.ocean",
+    "sounds":
+    [
+      "penumbra_phantasm:ocean"
+    ]
   }
 }

@@ -5,6 +5,7 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.network.ClientBoundSingleFountainData;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
+import destiny.penumbra_phantasm.server.capability.IntroCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.ITeleporter;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 
 import javax.annotation.Nullable;
@@ -281,8 +283,21 @@ public class DarkFountain {
     }
 
     public Entity teleportPlayer(ServerPlayer player, ServerLevel destinationLevel) {
-        player.teleportTo(destinationLevel, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), (float)Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270), player.getXRot());
-        player.connection.send(new ClientboundSetEntityMotionPacket(player));
+        if (destinationLevel.dimension() == ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))) {
+            IntroCapability capability;
+            LazyOptional<IntroCapability> lazyOptional = player.getCapability(CapabilityRegistry.INTRO);
+            if (lazyOptional.isPresent() && lazyOptional.resolve().isPresent()) {
+                capability = lazyOptional.resolve().get();
+
+                if (!capability.seenIntro) {
+                    capability.seenIntro = true;
+                    //Do player packet stuff here
+                }
+            }
+        } else {
+            player.teleportTo(destinationLevel, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), (float)Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270), player.getXRot());
+            player.connection.send(new ClientboundSetEntityMotionPacket(player));
+        }
 
         return player;
     }

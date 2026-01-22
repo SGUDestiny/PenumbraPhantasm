@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.capability.IntroCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -13,10 +14,13 @@ import net.minecraftforge.fml.common.Mod;
 public class CapabilityRegistry {
     public static final Capability<DarkFountainCapability> DARK_FOUNTAIN = CapabilityManager.get(new CapabilityToken<>() {
     });
+    public static final Capability<IntroCapability> INTRO = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event)
     {
         event.register(DarkFountainCapability.class);
+        event.register(IntroCapability.class);
     }
 }

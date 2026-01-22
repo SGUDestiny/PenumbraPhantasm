@@ -2,7 +2,7 @@
   "providers": [
     {
       "type": "ttf",
-      "file": "penumbra_phantasm:8_bit_operator.ttf",
+      "file": "penumbra_phantasm:8_bit_operator.otf",
       "size": 10,
       "oversample": 2,
       "shift": [0, 0]
