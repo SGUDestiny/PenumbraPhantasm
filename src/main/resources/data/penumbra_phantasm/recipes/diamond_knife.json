@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "tag": "forge:gems/diamond"
+    }
+  },
+  "pattern": [
+    "  #",
+    " X ",
+    "   "
+  ],
+  "result": {
+    "item": "penumbra_phantasm:diamond_knife"
+  },
+  "show_notification": true
+}

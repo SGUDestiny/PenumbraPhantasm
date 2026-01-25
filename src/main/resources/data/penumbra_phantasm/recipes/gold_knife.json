@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "tag": "forge:ingots/gold"
+    }
+  },
+  "pattern": [
+    "  #",
+    " X ",
+    "   "
+  ],
+  "result": {
+    "item": "penumbra_phantasm:gold_knife"
+  },
+  "show_notification": true
+}

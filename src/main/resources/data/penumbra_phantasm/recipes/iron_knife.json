@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "minecraft:stick"
+    },
+    "X": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "pattern": [
+    "  #",
+    " X ",
+    "   "
+  ],
+  "result": {
+    "item": "penumbra_phantasm:iron_knife"
+  },
+  "show_notification": true
+}
