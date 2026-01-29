@@ -110,7 +110,6 @@ public class KnifeItem extends SwordItem {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean b) {
-        if (!level.isClientSide()) {
             if (entity instanceof Player player) {
                 CompoundTag tag = stack.getOrCreateTag();
                 if (!tag.contains("tick")) {
@@ -226,7 +225,6 @@ public class KnifeItem extends SwordItem {
                     tag.putInt("tick", tick);
                 }
             }
-        }
     }
 
     @Override

@@ -285,22 +285,6 @@ public class DarkFountain {
     }
 
     public Entity teleportPlayer(ServerPlayer player, ServerLevel destinationLevel) {
-/*        if (destinationLevel.dimension() == ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))) {
-            IntroCapability capability;
-            LazyOptional<IntroCapability> lazyOptional = player.getCapability(CapabilityRegistry.INTRO);
-            if (lazyOptional.isPresent() && lazyOptional.resolve().isPresent()) {
-                capability = lazyOptional.resolve().get();
-
-                if (!capability.seenIntro) {
-                    capability.seenIntro = true;
-                    //Do player packet stuff here
-                }
-            }
-        } else {
-            player.teleportTo(destinationLevel, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), (float)Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270), player.getXRot());
-            player.connection.send(new ClientboundSetEntityMotionPacket(player));
-        }*/
-
         player.getCapability(CapabilityRegistry.INTRO).ifPresent(cap ->
             {
                 if(true)
