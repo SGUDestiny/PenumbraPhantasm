@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.fountain;
 
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.network.ClientBoundIntroPacket;
 import destiny.penumbra_phantasm.client.network.ClientBoundSingleFountainData;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
@@ -11,6 +12,7 @@ import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import destiny.penumbra_phantasm.server.util.ModUtil;
+import net.minecraft.client.gui.screens.WinScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
@@ -299,8 +301,19 @@ public class DarkFountain {
             player.connection.send(new ClientboundSetEntityMotionPacket(player));
         }*/
 
+
         player.teleportTo(destinationLevel, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), (float)Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270), player.getXRot());
         player.connection.send(new ClientboundSetEntityMotionPacket(player));
+
+        player.getCapability(CapabilityRegistry.INTRO).ifPresent(cap ->
+            {
+                if(true)
+                {
+                    cap.seenIntro = true;
+                    destinationLevel.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundIntroPacket());
+                }
+            });
 
         return player;
     }

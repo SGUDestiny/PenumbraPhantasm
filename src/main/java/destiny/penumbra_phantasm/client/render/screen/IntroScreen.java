@@ -55,8 +55,10 @@ public class IntroScreen extends Screen {
     }
 
     @Override
-    public void onClose() {}
+    public void onClose()
+    {
 
+    }
     public void closeScreen() {
         this.onFinished.run();
     }
