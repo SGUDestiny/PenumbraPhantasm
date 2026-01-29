@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.client.render.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.GameNarrator;
@@ -42,24 +43,14 @@ public class IntroScreen extends Screen {
     }
 
     @Override
-    public void renderBackground(GuiGraphics graphics) {
-        graphics.pose().pushPose();
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.ZERO, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR);
+    public void render(GuiGraphics graphics, int pMouseX, int pMouseY, float pPartialTick)
+    {
+        PoseStack pose = graphics.pose();
         if (this.tick > droneLength * 3) {
             graphics.blit(IMAGE_DEPTH, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, this.width, this.height);
         } else {
             graphics.blit(BLACK_SCREEN, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, this.width, this.height);
         }
-        RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
-        graphics.pose().popPose();
-        super.renderBackground(graphics);
-    }
-
-    @Override
-    public void render(GuiGraphics graphics, int p_281550_, int p_282878_, float p_282465_) {
-        super.render(graphics, p_281550_, p_282878_, p_282465_);
     }
 
     @Override
