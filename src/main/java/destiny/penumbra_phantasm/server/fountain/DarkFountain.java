@@ -301,17 +301,13 @@ public class DarkFountain {
             player.connection.send(new ClientboundSetEntityMotionPacket(player));
         }*/
 
-
-        player.teleportTo(destinationLevel, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), (float)Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270), player.getXRot());
-        player.connection.send(new ClientboundSetEntityMotionPacket(player));
-
         player.getCapability(CapabilityRegistry.INTRO).ifPresent(cap ->
             {
                 if(true)
                 {
                     cap.seenIntro = true;
                     destinationLevel.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundIntroPacket());
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundIntroPacket(destinationPos, destinationLevel.dimension()));
                 }
             });
 
