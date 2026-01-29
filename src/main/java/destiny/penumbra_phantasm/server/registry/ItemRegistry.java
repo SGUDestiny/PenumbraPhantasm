@@ -30,12 +30,16 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> FAMILIAR_SWORD = ITEMS.register("familiar_sword",
             () -> new SwordItem(Tiers.NETHERITE, 9, -3, basicItem()));
+    public static final RegistryObject<Item> FAMILIAR_AX = ITEMS.register("familiar_ax",
+            () -> new AxeItem(Tiers.NETHERITE, 9, -3, basicItem()));
 
     public static final RegistryObject<Item> DELTASHIELD = ITEMS.register("deltashield",
             () -> new DeltashieldItem(basicItem()));
 
     public static final RegistryObject<Item> SHADOW_CRYSTAL = ITEMS.register("shadow_crystal",
             () -> new Item(basicItem()));
+    public static final RegistryObject<Item> BLACK_SHARD = ITEMS.register("black_shard",
+            () -> new SwordItem(Tiers.NETHERITE, 9, -3, basicItem()));
 
     public static final RegistryObject<Item> DARK_CANDY = ITEMS.register("dark_candy",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationMod(8).fast().alwaysEat().build())));

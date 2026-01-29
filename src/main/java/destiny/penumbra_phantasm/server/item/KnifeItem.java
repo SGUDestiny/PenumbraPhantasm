@@ -110,117 +110,121 @@ public class KnifeItem extends SwordItem {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean b) {
-        if (entity instanceof Player player) {
-            CompoundTag tag = stack.getOrCreateTag();
-            if (!tag.contains("tick")) {
-                tag.putInt("tick", -2);
-            }
-
-            int tick = tag.getInt("tick");
-
-            if (tick >= 14) {
-                tag.putInt("tick", -2);
-                if (!level.getBlockState(player.getOnPos()).isAir()) {
-                    if (!level.isClientSide()) {
-                        UUID uuid = UUID.randomUUID();
-                        Iterator<ResourceKey<Level>> set = level.getServer().levelKeys().iterator();
-                        ResourceKey<Level> target = null;
-                        while(set.hasNext()) {
-                            ResourceKey<Level> current = set.next();
-                            if(current.equals(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))))
-                                target = current;
-                        }
-
-                        if (target == null) {
-                            return;
-                        }
-
-                        ResourceKey<Level> finalTarget = target;
-                        ServerLevel targetLevel = level.getServer().getLevel(finalTarget);
-                        if(targetLevel == null)
-                            return;
-
-                        ChunkPos fountainChunk = level.getChunk(player.blockPosition()).getPos();
-                        targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
-
-                        BlockPos fountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
-
-                        //Make Light World fountain
-                        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(level, player.getOnPos().above(), level.dimension(), fountainPos, finalTarget, 0, 0, 0, new HashSet<>()));
-
-                        //Make Dark World fountain
-                        targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(
-                                cap -> cap.addDarkFountain(targetLevel, fountainPos,
-                                        targetLevel.dimension(), player.getOnPos().above(), level.dimension(), 0, 0, 0, new HashSet<>()));
-
-                        targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
-
-                        if (!player.isCreative()) {
-                            player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
-                        }
-
-                        if (needsNetherStar) {
-                            tag.putBoolean("determination", false);
-                        }
-
-                        if (isSingleUse) {
-                            stack.hurtAndBreak(stack.getMaxDamage(), player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                        }
-                    }
+        if (!level.isClientSide()) {
+            if (entity instanceof Player player) {
+                CompoundTag tag = stack.getOrCreateTag();
+                if (!tag.contains("tick")) {
+                    tag.putInt("tick", -2);
                 }
 
-            } else if (tick >= 0) {
-                if (tick == 0) {
-                    if (level.isClientSide()) {
-                        //Get the animation for that player
-                        ModifierLayer<IAnimation> animation = (ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData((AbstractClientPlayer) player).get(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"));
+                int tick = tag.getInt("tick");
 
-                        if (animation != null) {
-                            //You can set an animation from anywhere ON THE CLIENT
-                            //Do not attempt to do this on a server, that will only fail
+                if (tick >= 14) {
+                    tag.putInt("tick", -2);
+                    if (!level.getBlockState(player.getOnPos()).isAir()) {
+                        if (!level.isClientSide()) {
+                            UUID uuid = UUID.randomUUID();
+                            Iterator<ResourceKey<Level>> set = level.getServer().levelKeys().iterator();
+                            ResourceKey<Level> target = null;
+                            while (set.hasNext()) {
+                                ResourceKey<Level> current = set.next();
+                                if (current.equals(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))))
+                                    target = current;
+                            }
 
-                            animation.setAnimation(new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))));
-                            //You might use  animation.replaceAnimationWithFade(); to create fade effect instead of sudden change
-                            //See javadoc for details
+                            if (target == null) {
+                                return;
+                            }
+
+                            ResourceKey<Level> finalTarget = target;
+                            ServerLevel targetLevel = level.getServer().getLevel(finalTarget);
+                            if (targetLevel == null)
+                                return;
+
+                            ChunkPos fountainChunk = level.getChunk(player.blockPosition()).getPos();
+                            targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
+
+                            BlockPos fountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
+
+                            //Make Light World fountain
+                            level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(level, player.getOnPos().above(), level.dimension(), fountainPos, finalTarget, 0, 0, 0, new HashSet<>()));
+
+                            //Make Dark World fountain
+                            targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(
+                                    cap -> cap.addDarkFountain(targetLevel, fountainPos,
+                                            targetLevel.dimension(), player.getOnPos().above(), level.dimension(), 0, 0, 0, new HashSet<>()));
+
+                            targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
+
+                            if (!player.isCreative()) {
+                                player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
+                            }
+
+                            if (needsNetherStar) {
+                                tag.putBoolean("determination", false);
+                            }
+
+                            if (isSingleUse) {
+                                stack.hurtAndBreak(stack.getMaxDamage(), player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+                            }
                         }
                     }
+
+                } else if (tick >= 0) {
+                    if (tick == 0) {
+                        if (level.isClientSide()) {
+                            //Get the animation for that player
+                            ModifierLayer<IAnimation> animation = (ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData((AbstractClientPlayer) player).get(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"));
+
+                            if (animation != null) {
+                                //You can set an animation from anywhere ON THE CLIENT
+                                //Do not attempt to do this on a server, that will only fail
+
+                                animation.setAnimation(new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))));
+                                //You might use  animation.replaceAnimationWithFade(); to create fade effect instead of sudden change
+                                //See javadoc for details
+                            }
+                        }
+                    }
+
+                    float initYaw = tag.getFloat("initYaw");
+                    double initX = tag.getDouble("initX");
+                    double initY = tag.getDouble("initY");
+                    double initZ = tag.getDouble("initZ");
+
+                    double yawRad = Math.toRadians(initYaw);
+                    double forwardX = Math.sin(yawRad);
+                    double forwardZ = Math.cos(yawRad);
+
+                    // Center: offset in front
+                    double offsetDist = 2.0;
+                    double centerX = initX + forwardX * offsetDist;
+                    double centerY = initY;
+                    double centerZ = initZ + forwardZ * offsetDist;
+
+                    // Row direction: to the right from player perspective
+                    double rowX = -forwardZ;
+                    double rowZ = forwardX;
+
+                    // Spacing
+                    double spacing = 0.5;
+
+                    // Index for left-to-right: -4 to +4
+                    int index = tick - 7;
+                    double offsetAlongRow = index * spacing;
+
+                    // Particle position
+                    double partX = centerX + rowX * offsetAlongRow;
+                    double partY = centerY + (-0.5f + level.getRandom().nextFloat() * 0.5f);
+                    double partZ = centerZ + rowZ * offsetAlongRow;
+
+                    if (level instanceof ServerLevel serverLevel) {
+                        serverLevel.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), partX, partY, partZ, 0, 0, 0);
+                    }
+
+                    tick++;
+                    tag.putInt("tick", tick);
                 }
-
-                float initYaw = tag.getFloat("initYaw");
-                double initX = tag.getDouble("initX");
-                double initY = tag.getDouble("initY");
-                double initZ = tag.getDouble("initZ");
-
-                double yawRad = Math.toRadians(initYaw);
-                double forwardX = Math.sin(yawRad);
-                double forwardZ = Math.cos(yawRad);
-
-                // Center: offset in front
-                double offsetDist = 2.0;
-                double centerX = initX + forwardX * offsetDist;
-                double centerY = initY;
-                double centerZ = initZ + forwardZ * offsetDist;
-
-                // Row direction: to the right from player perspective
-                double rowX = -forwardZ;
-                double rowZ = forwardX;
-
-                // Spacing
-                double spacing = 0.5;
-
-                // Index for left-to-right: -4 to +4
-                int index = tick - 7;
-                double offsetAlongRow = index * spacing;
-
-                // Particle position
-                double partX = centerX + rowX * offsetAlongRow;
-                double partY = centerY + (-0.5f + level.getRandom().nextFloat() * 0.5f);
-                double partZ = centerZ + rowZ * offsetAlongRow;
-
-                level.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), partX, partY, partZ, 0, 0, 0);
-
-                tick++;
-                tag.putInt("tick", tick);
             }
         }
     }

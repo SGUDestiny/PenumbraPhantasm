@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "penumbra_phantasm:scarlet_marble",
+    "penumbra_phantasm:dark_marble",
+    "penumbra_phantasm:umbrastone",
+    "penumbra_phantasm:cobbled_umbrastone",
+
+    "penumbra_phantasm:scarlet_marble_pawn",
+    "penumbra_phantasm:scarlet_marble_rook",
+    "penumbra_phantasm:scarlet_marble_knight",
+    "penumbra_phantasm:scarlet_marble_bishop",
+    "penumbra_phantasm:scarlet_marble_queen",
+    "penumbra_phantasm:scarlet_marble_king",
+
+    "penumbra_phantasm:dark_marble_pawn",
+    "penumbra_phantasm:dark_marble_rook",
+    "penumbra_phantasm:dark_marble_knight",
+    "penumbra_phantasm:dark_marble_bishop",
+    "penumbra_phantasm:dark_marble_queen",
+    "penumbra_phantasm:dark_marble_king"
+  ]
+}

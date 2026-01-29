@@ -6,11 +6,13 @@
   "item.penumbra_phantasm.real_knife": "§4Real Knife§r",
   "item.penumbra_phantasm.black_knife": "§0Black Knife§r",
   "item.penumbra_phantasm.dark_candy": "Dark Candy",
-  "item.penumbra_phantasm.friend": "§dFRI§r§eEND§r",
+  "item.penumbra_phantasm.friend": "§eFRI§r§dEND§r",
   "item.penumbra_phantasm.soul_hearth": "SOUL Hearth",
   "item.penumbra_phantasm.familiar_sword": "Familiar Sword",
+  "item.penumbra_phantasm.familiar_ax": "Familiar Ax",
   "item.penumbra_phantasm.deltashield": "DELTASHIELD",
   "item.penumbra_phantasm.shadow_crystal": "Shadow Crystal",
+  "item.penumbra_phantasm.black_shard": "Black Shard",
 
 
   "block.penumbra_phantasm.night_grass": "Night Grass",

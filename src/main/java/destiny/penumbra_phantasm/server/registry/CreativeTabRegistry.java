@@ -11,13 +11,14 @@ public class CreativeTabRegistry {
     public static final DeferredRegister<CreativeModeTab> DEF_REG  = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, PenumbraPhantasm.MODID);
 
     public static final RegistryObject<CreativeModeTab> MAIN = DEF_REG.register("main", () -> CreativeModeTab.builder()
-            .icon(() -> BlockRegistry.NIGHT_GRASS_BLOCK.get().asItem().getDefaultInstance())
+            .icon(() -> ItemRegistry.DARK_CANDY.get().getDefaultInstance())
             .title(Component.translatable("itemGroup.penumbra_phantasm.main"))
             .displayItems((parameters, output) -> {
                 output.accept(ItemRegistry.SOUL_HEARTH.get());
 
                 output.accept(ItemRegistry.DELTASHIELD.get());
                 output.accept(ItemRegistry.FAMILIAR_SWORD.get());
+                output.accept(ItemRegistry.FAMILIAR_AX.get());
 
                 output.accept(ItemRegistry.GOLD_KNIFE.get());
                 output.accept(ItemRegistry.IRON_KNIFE.get());
@@ -26,24 +27,25 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.REAL_KNIFE.get());
                 output.accept(ItemRegistry.BLACK_KNIFE.get());
 
-                output.accept(ItemRegistry.DARK_CANDY.get());
-                output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());
-                output.accept(BlockRegistry.DARK_CANDY_LEAVES.get());
-                output.accept(BlockRegistry.DARK_CANDY_LOG.get());
-
-                output.accept(ItemRegistry.FRIEND.get());
-
+                output.accept(ItemRegistry.BLACK_SHARD.get());
                 output.accept(ItemRegistry.SHADOW_CRYSTAL.get());
 
-                output.accept(BlockRegistry.SCARLET_LEAVES.get());
-                output.accept(BlockRegistry.SCARLET_LOG.get());
-                output.accept(BlockRegistry.SCARLET_SAPLING.get());
+                output.accept(ItemRegistry.FRIEND.get());
 
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());
                 output.accept(BlockRegistry.NIGHT_DIRT.get());
                 output.accept(BlockRegistry.UMBRASTONE.get());
                 output.accept(BlockRegistry.COBBLED_UMBRASTONE.get());
+
+                output.accept(BlockRegistry.SCARLET_LEAVES.get());
+                output.accept(BlockRegistry.SCARLET_LOG.get());
+                output.accept(BlockRegistry.SCARLET_SAPLING.get());
+
+                output.accept(ItemRegistry.DARK_CANDY.get());
+                output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());
+                output.accept(BlockRegistry.DARK_CANDY_LEAVES.get());
+                output.accept(BlockRegistry.DARK_CANDY_LOG.get());
 
                 output.accept(BlockRegistry.SCARLET_MARBLE.get());
                 output.accept(BlockRegistry.DARK_MARBLE.get());
