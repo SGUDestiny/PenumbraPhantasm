@@ -150,7 +150,7 @@ public class IntroScreen extends Screen {
 
             //Depths layer 1
             float depthsAlphaDelta1 = depthsTick1 / depthsLifetime;
-            float depthsAlpha1 = Mth.lerp(depthsAlphaDelta1, 1f, 0f);
+            float depthsAlpha1 = Mth.lerp(depthsAlphaDelta1, 0.8f, 0f);
             float depthsSize1 = Mth.lerp(depthsAlphaDelta1, 0f, 1f);
 
             pose.pushPose();
@@ -165,7 +165,7 @@ public class IntroScreen extends Screen {
 
             //Depths layer 2
             float depthsAlphaDelta2 = depthsTick2 / depthsLifetime;
-            float depthsAlpha2 = Mth.lerp(depthsAlphaDelta2, 1f, 0f);
+            float depthsAlpha2 = Mth.lerp(depthsAlphaDelta1, 0.8f, 0f);
             float depthsSize2 = Mth.lerp(depthsAlphaDelta2, 0f, 1f);
 
             pose.pushPose();
@@ -180,7 +180,7 @@ public class IntroScreen extends Screen {
 
             //Depths layer 3
             float depthsAlphaDelta3 = depthsTick3 / depthsLifetime;
-            float depthsAlpha3 = Mth.lerp(depthsAlphaDelta3, 1f, 0f);
+            float depthsAlpha3 = Mth.lerp(depthsAlphaDelta1, 0.8f, 0f);
             float depthsSize3 = Mth.lerp(depthsAlphaDelta3, 0f, 1f);
 
             pose.pushPose();
@@ -195,7 +195,7 @@ public class IntroScreen extends Screen {
 
             //Depths layer 4
             float depthsAlphaDelta4 = depthsTick4 / depthsLifetime;
-            float depthsAlpha4 = Mth.lerp(depthsAlphaDelta4, 1f, 0f);
+            float depthsAlpha4 = Mth.lerp(depthsAlphaDelta1, 0.8f, 0f);
             float depthsSize4 = Mth.lerp(depthsAlphaDelta4, 0f, 1f);
 
             pose.pushPose();
@@ -210,7 +210,7 @@ public class IntroScreen extends Screen {
 
             //Depths layer 5
             float depthsAlphaDelta5 = depthsTick5 / depthsLifetime;
-            float depthsAlpha5 = Mth.lerp(depthsAlphaDelta5, 1f, 0f);
+            float depthsAlpha5 = Mth.lerp(depthsAlphaDelta1, 0.8f, 0f);
             float depthsSize5 = Mth.lerp(depthsAlphaDelta5, 0f, 1f);
 
             pose.pushPose();
