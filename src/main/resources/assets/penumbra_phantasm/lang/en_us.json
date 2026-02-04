@@ -68,6 +68,7 @@
   "screen.penumbra_phantasm.intro.line.10": "BEGIN.",
   "screen.penumbra_phantasm.intro.line.12": "FIRST.",
   "screen.penumbra_phantasm.intro.line.13": "YOU MUST CHOOSE A GIFT.",
+  
   "screen.penumbra_phantasm.intro.choice.1": "DETERMINATION",
   "screen.penumbra_phantasm.intro.choice.2": "PATIENCE",
   "screen.penumbra_phantasm.intro.choice.3": "BRAVERY",
@@ -75,6 +76,7 @@
   "screen.penumbra_phantasm.intro.choice.5": "PERSEVERANCE",
   "screen.penumbra_phantasm.intro.choice.6": "KINDNESS",
   "screen.penumbra_phantasm.intro.choice.7": "JUSTICE",
+
   "screen.penumbra_phantasm.intro.line.14": "A WONDERFUL CHOICE.",
   "screen.penumbra_phantasm.intro.line.15": "'PLAYER_NAME.'",
   "screen.penumbra_phantasm.intro.line.16": "YOU HAVE A TRULY",
