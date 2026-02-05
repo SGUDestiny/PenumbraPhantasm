@@ -146,14 +146,14 @@ public class RenderBlitUtil
 						  float red, float green, float blue, float alpha,
 						  float pBlitOffset, float pMinU, float pMaxU, float pMinV, float pMaxV) {
 		RenderSystem.setShaderTexture(0, pAtlasLocation);
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		Matrix4f matrix4f = pose.last().pose();
 		BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
-		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-		bufferbuilder.vertex(matrix4f, pX1, pY1, pBlitOffset).uv(pMinU, pMinV).color(red, green, blue, alpha).endVertex();
-		bufferbuilder.vertex(matrix4f, pX1, pY2, pBlitOffset).uv(pMinU, pMaxV).color(red, green, blue, alpha).endVertex();
-		bufferbuilder.vertex(matrix4f, pX2, pY2, pBlitOffset).uv(pMaxU, pMaxV).color(red, green, blue, alpha).endVertex();
-		bufferbuilder.vertex(matrix4f, pX2, pY1, pBlitOffset).uv(pMaxU, pMinV).color(red, green, blue, alpha).endVertex();
+		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+		bufferbuilder.vertex(matrix4f, pX1, pY1, pBlitOffset).color(red, green, blue, alpha).uv(pMinU, pMinV).endVertex();
+		bufferbuilder.vertex(matrix4f, pX1, pY2, pBlitOffset).color(red, green, blue, alpha).uv(pMinU, pMaxV).endVertex();
+		bufferbuilder.vertex(matrix4f, pX2, pY2, pBlitOffset).color(red, green, blue, alpha).uv(pMaxU, pMaxV).endVertex();
+		bufferbuilder.vertex(matrix4f, pX2, pY1, pBlitOffset).color(red, green, blue, alpha).uv(pMaxU, pMinV).endVertex();
 		BufferUploader.drawWithShader(bufferbuilder.end());
 	}
 }

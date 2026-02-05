@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.client.render.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
@@ -85,13 +86,6 @@ public class IntroScreen extends Screen {
                 }
             }
             tick++;
-
-            System.out.println("---");
-            System.out.println("depthsTick1: "+ depthsTick1);
-            System.out.println("depthsTick2: "+ depthsTick2);
-            System.out.println("depthsTick3: "+ depthsTick3);
-            System.out.println("depthsTick4: "+ depthsTick4);
-            System.out.println("depthsTick5: "+ depthsTick5);
         }
     }
 
@@ -142,10 +136,8 @@ public class IntroScreen extends Screen {
         if (this.tick > depthsStart) {
             //BG Depths
             pose.pushPose();
-            RenderSystem.setShaderColor(depthsAlpha, depthsAlpha, depthsAlpha, 1);
             //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
-            graphics.blit(IMAGE_DEPTH, 0, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, 1, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 1
@@ -155,72 +147,58 @@ public class IntroScreen extends Screen {
 
             pose.pushPose();
             pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize1, 1 + depthsSize1, 1);
+            pose.scale(1 + depthsSize1 / 2, 1 + depthsSize1 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderSystem.setShaderColor(depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha1);
             //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
-            graphics.blit(IMAGE_DEPTH, 0, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha1, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 2
             float depthsAlphaDelta2 = depthsTick2 / depthsLifetime;
-            float depthsAlpha2 = Mth.lerp(depthsAlphaDelta1, 0.8f, 0f);
+            float depthsAlpha2 = Mth.lerp(depthsAlphaDelta2, 0.8f, 0f);
             float depthsSize2 = Mth.lerp(depthsAlphaDelta2, 0f, 1f);
 
             pose.pushPose();
             pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize2, 1 + depthsSize2, 1);
+            pose.scale(1 + depthsSize2 / 2, 1 + depthsSize2 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderSystem.setShaderColor(depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha2);
-            //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
-            graphics.blit(IMAGE_DEPTH, 0, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha2, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 3
             float depthsAlphaDelta3 = depthsTick3 / depthsLifetime;
-            float depthsAlpha3 = Mth.lerp(depthsAlphaDelta1, 0.8f, 0f);
+            float depthsAlpha3 = Mth.lerp(depthsAlphaDelta3, 0.8f, 0f);
             float depthsSize3 = Mth.lerp(depthsAlphaDelta3, 0f, 1f);
 
             pose.pushPose();
             pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize3, 1 + depthsSize3, 1);
+            pose.scale(1 + depthsSize3 / 2, 1 + depthsSize3 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderSystem.setShaderColor(depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha3);
-            //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
-            graphics.blit(IMAGE_DEPTH, 0, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha3, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 4
             float depthsAlphaDelta4 = depthsTick4 / depthsLifetime;
-            float depthsAlpha4 = Mth.lerp(depthsAlphaDelta1, 0.8f, 0f);
+            float depthsAlpha4 = Mth.lerp(depthsAlphaDelta4, 0.8f, 0f);
             float depthsSize4 = Mth.lerp(depthsAlphaDelta4, 0f, 1f);
 
             pose.pushPose();
             pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize4, 1 + depthsSize4, 1);
+            pose.scale(1 + depthsSize4 / 2, 1 + depthsSize4 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderSystem.setShaderColor(depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha4);
-            //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
-            graphics.blit(IMAGE_DEPTH, 0, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha4, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 5
             float depthsAlphaDelta5 = depthsTick5 / depthsLifetime;
-            float depthsAlpha5 = Mth.lerp(depthsAlphaDelta1, 0.8f, 0f);
+            float depthsAlpha5 = Mth.lerp(depthsAlphaDelta5, 0.8f, 0f);
             float depthsSize5 = Mth.lerp(depthsAlphaDelta5, 0f, 1f);
 
             pose.pushPose();
             pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize5, 1 + depthsSize5, 1);
+            pose.scale(1 + depthsSize5 / 2, 1 + depthsSize5 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderSystem.setShaderColor(depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha5);
-            //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
-            graphics.blit(IMAGE_DEPTH, 0, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha5, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Black bars
