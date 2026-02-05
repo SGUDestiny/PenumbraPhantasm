@@ -9,10 +9,35 @@ import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class IntroScreen extends Screen {
+    public final class TypewriterText {
+        private final String text;
+        private final int startTime;
+        private final int ticksPerChar;
+
+        public TypewriterText(String text, int ticksPerChar, int startTick) {
+            this.text = text;
+            this.ticksPerChar = ticksPerChar;
+            this.startTime = startTick;
+        }
+
+        public String getVisibleText(int tick) {
+            long elapsed = tick - startTime;
+            int chars = (int) (elapsed / ticksPerChar);
+            chars = Mth.clamp(chars, 0, text.length());
+            return text.substring(0, chars);
+        }
+
+        public boolean isFinished() {
+            return getVisibleText(tick).length() >= text.length();
+        }
+    }
+
     Minecraft minecraft = Minecraft.getInstance();
     public static final ResourceLocation BLACK_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/black_screen.png");
     public static final ResourceLocation IMAGE_DEPTH = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/image_depth_blue_alt.png");
@@ -75,6 +100,23 @@ public class IntroScreen extends Screen {
         PoseStack pose = graphics.pose();
         pose.pushPose();
         graphics.blit(BLACK_SCREEN, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, this.width, this.height);
+        pose.popPose();
+
+        TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1")
+                .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))).getString(), 2, 30);
+        String lineString1 = line1.getVisibleText(tick);
+
+        pose.pushPose();
+        pose.translate(this.width / 2f, this.height / 2f, 0f);
+        pose.scale(3, 3, 0);
+        pose.translate(-this.width / 2f, -this.height / 2f, 0f);
+        graphics.drawString(Minecraft.getInstance().font, lineString1, (this.width - Minecraft.getInstance().font.width(line1.text)) / 2, this.height / 2, 0xFFFFFF);
+
+        TypewriterText line2 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.2")
+                .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))).getString(), 2, 60);
+        String lineString2 = line2.getVisibleText(tick);
+
+        graphics.drawString(Minecraft.getInstance().font, lineString2, (this.width - Minecraft.getInstance().font.width(line2.text)) / 2, this.height / 2 + 10, 0xFFFFFF);
         pose.popPose();
 
         //SOUL sequence

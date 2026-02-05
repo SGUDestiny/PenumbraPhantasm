@@ -56,7 +56,7 @@
   "tooltip.penumbra_phantasm.netherite_knife.lv": "LV:",
   "tooltip.penumbra_phantasm.netherite_knife.exp": "EXP:",
 
-  "screen.penumbra_phantasm.intro.line.1": "ARE YOU",
+  "screen.penumbra_phantasm.intro.line.1": "A R E    Y O U",
   "screen.penumbra_phantasm.intro.line.2": "THERE?",
   "screen.penumbra_phantasm.intro.line.3": "ARE WE",
   "screen.penumbra_phantasm.intro.line.4": "CONNECTED?",
@@ -78,7 +78,8 @@
   "screen.penumbra_phantasm.intro.choice.7": "JUSTICE",
 
   "screen.penumbra_phantasm.intro.line.14": "A WONDERFUL CHOICE.",
-  "screen.penumbra_phantasm.intro.line.15": "'PLAYER_NAME.'",
+  "screen.penumbra_phantasm.intro.line.15.1": "'",
+  "screen.penumbra_phantasm.intro.line.15.2": ".'",
   "screen.penumbra_phantasm.intro.line.16": "YOU HAVE A TRULY",
   "screen.penumbra_phantasm.intro.line.17": "MAGNIFICENT",
   "screen.penumbra_phantasm.intro.line.18": "JOURNEY AHEAD.",
