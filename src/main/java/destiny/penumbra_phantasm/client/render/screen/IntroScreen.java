@@ -24,7 +24,7 @@ public class IntroScreen extends Screen {
     public static final ResourceLocation IMAGE_DEPTH = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/image_depth_blue_alt.png");
     public static final ResourceLocation BLURRY_SOUL = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/blurry_soul.png");
     public final Runnable onFinished;
-    public int screenLength = 120 * 20;
+    public boolean shouldClose = false;
     public int droneLength = (int) (8.727 * 20);
     public int tick = 0;
     //Depths lifetime - 8 seconds
@@ -34,8 +34,10 @@ public class IntroScreen extends Screen {
     public float depthsTick3 = depthsLifetime * 2f / 5f;
     public float depthsTick4 = depthsLifetime * 3f / 5f;
     public float depthsTick5 = depthsLifetime * 4f / 5f;
-
     public int depthsStart = droneLength * 5 + 3 * 20;
+
+    public int tickText = 0;
+    public boolean isChoosing = false;
 
     public TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             2, 30, 0);
@@ -85,7 +87,7 @@ public class IntroScreen extends Screen {
 
     @Override
     public void tick() {
-        if (tick > screenLength) {
+        if (shouldClose) {
             this.closeScreen();
         } else {
             if (tick == 16 * 20 || tick == 43 * 20) {
@@ -106,6 +108,10 @@ public class IntroScreen extends Screen {
                 depthsTick3 = (depthsTick3 + 1f) % depthsLifetime;
                 depthsTick4 = (depthsTick4 + 1f) % depthsLifetime;
                 depthsTick5 = (depthsTick5 + 1f) % depthsLifetime;
+            }
+
+            if (!isChoosing) {
+                tickText++;
             }
             tick++;
         }
@@ -131,67 +137,67 @@ public class IntroScreen extends Screen {
         pose.scale(2.5f, 2.5f, 0);
         pose.translate(-this.width / 2f, -this.height / 2f, 0f);
 
-        Component lineString1 = line1.getVisibleText(tick);
+        Component lineString1 = line1.getVisibleText(tickText);
         drawString(graphics, lineString1,
                 (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
-                this.height / 2 - 20, 0xFFFFFF, line1.getAlpha(tick));
-        Component lineString2 = line2.getVisibleText(tick);
+                this.height / 2 - 20, 0xFFFFFF, line1.getAlpha(tickText));
+        Component lineString2 = line2.getVisibleText(tickText);
         drawString(graphics, lineString2,
                 (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
-                this.height / 2 - 5, 0xFFFFFF, line2.getAlpha(tick));
+                this.height / 2 - 5, 0xFFFFFF, line2.getAlpha(tickText));
 
-        Component lineString3 = line3.getVisibleText(tick);
+        Component lineString3 = line3.getVisibleText(tickText);
         drawString(graphics, lineString3,
                 (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
-                this.height / 2 - 20, 0xFFFFFF, line3.getAlpha(tick));
-        Component lineString4 = line4.getVisibleText(tick);
+                this.height / 2 - 20, 0xFFFFFF, line3.getAlpha(tickText));
+        Component lineString4 = line4.getVisibleText(tickText);
         drawString(graphics, lineString4,
                 (this.width - Minecraft.getInstance().font.width(line1.text)) / 2 - 10,
-                this.height / 2 - 5, 0xFFFFFF, line4.getAlpha(tick));
+                this.height / 2 - 5, 0xFFFFFF, line4.getAlpha(tickText));
 
-        Component lineString5 = line5.getVisibleText(tick);
+        Component lineString5 = line5.getVisibleText(tickText);
         drawString(graphics, lineString5,
                 (this.width - Minecraft.getInstance().font.width(line5.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line5.getAlpha(tick));
+                this.height / 2 - 50, 0xFFFFFF, line5.getAlpha(tickText));
 
-        Component lineString6 = line6.getVisibleText(tick);
+        Component lineString6 = line6.getVisibleText(tickText);
         drawString(graphics, lineString6,
                 (this.width - Minecraft.getInstance().font.width(line6.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line6.getAlpha(tick));
-        Component lineString7 = line7.getVisibleText(tick);
+                this.height / 2 - 50, 0xFFFFFF, line6.getAlpha(tickText));
+        Component lineString7 = line7.getVisibleText(tickText);
         drawString(graphics, lineString7,
                 (this.width - Minecraft.getInstance().font.width(line7.text)) / 2,
-                this.height / 2 - 35, 0xFFFFFF, line7.getAlpha(tick));
+                this.height / 2 - 35, 0xFFFFFF, line7.getAlpha(tickText));
 
-        Component lineString8 = line8.getVisibleText(tick);
+        Component lineString8 = line8.getVisibleText(tickText);
         drawString(graphics, lineString8,
                 (this.width - Minecraft.getInstance().font.width(line8.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line8.getAlpha(tick));
+                this.height / 2 - 50, 0xFFFFFF, line8.getAlpha(tickText));
 
-        Component lineString9 = line9.getVisibleText(tick);
+        Component lineString9 = line9.getVisibleText(tickText);
         drawString(graphics, lineString9,
                 (this.width - Minecraft.getInstance().font.width(line9.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line9.getAlpha(tick));
-        Component lineString10 = line10.getVisibleText(tick);
+                this.height / 2 - 50, 0xFFFFFF, line9.getAlpha(tickText));
+        Component lineString10 = line10.getVisibleText(tickText);
         drawString(graphics, lineString10,
                 (this.width - Minecraft.getInstance().font.width(line9.text)) / 2,
-                this.height / 2 - 35, 0xFFFFFF, line10.getAlpha(tick));
+                this.height / 2 - 35, 0xFFFFFF, line10.getAlpha(tickText));
 
 
 
-        Component lineString11 = line11.getVisibleText(tick);
+        Component lineString11 = line11.getVisibleText(tickText);
         drawString(graphics, lineString11,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 - 50, 0xFFFFFF, line11.getAlpha(tick));
+                this.height / 2 - 50, 0xFFFFFF, line11.getAlpha(tickText));
 
-        Component lineString12 = line12.getVisibleText(tick);
+        Component lineString12 = line12.getVisibleText(tickText);
         drawString(graphics, lineString12,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 - 50, 0xFFFFFF, line12.getAlpha(tick));
-        Component lineString13 = line13.getVisibleText(tick);
+                this.height / 2 - 50, 0xFFFFFF, line12.getAlpha(tickText));
+        Component lineString13 = line13.getVisibleText(tickText);
         drawString(graphics, lineString13,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 - 35, 0xFFFFFF, line13.getAlpha(tick));
+                this.height / 2 - 35, 0xFFFFFF, line13.getAlpha(tickText));
     }
 
     public void renderBackground(GuiGraphics graphics, PoseStack pose)
@@ -337,11 +343,6 @@ public class IntroScreen extends Screen {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
-    @Override
-    public void onClose()
-    {
-        this.onFinished.run();
-    }
     public void closeScreen() {
         this.onFinished.run();
     }
