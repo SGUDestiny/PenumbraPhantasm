@@ -37,13 +37,23 @@ public class IntroScreen extends Screen {
 
     public int depthsStart = droneLength * 5;
 
-    TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1")
-                                                       .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+    public TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             2, 30);
+    public TypewriterText line2 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.2").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 80).syncTransparency(line1);
 
-    public TypewriterText line2 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.2")
-                                                              .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            2, 60).syncTransparency(line1);
+    public TypewriterText line3 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.3").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 9 * 20);
+    public TypewriterText line4 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.4").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            2, 9 * 20 + 30).syncTransparency(line3);
+
+    public TypewriterText line5 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.5").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            2, 20 * 20);
+
+    public TypewriterText line6 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.6").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 26 * 20);
+    public TypewriterText line7 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.7").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            2, 27 * 20).syncTransparency(line6);
 
     public IntroScreen(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
@@ -98,22 +108,42 @@ public class IntroScreen extends Screen {
 
     public void renderText(GuiGraphics graphics, PoseStack pose)
     {
-        Component lineString1 = line1.getVisibleText(tick);
-
         pose.pushPose();
         pose.translate(this.width / 2f, this.height / 2f, 0f);
-        pose.scale(3, 3, 0);
+        pose.scale(2.5f, 2.5f, 0);
         pose.translate(-this.width / 2f, -this.height / 2f, 0f);
 
+        Component lineString1 = line1.getVisibleText(tick);
         drawString(graphics, lineString1,
-                (this.width - Minecraft.getInstance().font.width(line1.text))/2,
-                this.height / 2, 0xFFFFFF, line1.getAlpha(tick));
-
+                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
+                this.height / 2 - 20, 0xFFFFFF, line1.getAlpha(tick));
         Component lineString2 = line2.getVisibleText(tick);
-
         drawString(graphics, lineString2,
-                (this.width - Minecraft.getInstance().font.width(line1.text))/2,
-                this.height / 2 + 10, 0xFFFFFF, line2.getAlpha(tick));
+                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
+                this.height / 2 - 5, 0xFFFFFF, line2.getAlpha(tick));
+
+        Component lineString3 = line3.getVisibleText(tick);
+        drawString(graphics, lineString3,
+                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
+                this.height / 2 - 20, 0xFFFFFF, line3.getAlpha(tick));
+        Component lineString4 = line4.getVisibleText(tick);
+        drawString(graphics, lineString4,
+                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2 - 10,
+                this.height / 2 - 5, 0xFFFFFF, line4.getAlpha(tick));
+
+        Component lineString5 = line5.getVisibleText(tick);
+        drawString(graphics, lineString5,
+                (this.width - Minecraft.getInstance().font.width(line5.text)) / 2,
+                this.height / 2 - 50, 0xFFFFFF, line5.getAlpha(tick));
+
+        Component lineString6 = line6.getVisibleText(tick);
+        drawString(graphics, lineString6,
+                (this.width - Minecraft.getInstance().font.width(line6.text)) / 2,
+                this.height / 2 - 50, 0xFFFFFF, line6.getAlpha(tick));
+        Component lineString7 = line7.getVisibleText(tick);
+        drawString(graphics, lineString7,
+                (this.width - Minecraft.getInstance().font.width(line7.text)) / 2,
+                this.height / 2 - 35, 0xFFFFFF, line7.getAlpha(tick));
     }
 
     public void renderBackground(GuiGraphics graphics, PoseStack pose)
@@ -255,7 +285,7 @@ public class IntroScreen extends Screen {
     public void drawString(GuiGraphics graphics, Component lineString, int x, int y, int color, float alpha)
     {
         RenderSystem.setShaderColor(1f ,1f, 1f, alpha);
-        graphics.drawString(Minecraft.getInstance().font, lineString, x, y, color);
+        graphics.drawString(Minecraft.getInstance().font, lineString, x, y, color, false);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 

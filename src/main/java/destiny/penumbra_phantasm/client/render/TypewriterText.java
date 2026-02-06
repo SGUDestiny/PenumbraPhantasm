@@ -30,7 +30,7 @@ public class TypewriterText
 	{
 		int finishTick = getFinishTick();
 		float transparentTick = this.transparentTick;
-		float transparentEnd = transparentTick+40;
+		float transparentEnd = transparentTick + 20;
 
 
 		if(tick < finishTick) return 1F;
