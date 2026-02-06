@@ -3,8 +3,10 @@ package destiny.penumbra_phantasm.client.render.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.network.ServerBoundSoulPacket;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.TypewriterText;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
@@ -17,6 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
+import net.minecraftforge.network.NetworkRegistry;
 
 public class IntroScreen extends Screen {
 
@@ -451,6 +454,7 @@ public class IntroScreen extends Screen {
     public void pickChoice()
     {
         isChoosing = false;
+        PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
         // Choose what is currently selected(Pressing ENTER)
     }
 

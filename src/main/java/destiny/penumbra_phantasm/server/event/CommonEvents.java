@@ -101,4 +101,10 @@ public class CommonEvents {
             });
         }
     }
+
+    @SubscribeEvent
+    public void playerJoin(PlayerEvent.PlayerLoggedInEvent event)
+    {
+        System.out.println("Player logged in");
+    }
 }

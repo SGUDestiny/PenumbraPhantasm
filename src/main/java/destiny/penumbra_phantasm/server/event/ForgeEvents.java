@@ -1,7 +1,7 @@
 package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.capability.IntroCapability;
+import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.GenericProvider;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -23,7 +23,7 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
-            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "intro"), new GenericProvider<>(CapabilityRegistry.INTRO, new IntroCapability()));
+            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "soul"), new GenericProvider<>(CapabilityRegistry.SOUL, new SoulCapability()));
         }
     }
 }

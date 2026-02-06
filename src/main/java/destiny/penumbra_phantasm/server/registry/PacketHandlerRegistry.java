@@ -1,10 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.network.ClientBoundIntroPacket;
-import destiny.penumbra_phantasm.client.network.ClientBoundSingleFountainData;
-import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
-import destiny.penumbra_phantasm.client.network.ServerBoundIntroPacket;
+import destiny.penumbra_phantasm.client.network.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;
@@ -56,6 +53,12 @@ public class PacketHandlerRegistry {
                 .encoder(ServerBoundIntroPacket::encode)
                 .decoder(ServerBoundIntroPacket::decode)
                 .consumerMainThread(ServerBoundIntroPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ServerBoundSoulPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ServerBoundSoulPacket::encode)
+                .decoder(ServerBoundSoulPacket::decode)
+                .consumerMainThread(ServerBoundSoulPacket::handle)
                 .add();
     }
 }
