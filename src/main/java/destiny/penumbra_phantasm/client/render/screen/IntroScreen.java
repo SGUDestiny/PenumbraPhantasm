@@ -32,6 +32,7 @@ public class IntroScreen extends Screen {
     public int droneLength = (int) (8.727 * 20);
     public int depthsMusicLength = 48 * 20;
     public int tick = 0;
+    public int outlineTick = 0;
     public int tickDepthsMusic = -1;
     //Depths lifetime - 8 seconds
     public float depthsLifetime = 8 * 20;
@@ -100,6 +101,11 @@ public class IntroScreen extends Screen {
     public TypewriterText choice7 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.7").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             1, choiceStart, 30).syncTransparency(line12);
 
+    public TypewriterText line14 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.14").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 59 * 20, 30);
+    public TypewriterText line15 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.15.1").append(minecraft.player.getName()).append(Component.translatable("screen.penumbra_phantasm.intro.line.15.2")).withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 64 * 20, 20);
+
     public IntroScreen(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
         this.onFinished = runnable;
@@ -150,6 +156,11 @@ public class IntroScreen extends Screen {
             }
             tick++;
         }
+        if (outlineTick >= 60) {
+            outlineTick = 0;
+        } else {
+            outlineTick++;
+        }
     }
 
     @Override
@@ -172,7 +183,12 @@ public class IntroScreen extends Screen {
         pose.scale(2.5f, 2.5f, 0);
         pose.translate(-this.width / 2f, -this.height / 2f, 0f);
 
-        float outlineAlpha = 0.5f;
+        float outlineAlphaDelta = outlineTick / 60f;
+        float outlineAlpha = outlineAlphaDelta <= 0.5f
+                ? Mth.lerp(outlineAlphaDelta * 2.0f, 0.2f, 0.5f)
+                : Mth.lerp((outlineAlphaDelta - 0.5f) * 2.0f, 0.5f, 0.2f);
+
+        System.out.println();
 
         Component lineString1 = line1.getVisibleText(tickText);
         drawStringOutlined(graphics, lineString1,
@@ -223,59 +239,65 @@ public class IntroScreen extends Screen {
 
 
         Component lineString11 = line11.getVisibleText(tickText);
-        drawString(graphics, lineString11,
+        drawStringOutlined(graphics, lineString11,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 - 50, 0xFFFFFF, line11.getAlpha(tickText));
+                this.height / 2 - 50, 0xFFFFFF, line11.getAlpha(tickText), outlineAlpha);
 
         Component lineString12 = line12.getVisibleText(tickText);
-        drawString(graphics, lineString12,
+        drawStringOutlined(graphics, lineString12,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 - 50, 0xFFFFFF, line12.getAlpha(tickText));
+                this.height / 2 - 50, 0xFFFFFF, line12.getAlpha(tickText), outlineAlpha);
         Component lineString13 = line13.getVisibleText(tickText);
-        drawString(graphics, lineString13,
+        drawStringOutlined(graphics, lineString13,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 - 35, 0xFFFFFF, line12.getAlpha(tickText));
+                this.height / 2 - 35, 0xFFFFFF, line12.getAlpha(tickText), outlineAlpha);
 
 
 
         float appearStart = choiceStart - 10;
         float appearDuration = 10f;
-        float alpha = 0f;
+        float alpha = 1f;
         float appearDelta = (tickText - appearStart) / appearDuration;
-        if (tickText >= appearStart && tickText < appearStart + appearDuration) {
+        if (tickText >= appearStart && tickText < choiceStart) {
             alpha = Mth.lerp(appearDelta, 1f, 0f);
+        } else if (tickText >= choiceStart) {
+            alpha = 0f;
         }
 
-        System.out.println("alpha: " + alpha);
+        System.out.println("alpha:" + alpha);
 
-        Component choiceString1 = choice1.getVisibleText(tickText);
-        drawString(graphics, choiceString1,
+        drawString(graphics, Component.translatable("screen.penumbra_phantasm.intro.choice.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
                 this.height / 2 - 10, currentChoice == 1 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
-        Component choiceString2 = choice2.getVisibleText(tickText);
-        drawString(graphics, choiceString2,
+        drawString(graphics, Component.translatable("screen.penumbra_phantasm.intro.choice.2").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
                 this.height / 2, currentChoice == 2 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
-        Component choiceString3 = choice3.getVisibleText(tickText);
-        drawString(graphics, choiceString3,
+        drawString(graphics, Component.translatable("screen.penumbra_phantasm.intro.choice.3").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
                 this.height / 2 + 10, currentChoice == 3 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
-        Component choiceString4 = choice4.getVisibleText(tickText);
-        drawString(graphics, choiceString4,
+        drawString(graphics, Component.translatable("screen.penumbra_phantasm.intro.choice.4").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
                 this.height / 2 + 20, currentChoice == 4 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
-        Component choiceString5 = choice5.getVisibleText(tickText);
-        drawString(graphics, choiceString5,
+        drawString(graphics, Component.translatable("screen.penumbra_phantasm.intro.choice.5").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
                 this.height / 2 + 30, currentChoice == 5 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
-        Component choiceString6 = choice6.getVisibleText(tickText);
-        drawString(graphics, choiceString6,
+        drawString(graphics, Component.translatable("screen.penumbra_phantasm.intro.choice.6").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
                 this.height / 2 + 40, currentChoice == 6 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
-        Component choiceString7 = choice7.getVisibleText(tickText);
-        drawString(graphics, choiceString7,
+        drawString(graphics, Component.translatable("screen.penumbra_phantasm.intro.choice.7").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
                 this.height / 2 + 50, currentChoice == 7 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
+
+
+
+        Component lineString14 = line14.getVisibleText(tickText);
+        drawString(graphics, lineString14,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 50, 0xFFFFFF, line14.getAlpha(tickText));
+        Component lineString15 = line15.getVisibleText(tickText);
+        drawString(graphics, lineString15,
+                (this.width - Minecraft.getInstance().font.width(line15.text)) / 2,
+                this.height / 2 - 50, 0xFFFFFF, line15.getAlpha(tickText));
     }
 
     public void renderBackground(GuiGraphics graphics, PoseStack pose, float pPartialTick)
