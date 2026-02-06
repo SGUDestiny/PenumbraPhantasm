@@ -26,7 +26,9 @@ public class IntroScreen extends Screen {
     public final Runnable onFinished;
     public boolean shouldClose = false;
     public int droneLength = (int) (8.727 * 20);
+    public int depthsMusicLength = 48 * 20;
     public int tick = 0;
+    public int tickDepthsMusic = 0;
     //Depths lifetime - 8 seconds
     public float depthsLifetime = 8 * 20;
     public float depthsTick1 = 0f;
@@ -68,12 +70,27 @@ public class IntroScreen extends Screen {
 
 
     public TypewriterText line11 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.11").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 50 * 20, 20);
+            1, 50 * 20, 30);
 
     public TypewriterText line12 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.12").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 53 * 20, 20);
+            1, 53 * 20, 30 - 100000);
     public TypewriterText line13 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.13").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 55 * 20, 20).syncTransparency(line12);
+            1, 55 * 20, 30 - 100000).syncTransparency(line12);
+
+    public TypewriterText choice1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+    public TypewriterText choice2 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.2").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+    public TypewriterText choice3 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.3").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+    public TypewriterText choice4 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.4").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+    public TypewriterText choice5 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.5").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+    public TypewriterText choice6 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.6").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+    public TypewriterText choice7 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.7").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 57 * 20, 30 - 100000).syncTransparency(line12);
 
     public IntroScreen(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
@@ -103,6 +120,13 @@ public class IntroScreen extends Screen {
                 minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM.get());
             }
             if (tick > depthsStart) {
+                if (tick > depthsStart + (100.567 * 20)) {
+                    tickDepthsMusic++;
+                }
+                if (tickDepthsMusic % depthsMusicLength == 0 || tickDepthsMusic == 0) {
+                    minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM_LOOP.get());
+                }
+
                 depthsTick1 = (depthsTick1 + 1f) % depthsLifetime;
                 depthsTick2 = (depthsTick2 + 1f) % depthsLifetime;
                 depthsTick3 = (depthsTick3 + 1f) % depthsLifetime;
@@ -198,6 +222,37 @@ public class IntroScreen extends Screen {
         drawString(graphics, lineString13,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
                 this.height / 2 - 35, 0xFFFFFF, line13.getAlpha(tickText));
+
+
+
+        Component choiceString1 = choice1.getVisibleText(tickText);
+        drawString(graphics, choiceString1,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 10, 0xFFFFFF, choice1.getAlpha(tickText));
+        Component choiceString2 = choice2.getVisibleText(tickText);
+        drawString(graphics, choiceString2,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2, 0xFFFFFF, choice2.getAlpha(tickText));
+        Component choiceString3 = choice3.getVisibleText(tickText);
+        drawString(graphics, choiceString3,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 + 10, 0xFFFFFF, choice3.getAlpha(tickText));
+        Component choiceString4 = choice4.getVisibleText(tickText);
+        drawString(graphics, choiceString4,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 + 20, 0xFFFFFF, choice4.getAlpha(tickText));
+        Component choiceString5 = choice5.getVisibleText(tickText);
+        drawString(graphics, choiceString5,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 + 30, 0xFFFFFF, choice5.getAlpha(tickText));
+        Component choiceString6 = choice6.getVisibleText(tickText);
+        drawString(graphics, choiceString6,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 + 40, 0xFFFFFF, choice6.getAlpha(tickText));
+        Component choiceString7 = choice7.getVisibleText(tickText);
+        drawString(graphics, choiceString7,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 + 50, 0xFFFFFF, choice7.getAlpha(tickText));
     }
 
     public void renderBackground(GuiGraphics graphics, PoseStack pose)
@@ -353,7 +408,14 @@ public class IntroScreen extends Screen {
         // Choose what is currently selected(Pressing ENTER)
     }
 
+    @Override
+    public void onClose() {
+        this.onFinished.run();
+        minecraft.getSoundManager().stop();
+    }
+
     public void closeScreen() {
         this.onFinished.run();
+        minecraft.getSoundManager().stop();
     }
 }

@@ -76,6 +76,13 @@
       "penumbra_phantasm:intro_another_him"
     ]
   },
+  "intro_another_him_loop": {
+    "subtitle": "sound.penumbra_phantasm.intro_another_him_loop",
+    "sounds":
+    [
+      "penumbra_phantasm:intro_another_him_loop"
+    ]
+  },
   "intro_appearance": {
     "subtitle": "sound.penumbra_phantasm.intro_appearance",
     "sounds":

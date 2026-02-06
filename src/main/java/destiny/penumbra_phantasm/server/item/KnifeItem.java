@@ -217,9 +217,7 @@ public class KnifeItem extends SwordItem {
                     double partY = centerY + (-0.5f + level.getRandom().nextFloat() * 0.5f);
                     double partZ = centerZ + rowZ * offsetAlongRow;
 
-                    if (level instanceof ServerLevel serverLevel) {
-                        serverLevel.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), partX, partY, partZ, 0, 0, 0);
-                    }
+                    level.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), partX, partY, partZ, 0, 0, 0);
 
                     tick++;
                     tag.putInt("tick", tick);
