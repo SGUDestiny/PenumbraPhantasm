@@ -155,16 +155,19 @@ public class ClientEvents {
 	{
 		if(Minecraft.getInstance().screen instanceof IntroScreen introScreen)
 		{
+			if(event.getAction() != 1)
+				return;
+
 			if(InputConstants.getKey(InputConstants.KEY_W, event.getScanCode())
 							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
-				introScreen.incrementChoice(1);
+				introScreen.incrementChoice(-1);
 			}
 
 			if(InputConstants.getKey(InputConstants.KEY_S, event.getScanCode())
 							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
-				introScreen.incrementChoice(-1);
+				introScreen.incrementChoice(1);
 			}
 
 			if(InputConstants.getKey(InputConstants.KEY_RETURN, event.getScanCode())

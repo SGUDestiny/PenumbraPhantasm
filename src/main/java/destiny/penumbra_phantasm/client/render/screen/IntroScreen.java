@@ -28,7 +28,7 @@ public class IntroScreen extends Screen {
     public int droneLength = (int) (8.727 * 20);
     public int depthsMusicLength = 48 * 20;
     public int tick = 0;
-    public int tickDepthsMusic = 0;
+    public int tickDepthsMusic = -1;
     //Depths lifetime - 8 seconds
     public float depthsLifetime = 8 * 20;
     public float depthsTick1 = 0f;
@@ -40,6 +40,8 @@ public class IntroScreen extends Screen {
 
     public int tickText = 0;
     public boolean isChoosing = false;
+    public int choiceStart = 57 * 20;
+    public int currentChoice = 1;
 
     public TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             2, 30, 0);
@@ -78,19 +80,19 @@ public class IntroScreen extends Screen {
             1, 55 * 20, 30 - 100000).syncTransparency(line12);
 
     public TypewriterText choice1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30 - 100000).syncTransparency(line12);
     public TypewriterText choice2 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.2").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30 - 100000).syncTransparency(line12);
     public TypewriterText choice3 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.3").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30 - 100000).syncTransparency(line12);
     public TypewriterText choice4 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.4").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30 - 100000).syncTransparency(line12);
     public TypewriterText choice5 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.5").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30 - 100000).syncTransparency(line12);
     public TypewriterText choice6 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.6").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30 - 100000).syncTransparency(line12);
     public TypewriterText choice7 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.7").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 57 * 20, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30 - 100000).syncTransparency(line12);
 
     public IntroScreen(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
@@ -120,14 +122,11 @@ public class IntroScreen extends Screen {
                 minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM.get());
             }
             if (tick > depthsStart) {
-                if (tick == depthsStart + (100.567 * 20)) {
+                if (tickDepthsMusic % depthsMusicLength == 0 || tickDepthsMusic == 0) {
                     minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM_LOOP.get());
-                    tickDepthsMusic++;
-                } else if (tick > depthsStart + (100.567 * 20)) {
-                    tickDepthsMusic++;
                 }
-                if (tickDepthsMusic % depthsMusicLength == 0) {
-                    minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM_LOOP.get());
+                if (tick > depthsStart + (100.567 * 20)) {
+                    tickDepthsMusic++;
                 }
 
                 depthsTick1 = (depthsTick1 + 1f) % depthsLifetime;
@@ -269,15 +268,15 @@ public class IntroScreen extends Screen {
         float soulX = 1f;
         float appearDelta = (tick - appearStart) / appearDuration;
         if (tick >= appearStart && tick < appearStart + appearDuration) {
-            soulY = Mth.lerp(appearDelta, 150f, 1f);
-            soulX = Mth.lerp(appearDelta, 0f, 1f);
+            soulY = Mth.lerp(appearDelta, 150f, 1.25f);
+            soulX = Mth.lerp(appearDelta, 0f, 1.25f);
         }
 
         float disappearStart = 43 * 20;
         float disappearDelta = (tick - disappearStart) / appearDuration;
         if (tick >= disappearStart && tick < disappearStart + appearDuration) {
-            soulY = Mth.lerp(disappearDelta, 1f, 150f);
-            soulX = Mth.lerp(disappearDelta, 1f, 0f);
+            soulY = Mth.lerp(disappearDelta, 1.25f, 150f);
+            soulX = Mth.lerp(disappearDelta, 1.25f, 0f);
         }
 
         pose.pushPose();
@@ -385,6 +384,17 @@ public class IntroScreen extends Screen {
             graphics.blit(BLACK_SCREEN, this.width - this.width / 8, 0, 0, 0.0F, 0.0F, this.width / 8, this.height, this.width, this.height);
             pose.popPose();
 
+
+            //Choice SOUL
+            pose.pushPose();
+            if (tick >= choiceStart) {
+                pose.translate(this.width / 2f, this.height / 2f, 0);
+                pose.scale(1.25f, 1.25f, 0);
+                pose.translate(-10f - 135f, -45f + (20 * currentChoice), 0f);
+                graphics.blit(BLURRY_SOUL, 0, 0, 0, 0.0F, 0.0F, 20, 20, 20, 20);
+            }
+            pose.popPose();
+
             pose.pushPose();
             pose.scale(2f, 2f, 2f);
             //graphics.drawString(this.font, Component.literal("H O W   V E R Y").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))), this.width / 6, this.height / 6, 16777215);
@@ -403,7 +413,7 @@ public class IntroScreen extends Screen {
 
     public void incrementChoice(int increment)
     {
-        //Scroll through the choice here.
+        currentChoice = Mth.clamp(currentChoice + increment, 1, 7);
     }
 
     public void pickChoice()
