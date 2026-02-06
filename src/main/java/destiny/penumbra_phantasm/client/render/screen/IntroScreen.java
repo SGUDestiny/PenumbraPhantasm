@@ -75,24 +75,24 @@ public class IntroScreen extends Screen {
             1, 50 * 20, 30);
 
     public TypewriterText line12 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.12").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 53 * 20, 30 - 100000);
+            1, 53 * 20, 30);
     public TypewriterText line13 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.13").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 55 * 20, 30 - 100000).syncTransparency(line12);
+            1, 55 * 20, 30).syncTransparency(line12);
 
     public TypewriterText choice1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, choiceStart, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30).syncTransparency(line12);
     public TypewriterText choice2 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.2").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, choiceStart, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30).syncTransparency(line12);
     public TypewriterText choice3 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.3").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, choiceStart, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30).syncTransparency(line12);
     public TypewriterText choice4 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.4").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, choiceStart, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30).syncTransparency(line12);
     public TypewriterText choice5 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.5").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, choiceStart, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30).syncTransparency(line12);
     public TypewriterText choice6 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.6").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, choiceStart, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30).syncTransparency(line12);
     public TypewriterText choice7 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.7").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, choiceStart, 30 - 100000).syncTransparency(line12);
+            1, choiceStart, 30).syncTransparency(line12);
 
     public IntroScreen(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
@@ -136,6 +136,9 @@ public class IntroScreen extends Screen {
                 depthsTick5 = (depthsTick5 + 1f) % depthsLifetime;
             }
 
+            if (tick == choiceStart + 15) {
+                isChoosing = true;
+            }
             if (!isChoosing) {
                 tickText++;
             }
@@ -230,31 +233,31 @@ public class IntroScreen extends Screen {
         Component choiceString1 = choice1.getVisibleText(tickText);
         drawString(graphics, choiceString1,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 - 10, 0xFFFFFF, choice1.getAlpha(tickText));
+                this.height / 2 - 10, currentChoice == 1 ? 0xFFFF40 : 0xFFFFFF, choice1.getAlpha(tickText));
         Component choiceString2 = choice2.getVisibleText(tickText);
         drawString(graphics, choiceString2,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2, 0xFFFFFF, choice2.getAlpha(tickText));
+                this.height / 2, currentChoice == 2 ? 0xFFFF40 : 0xFFFFFF, choice2.getAlpha(tickText));
         Component choiceString3 = choice3.getVisibleText(tickText);
         drawString(graphics, choiceString3,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 10, 0xFFFFFF, choice3.getAlpha(tickText));
+                this.height / 2 + 10, currentChoice == 3 ? 0xFFFF40 : 0xFFFFFF, choice3.getAlpha(tickText));
         Component choiceString4 = choice4.getVisibleText(tickText);
         drawString(graphics, choiceString4,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 20, 0xFFFFFF, choice4.getAlpha(tickText));
+                this.height / 2 + 20, currentChoice == 4 ? 0xFFFF40 : 0xFFFFFF, choice4.getAlpha(tickText));
         Component choiceString5 = choice5.getVisibleText(tickText);
         drawString(graphics, choiceString5,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 30, 0xFFFFFF, choice5.getAlpha(tickText));
+                this.height / 2 + 30, currentChoice == 5 ? 0xFFFF40 : 0xFFFFFF, choice5.getAlpha(tickText));
         Component choiceString6 = choice6.getVisibleText(tickText);
         drawString(graphics, choiceString6,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 40, 0xFFFFFF, choice6.getAlpha(tickText));
+                this.height / 2 + 40, currentChoice == 6 ? 0xFFFF40 : 0xFFFFFF, choice6.getAlpha(tickText));
         Component choiceString7 = choice7.getVisibleText(tickText);
         drawString(graphics, choiceString7,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 50, 0xFFFFFF, choice7.getAlpha(tickText));
+                this.height / 2 + 50, currentChoice == 7 ? 0xFFFF40 : 0xFFFFFF, choice7.getAlpha(tickText));
     }
 
     public void renderBackground(GuiGraphics graphics, PoseStack pose)
@@ -418,6 +421,7 @@ public class IntroScreen extends Screen {
 
     public void pickChoice()
     {
+        isChoosing = false;
         // Choose what is currently selected(Pressing ENTER)
     }
 

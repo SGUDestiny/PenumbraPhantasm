@@ -155,7 +155,7 @@ public class ClientEvents {
 	{
 		if(Minecraft.getInstance().screen instanceof IntroScreen introScreen)
 		{
-			if(event.getAction() != 1)
+			if(event.getAction() != 1 || !introScreen.isChoosing)
 				return;
 
 			if(InputConstants.getKey(InputConstants.KEY_W, event.getScanCode())
