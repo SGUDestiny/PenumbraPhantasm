@@ -111,39 +111,38 @@ public class IntroScreen extends Screen {
         pose.pushPose();
         pose.translate(this.width / 2f, this.height / 2f, 0f);
         pose.scale(2.5f, 2.5f, 0);
-        pose.translate(-this.width / 2f, -this.height / 2f, 0f);
 
         Component lineString1 = line1.getVisibleText(tick);
         drawString(graphics, lineString1,
-                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
-                this.height / 2 - 20, 0xFFFFFF, line1.getAlpha(tick));
+               -Minecraft.getInstance().font.width(line1.text) / 2,
+                -20, 0xFFFFFF, line1.getAlpha(tick));
         Component lineString2 = line2.getVisibleText(tick);
         drawString(graphics, lineString2,
-                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
-                this.height / 2 - 5, 0xFFFFFF, line2.getAlpha(tick));
+                -Minecraft.getInstance().font.width(line1.text) / 2,
+                -5, 0xFFFFFF, line2.getAlpha(tick));
 
         Component lineString3 = line3.getVisibleText(tick);
         drawString(graphics, lineString3,
-                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
-                this.height / 2 - 20, 0xFFFFFF, line3.getAlpha(tick));
+                -Minecraft.getInstance().font.width(line1.text) / 2,
+                -20, 0xFFFFFF, line3.getAlpha(tick));
         Component lineString4 = line4.getVisibleText(tick);
         drawString(graphics, lineString4,
-                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2 - 10,
-                this.height / 2 - 5, 0xFFFFFF, line4.getAlpha(tick));
+                -(Minecraft.getInstance().font.width(line1.text) / 2) - 10,
+                -5, 0xFFFFFF, line4.getAlpha(tick));
 
         Component lineString5 = line5.getVisibleText(tick);
         drawString(graphics, lineString5,
-                (this.width - Minecraft.getInstance().font.width(line5.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line5.getAlpha(tick));
+                -Minecraft.getInstance().font.width(line5.text) / 2,
+                -50, 0xFFFFFF, line5.getAlpha(tick));
 
         Component lineString6 = line6.getVisibleText(tick);
         drawString(graphics, lineString6,
-                (this.width - Minecraft.getInstance().font.width(line6.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line6.getAlpha(tick));
+                -Minecraft.getInstance().font.width(line6.text) / 2,
+                -50, 0xFFFFFF, line6.getAlpha(tick));
         Component lineString7 = line7.getVisibleText(tick);
         drawString(graphics, lineString7,
-                (this.width - Minecraft.getInstance().font.width(line7.text)) / 2,
-                this.height / 2 - 35, 0xFFFFFF, line7.getAlpha(tick));
+                -Minecraft.getInstance().font.width(line7.text) / 2,
+                -35, 0xFFFFFF, line7.getAlpha(tick));
     }
 
     public void renderBackground(GuiGraphics graphics, PoseStack pose)
