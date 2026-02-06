@@ -343,6 +343,16 @@ public class IntroScreen extends Screen {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
+    public void incrementChoice(int increment)
+    {
+        //Scroll through the choice here.
+    }
+
+    public void pickChoice()
+    {
+        // Choose what is currently selected(Pressing ENTER)
+    }
+
     public void closeScreen() {
         this.onFinished.run();
     }

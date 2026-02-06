@@ -1,8 +1,10 @@
 package destiny.penumbra_phantasm.server.event;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
+import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -18,6 +20,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
@@ -143,6 +146,31 @@ public class ClientEvents {
 				}
 			} else if (FountainRenderUtil.fountainHueAlpha != 0F) {
 				FountainRenderUtil.fountainHueAlpha -= 0.01F;
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void pressKey(InputEvent.Key event)
+	{
+		if(Minecraft.getInstance().screen instanceof IntroScreen introScreen)
+		{
+			if(InputConstants.getKey(InputConstants.KEY_W, event.getScanCode())
+							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+			{
+				introScreen.incrementChoice(1);
+			}
+
+			if(InputConstants.getKey(InputConstants.KEY_S, event.getScanCode())
+							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+			{
+				introScreen.incrementChoice(-1);
+			}
+
+			if(InputConstants.getKey(InputConstants.KEY_RETURN, event.getScanCode())
+							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+			{
+				introScreen.pickChoice();
 			}
 		}
 	}
