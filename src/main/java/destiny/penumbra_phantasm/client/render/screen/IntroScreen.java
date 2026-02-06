@@ -172,7 +172,7 @@ public class IntroScreen extends Screen {
         pose.scale(2.5f, 2.5f, 0);
         pose.translate(-this.width / 2f, -this.height / 2f, 0f);
 
-        float outlineAlpha = 0.8f;
+        float outlineAlpha = 0.5f;
 
         Component lineString1 = line1.getVisibleText(tickText);
         drawStringOutlined(graphics, lineString1,
@@ -465,8 +465,8 @@ public class IntroScreen extends Screen {
 
     public void drawStringOutlined(GuiGraphics graphics, Component lineString, int x, int y, int color, float alpha, float alphaOutline)
     {
-        PoseStack poseStack = graphics.pose();
         Font font = Minecraft.getInstance().font;
+        RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
 
         renderTextLayer(graphics, font, lineString, x + 1, y, color, alphaOutline);
         renderTextLayer(graphics, font, lineString, x - 1, y, color, alphaOutline);
@@ -474,8 +474,7 @@ public class IntroScreen extends Screen {
         renderTextLayer(graphics, font, lineString, x, y - 1, color, alphaOutline);
 
         renderTextLayer(graphics, font, lineString, x, y, color, alpha);
-
-        poseStack.popPose();
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
     private void renderTextLayer(GuiGraphics graphics, Font font, Component text, int x, int y, int color, float alpha) {
@@ -507,7 +506,6 @@ public class IntroScreen extends Screen {
     public void pickChoice()
     {
         isChoosing = false;
-        PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
         // Choose what is currently selected(Pressing ENTER)
     }
 
@@ -515,10 +513,12 @@ public class IntroScreen extends Screen {
     public void onClose() {
         this.onFinished.run();
         minecraft.getSoundManager().stop();
+        PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
     }
 
     public void closeScreen() {
         this.onFinished.run();
         minecraft.getSoundManager().stop();
+        PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
     }
 }
