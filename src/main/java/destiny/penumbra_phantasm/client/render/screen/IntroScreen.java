@@ -46,7 +46,7 @@ public class IntroScreen extends Screen {
     public boolean isChoosing = false;
     public int choiceStart = 57 * 20;
     public int currentChoice = 1;
-    public float oldChoiceSoulX = 0f;
+    public float oldChoiceSoulY = 0f;
     private int choiceLerpStartTick = -1;
 
     public TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
@@ -161,7 +161,7 @@ public class IntroScreen extends Screen {
         pose.popPose();
 
 
-        renderBackground(graphics, pose);
+        renderBackground(graphics, pose, pPartialTick);
         renderText(graphics, pose);
     }
 
@@ -172,51 +172,53 @@ public class IntroScreen extends Screen {
         pose.scale(2.5f, 2.5f, 0);
         pose.translate(-this.width / 2f, -this.height / 2f, 0f);
 
+        float outlineAlpha = 0.8f;
+
         Component lineString1 = line1.getVisibleText(tickText);
-        drawString(graphics, lineString1,
+        drawStringOutlined(graphics, lineString1,
                 (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
-                this.height / 2 - 20, 0xFFFFFF, line1.getAlpha(tickText));
+                this.height / 2 - 20, 0xFFFFFF, line1.getAlpha(tickText), outlineAlpha);
         Component lineString2 = line2.getVisibleText(tickText);
-        drawString(graphics, lineString2,
+        drawStringOutlined(graphics, lineString2,
                 (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
-                this.height / 2 - 5, 0xFFFFFF, line1.getAlpha(tickText));
+                this.height / 2 - 5, 0xFFFFFF, line1.getAlpha(tickText), outlineAlpha);
 
         Component lineString3 = line3.getVisibleText(tickText);
-        drawString(graphics, lineString3,
+        drawStringOutlined(graphics, lineString3,
                 (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
-                this.height / 2 - 20, 0xFFFFFF, line3.getAlpha(tickText));
+                this.height / 2 - 20, 0xFFFFFF, line3.getAlpha(tickText), outlineAlpha);
         Component lineString4 = line4.getVisibleText(tickText);
-        drawString(graphics, lineString4,
+        drawStringOutlined(graphics, lineString4,
                 (this.width - Minecraft.getInstance().font.width(line1.text)) / 2 - 10,
-                this.height / 2 - 5, 0xFFFFFF, line3.getAlpha(tickText));
+                this.height / 2 - 5, 0xFFFFFF, line3.getAlpha(tickText), outlineAlpha);
 
         Component lineString5 = line5.getVisibleText(tickText);
-        drawString(graphics, lineString5,
+        drawStringOutlined(graphics, lineString5,
                 (this.width - Minecraft.getInstance().font.width(line5.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line5.getAlpha(tickText));
+                this.height / 2 - 50, 0xFFFFFF, line5.getAlpha(tickText), outlineAlpha);
 
         Component lineString6 = line6.getVisibleText(tickText);
-        drawString(graphics, lineString6,
+        drawStringOutlined(graphics, lineString6,
                 (this.width - Minecraft.getInstance().font.width(line6.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line6.getAlpha(tickText));
+                this.height / 2 - 50, 0xFFFFFF, line6.getAlpha(tickText), outlineAlpha);
         Component lineString7 = line7.getVisibleText(tickText);
-        drawString(graphics, lineString7,
+        drawStringOutlined(graphics, lineString7,
                 (this.width - Minecraft.getInstance().font.width(line7.text)) / 2,
-                this.height / 2 - 35, 0xFFFFFF, line6.getAlpha(tickText));
+                this.height / 2 - 35, 0xFFFFFF, line6.getAlpha(tickText), outlineAlpha);
 
         Component lineString8 = line8.getVisibleText(tickText);
-        drawString(graphics, lineString8,
+        drawStringOutlined(graphics, lineString8,
                 (this.width - Minecraft.getInstance().font.width(line8.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line8.getAlpha(tickText));
+                this.height / 2 - 50, 0xFFFFFF, line8.getAlpha(tickText), outlineAlpha);
 
         Component lineString9 = line9.getVisibleText(tickText);
-        drawString(graphics, lineString9,
+        drawStringOutlined(graphics, lineString9,
                 (this.width - Minecraft.getInstance().font.width(line9.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line9.getAlpha(tickText));
+                this.height / 2 - 50, 0xFFFFFF, line9.getAlpha(tickText), outlineAlpha);
         Component lineString10 = line10.getVisibleText(tickText);
-        drawString(graphics, lineString10,
+        drawStringOutlined(graphics, lineString10,
                 (this.width - Minecraft.getInstance().font.width(line9.text)) / 2,
-                this.height / 2 - 35, 0xFFFFFF, line9.getAlpha(tickText));
+                this.height / 2 - 35, 0xFFFFFF, line9.getAlpha(tickText), outlineAlpha);
 
 
 
@@ -236,37 +238,47 @@ public class IntroScreen extends Screen {
 
 
 
+        float appearStart = choiceStart - 10;
+        float appearDuration = 10f;
+        float alpha = 0f;
+        float appearDelta = (tickText - appearStart) / appearDuration;
+        if (tickText >= appearStart && tickText < appearStart + appearDuration) {
+            alpha = Mth.lerp(appearDelta, 1f, 0f);
+        }
+
+        System.out.println("alpha: " + alpha);
+
         Component choiceString1 = choice1.getVisibleText(tickText);
         drawString(graphics, choiceString1,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 - 10, currentChoice == 1 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText));
+                this.height / 2 - 10, currentChoice == 1 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
         Component choiceString2 = choice2.getVisibleText(tickText);
         drawString(graphics, choiceString2,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2, currentChoice == 2 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText));
+                this.height / 2, currentChoice == 2 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
         Component choiceString3 = choice3.getVisibleText(tickText);
         drawString(graphics, choiceString3,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 10, currentChoice == 3 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText));
+                this.height / 2 + 10, currentChoice == 3 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
         Component choiceString4 = choice4.getVisibleText(tickText);
         drawString(graphics, choiceString4,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 20, currentChoice == 4 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText));
+                this.height / 2 + 20, currentChoice == 4 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
         Component choiceString5 = choice5.getVisibleText(tickText);
         drawString(graphics, choiceString5,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 30, currentChoice == 5 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText));
+                this.height / 2 + 30, currentChoice == 5 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
         Component choiceString6 = choice6.getVisibleText(tickText);
         drawString(graphics, choiceString6,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 40, currentChoice == 6 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText));
+                this.height / 2 + 40, currentChoice == 6 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
         Component choiceString7 = choice7.getVisibleText(tickText);
         drawString(graphics, choiceString7,
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 + 50, currentChoice == 7 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText));
+                this.height / 2 + 50, currentChoice == 7 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
     }
 
-    public void renderBackground(GuiGraphics graphics, PoseStack pose)
+    public void renderBackground(GuiGraphics graphics, PoseStack pose, float pPartialTick)
     {
         pose.popPose();
 
@@ -399,7 +411,6 @@ public class IntroScreen extends Screen {
             if (tickText >= choiceStart - 10 && tickText < choiceStart + 25) {
                 //SOUL sequence
                 float choiceSoulX = 0f;
-                float choiceSoulY = 0f;
                 float choiceSoulAlpha = 1f;
 
                 float choiceSoulAppearStart = choiceStart - 10;
@@ -417,13 +428,21 @@ public class IntroScreen extends Screen {
                     choiceSoulAlpha = Mth.lerp(choiceSoulDisappearDelta, 1f, 0f);
                 }
 
-                float choiceSoulMoveDuration = 10f;
-                float choiceSoulMoveDelta = tick / choiceSoulMoveDuration;
-                choiceSoulY = Mth.lerp(choiceSoulMoveDelta, )
+                float yPos;
+                float targetY = -45f + (20 * currentChoice);
+                if (choiceLerpStartTick == -1) {
+                    yPos = targetY;
+                } else {
+                    float delta = Mth.clamp((tick + pPartialTick - choiceLerpStartTick) / 3f, 0f, 1f);
+                    yPos = Mth.lerp(delta, oldChoiceSoulY, targetY);
+                    if (delta >= 1f) {
+                        choiceLerpStartTick = -1;  // Reset once lerp completes
+                    }
+                }
 
                 pose.translate(this.width / 2f, this.height / 2f, 0);
                 pose.scale(1.25f, 1.25f, 0);
-                pose.translate(-10f - 135f + choiceSoulX, -45f + (20 * currentChoice), 0f);
+                pose.translate(-10f - 135f + choiceSoulX, yPos, 0f);
                 RenderBlitUtil.blit(BLURRY_SOUL, pose, 0, 0, 1, 1, 1, choiceSoulAlpha, 0, 0.0F, 0.0F, 20, 20, 20, 20);
             }
             pose.popPose();
@@ -472,9 +491,17 @@ public class IntroScreen extends Screen {
         graphics.drawString(font, text, x, y, finalColor, false);
     }
 
-    public void incrementChoice(int increment)
-    {
-        currentChoice = Mth.clamp(currentChoice + increment, 1, 7);
+    public void incrementChoice(int increment) {
+        if (increment != 0) {
+            // Record old Y before changing choice
+            float oldY = -45f + (20 * currentChoice);
+            int oldChoice = currentChoice;
+            currentChoice = Mth.clamp(currentChoice + increment, 1, 7);
+            if (currentChoice != oldChoice) {
+                oldChoiceSoulY = oldY;
+                choiceLerpStartTick = tick;
+            }
+        }
     }
 
     public void pickChoice()
