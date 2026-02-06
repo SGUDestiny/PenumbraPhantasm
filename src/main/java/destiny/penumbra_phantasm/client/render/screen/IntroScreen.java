@@ -120,10 +120,13 @@ public class IntroScreen extends Screen {
                 minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM.get());
             }
             if (tick > depthsStart) {
-                if (tick > depthsStart + (100.567 * 20)) {
+                if (tick == depthsStart + (100.567 * 20)) {
+                    minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM_LOOP.get());
+                    tickDepthsMusic++;
+                } else if (tick > depthsStart + (100.567 * 20)) {
                     tickDepthsMusic++;
                 }
-                if (tickDepthsMusic % depthsMusicLength == 0 || tickDepthsMusic == 0) {
+                if (tickDepthsMusic % depthsMusicLength == 0) {
                     minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM_LOOP.get());
                 }
 
