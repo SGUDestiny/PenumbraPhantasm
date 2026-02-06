@@ -229,7 +229,7 @@ public class IntroScreen extends Screen {
 
         float depthsAppearDuration = 5 * 20f;
         float depthsAppearDelta = (tick - depthsStart) / depthsAppearDuration;
-        float depthsColor = 1f;
+        float depthsColor = 0.5f;
         if (tick >= depthsStart && tick < depthsStart + depthsAppearDuration) {
             depthsColor = Mth.lerp(depthsAppearDelta, 0f, 0.5f);
         }
