@@ -26,7 +26,7 @@ public class IntroScreen extends Screen {
     public final Runnable onFinished;
     public int screenLength = 120 * 20;
     public int droneLength = (int) (8.727 * 20);
-    public int tick = droneLength * 5;
+    public int tick = 0;
     //Depths lifetime - 8 seconds
     public float depthsLifetime = 8 * 20;
     public float depthsTick1 = 0f;
