@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
+import destiny.penumbra_phantasm.client.render.TypewriterText;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
@@ -12,31 +13,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 
 public class IntroScreen extends Screen {
-    public final class TypewriterText {
-        private final String text;
-        private final int startTime;
-        private final int ticksPerChar;
-
-        public TypewriterText(String text, int ticksPerChar, int startTick) {
-            this.text = text;
-            this.ticksPerChar = ticksPerChar;
-            this.startTime = startTick;
-        }
-
-        public String getVisibleText(int tick) {
-            long elapsed = tick - startTime;
-            int chars = (int) (elapsed / ticksPerChar);
-            chars = Mth.clamp(chars, 0, text.length());
-            return text.substring(0, chars);
-        }
-
-        public boolean isFinished() {
-            return getVisibleText(tick).length() >= text.length();
-        }
-    }
 
     Minecraft minecraft = Minecraft.getInstance();
     public static final ResourceLocation BLACK_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/black_screen.png");
@@ -55,6 +36,14 @@ public class IntroScreen extends Screen {
     public float depthsTick5 = depthsLifetime * 4f / 5f;
 
     public int depthsStart = droneLength * 5;
+
+    TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1")
+                                                       .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            2, 30);
+
+    public TypewriterText line2 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.2")
+                                                              .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            2, 60).syncTransparency(line1);
 
     public IntroScreen(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
@@ -102,21 +91,33 @@ public class IntroScreen extends Screen {
         graphics.blit(BLACK_SCREEN, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, this.width, this.height);
         pose.popPose();
 
-        TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1")
-                .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))).getString(), 2, 30);
-        String lineString1 = line1.getVisibleText(tick);
+
+        renderBackground(graphics, pose);
+        renderText(graphics, pose);
+    }
+
+    public void renderText(GuiGraphics graphics, PoseStack pose)
+    {
+        Component lineString1 = line1.getVisibleText(tick);
 
         pose.pushPose();
         pose.translate(this.width / 2f, this.height / 2f, 0f);
         pose.scale(3, 3, 0);
         pose.translate(-this.width / 2f, -this.height / 2f, 0f);
-        graphics.drawString(Minecraft.getInstance().font, lineString1, (this.width - Minecraft.getInstance().font.width(line1.text)) / 2, this.height / 2, 0xFFFFFF);
 
-        TypewriterText line2 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.2")
-                .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))).getString(), 2, 60);
-        String lineString2 = line2.getVisibleText(tick);
+        drawString(graphics, lineString1,
+                (this.width - Minecraft.getInstance().font.width(line1.text))/2,
+                this.height / 2, 0xFFFFFF, line1.getAlpha(tick));
 
-        graphics.drawString(Minecraft.getInstance().font, lineString2, (this.width - Minecraft.getInstance().font.width(line2.text)) / 2, this.height / 2 + 10, 0xFFFFFF);
+        Component lineString2 = line2.getVisibleText(tick);
+
+        drawString(graphics, lineString2,
+                (this.width - Minecraft.getInstance().font.width(line1.text))/2,
+                this.height / 2 + 10, 0xFFFFFF, line2.getAlpha(tick));
+    }
+
+    public void renderBackground(GuiGraphics graphics, PoseStack pose)
+    {
         pose.popPose();
 
         //SOUL sequence
@@ -165,8 +166,8 @@ public class IntroScreen extends Screen {
             //Depths layer 5
             float depthsAlphaDelta5 = depthsTick5 / depthsLifetime;
             float depthsAlpha5 = depthsAlphaDelta5 <= 0.5f
-                    ? Mth.lerp(depthsAlphaDelta5 * 2.0f, 0.0f, 0.8f)
-                    : Mth.lerp((depthsAlphaDelta5 - 0.5f) * 2.0f, 0.8f, 0.0f);
+                                         ? Mth.lerp(depthsAlphaDelta5 * 2.0f, 0.0f, 0.8f)
+                                         : Mth.lerp((depthsAlphaDelta5 - 0.5f) * 2.0f, 0.8f, 0.0f);
             float depthsSize5 = Mth.lerp(depthsAlphaDelta5, 0f, 1f);
 
             pose.pushPose();
@@ -179,8 +180,8 @@ public class IntroScreen extends Screen {
             //Depths layer 4
             float depthsAlphaDelta4 = depthsTick4 / depthsLifetime;
             float depthsAlpha4 = depthsAlphaDelta4 <= 0.5f
-                    ? Mth.lerp(depthsAlphaDelta4 * 2.0f, 0.0f, 0.8f)
-                    : Mth.lerp((depthsAlphaDelta4 - 0.5f) * 2.0f, 0.8f, 0.0f);
+                                         ? Mth.lerp(depthsAlphaDelta4 * 2.0f, 0.0f, 0.8f)
+                                         : Mth.lerp((depthsAlphaDelta4 - 0.5f) * 2.0f, 0.8f, 0.0f);
             float depthsSize4 = Mth.lerp(depthsAlphaDelta4, 0f, 1f);
 
             pose.pushPose();
@@ -193,8 +194,8 @@ public class IntroScreen extends Screen {
             //Depths layer 3
             float depthsAlphaDelta3 = depthsTick3 / depthsLifetime;
             float depthsAlpha3 = depthsAlphaDelta3 <= 0.5f
-                    ? Mth.lerp(depthsAlphaDelta3 * 2.0f, 0.0f, 0.8f)
-                    : Mth.lerp((depthsAlphaDelta3 - 0.5f) * 2.0f, 0.8f, 0.0f);
+                                         ? Mth.lerp(depthsAlphaDelta3 * 2.0f, 0.0f, 0.8f)
+                                         : Mth.lerp((depthsAlphaDelta3 - 0.5f) * 2.0f, 0.8f, 0.0f);
             float depthsSize3 = Mth.lerp(depthsAlphaDelta3, 0f, 1f);
 
             pose.pushPose();
@@ -207,8 +208,8 @@ public class IntroScreen extends Screen {
             //Depths layer 2
             float depthsAlphaDelta2 = depthsTick2 / depthsLifetime;
             float depthsAlpha2 = depthsAlphaDelta2 <= 0.5f
-                    ? Mth.lerp(depthsAlphaDelta2 * 2.0f, 0.0f, 0.8f)
-                    : Mth.lerp((depthsAlphaDelta2 - 0.5f) * 2.0f, 0.8f, 0.0f);
+                                         ? Mth.lerp(depthsAlphaDelta2 * 2.0f, 0.0f, 0.8f)
+                                         : Mth.lerp((depthsAlphaDelta2 - 0.5f) * 2.0f, 0.8f, 0.0f);
             float depthsSize2 = Mth.lerp(depthsAlphaDelta2, 0f, 1f);
 
             pose.pushPose();
@@ -221,8 +222,8 @@ public class IntroScreen extends Screen {
             //Depths layer 1
             float depthsAlphaDelta1 = depthsTick1 / depthsLifetime;
             float depthsAlpha1 = depthsAlphaDelta1 <= 0.5f
-                    ? Mth.lerp(depthsAlphaDelta1 * 2.0f, 0.0f, 0.8f)
-                    : Mth.lerp((depthsAlphaDelta1 - 0.5f) * 2.0f, 0.8f, 0.0f);
+                                         ? Mth.lerp(depthsAlphaDelta1 * 2.0f, 0.0f, 0.8f)
+                                         : Mth.lerp((depthsAlphaDelta1 - 0.5f) * 2.0f, 0.8f, 0.0f);
             float depthsSize1 = Mth.lerp(depthsAlphaDelta1, 0f, 1f);
 
             pose.pushPose();
@@ -249,6 +250,13 @@ public class IntroScreen extends Screen {
             //graphics.drawString(this.font, Component.literal("I N T E R E S T I N G .").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))), this.width / 6, this.height / 6 + 28, 16777215);
             pose.popPose();
         }
+    }
+
+    public void drawString(GuiGraphics graphics, Component lineString, int x, int y, int color, float alpha)
+    {
+        RenderSystem.setShaderColor(1f ,1f, 1f, alpha);
+        graphics.drawString(Minecraft.getInstance().font, lineString, x, y, color);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
     @Override
