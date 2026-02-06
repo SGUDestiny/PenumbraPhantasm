@@ -26,7 +26,7 @@ public class IntroScreen extends Screen {
     public final Runnable onFinished;
     public int screenLength = 120 * 20;
     public int droneLength = (int) (8.727 * 20);
-    public int tick = 0;
+    public int tick = droneLength * 5;
     //Depths lifetime - 8 seconds
     public float depthsLifetime = 8 * 20;
     public float depthsTick1 = 0f;
@@ -35,25 +35,43 @@ public class IntroScreen extends Screen {
     public float depthsTick4 = depthsLifetime * 3f / 5f;
     public float depthsTick5 = depthsLifetime * 4f / 5f;
 
-    public int depthsStart = droneLength * 5;
+    public int depthsStart = droneLength * 5 + 3 * 20;
 
     public TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            2, 30);
+            2, 30, 0);
     public TypewriterText line2 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.2").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 80).syncTransparency(line1);
+            1, 80, 0).syncTransparency(line1);
 
     public TypewriterText line3 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.3").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 9 * 20);
+            1, 9 * 20, 0);
     public TypewriterText line4 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.4").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            2, 9 * 20 + 30).syncTransparency(line3);
+            2, 9 * 20 + 30, 0).syncTransparency(line3);
 
     public TypewriterText line5 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.5").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            2, 20 * 20);
+            2, 20 * 20, 0);
 
     public TypewriterText line6 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.6").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 26 * 20);
+            1, 26 * 20, 0);
     public TypewriterText line7 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.7").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            2, 27 * 20).syncTransparency(line6);
+            2, 27 * 20, 0).syncTransparency(line6);
+
+    public TypewriterText line8 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.8").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 33 * 20, 0);
+
+    public TypewriterText line9 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.9").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            2, 37 * 20, 0);
+    public TypewriterText line10 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.10").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 39 * 20, 0).syncTransparency(line9);
+
+
+
+    public TypewriterText line11 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.11").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 50 * 20, 20);
+
+    public TypewriterText line12 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.12").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 53 * 20, 20);
+    public TypewriterText line13 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.13").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 55 * 20, 20).syncTransparency(line12);
 
     public IntroScreen(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
@@ -70,11 +88,11 @@ public class IntroScreen extends Screen {
         if (tick > screenLength) {
             this.closeScreen();
         } else {
-            if (tick == 16 * 20 || tick == 40 * 20) {
+            if (tick == 16 * 20 || tick == 43 * 20) {
                 minecraft.player.playSound(SoundRegistry.INTRO_APPEARANCE.get());
             }
 
-            if (tick < depthsStart) {
+            if (tick < depthsStart && tick < 36 * 20) {
                 if (tick % droneLength == 0 || tick == 0) {
                     minecraft.player.playSound(SoundRegistry.INTRO_DRONE.get());
                 }
@@ -111,38 +129,69 @@ public class IntroScreen extends Screen {
         pose.pushPose();
         pose.translate(this.width / 2f, this.height / 2f, 0f);
         pose.scale(2.5f, 2.5f, 0);
+        pose.translate(-this.width / 2f, -this.height / 2f, 0f);
 
         Component lineString1 = line1.getVisibleText(tick);
         drawString(graphics, lineString1,
-               -Minecraft.getInstance().font.width(line1.text) / 2,
-                -20, 0xFFFFFF, line1.getAlpha(tick));
+                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
+                this.height / 2 - 20, 0xFFFFFF, line1.getAlpha(tick));
         Component lineString2 = line2.getVisibleText(tick);
         drawString(graphics, lineString2,
-                -Minecraft.getInstance().font.width(line1.text) / 2,
-                -5, 0xFFFFFF, line2.getAlpha(tick));
+                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
+                this.height / 2 - 5, 0xFFFFFF, line2.getAlpha(tick));
 
         Component lineString3 = line3.getVisibleText(tick);
         drawString(graphics, lineString3,
-                -Minecraft.getInstance().font.width(line1.text) / 2,
-                -20, 0xFFFFFF, line3.getAlpha(tick));
+                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2,
+                this.height / 2 - 20, 0xFFFFFF, line3.getAlpha(tick));
         Component lineString4 = line4.getVisibleText(tick);
         drawString(graphics, lineString4,
-                -(Minecraft.getInstance().font.width(line1.text) / 2) - 10,
-                -5, 0xFFFFFF, line4.getAlpha(tick));
+                (this.width - Minecraft.getInstance().font.width(line1.text)) / 2 - 10,
+                this.height / 2 - 5, 0xFFFFFF, line4.getAlpha(tick));
 
         Component lineString5 = line5.getVisibleText(tick);
         drawString(graphics, lineString5,
-                -Minecraft.getInstance().font.width(line5.text) / 2,
-                -50, 0xFFFFFF, line5.getAlpha(tick));
+                (this.width - Minecraft.getInstance().font.width(line5.text)) / 2,
+                this.height / 2 - 50, 0xFFFFFF, line5.getAlpha(tick));
 
         Component lineString6 = line6.getVisibleText(tick);
         drawString(graphics, lineString6,
-                -Minecraft.getInstance().font.width(line6.text) / 2,
-                -50, 0xFFFFFF, line6.getAlpha(tick));
+                (this.width - Minecraft.getInstance().font.width(line6.text)) / 2,
+                this.height / 2 - 50, 0xFFFFFF, line6.getAlpha(tick));
         Component lineString7 = line7.getVisibleText(tick);
         drawString(graphics, lineString7,
-                -Minecraft.getInstance().font.width(line7.text) / 2,
-                -35, 0xFFFFFF, line7.getAlpha(tick));
+                (this.width - Minecraft.getInstance().font.width(line7.text)) / 2,
+                this.height / 2 - 35, 0xFFFFFF, line7.getAlpha(tick));
+
+        Component lineString8 = line8.getVisibleText(tick);
+        drawString(graphics, lineString8,
+                (this.width - Minecraft.getInstance().font.width(line8.text)) / 2,
+                this.height / 2 - 50, 0xFFFFFF, line8.getAlpha(tick));
+
+        Component lineString9 = line9.getVisibleText(tick);
+        drawString(graphics, lineString9,
+                (this.width - Minecraft.getInstance().font.width(line9.text)) / 2,
+                this.height / 2 - 50, 0xFFFFFF, line9.getAlpha(tick));
+        Component lineString10 = line10.getVisibleText(tick);
+        drawString(graphics, lineString10,
+                (this.width - Minecraft.getInstance().font.width(line9.text)) / 2,
+                this.height / 2 - 35, 0xFFFFFF, line10.getAlpha(tick));
+
+
+
+        Component lineString11 = line11.getVisibleText(tick);
+        drawString(graphics, lineString11,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 50, 0xFFFFFF, line11.getAlpha(tick));
+
+        Component lineString12 = line12.getVisibleText(tick);
+        drawString(graphics, lineString12,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 50, 0xFFFFFF, line12.getAlpha(tick));
+        Component lineString13 = line13.getVisibleText(tick);
+        drawString(graphics, lineString13,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 35, 0xFFFFFF, line13.getAlpha(tick));
     }
 
     public void renderBackground(GuiGraphics graphics, PoseStack pose)
@@ -160,7 +209,7 @@ public class IntroScreen extends Screen {
             soulX = Mth.lerp(appearDelta, 0f, 1f);
         }
 
-        float disappearStart = 40 * 20;
+        float disappearStart = 43 * 20;
         float disappearDelta = (tick - disappearStart) / appearDuration;
         if (tick >= disappearStart && tick < disappearStart + appearDuration) {
             soulY = Mth.lerp(disappearDelta, 1f, 150f);
@@ -180,16 +229,16 @@ public class IntroScreen extends Screen {
 
         float depthsAppearDuration = 5 * 20f;
         float depthsAppearDelta = (tick - depthsStart) / depthsAppearDuration;
-        float depthsAlpha = 1f;
+        float depthsColor = 1f;
         if (tick >= depthsStart && tick < depthsStart + depthsAppearDuration) {
-            depthsAlpha = Mth.lerp(depthsAppearDelta, 0f, 1f);
+            depthsColor = Mth.lerp(depthsAppearDelta, 0f, 0.5f);
         }
 
         if (this.tick > depthsStart) {
             //BG Depths
             pose.pushPose();
             //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, 1, 0, 0, this.width, this.height, this.width, this.height);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, 1, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 5
@@ -203,7 +252,7 @@ public class IntroScreen extends Screen {
             pose.translate(this.width / 2f, this.height / 2f, 0);
             pose.scale(1 + depthsSize5 / 2, 1 + depthsSize5 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha5, 0, 0, 0, this.width, this.height, this.width, this.height);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha5, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 4
@@ -217,7 +266,7 @@ public class IntroScreen extends Screen {
             pose.translate(this.width / 2f, this.height / 2f, 0);
             pose.scale(1 + depthsSize4 / 2, 1 + depthsSize4 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha4, 0, 0, 0, this.width, this.height, this.width, this.height);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha4, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 3
@@ -231,7 +280,7 @@ public class IntroScreen extends Screen {
             pose.translate(this.width / 2f, this.height / 2f, 0);
             pose.scale(1 + depthsSize3 / 2, 1 + depthsSize3 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha3, 0, 0, 0, this.width, this.height, this.width, this.height);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha3, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 2
@@ -245,7 +294,7 @@ public class IntroScreen extends Screen {
             pose.translate(this.width / 2f, this.height / 2f, 0);
             pose.scale(1 + depthsSize2 / 2, 1 + depthsSize2 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha2, 0, 0, 0, this.width, this.height, this.width, this.height);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha2, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Depths layer 1
@@ -260,7 +309,7 @@ public class IntroScreen extends Screen {
             pose.scale(1 + depthsSize1 / 2, 1 + depthsSize1 / 2, 1);
             pose.translate(-this.width / 2f, -this.height / 2f, 0);
             //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsAlpha, depthsAlpha, depthsAlpha, depthsAlpha1, 0, 0, 0, this.width, this.height, this.width, this.height);
+            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha1, 0, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
             //Black bars

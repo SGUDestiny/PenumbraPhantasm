@@ -66,8 +66,9 @@
   "screen.penumbra_phantasm.intro.line.8": "N O W .",
   "screen.penumbra_phantasm.intro.line.9": "W E   M A Y",
   "screen.penumbra_phantasm.intro.line.10": "B E G I N .",
-  "screen.penumbra_phantasm.intro.line.12": "F I R S T .",
-  "screen.penumbra_phantasm.intro.line.13": "Y O U   M U S T   C H O O S E   A   G I F T .",
+  "screen.penumbra_phantasm.intro.line.11": "F I R S T .",
+  "screen.penumbra_phantasm.intro.line.12": "Y O U   M U S T   C H O O S E",
+  "screen.penumbra_phantasm.intro.line.13": "A   G I F T .",
   
   "screen.penumbra_phantasm.intro.choice.1": "DETERMINATION",
   "screen.penumbra_phantasm.intro.choice.2": "PATIENCE",

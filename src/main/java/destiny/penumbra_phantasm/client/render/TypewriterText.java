@@ -10,12 +10,12 @@ public class TypewriterText
 	public int transparentTick;
 	public final int ticksPerChar;
 
-	public TypewriterText(Component text, int ticksPerChar, int startTick)
+	public TypewriterText(Component text, int ticksPerChar, int startTick, int transparentTickOffset)
 	{
 		this.text = text;
 		this.ticksPerChar = ticksPerChar;
 		this.startTime = startTick;
-		this.transparentTick = getFinishTick() + 40;
+		this.transparentTick = getFinishTick() + 40 - transparentTickOffset;
 	}
 
 	public Component getVisibleText(int tick)
