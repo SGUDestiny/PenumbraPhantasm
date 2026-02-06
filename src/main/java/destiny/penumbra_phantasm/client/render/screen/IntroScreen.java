@@ -8,6 +8,7 @@ import destiny.penumbra_phantasm.client.render.TypewriterText;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -412,6 +413,34 @@ public class IntroScreen extends Screen {
         RenderSystem.setShaderColor(1f ,1f, 1f, alpha);
         graphics.drawString(Minecraft.getInstance().font, lineString, x, y, color, false);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+    }
+
+    public void drawStringOutlined(GuiGraphics graphics, Component lineString, int x, int y, int color, float alpha, float alphaOutline)
+    {
+        PoseStack poseStack = graphics.pose();
+        Font font = Minecraft.getInstance().font;
+
+        renderTextLayer(graphics, font, lineString, x + 1, y, color, alphaOutline);
+        renderTextLayer(graphics, font, lineString, x - 1, y, color, alphaOutline);
+        renderTextLayer(graphics, font, lineString, x, y + 1, color, alphaOutline);
+        renderTextLayer(graphics, font, lineString, x, y - 1, color, alphaOutline);
+
+        renderTextLayer(graphics, font, lineString, x, y, color, alpha);
+
+        poseStack.popPose();
+    }
+
+    private void renderTextLayer(GuiGraphics graphics, Font font, Component text, int x, int y, int color, float alpha) {
+        if (alpha <= 0.05f) return; // Optimization: don't render if invisible
+
+        // Extract RGB and apply our custom alpha
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = color & 0xFF;
+        int a = (int) (alpha * 255);
+        int finalColor = (a << 24) | (r << 16) | (g << 8) | b;
+
+        graphics.drawString(font, text, x, y, finalColor, false);
     }
 
     public void incrementChoice(int increment)
