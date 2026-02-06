@@ -46,6 +46,8 @@ public class IntroScreen extends Screen {
     public boolean isChoosing = false;
     public int choiceStart = 57 * 20;
     public int currentChoice = 1;
+    public float oldChoiceSoulX = 0f;
+    private int choiceLerpStartTick = -1;
 
     public TypewriterText line1 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             2, 30, 0);
@@ -394,11 +396,35 @@ public class IntroScreen extends Screen {
 
             //Choice SOUL
             pose.pushPose();
-            if (tick >= choiceStart) {
+            if (tickText >= choiceStart - 10 && tickText < choiceStart + 25) {
+                //SOUL sequence
+                float choiceSoulX = 0f;
+                float choiceSoulY = 0f;
+                float choiceSoulAlpha = 1f;
+
+                float choiceSoulAppearStart = choiceStart - 10;
+                float choiceSoulAppearDuration = 10f;
+                float choiceSoulAppearDelta = (tickText - choiceSoulAppearStart) / choiceSoulAppearDuration;
+                if (tickText >= choiceStart - 10 && tickText < choiceStart) {
+                    choiceSoulX = Mth.lerp(choiceSoulAppearDelta, -10f, 0f);
+                    choiceSoulAlpha = Mth.lerp(choiceSoulAppearDelta, 0f, 1f);
+                }
+
+                float choiceSoulDisappearStart = choiceStart + 15;
+                float choiceSoulDisappearDuration = 10f;
+                float choiceSoulDisappearDelta = (tickText - choiceSoulDisappearStart) / choiceSoulDisappearDuration;
+                if (tickText >= choiceStart + 15 && tickText < choiceStart + 25) {
+                    choiceSoulAlpha = Mth.lerp(choiceSoulDisappearDelta, 1f, 0f);
+                }
+
+                float choiceSoulMoveDuration = 10f;
+                float choiceSoulMoveDelta = tick / choiceSoulMoveDuration;
+                choiceSoulY = Mth.lerp(choiceSoulMoveDelta, )
+
                 pose.translate(this.width / 2f, this.height / 2f, 0);
                 pose.scale(1.25f, 1.25f, 0);
-                pose.translate(-10f - 135f, -45f + (20 * currentChoice), 0f);
-                RenderBlitUtil.blit(BLURRY_SOUL, pose, 0, 0, 1, 1, 1, 1, 0, 0.0F, 0.0F, 20, 20, 20, 20);
+                pose.translate(-10f - 135f + choiceSoulX, -45f + (20 * currentChoice), 0f);
+                RenderBlitUtil.blit(BLURRY_SOUL, pose, 0, 0, 1, 1, 1, choiceSoulAlpha, 0, 0.0F, 0.0F, 20, 20, 20, 20);
             }
             pose.popPose();
 

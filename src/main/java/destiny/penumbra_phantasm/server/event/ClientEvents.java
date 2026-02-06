@@ -163,15 +163,29 @@ public class ClientEvents {
 			{
 				introScreen.incrementChoice(-1);
 			}
-
 			if(InputConstants.getKey(InputConstants.KEY_S, event.getScanCode())
 							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
 				introScreen.incrementChoice(1);
 			}
-
 			if(InputConstants.getKey(InputConstants.KEY_RETURN, event.getScanCode())
 							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+			{
+				introScreen.pickChoice();
+			}
+
+			if(InputConstants.getKey(InputConstants.KEY_UP, event.getScanCode())
+					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+			{
+				introScreen.incrementChoice(-1);
+			}
+			if(InputConstants.getKey(InputConstants.KEY_DOWN, event.getScanCode())
+					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+			{
+				introScreen.incrementChoice(1);
+			}
+			if(InputConstants.getKey(InputConstants.KEY_Z, event.getScanCode())
+					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
 				introScreen.pickChoice();
 			}
