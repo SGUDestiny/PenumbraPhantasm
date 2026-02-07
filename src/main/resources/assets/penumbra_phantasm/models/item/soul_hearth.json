@@ -3,8 +3,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "penumbra_phantasm:item/soul_hearth",
-		"particle": "penumbra_phantasm:item/soul_hearth"
+		"0": "penumbra_phantasm:item/soul_hearth_empty",
+		"particle": "penumbra_phantasm:item/soul_hearth_empty"
 	},
 	"elements": [
 		{
@@ -76,10 +76,6 @@
 			"name": "Light",
 			"from": [4.5, 14, 4.5],
 			"to": [11.5, 17, 11.5],
-			"forge_data": {
-				"block_light": 15,
-				"sky_light": 15
-			},
 			"rotation": {"angle": 0, "axis": "y", "origin": [7, 14, 7]},
 			"faces": {
 				"north": {"uv": [11.375, 0.875, 12.25, 1.25], "texture": "#0"},
@@ -94,10 +90,6 @@
 			"name": "Light",
 			"from": [5.5, 17, 5.5],
 			"to": [10.5, 19, 10.5],
-			"forge_data": {
-				"block_light": 15,
-				"sky_light": 15
-			},
 			"rotation": {"angle": 0, "axis": "y", "origin": [7, 17, 7]},
 			"faces": {
 				"north": {"uv": [8.625, 0.625, 9.25, 0.875], "texture": "#0"},
@@ -112,10 +104,6 @@
 			"name": "Light",
 			"from": [4.5, 4, 4.5],
 			"to": [11.5, 11, 11.5],
-			"forge_data": {
-				"block_light": 15,
-				"sky_light": 15
-			},
 			"rotation": {"angle": 0, "axis": "y", "origin": [7, 4, 7]},
 			"faces": {
 				"north": {"uv": [5.375, 3.75, 6.25, 4.625], "texture": "#0"},
@@ -130,10 +118,6 @@
 			"name": "Light",
 			"from": [4.5, 1, 4.5],
 			"to": [11.5, 2, 11.5],
-			"forge_data": {
-				"block_light": 15,
-				"sky_light": 15
-			},
 			"rotation": {"angle": 0, "axis": "y", "origin": [7, 1, 7]},
 			"faces": {
 				"north": {"uv": [8.875, 2.125, 9.75, 2.25], "texture": "#0"},
@@ -148,10 +132,6 @@
 			"name": "Light",
 			"from": [3.5, 0, 3.5],
 			"to": [12.5, 1, 12.5],
-			"forge_data": {
-				"block_light": 15,
-				"sky_light": 15
-			},
 			"rotation": {"angle": 0, "axis": "y", "origin": [7, 0, 7]},
 			"faces": {
 				"north": {"uv": [9.125, 3.375, 10.25, 3.5], "texture": "#0"},

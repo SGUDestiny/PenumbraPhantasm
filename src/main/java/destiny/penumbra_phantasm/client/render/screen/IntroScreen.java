@@ -16,10 +16,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
-import net.minecraftforge.network.NetworkRegistry;
 
 public class IntroScreen extends Screen {
 
@@ -27,7 +24,6 @@ public class IntroScreen extends Screen {
     public static final ResourceLocation BLACK_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/black_screen.png");
     public static final ResourceLocation WHITE_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/white_screen.png");
     public static final ResourceLocation IMAGE_DEPTH = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/image_depth_blue_alt.png");
-    public static final ResourceLocation BLURRY_SOUL = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/blurry_soul.png");
     public final Runnable onFinished;
     public boolean shouldClose = false;
     public int droneLength = (int) (8.727 * 20);
@@ -108,41 +104,41 @@ public class IntroScreen extends Screen {
     public TypewriterText line14 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.14").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             1, 59 * 20, 30);
     public TypewriterText line15 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.15.1").append(getSpacedNickname(minecraft.player.getName())).append(Component.translatable("screen.penumbra_phantasm.intro.line.15.2")).withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 64 * 20, 20);
+            1, 63 * 20, 20);
 
     public TypewriterText line16 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.16").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 67 * 20, 30);
+            1, 69 * 20, 30);
     public TypewriterText line17 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.17").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 69 * 20, 30).syncTransparency(line16);
+            1, 71 * 20, 30).syncTransparency(line16);
     public TypewriterText line18 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.18").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 70 * 20, 30).syncTransparency(line16);
+            1, 72 * 20, 30).syncTransparency(line16);
 
     public TypewriterText line19 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.19").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 74 * 20, 30);
+            1, 76 * 20, 30);
     public TypewriterText line20 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.20").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 76 * 20, 30).syncTransparency(line19);
+            1, 78 * 20, 30).syncTransparency(line19);
     public TypewriterText line21 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.21").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 77 * 20, 30).syncTransparency(line19);
+            1, 79 * 20, 30).syncTransparency(line19);
 
     public TypewriterText line22 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.22").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 74 * 20, 30).syncTransparency(line19);;
+            1, 76 * 20, 30).syncTransparency(line19);;
     public TypewriterText line23 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.23").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 76 * 20, 30).syncTransparency(line19);
+            1, 78 * 20, 30).syncTransparency(line19);
     public TypewriterText line24 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.24").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 77 * 20, 20).syncTransparency(line19);
+            1, 79 * 20, 20).syncTransparency(line19);
 
     public TypewriterText line25 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.25").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 79 * 20, 30);
+            1, 81 * 20 + 10, 30);
 
     public TypewriterText line26 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.26").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 82 * 20, 30);
+            1, 84 * 20, 30);
     public TypewriterText line27 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.27").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 84 * 20, 30).syncTransparency(line26);
+            1, 86 * 20, 30).syncTransparency(line26);
 
     public TypewriterText line28 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.28").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 87 * 20, 0);
+            1, 89 * 20, 0);
     public TypewriterText line29 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.29").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 88 * 20, 0).syncTransparency(line28);
+            1, 90 * 20, 0).syncTransparency(line28);
 
     public IntroScreen(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
@@ -172,12 +168,12 @@ public class IntroScreen extends Screen {
                 minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM.get());
             }
             if (tick > depthsStart) {
-                if (tickText == 81 * 20) {
+                if (tickText == 88 * 20) {
                     minecraft.getSoundManager().stop();
                     stopDepthsMusic = true;
                     minecraft.player.playSound(SoundRegistry.GREAT_SHINE.get());
                 }
-                if (tickText == 90 * 20 + 5) {
+                if (tickText == 92 * 20 + 5) {
                     minecraft.player.playSound(SoundRegistry.FOUNTAIN_SEAL.get());
                 }
                 if ((tickDepthsMusic % depthsMusicLength == 0 || tickDepthsMusic == 0) && !stopDepthsMusic) {
@@ -207,7 +203,7 @@ public class IntroScreen extends Screen {
                 outlineTick++;
             }
 
-            if (tickText >= 94 * 20) {
+            if (tickText >= 96 * 20) {
                 shouldClose = true;
             }
 
@@ -414,6 +410,8 @@ public class IntroScreen extends Screen {
 
     public void renderBackground(GuiGraphics graphics, PoseStack pose)
     {
+        ResourceLocation BLURRY_SOUL = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/blurry_soul_" + currentChoice + ".png");
+
         pose.popPose();
 
         //SOUL sequence
@@ -581,12 +579,12 @@ public class IntroScreen extends Screen {
             }
 
             //Ending SOUL
-            if (tickText >= 81 * 20) {
+            if (tickText >= 88 * 20) {
                 float endingSoulAlpha = 0f;
                 float endingSoulSize = 1f;
                 float endingSoulSecondarySize = 0f;
 
-                float endingSoulAppearStart = 81 * 20;
+                float endingSoulAppearStart = 88 * 20;
                 float endingSoulAppearDuration = 10f;
                 float endingSoulAppearDelta = (tickText - endingSoulAppearStart) / endingSoulAppearDuration;
                 if (tickText < endingSoulAppearStart + endingSoulAppearDuration) {
@@ -599,7 +597,7 @@ public class IntroScreen extends Screen {
                     endingSoulSecondarySize = Mth.lerp(endingSoulSecondaryAppearDelta, 0f, 5f);
                 }
 
-                float endingSoulShineStart = 90 * 20;
+                float endingSoulShineStart = 92 * 20;
                 float endingSoulShineDuration = 20;
                 float endingSoulSecondaryShineDelta = (tickText - endingSoulShineStart) / endingSoulShineDuration;
                 if (tickText >= endingSoulShineStart && tickText < endingSoulShineStart + endingSoulShineDuration) {
@@ -623,7 +621,7 @@ public class IntroScreen extends Screen {
             }
 
             //Ending
-            if (tickText >= 90 * 20 + 5) {
+            if (tickText >= 92 * 20 + 5) {
                 float endingSizeX1 = 1;
                 float endingSizeX2 = 2;
                 float endingSizeX3 = 3;
@@ -631,7 +629,7 @@ public class IntroScreen extends Screen {
                 float endingAlpha1 = 1f;
                 float endingAlpha2 = 1f;
                 float endingAlpha3 = 1f;
-                float endingStart = 90 * 20 + 5;
+                float endingStart = 92 * 20 + 5;
                 float endingDuration = 60;
                 float endingDelta = (tickText - endingStart) / endingDuration;
                 if (tickText < endingStart + endingDuration) {
