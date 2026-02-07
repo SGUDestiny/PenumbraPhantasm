@@ -27,6 +27,8 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> INTRO_DRONE = registerSoundEvent("intro_drone");
     public static RegistryObject<SoundEvent> GREAT_SHINE = registerSoundEvent("great_shine");
     public static RegistryObject<SoundEvent> OCEAN = registerSoundEvent("ocean");
+    public static RegistryObject<SoundEvent> SOUL_BREAK = registerSoundEvent("soul_break");
+    public static RegistryObject<SoundEvent> SOUL_SHATTER = registerSoundEvent("soul_shatter");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {

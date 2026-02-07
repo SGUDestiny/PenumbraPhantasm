@@ -117,5 +117,19 @@
     [
       "penumbra_phantasm:ocean"
     ]
+  },
+  "soul_break": {
+    "subtitle": "sound.penumbra_phantasm.soul_break",
+    "sounds":
+    [
+      "penumbra_phantasm:soul_break"
+    ]
+  },
+  "soul_shatter": {
+    "subtitle": "sound.penumbra_phantasm.soul_shatter",
+    "sounds":
+    [
+      "penumbra_phantasm:soul_shatter"
+    ]
   }
 }
