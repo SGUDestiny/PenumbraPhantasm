@@ -129,7 +129,7 @@ public class IntroScreen extends Screen {
     public TypewriterText line23 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.23").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             1, 76 * 20, 30).syncTransparency(line19);
     public TypewriterText line24 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.24").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
-            1, 77 * 20, 30).syncTransparency(line19);
+            1, 77 * 20, 20).syncTransparency(line19);
 
     public TypewriterText line25 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.25").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             1, 79 * 20, 30);
@@ -177,7 +177,7 @@ public class IntroScreen extends Screen {
                     stopDepthsMusic = true;
                     minecraft.player.playSound(SoundRegistry.GREAT_SHINE.get());
                 }
-                if (tickText == 90 * 20) {
+                if (tickText == 90 * 20 + 5) {
                     minecraft.player.playSound(SoundRegistry.FOUNTAIN_SEAL.get());
                 }
                 if ((tickDepthsMusic % depthsMusicLength == 0 || tickDepthsMusic == 0) && !stopDepthsMusic) {
@@ -194,7 +194,7 @@ public class IntroScreen extends Screen {
                 depthsTick5 = (depthsTick5 + 1f) % depthsLifetime;
             }
 
-            if (tick == choiceStart + 10) {
+            if (tick == choiceStart) {
                 isChoosing = true;
             }
             if (!isChoosing) {
@@ -623,7 +623,7 @@ public class IntroScreen extends Screen {
             }
 
             //Ending
-            if (tickText >= 90 * 20) {
+            if (tickText >= 90 * 20 + 5) {
                 float endingSizeX1 = 1;
                 float endingSizeX2 = 2;
                 float endingSizeX3 = 3;
@@ -631,7 +631,7 @@ public class IntroScreen extends Screen {
                 float endingAlpha1 = 1f;
                 float endingAlpha2 = 1f;
                 float endingAlpha3 = 1f;
-                float endingStart = 90 * 20;
+                float endingStart = 90 * 20 + 5;
                 float endingDuration = 60;
                 float endingDelta = (tickText - endingStart) / endingDuration;
                 if (tickText < endingStart + endingDuration) {
