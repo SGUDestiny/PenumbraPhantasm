@@ -41,6 +41,13 @@
       "penumbra_phantasm:fountain_darkness"
     ]
   },
+  "fountain_seal": {
+    "subtitle": "sound.penumbra_phantasm.fountain_seal",
+    "sounds":
+    [
+      "penumbra_phantasm:fountain_seal"
+    ]
+  },
   "real_knife_slash": {
     "subtitle": "sound.penumbra_phantasm.real_knife_slash",
     "sounds":
@@ -95,6 +102,13 @@
     "sounds":
     [
       "penumbra_phantasm:intro_drone"
+    ]
+  },
+  "great_shine": {
+    "subtitle": "sound.penumbra_phantasm.great_shine",
+    "sounds":
+    [
+      "penumbra_phantasm:great_shine"
     ]
   },
   "ocean": {

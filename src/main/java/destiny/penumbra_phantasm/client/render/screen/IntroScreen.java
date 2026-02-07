@@ -25,6 +25,7 @@ public class IntroScreen extends Screen {
 
     Minecraft minecraft = Minecraft.getInstance();
     public static final ResourceLocation BLACK_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/black_screen.png");
+    public static final ResourceLocation WHITE_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/white_screen.png");
     public static final ResourceLocation IMAGE_DEPTH = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/image_depth_blue_alt.png");
     public static final ResourceLocation BLURRY_SOUL = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/blurry_soul.png");
     public final Runnable onFinished;
@@ -34,6 +35,7 @@ public class IntroScreen extends Screen {
     public int tick = 0;
     public int outlineTick = 0;
     public int tickDepthsMusic = -1;
+    public boolean stopDepthsMusic = false;
     //Depths lifetime - 8 seconds
     public float depthsLifetime = 8 * 20;
     public float depthsTick1 = 0f;
@@ -101,10 +103,46 @@ public class IntroScreen extends Screen {
     public TypewriterText choice7 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.choice.7").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             1, choiceStart, 30).syncTransparency(line12);
 
+
+
     public TypewriterText line14 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.14").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             1, 59 * 20, 30);
-    public TypewriterText line15 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.15.1").append(minecraft.player.getName()).append(Component.translatable("screen.penumbra_phantasm.intro.line.15.2")).withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+    public TypewriterText line15 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.15.1").append(getSpacedNickname(minecraft.player.getName())).append(Component.translatable("screen.penumbra_phantasm.intro.line.15.2")).withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             1, 64 * 20, 20);
+
+    public TypewriterText line16 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.16").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 67 * 20, 30);
+    public TypewriterText line17 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.17").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 69 * 20, 30).syncTransparency(line16);
+    public TypewriterText line18 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.18").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 70 * 20, 30).syncTransparency(line16);
+
+    public TypewriterText line19 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.19").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 74 * 20, 30);
+    public TypewriterText line20 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.20").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 76 * 20, 30).syncTransparency(line19);
+    public TypewriterText line21 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.21").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 77 * 20, 30).syncTransparency(line19);
+
+    public TypewriterText line22 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.22").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 74 * 20, 30).syncTransparency(line19);;
+    public TypewriterText line23 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.23").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 76 * 20, 30).syncTransparency(line19);
+    public TypewriterText line24 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.24").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 77 * 20, 30).syncTransparency(line19);
+
+    public TypewriterText line25 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.25").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 79 * 20, 30);
+
+    public TypewriterText line26 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.26").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 82 * 20, 30);
+    public TypewriterText line27 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.27").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 84 * 20, 30).syncTransparency(line26);
+
+    public TypewriterText line28 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.28").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 87 * 20, 0);
+    public TypewriterText line29 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.29").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
+            1, 88 * 20, 0).syncTransparency(line28);
 
     public IntroScreen(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
@@ -134,10 +172,18 @@ public class IntroScreen extends Screen {
                 minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM.get());
             }
             if (tick > depthsStart) {
-                if (tickDepthsMusic % depthsMusicLength == 0 || tickDepthsMusic == 0) {
+                if (tickText == 81 * 20) {
+                    minecraft.getSoundManager().stop();
+                    stopDepthsMusic = true;
+                    minecraft.player.playSound(SoundRegistry.GREAT_SHINE.get());
+                }
+                if (tickText == 90 * 20) {
+                    minecraft.player.playSound(SoundRegistry.FOUNTAIN_SEAL.get());
+                }
+                if ((tickDepthsMusic % depthsMusicLength == 0 || tickDepthsMusic == 0) && !stopDepthsMusic) {
                     minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM_LOOP.get());
                 }
-                if (tick > depthsStart + (100.567 * 20)) {
+                if (tick > depthsStart + (100.567 * 20) && !stopDepthsMusic) {
                     tickDepthsMusic++;
                 }
 
@@ -148,19 +194,26 @@ public class IntroScreen extends Screen {
                 depthsTick5 = (depthsTick5 + 1f) % depthsLifetime;
             }
 
-            if (tick == choiceStart + 15) {
+            if (tick == choiceStart + 10) {
                 isChoosing = true;
             }
             if (!isChoosing) {
                 tickText++;
             }
+
+            if (outlineTick >= 60) {
+                outlineTick = 0;
+            } else {
+                outlineTick++;
+            }
+
+            if (tickText >= 94 * 20) {
+                shouldClose = true;
+            }
+
             tick++;
         }
-        if (outlineTick >= 60) {
-            outlineTick = 0;
-        } else {
-            outlineTick++;
-        }
+
     }
 
     @Override
@@ -172,7 +225,7 @@ public class IntroScreen extends Screen {
         pose.popPose();
 
 
-        renderBackground(graphics, pose, pPartialTick);
+        renderBackground(graphics, pose);
         renderText(graphics, pose);
     }
 
@@ -187,8 +240,6 @@ public class IntroScreen extends Screen {
         float outlineAlpha = outlineAlphaDelta <= 0.5f
                 ? Mth.lerp(outlineAlphaDelta * 2.0f, 0.2f, 0.5f)
                 : Mth.lerp((outlineAlphaDelta - 0.5f) * 2.0f, 0.5f, 0.2f);
-
-        System.out.println();
 
         Component lineString1 = line1.getVisibleText(tickText);
         drawStringOutlined(graphics, lineString1,
@@ -264,8 +315,6 @@ public class IntroScreen extends Screen {
             alpha = 0f;
         }
 
-        System.out.println("alpha:" + alpha);
-
         drawString(graphics, Component.translatable("screen.penumbra_phantasm.intro.choice.1").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
                 (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
                 this.height / 2 - 10, currentChoice == 1 ? 0xFFFF40 : 0xFFFFFF, line12.getAlpha(tickText) - alpha);
@@ -291,16 +340,79 @@ public class IntroScreen extends Screen {
 
 
         Component lineString14 = line14.getVisibleText(tickText);
-        drawString(graphics, lineString14,
-                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
-                this.height / 2 - 50, 0xFFFFFF, line14.getAlpha(tickText));
+        drawStringOutlined(graphics, lineString14,
+                (this.width - Minecraft.getInstance().font.width(line14.text)) / 2,
+                this.height / 2 - 30, 0xFFFFFF, line14.getAlpha(tickText), outlineAlpha);
+
         Component lineString15 = line15.getVisibleText(tickText);
-        drawString(graphics, lineString15,
+        drawStringOutlined(graphics, lineString15,
                 (this.width - Minecraft.getInstance().font.width(line15.text)) / 2,
-                this.height / 2 - 50, 0xFFFFFF, line15.getAlpha(tickText));
+                this.height / 2 - 30, 0xFFFFFF, line15.getAlpha(tickText), outlineAlpha);
+
+        Component lineString16 = line16.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString16,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 30, 0xFFFFFF, line16.getAlpha(tickText), outlineAlpha);
+        Component lineString17 = line17.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString17,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 20, 0xFFFFFF, line16.getAlpha(tickText), outlineAlpha);
+        Component lineString18 = line18.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString18,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 10, 0xFFFFFF, line16.getAlpha(tickText), outlineAlpha);
+
+        Component lineString19 = line19.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString19,
+                (this.width - Minecraft.getInstance().font.width(line19.text)) / 2 - 60,
+                this.height / 2 - 30, 0xFFFFFF, line19.getAlpha(tickText), outlineAlpha);
+        Component lineString20 = line20.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString20,
+                (this.width - Minecraft.getInstance().font.width(line19.text)) / 2 - 60,
+                this.height / 2 - 20, 0xFFFFFF, line19.getAlpha(tickText), outlineAlpha);
+        Component lineString21 = line21.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString21,
+                (this.width - Minecraft.getInstance().font.width(line19.text)) / 2 - 60,
+                this.height / 2 - 10, 0xFFFFFF, line19.getAlpha(tickText), outlineAlpha);
+
+        Component lineString22 = line22.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString22,
+                (this.width - Minecraft.getInstance().font.width(line19.text)) / 2 + 60,
+                this.height / 2 - 30, 0xFFFFFF, line19.getAlpha(tickText), outlineAlpha);
+        Component lineString23 = line23.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString23,
+                (this.width - Minecraft.getInstance().font.width(line19.text)) / 2 + 60,
+                this.height / 2 - 20, 0xFFFFFF, line19.getAlpha(tickText), outlineAlpha);
+        Component lineString24 = line24.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString24,
+                (this.width - Minecraft.getInstance().font.width(line19.text)) / 2 + 60,
+                this.height / 2 - 10, 0xFFFFFF, line19.getAlpha(tickText), outlineAlpha);
+
+        Component lineString25 = line25.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString25,
+                (this.width - Minecraft.getInstance().font.width(line25.text)) / 2,
+                this.height / 2 - 30, 0xFFFFFF, line25.getAlpha(tickText), outlineAlpha);
+
+        Component lineString26 = line26.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString26,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 40, 0xFFFFFF, line26.getAlpha(tickText), outlineAlpha);
+        Component lineString27 = line27.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString27,
+                (this.width - Minecraft.getInstance().font.width(line11.text)) / 2 - 40,
+                this.height / 2 - 30, 0xFFFFFF, line26.getAlpha(tickText), outlineAlpha);
+
+        Component lineString28 = line28.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString28,
+                (this.width - Minecraft.getInstance().font.width(line28.text)) / 2,
+                this.height / 2 - 40, 0xFFFFFF, line28.getAlpha(tickText), outlineAlpha);
+        Component lineString29 = line29.getVisibleText(tickText);
+        drawStringOutlined(graphics, lineString29,
+                (this.width - Minecraft.getInstance().font.width(line28.text)) / 2 - 20,
+                this.height / 2 - 30, 0xFFFFFF, line28.getAlpha(tickText), outlineAlpha);
     }
 
-    public void renderBackground(GuiGraphics graphics, PoseStack pose, float pPartialTick)
+    public void renderBackground(GuiGraphics graphics, PoseStack pose)
     {
         pose.popPose();
 
@@ -455,7 +567,7 @@ public class IntroScreen extends Screen {
                 if (choiceLerpStartTick == -1) {
                     yPos = targetY;
                 } else {
-                    float delta = Mth.clamp((tick + pPartialTick - choiceLerpStartTick) / 3f, 0f, 1f);
+                    float delta = Mth.clamp((tick - choiceLerpStartTick) / 3f, 0f, 1f);
                     yPos = Mth.lerp(delta, oldChoiceSoulY, targetY);
                     if (delta >= 1f) {
                         choiceLerpStartTick = -1;  // Reset once lerp completes
@@ -463,17 +575,104 @@ public class IntroScreen extends Screen {
                 }
 
                 pose.translate(this.width / 2f, this.height / 2f, 0);
-                pose.scale(1.25f, 1.25f, 0);
+                pose.scale(1.25f, 1.25f, 1);
                 pose.translate(-10f - 135f + choiceSoulX, yPos, 0f);
                 RenderBlitUtil.blit(BLURRY_SOUL, pose, 0, 0, 1, 1, 1, choiceSoulAlpha, 0, 0.0F, 0.0F, 20, 20, 20, 20);
             }
-            pose.popPose();
 
-            pose.pushPose();
-            pose.scale(2f, 2f, 2f);
-            //graphics.drawString(this.font, Component.literal("H O W   V E R Y").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))), this.width / 6, this.height / 6, 16777215);
-            //graphics.drawString(this.font, Component.literal("V E R Y").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))), this.width / 6, this.height / 6 + 14, 16777215);
-            //graphics.drawString(this.font, Component.literal("I N T E R E S T I N G .").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))), this.width / 6, this.height / 6 + 28, 16777215);
+            //Ending SOUL
+            if (tickText >= 81 * 20) {
+                float endingSoulAlpha = 0f;
+                float endingSoulSize = 1f;
+                float endingSoulSecondarySize = 0f;
+
+                float endingSoulAppearStart = 81 * 20;
+                float endingSoulAppearDuration = 10f;
+                float endingSoulAppearDelta = (tickText - endingSoulAppearStart) / endingSoulAppearDuration;
+                if (tickText < endingSoulAppearStart + endingSoulAppearDuration) {
+                    endingSoulSize = Mth.lerp(endingSoulAppearDelta, 0f, 1f);
+                }
+                float endingSoulSecondaryAppearDuration = 20f;
+                float endingSoulSecondaryAppearDelta = (tickText - endingSoulAppearStart) / endingSoulSecondaryAppearDuration;
+                if (tickText < endingSoulAppearStart + endingSoulSecondaryAppearDuration) {
+                    endingSoulAlpha = Mth.lerp(endingSoulSecondaryAppearDelta, 1f, 0f);
+                    endingSoulSecondarySize = Mth.lerp(endingSoulSecondaryAppearDelta, 0f, 5f);
+                }
+
+                float endingSoulShineStart = 90 * 20;
+                float endingSoulShineDuration = 20;
+                float endingSoulSecondaryShineDelta = (tickText - endingSoulShineStart) / endingSoulShineDuration;
+                if (tickText >= endingSoulShineStart && tickText < endingSoulShineStart + endingSoulShineDuration) {
+                    endingSoulAlpha = Mth.lerp(endingSoulSecondaryShineDelta, 1f, 0f);
+                    endingSoulSecondarySize = Mth.lerp(endingSoulSecondaryShineDelta, 0f, 5f);
+                }
+
+                pose.pushPose();
+                pose.translate(this.width / 2f, this.height / 2f, 0);
+                pose.scale(1.25f * endingSoulSize, 1.25f * endingSoulSize, 1);
+                pose.translate(-10f, -10, 0f);
+                RenderBlitUtil.blit(BLURRY_SOUL, pose, 0, 0, 1, 1, 1, 1, 0, 0.0F, 0.0F, 20, 20, 20, 20);
+                pose.popPose();
+
+                pose.pushPose();
+                pose.translate(this.width / 2f, this.height / 2f, 0);
+                pose.scale(endingSoulSecondarySize, endingSoulSecondarySize, 1);
+                pose.translate(-10f, -10, 0f);
+                RenderBlitUtil.blit(BLURRY_SOUL, pose, 0, 0, 1, 1, 1, endingSoulAlpha, 0, 0.0F, 0.0F, 20, 20, 20, 20);
+                pose.popPose();
+            }
+
+            //Ending
+            if (tickText >= 90 * 20) {
+                float endingSizeX1 = 1;
+                float endingSizeX2 = 2;
+                float endingSizeX3 = 3;
+
+                float endingAlpha1 = 1f;
+                float endingAlpha2 = 1f;
+                float endingAlpha3 = 1f;
+                float endingStart = 90 * 20;
+                float endingDuration = 60;
+                float endingDelta = (tickText - endingStart) / endingDuration;
+                if (tickText < endingStart + endingDuration) {
+                    endingSizeX1 = Mth.lerp(endingDelta, 0, 1);
+                    endingSizeX2 = Mth.lerp(endingDelta, 0, 2);
+                    endingSizeX3 = Mth.lerp(endingDelta, 0, 3);
+
+                    endingAlpha1 = Mth.lerp(endingDelta, 0.075f, 1);
+                    endingAlpha2 = Mth.lerp(endingDelta, 0.05f, 1);
+                    endingAlpha3 = Mth.lerp(endingDelta, 0.025f, 1);
+                } else {
+                    endingSizeX1 = 1;
+                    endingSizeX2 = 2;
+                    endingSizeX3 = 3;
+
+                    endingAlpha1 = 1f;
+                    endingAlpha2 = 1f;
+                    endingAlpha3 = 1f;
+                }
+
+                pose.pushPose();
+                pose.translate(this.width / 2f, this.height / 2f, 0);
+                pose.scale(endingSizeX3, 1, 1);
+                pose.translate(-this.width / 2f, -this.height / 2f, 0);
+                RenderBlitUtil.blit(WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha3, 0.0F, 0.0F, this.width, this.height, this.width, this.height);
+                pose.popPose();
+
+                pose.pushPose();
+                pose.translate(this.width / 2f, this.height / 2f, 0);
+                pose.scale(endingSizeX2, 1, 1);
+                pose.translate(-this.width / 2f, -this.height / 2f, 0);
+                RenderBlitUtil.blit(WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha2, 0.0F, 0.0F, this.width, this.height, this.width, this.height);
+                pose.popPose();
+
+                pose.pushPose();
+                pose.translate(this.width / 2f, this.height / 2f, 0);
+                pose.scale(endingSizeX1, 1, 1);
+                pose.translate(-this.width / 2f, -this.height / 2f, 0);
+                RenderBlitUtil.blit(WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha1, 0.0F, 0.0F, this.width, this.height, this.width, this.height);
+                pose.popPose();
+            }
             pose.popPose();
         }
     }
@@ -531,11 +730,18 @@ public class IntroScreen extends Screen {
         // Choose what is currently selected(Pressing ENTER)
     }
 
+    public Component getSpacedNickname(Component nickname) {
+        String spacedNickname = String.join(" ", nickname.getString().split(""));
+        return Component.literal(spacedNickname);
+    }
+
     @Override
     public void onClose() {
-        this.onFinished.run();
-        minecraft.getSoundManager().stop();
-        PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
+        if (minecraft.player.getAbilities().instabuild) {
+            this.onFinished.run();
+            minecraft.getSoundManager().stop();
+            PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
+        }
     }
 
     public void closeScreen() {

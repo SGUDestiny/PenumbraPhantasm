@@ -1,7 +1,12 @@
 package destiny.penumbra_phantasm.server.capability;
 
+import destiny.penumbra_phantasm.client.network.ClientBoundIntroPacket;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.network.PacketDistributor;
 
 public class SoulCapability implements INBTSerializable<CompoundTag> {
     public static final String SEEN_INTRO = "seenIntro";
@@ -9,6 +14,13 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
 
     public boolean seenIntro = false;
     public SoulType soulType = SoulType.DETERMINATION;
+
+    public void tick(Level level, Player player) {
+        if (!seenIntro) {
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (net.minecraft.server.level.ServerPlayer) player), new ClientBoundIntroPacket(player.getOnPos().above(), player.level().dimension()));
+            seenIntro = true;
+        }
+    }
 
     @Override
     public CompoundTag serializeNBT() {

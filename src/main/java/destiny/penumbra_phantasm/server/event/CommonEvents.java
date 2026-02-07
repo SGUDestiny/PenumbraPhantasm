@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.server.registry.*;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -103,8 +104,8 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void playerJoin(PlayerEvent.PlayerLoggedInEvent event)
-    {
-        System.out.println("Player logged in");
+    public void playerTick(TickEvent.PlayerTickEvent event) {
+        if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof ServerPlayer player)
+            event.player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> cap.tick(event.player.level(), player));
     }
 }
