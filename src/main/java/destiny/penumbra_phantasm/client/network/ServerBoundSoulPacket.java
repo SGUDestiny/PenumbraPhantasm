@@ -44,7 +44,7 @@ public class ServerBoundSoulPacket
 
 			player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap ->
 				{
-					cap.soulType = SoulType.byId(this.soulType);
+					cap.soulType = this.soulType;
 				});
 		});
 		return true;

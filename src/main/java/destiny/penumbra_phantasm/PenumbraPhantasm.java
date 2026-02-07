@@ -9,6 +9,7 @@ import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.particles.*;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
+import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -24,6 +25,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+
+import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
 
 @Mod(PenumbraPhantasm.MODID)
 public class PenumbraPhantasm {
@@ -92,6 +95,7 @@ public class PenumbraPhantasm {
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());
+                ItemProperties.register(ItemRegistry.SOUL_HEARTH.get(), new ResourceLocation(MODID, SOUL_TYPE), new SoulHearthItemProperty());
                 ItemProperties.register(ItemRegistry.DELTASHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
                     return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F;
                 });
