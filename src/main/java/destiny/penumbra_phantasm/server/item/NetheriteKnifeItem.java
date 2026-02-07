@@ -27,12 +27,12 @@ public class NetheriteKnifeItem extends KnifeItem {
                     int nextexp = 20 * lv;
 
                     list.add(Component.translatable("tooltip.penumbra_phantasm.netherite_knife.lv")
-                            .append(Component.literal(" " + lv)
+                            .append(Component.literal("" + lv)
                                     .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator")))
                             )
                     );
                     list.add(Component.translatable("tooltip.penumbra_phantasm.netherite_knife.exp")
-                            .append(Component.literal(" " + exp + " / " + nextexp)
+                            .append(Component.literal(exp + " / " + nextexp)
                                     .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator")))
                             )
                     );

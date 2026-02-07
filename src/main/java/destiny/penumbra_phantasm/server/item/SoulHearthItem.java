@@ -1,8 +1,13 @@
 package destiny.penumbra_phantasm.server.item;
 
+import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.SoulType;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -11,10 +16,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -58,8 +65,8 @@ public class SoulHearthItem extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level pLevel, Entity entity, int slotId, boolean isSelected) {
-        if (pLevel.isClientSide()) return;
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        if (level.isClientSide()) return;
 
         if (entity instanceof Player player) {
             if (!player.getCapability(CapabilityRegistry.SOUL).isPresent()) return;
@@ -72,7 +79,53 @@ public class SoulHearthItem extends Item {
                 stack.getOrCreateTag().putFloat(DETERMINATION, determination);
                 stack.getOrCreateTag().putInt(TRUST_LEVEL, trustLevel);
             }
+
+            UUID ownerUuid = stack.getTag().getUUID(OWNER_UUID);
+            if (player.getUUID().equals(ownerUuid)) {
+                float determination = stack.getTag().getFloat(DETERMINATION);
+
+                if (determination < 1) {
+                    if (level.getGameTime() % (5 * 20) == 0) {
+                        determination = determination + 0.01f;
+                    }
+                }
+
+                stack.getOrCreateTag().putFloat(DETERMINATION, determination);
+            }
         }
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
+        if (stack.getTag() == null) return;
+
+        UUID ownerUuid = stack.getTag().getUUID(OWNER_UUID);
+        if (!Minecraft.getInstance().player.getUUID().equals(ownerUuid)) {
+            components.add(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.not_owner")
+                            .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))));
+        } else {
+            int soulType = stack.getTag().getInt(SOUL_TYPE);
+            int determination = (int) (100 * stack.getTag().getFloat(DETERMINATION));
+            int trustLevel = stack.getTag().getInt(TRUST_LEVEL);
+
+            components.add(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.soul_type")
+                    .append(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.soul_type." + soulType))
+                    .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator")))
+            );
+            components.add(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.determination")
+                    .append(Component.literal(determination + "%"))
+                    .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator")))
+            );
+            components.add(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.trust_level")
+                    .append(Component.literal(trustLevel + ""))
+                    .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator")))
+            );
+        }
+    }
+
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return false;
     }
 
     public static float wrapRad(float pValue) {
