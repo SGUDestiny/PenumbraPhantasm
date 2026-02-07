@@ -14,6 +14,7 @@ import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.*;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -280,7 +281,7 @@ public class DarkFountain {
         }
     }
 
-    public Entity teleportPlayer(ServerPlayer player, ServerLevel destinationLevel) {
+/*    public Entity teleportPlayer(ServerPlayer player, ServerLevel destinationLevel) {
         player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap ->
             {
                 if(true)
@@ -290,6 +291,13 @@ public class DarkFountain {
                     PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundIntroPacket(destinationPos, destinationLevel.dimension()));
                 }
             });
+
+        return player;
+    }*/
+
+    public Entity teleportPlayer(ServerPlayer player, ServerLevel destinationLevel) {
+        player.teleportTo(destinationLevel, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), (float)Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270), player.getXRot());
+        player.connection.send(new ClientboundSetEntityMotionPacket(player));
 
         return player;
     }
