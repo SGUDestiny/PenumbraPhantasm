@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -13,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -101,6 +103,39 @@ public class CommonEvents {
                 });
             });
         }
+    }
+
+    @SubscribeEvent
+    public void deathEvent(LivingDeathEvent event)
+    {
+        LivingEntity living = event.getEntity();
+        if(living instanceof ServerPlayer serverPlayer)
+        {
+            serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
+				cap.diedWithSoulHearth = serverPlayer.getInventory()
+													 .hasAnyMatching(stack -> stack.is(ItemRegistry.SOUL_HEARTH.get()));
+
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+                        new ClientBoundSoulBreakPacket(cap.diedWithSoulHearth, cap.soulType));
+            });
+        }
+    }
+
+    @SubscribeEvent
+    public void cloneEvent(PlayerEvent.Clone event)
+    {
+        Player original = event.getOriginal();
+        Player player = event.getEntity();
+
+        original.reviveCaps();
+
+        original.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
+            player.getCapability(CapabilityRegistry.SOUL).ifPresent(copyCap -> {
+                copyCap.sync(cap);
+            });
+        });
+
+        original.invalidateCaps();
     }
 
     @SubscribeEvent

@@ -5,11 +5,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
+import destiny.penumbra_phantasm.client.render.screen.SoulDeathScreen;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.DeathScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -21,7 +23,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -88,7 +92,7 @@ public class ClientEvents {
 								if (fountain.getDestinationPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
 									FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
 								} else {
-									FountainRenderUtil.renderOpenFountainOptimized(fountain, partialTick, animationTime, length, textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
+									FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
 								}
 							}
 						}
@@ -97,6 +101,13 @@ public class ClientEvents {
 					});
 			});
 		}
+	}
+
+	@SubscribeEvent
+	public static void screenRendering(ScreenEvent.Render.Post event)
+	{
+		if(event.getScreen() instanceof DeathScreen deathScreen)
+			SoulDeathScreen.render(event.getGuiGraphics(), deathScreen, event.getPartialTick());
 	}
 
 	@SubscribeEvent
