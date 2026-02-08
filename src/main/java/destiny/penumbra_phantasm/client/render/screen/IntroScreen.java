@@ -18,6 +18,10 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class IntroScreen extends Screen {
 
     Minecraft minecraft = Minecraft.getInstance();
@@ -34,11 +38,8 @@ public class IntroScreen extends Screen {
     public boolean stopDepthsMusic = false;
     //Depths lifetime - 8 seconds
     public final float depthsLifetime = 8 * 20;
-    public float depthsTick1 = 0f;
-    public float depthsTick2 = depthsLifetime / 5f;
-    public float depthsTick3 = depthsLifetime * 2f / 5f;
-    public float depthsTick4 = depthsLifetime * 3f / 5f;
-    public float depthsTick5 = depthsLifetime * 4f / 5f;
+    public List<Float> activeDepths = new ArrayList<>();
+    public final float depthsSpacing = depthsLifetime / 5f;
     public final int depthsStart = droneLength * 5 + 3 * 20;
 
     public int tickText = 0;
@@ -148,6 +149,11 @@ public class IntroScreen extends Screen {
     @Override
     protected void init() {
         minecraft.getSoundManager().stop();
+        activeDepths.add(0f);
+        activeDepths.add(depthsSpacing);
+        activeDepths.add(depthsSpacing * 2f);
+        activeDepths.add(depthsSpacing * 3f);
+        activeDepths.add(depthsSpacing * 4f);
     }
 
     @Override
@@ -183,11 +189,19 @@ public class IntroScreen extends Screen {
                     tickDepthsMusic++;
                 }
 
-                depthsTick1 = (depthsTick1 + 1f) % depthsLifetime;
-                depthsTick2 = (depthsTick2 + 1f) % depthsLifetime;
-                depthsTick3 = (depthsTick3 + 1f) % depthsLifetime;
-                depthsTick4 = (depthsTick4 + 1f) % depthsLifetime;
-                depthsTick5 = (depthsTick5 + 1f) % depthsLifetime;
+                List<Float> toRemove = new ArrayList<>();
+                for (int i = 0; i < activeDepths.size(); i++) {
+                    float current = activeDepths.get(i);
+                    float next = current + 1f;
+                    activeDepths.set(i, next);
+                    if (next >= depthsLifetime) {
+                        toRemove.add(next);
+                    }
+                }
+                for (float tr : toRemove) {
+                    activeDepths.remove(tr);
+                    activeDepths.add(0f);
+                }
             }
 
             if (tick == choiceStart) {
@@ -451,82 +465,28 @@ public class IntroScreen extends Screen {
         }
 
         if (this.tick > depthsStart) {
-            //BG Depths
+            // BG Depths
             pose.pushPose();
-            //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
             RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, 1, 0, 0, this.width, this.height, this.width, this.height);
             pose.popPose();
 
-            //Depths layer 5
-            float depthsAlphaDelta5 = depthsTick5 / depthsLifetime;
-            float depthsAlpha5 = depthsAlphaDelta5 <= 0.5f
-                                         ? Mth.lerp(depthsAlphaDelta5 * 2.0f, 0.0f, 0.8f)
-                                         : Mth.lerp((depthsAlphaDelta5 - 0.5f) * 2.0f, 0.8f, 0.0f);
-            float depthsSize5 = Mth.lerp(depthsAlphaDelta5, 0f, 1f);
+            List<Float> sortedDepths = new ArrayList<>(activeDepths);
+            sortedDepths.sort(Collections.reverseOrder());
 
-            pose.pushPose();
-            pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize5 / 2, 1 + depthsSize5 / 2, 1);
-            pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha5, 0, 0, 0, this.width, this.height, this.width, this.height);
-            pose.popPose();
+            for (float depthsTick : sortedDepths) {
+                float depthsAlphaDelta = depthsTick / depthsLifetime;
+                float depthsAlpha = depthsAlphaDelta <= 0.5f
+                        ? Mth.lerp(depthsAlphaDelta * 2.0f, 0f, 0.8f)
+                        : Mth.lerp((depthsAlphaDelta - 0.5f) * 2.0f, 0.8f, 0f);
+                float depthsSize = Mth.lerp(depthsAlphaDelta, 0f, 1f);
 
-            //Depths layer 4
-            float depthsAlphaDelta4 = depthsTick4 / depthsLifetime;
-            float depthsAlpha4 = depthsAlphaDelta4 <= 0.5f
-                                         ? Mth.lerp(depthsAlphaDelta4 * 2.0f, 0.0f, 0.8f)
-                                         : Mth.lerp((depthsAlphaDelta4 - 0.5f) * 2.0f, 0.8f, 0.0f);
-            float depthsSize4 = Mth.lerp(depthsAlphaDelta4, 0f, 1f);
-
-            pose.pushPose();
-            pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize4 / 2, 1 + depthsSize4 / 2, 1);
-            pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha4, 0, 0, 0, this.width, this.height, this.width, this.height);
-            pose.popPose();
-
-            //Depths layer 3
-            float depthsAlphaDelta3 = depthsTick3 / depthsLifetime;
-            float depthsAlpha3 = depthsAlphaDelta3 <= 0.5f
-                                         ? Mth.lerp(depthsAlphaDelta3 * 2.0f, 0.0f, 0.8f)
-                                         : Mth.lerp((depthsAlphaDelta3 - 0.5f) * 2.0f, 0.8f, 0.0f);
-            float depthsSize3 = Mth.lerp(depthsAlphaDelta3, 0f, 1f);
-
-            pose.pushPose();
-            pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize3 / 2, 1 + depthsSize3 / 2, 1);
-            pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha3, 0, 0, 0, this.width, this.height, this.width, this.height);
-            pose.popPose();
-
-            //Depths layer 2
-            float depthsAlphaDelta2 = depthsTick2 / depthsLifetime;
-            float depthsAlpha2 = depthsAlphaDelta2 <= 0.5f
-                                         ? Mth.lerp(depthsAlphaDelta2 * 2.0f, 0.0f, 0.8f)
-                                         : Mth.lerp((depthsAlphaDelta2 - 0.5f) * 2.0f, 0.8f, 0.0f);
-            float depthsSize2 = Mth.lerp(depthsAlphaDelta2, 0f, 1f);
-
-            pose.pushPose();
-            pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize2 / 2, 1 + depthsSize2 / 2, 1);
-            pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha2, 0, 0, 0, this.width, this.height, this.width, this.height);
-            pose.popPose();
-
-            //Depths layer 1
-            float depthsAlphaDelta1 = depthsTick1 / depthsLifetime;
-            float depthsAlpha1 = depthsAlphaDelta1 <= 0.5f
-                                         ? Mth.lerp(depthsAlphaDelta1 * 2.0f, 0.0f, 0.8f)
-                                         : Mth.lerp((depthsAlphaDelta1 - 0.5f) * 2.0f, 0.8f, 0.0f);
-            float depthsSize1 = Mth.lerp(depthsAlphaDelta1, 0f, 1f);
-
-            pose.pushPose();
-            pose.translate(this.width / 2f, this.height / 2f, 0);
-            pose.scale(1 + depthsSize1 / 2, 1 + depthsSize1 / 2, 1);
-            pose.translate(-this.width / 2f, -this.height / 2f, 0);
-            //atlasLocation, x, y, blitOffset, uOffset, vOffset, uWidth, vHeight, textureWidth, textureHeight
-            RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha1, 0, 0, 0, this.width, this.height, this.width, this.height);
-            pose.popPose();
+                pose.pushPose();
+                pose.translate(this.width / 2f, this.height / 2f, 0);
+                pose.scale(1 + depthsSize / 1.75f, 1 + depthsSize / 1.75f, 1);
+                pose.translate(-this.width / 2f, -this.height / 2f, 0);
+                RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, depthsAlpha, 0, 0, this.width, this.height, this.width, this.height);
+                pose.popPose();
+            }
 
             //Black bars
             pose.pushPose();
