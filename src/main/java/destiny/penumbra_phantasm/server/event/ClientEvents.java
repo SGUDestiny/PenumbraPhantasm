@@ -106,8 +106,8 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void screenRendering(ScreenEvent.Render.Post event)
 	{
-		if(event.getScreen() instanceof DeathScreen deathScreen)
-			SoulDeathScreen.render(event.getGuiGraphics(), deathScreen, event.getPartialTick());
+//		if(event.getScreen() instanceof DeathScreen deathScreen)
+//			SoulDeathScreen.render(event.getGuiGraphics(), deathScreen, event.getPartialTick());
 	}
 
 	@SubscribeEvent
