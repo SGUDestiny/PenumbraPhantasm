@@ -26,14 +26,14 @@ public class SoulDeathScreen {
 			return;
 
 		Minecraft minecraft = Minecraft.getInstance();
-		long currentTimeTicks = (System.currentTimeMillis() / 1000) / 20;
+		long currentTimeTicks = System.currentTimeMillis() / 50;
 
 		//Mid-death, right after finishing the death animation the player capability stops existing
 		//I had to store the data in static fields because of this, preferably do not use that for animations.
 		minecraft.player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
 			hadSoulHearth = cap.diedWithSoulHearth;
 			soulType = cap.soulType;
-			tickStart = (System.currentTimeMillis() / 1000) / 20;
+			tickStart = System.currentTimeMillis() / 50;
 		});
 
 		if (!hadSoulHearth) return;

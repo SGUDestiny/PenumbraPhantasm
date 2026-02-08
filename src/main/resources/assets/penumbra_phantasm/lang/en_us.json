@@ -52,6 +52,8 @@
   "sound.penumbra_phantasm.real_knife_slash": "Air is slashed with determination",
   "sound.penumbra_phantasm.real_knife_hit": "Heavy damage",
   "sound.penumbra_phantasm.level_up": "Your LOVE has increased",
+  "sound.penumbra_phantasm.soul_break": "SOUL breaks in two",
+  "sound.penumbra_phantasm.soul_shatter": "SOUL shatters to pieces",
 
   "tooltip.penumbra_phantasm.netherite_knife.lv": "LV: ",
   "tooltip.penumbra_phantasm.netherite_knife.exp": "EXP: ",

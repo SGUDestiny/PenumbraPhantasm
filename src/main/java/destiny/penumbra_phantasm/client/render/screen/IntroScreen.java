@@ -26,24 +26,24 @@ public class IntroScreen extends Screen {
     public static final ResourceLocation IMAGE_DEPTH = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/image_depth_blue_alt.png");
     public final Runnable onFinished;
     public boolean shouldClose = false;
-    public int droneLength = (int) (8.727 * 20);
-    public int depthsMusicLength = 48 * 20;
+    public final int droneLength = (int) (8.727 * 20);
+    public final int depthsMusicLength = 48 * 20;
     public int tick = 0;
     public int outlineTick = 0;
     public int tickDepthsMusic = -1;
     public boolean stopDepthsMusic = false;
     //Depths lifetime - 8 seconds
-    public float depthsLifetime = 8 * 20;
+    public final float depthsLifetime = 8 * 20;
     public float depthsTick1 = 0f;
     public float depthsTick2 = depthsLifetime / 5f;
     public float depthsTick3 = depthsLifetime * 2f / 5f;
     public float depthsTick4 = depthsLifetime * 3f / 5f;
     public float depthsTick5 = depthsLifetime * 4f / 5f;
-    public int depthsStart = droneLength * 5 + 3 * 20;
+    public final int depthsStart = droneLength * 5 + 3 * 20;
 
     public int tickText = 0;
     public boolean isChoosing = false;
-    public int choiceStart = 57 * 20;
+    public final int choiceStart = 57 * 20;
     public int currentChoice = 1;
     public float oldChoiceSoulY = 0f;
     private int choiceLerpStartTick = -1;
