@@ -42,7 +42,11 @@ public class FriendItem extends Item {
             boolean reset = stack.getTag().getBoolean("reset");
 
             if (level.getGameTime() % 10 == 0 && level.random.nextFloat() > 0.7 && fun == 0) {
-                fun = level.random.nextInt(2, 6);
+                if (player.getOffhandItem() == stack || player.getMainHandItem() == stack || getTravelSlots(player).size() <= 2) {
+                    fun = level.random.nextInt(2, 4);
+                } else {
+                    fun = level.random.nextInt(2, 6);
+                }
 
                 stack.getOrCreateTag().putInt("fun", fun);
             }
@@ -138,32 +142,12 @@ public class FriendItem extends Item {
                 slots.add(i);
             }
         }
-        for (int i = 100; i < player.getInventory().armor.size(); i++) {
-            if (player.getInventory().armor.get(i).getItem() != ItemRegistry.FRIEND.get()) {
-                slots.add(i);
-            }
-        }
-        for (int i = 99; i < player.getInventory().offhand.size(); i++) {
-            if (player.getInventory().offhand.get(i).getItem() != ItemRegistry.FRIEND.get()) {
-                slots.add(i);
-            }
-        }
         return slots;
     }
 
     public int getCurrentSlot(Player player, ItemStack stack) {
         for (int i = 0; i < player.getInventory().items.size(); i++) {
             if (player.getInventory().items.get(i) == stack) {
-                return i;
-            }
-        }
-        for (int i = 100; i < player.getInventory().armor.size(); i++) {
-            if (player.getInventory().armor.get(i) == stack) {
-                return i;
-            }
-        }
-        for (int i = 99; i < player.getInventory().offhand.size(); i++) {
-            if (player.getInventory().offhand.get(i) == stack) {
                 return i;
             }
         }
