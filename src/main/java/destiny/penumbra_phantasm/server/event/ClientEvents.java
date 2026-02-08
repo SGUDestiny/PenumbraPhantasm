@@ -89,10 +89,10 @@ public class ClientEvents {
 							} else {
 								double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
-								if (fountain.getDestinationPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
+								if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
 									FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
 								} else {
-									FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
+									FountainRenderUtil.renderOpenFountainOptimized(fountain, partialTick, animationTime, length, textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
 								}
 							}
 						}

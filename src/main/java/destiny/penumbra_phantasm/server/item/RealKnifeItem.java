@@ -12,8 +12,11 @@ import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeMod;
 
 public class RealKnifeItem extends KnifeItem {
+    public int damage;
+
     public RealKnifeItem(Tier tier, float speed, int damage, boolean isSingleUse, boolean needsNetherStar, Properties properties) {
         super(tier, damage, speed, isSingleUse, needsNetherStar, properties);
+        this.damage = damage;
     }
 
     @Override
@@ -23,6 +26,8 @@ public class RealKnifeItem extends KnifeItem {
 
             if (Config.realKnifeOP) {
                 builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", Integer.MAX_VALUE, Operation.ADDITION));
+            } else {
+                builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.damage, Operation.ADDITION));
             }
             builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -2, Operation.ADDITION));
             builder.put(ForgeMod.ENTITY_REACH.get(), new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Weapon modifier", -1, Operation.ADDITION));

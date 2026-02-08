@@ -201,7 +201,7 @@ public class DarkFountain {
                 if (destinationDimension == ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))) {
                     teleportBox = new AABB(fountainPos.above()).inflate(1);
                 } else {
-                    teleportBox = new AABB(destinationPos.above()).inflate(1).setMaxY(128);
+                    teleportBox = new AABB(fountainPos.above()).inflate(1).setMaxY(128);
                 }
                 HashSet<UUID> teleportBoxEntities = new HashSet<>();
                 ServerLevel fountainLevel = level.getServer().getLevel(this.fountainDimension);
