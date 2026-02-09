@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.item;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.SoulType;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.network.chat.Component;
@@ -46,10 +47,10 @@ public class SoulHearthItem extends Item {
             private static final HumanoidModel.ArmPose POSE = HumanoidModel.ArmPose.create("POSE", false, (model, entity, arm) -> {
                 if (arm == HumanoidArm.RIGHT) {
                     model.rightArm.xRot = 4.8f + entity.getXRot() / 90;
-                    model.rightArm.yRot = Mth.clamp(wrapRad(0F + model.head.yRot), -0.5f, 1);
+                    model.rightArm.yRot = Mth.clamp(ModUtil.wrapRad(0F + model.head.yRot), -0.5f, 1);
                 } else {
                     model.leftArm.xRot = 4.8f + entity.getXRot() / 90;
-                    model.leftArm.yRot = Mth.clamp(wrapRad(0F + model.head.yRot), -0.5f, 1);
+                    model.leftArm.yRot = Mth.clamp(ModUtil.wrapRad(0F + model.head.yRot), -0.5f, 1);
                 }
             });
 
@@ -126,19 +127,5 @@ public class SoulHearthItem extends Item {
     @Override
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
-    }
-
-    public static float wrapRad(float pValue) {
-        float p = (float) (Math.PI * 2);
-        float d0 = pValue % p;
-        if (d0 >= Math.PI) {
-            d0 -= p;
-        }
-
-        if (d0 < -Math.PI) {
-            d0 += p;
-        }
-
-        return d0;
     }
 }

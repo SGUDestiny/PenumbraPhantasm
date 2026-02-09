@@ -27,4 +27,18 @@ public class ModUtil {
     public static double getBoundRandomDoubleStatic(Level level, double origin, double limit) {
         return origin + (limit - origin) * level.getRandom().nextDouble();
     }
+
+    public static float wrapRad(float pValue) {
+        float p = (float) (Math.PI * 2);
+        float d0 = pValue % p;
+        if (d0 >= Math.PI) {
+            d0 -= p;
+        }
+
+        if (d0 < -Math.PI) {
+            d0 += p;
+        }
+
+        return d0;
+    }
 }

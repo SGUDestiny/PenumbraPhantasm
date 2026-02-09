@@ -1,0 +1,23 @@
+{
+	"loader": "forge:separate_transforms",
+	"gui_light": "front",
+	"base":
+	{
+		"parent": "penumbra_phantasm:item/hearth_third_person"
+	},
+	"perspectives":
+	{
+		"gui":
+		{
+			"parent": "penumbra_phantasm:item/hearth_item"
+		},
+		"fixed":
+		{
+			"parent": "penumbra_phantasm:item/hearth_item"
+		},
+		"ground":
+		{
+			"parent": "penumbra_phantasm:item/hearth_item"
+		}
+	}
+}

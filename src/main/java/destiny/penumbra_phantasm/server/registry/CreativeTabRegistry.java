@@ -11,10 +11,11 @@ public class CreativeTabRegistry {
     public static final DeferredRegister<CreativeModeTab> DEF_REG  = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, PenumbraPhantasm.MODID);
 
     public static final RegistryObject<CreativeModeTab> MAIN = DEF_REG.register("main", () -> CreativeModeTab.builder()
-            .icon(() -> ItemRegistry.DARK_CANDY.get().getDefaultInstance())
+            .icon(() -> ItemRegistry.SOUL_HEARTH.get().getDefaultInstance())
             .title(Component.translatable("itemGroup.penumbra_phantasm.main"))
             .displayItems((parameters, output) -> {
                 output.accept(ItemRegistry.SOUL_HEARTH.get());
+                output.accept(BlockRegistry.HEARTH.get());
 
                 output.accept(ItemRegistry.DELTASHIELD.get());
                 output.accept(ItemRegistry.FAMILIAR_SWORD.get());

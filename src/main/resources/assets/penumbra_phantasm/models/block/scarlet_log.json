@@ -8,7 +8,7 @@
 		"2": "penumbra_phantasm:block/scarlet_log_inner_top",
 		"3": "penumbra_phantasm:block/scarlet_log_outer",
 		"4": "penumbra_phantasm:block/scarlet_log_outer_top",
-		"particle": "penumbra_phantasm:block/scarlet_log_outer"
+		"particle": "penumbra_phantasm:block/scarlet_log_inner"
 	},
 	"elements": [
 		{

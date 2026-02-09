@@ -123,6 +123,10 @@ public class BlockRegistry {
     public static final RegistryObject<LiquidBlock> PURE_DARKNESS = BLOCKS.register("pure_darkness",
             () -> new LiquidBlock(FluidRegistry.SOURCE_PURE_DARKNESS, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable().lightLevel(state -> 15)));
 
+    public static final RegistryObject<Block> HEARTH = registerBlock("hearth",
+            () -> new HearthBlock(BlockBehaviour.Properties.copy(Blocks.LANTERN)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.LANTERN).noOcclusion()));
+
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
