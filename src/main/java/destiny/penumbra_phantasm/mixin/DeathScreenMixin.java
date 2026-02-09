@@ -173,10 +173,10 @@ public class DeathScreenMixin
 		}
 
 		if (tick == tickSoulBreak) {
-			minecraft.player.playSound(SoundRegistry.SOUL_BREAK.get(), 0.5f, 1f);
+			minecraft.player.playSound(SoundRegistry.SOUL_BREAK.get(), 0.75f, 1f);
 		}
 		if (tick == tickSoulShatter) {
-			minecraft.player.playSound(SoundRegistry.SOUL_SHATTER.get(), 0.5f, 1f);
+			minecraft.player.playSound(SoundRegistry.SOUL_SHATTER.get(), 0.75f, 1f);
 		}
 
 		tick++;
