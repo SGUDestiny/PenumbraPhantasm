@@ -70,7 +70,7 @@ public class KnifeItem extends SwordItem {
         ItemStack stack = player.getItemInHand(hand);
         CompoundTag tag = stack.getOrCreateTag();
 
-        if (!player.onGround() || level.dimension().location().toString().equals("penumbra_phantasm:dark_depths")) {
+        if (!player.onGround() || DarkFountain.isDarkWorldStatic(level.dimension())) {
             return InteractionResultHolder.fail(stack);
         }
 
@@ -114,6 +114,7 @@ public class KnifeItem extends SwordItem {
 
     //TODO:
     // - Made opening the fountain depend on the soul capability and determination (100% = 1 fountain)
+    // - Clean up code (?)
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean b) {
@@ -129,7 +130,6 @@ public class KnifeItem extends SwordItem {
                     tag.putInt("tick", -2);
                     if (!level.getBlockState(player.getOnPos()).isAir()) {
                         if (!level.isClientSide()) {
-                            UUID uuid = UUID.randomUUID();
                             Iterator<ResourceKey<Level>> set = level.getServer().levelKeys().iterator();
                             ResourceKey<Level> target = null;
                             while (set.hasNext()) {
