@@ -22,6 +22,11 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Map;
 
+//TODO:
+// - Change the visual effect to be a veil of darkness slowly descending from above
+// - The starting vertical pos of the veil should depend on how close the player is
+// - When the screen is fully covered, teleport the player
+
 public class FountainDarknessOverlay {
     public static final ResourceLocation TEXTURE = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/fountain_darkness_old.png");
 
