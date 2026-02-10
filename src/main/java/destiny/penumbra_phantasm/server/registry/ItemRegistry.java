@@ -29,9 +29,9 @@ public class ItemRegistry {
             () -> new KnifeItem(Tiers.NETHERITE, 0, -2, false, false, basicItem()));
 
     public static final RegistryObject<Item> FAMILIAR_SWORD = ITEMS.register("familiar_sword",
-            () -> new SwordItem(Tiers.NETHERITE, 9, -3, basicItem()));
+            () -> new FamiliarSwordItem(Tiers.NETHERITE, 9, -3, basicItem()));
     public static final RegistryObject<Item> FAMILIAR_AX = ITEMS.register("familiar_ax",
-            () -> new AxeItem(Tiers.NETHERITE, 9, -3, basicItem()));
+            () -> new FamiliarAxItem(Tiers.NETHERITE, 9, -3, basicItem()));
 
     public static final RegistryObject<Item> DELTASHIELD = ITEMS.register("deltashield",
             () -> new DeltashieldItem(basicItem()));

@@ -108,6 +108,13 @@ public class KnifeItem extends SwordItem {
         return InteractionResultHolder.sidedSuccess(stack, false);
     }
 
+    //FIXME:
+    // - Fix particles being seen only on one client
+    // - Make animations synced between all clients
+
+    //TODO:
+    // - Made opening the fountain depend on the soul capability and determination (100% = 1 fountain)
+
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean b) {
             if (entity instanceof Player player) {

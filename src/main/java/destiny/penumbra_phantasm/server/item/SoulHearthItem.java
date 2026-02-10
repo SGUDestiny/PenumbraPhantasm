@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+//TODO:
+// - Transition soul hearth stuff to the capability
+
 public class SoulHearthItem extends Item {
     public static final String OWNER_UUID = "owner_uuid";
     public static final String SOUL_TYPE = "soul_type";

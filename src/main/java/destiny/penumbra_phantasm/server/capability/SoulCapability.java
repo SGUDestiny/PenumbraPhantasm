@@ -10,6 +10,9 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
+//TODO:
+// - Transition soul hearth stuff to the capability
+
 public class SoulCapability implements INBTSerializable<CompoundTag> {
     public static final String SEEN_INTRO = "seenIntro";
     public static final String SOUL_TYPE = "soulType";

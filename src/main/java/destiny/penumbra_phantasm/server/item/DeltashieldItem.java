@@ -7,6 +7,9 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 
+//TODO:
+// - Make parry mechanic
+
 public class DeltashieldItem extends ShieldItem {
     public DeltashieldItem(Properties properties) {
         super(properties);
