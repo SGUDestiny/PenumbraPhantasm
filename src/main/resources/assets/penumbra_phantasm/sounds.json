@@ -27,6 +27,13 @@
       "penumbra_phantasm:fountain_music"
     ]
   },
+  "fountain_music_disc": {
+    "subtitle": "sound.penumbra_phantasm.fountain_music_disc",
+    "sounds":
+    [
+      "penumbra_phantasm:fountain_music_disc"
+    ]
+  },
   "fountain_music_alternate": {
     "subtitle": "sound.penumbra_phantasm.fountain_music_alternate",
     "sounds":

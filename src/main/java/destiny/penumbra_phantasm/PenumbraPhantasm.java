@@ -8,6 +8,7 @@ import destiny.penumbra_phantasm.client.render.item.DeltashieldRenderer;
 import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.particles.*;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
+import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
@@ -64,6 +65,11 @@ public class PenumbraPhantasm {
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
+        @SubscribeEvent
+        public static void onItemColors(RegisterColorHandlersEvent.Item event) {
+            event.register((stack, colorIn) -> colorIn != 0 ? -1 : MusicMediumItem.getColor(), ItemRegistry.ITEM_MUSIC_MEDIUM_THE_HOLY.get());
+        }
+
         @SubscribeEvent
         public static void bakeModels(EntityRenderersEvent.RegisterLayerDefinitions event) {
             event.registerLayerDefinition(DarkFountainOpeningModel.LAYER_LOCATION, DarkFountainOpeningModel::createBodyLayer);

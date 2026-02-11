@@ -49,4 +49,7 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> SOUL_HEARTH = ITEMS.register("soul_hearth",
             () -> new SoulHearthItem(basicItem()));
+
+    public static final RegistryObject<Item> ITEM_MUSIC_MEDIUM_THE_HOLY = ITEMS.register("item_music_medium_the_holy",
+            () -> new MusicMediumItem(6, SoundRegistry.FOUNTAIN_MUSIC_DISC, basicItem(), (int) (53.333 * 20)));
 }

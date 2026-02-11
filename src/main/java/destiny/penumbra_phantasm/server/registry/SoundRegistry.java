@@ -15,6 +15,7 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> FOUNTAIN_TARGET = registerSoundEvent("fountain_target");
     public static RegistryObject<SoundEvent> FOUNTAIN_WIND = registerSoundEvent("fountain_wind");
     public static RegistryObject<SoundEvent> FOUNTAIN_MUSIC = registerSoundEvent("fountain_music");
+    public static RegistryObject<SoundEvent> FOUNTAIN_MUSIC_DISC = registerSoundEvent("fountain_music_disc");
     public static RegistryObject<SoundEvent> FOUNTAIN_MUSIC_ALTERNATE = registerSoundEvent("fountain_music_alternate");
     public static RegistryObject<SoundEvent> FOUNTAIN_DARKNESS = registerSoundEvent("fountain_darkness");
     public static RegistryObject<SoundEvent> FOUNTAIN_SEAL = registerSoundEvent("fountain_seal");

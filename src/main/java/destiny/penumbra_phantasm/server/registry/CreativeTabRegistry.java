@@ -33,6 +33,8 @@ public class CreativeTabRegistry {
 
                 output.accept(ItemRegistry.FRIEND.get());
 
+                output.accept(ItemRegistry.ITEM_MUSIC_MEDIUM_THE_HOLY.get());
+
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());
                 output.accept(BlockRegistry.NIGHT_DIRT.get());
