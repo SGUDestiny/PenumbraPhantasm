@@ -92,7 +92,7 @@ public class FountainDarknessOverlay {
         } else {
             PoseStack pose = guiGraphics.pose();
             double distance = fountain.getFountainPos().getCenter().distanceTo(player.getEyePosition().add(0, -1, 0));
-            float distanceDelta = (float) ((distance - 1.5f) / 5);
+            float distanceDelta = (float) ((distance - 0.8f) / 5);
             float verticalTranslation = (int) (Mth.lerp(distanceDelta, 0, -height + (height / 10f)));
 
             pose.pushPose();

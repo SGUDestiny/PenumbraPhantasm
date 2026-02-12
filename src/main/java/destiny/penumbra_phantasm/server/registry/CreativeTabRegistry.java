@@ -44,11 +44,13 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.SCARLET_LEAVES.get());
                 output.accept(BlockRegistry.SCARLET_LOG.get());
                 output.accept(BlockRegistry.SCARLET_SAPLING.get());
+                output.accept(BlockRegistry.SCARLET_PLANKS.get());
 
                 output.accept(ItemRegistry.DARK_CANDY.get());
                 output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());
                 output.accept(BlockRegistry.DARK_CANDY_LEAVES.get());
                 output.accept(BlockRegistry.DARK_CANDY_LOG.get());
+                output.accept(BlockRegistry.DARK_CANDY_PLANKS.get());
 
                 output.accept(BlockRegistry.SCARLET_MARBLE.get());
                 output.accept(BlockRegistry.DARK_MARBLE.get());
