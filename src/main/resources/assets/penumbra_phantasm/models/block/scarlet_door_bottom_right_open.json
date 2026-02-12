@@ -1,0 +1,7 @@
+{
+  "parent": "penumbra_phantasm:block/door_bottom_right_open_emissive",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/scarlet_door_bottom",
+    "top": "penumbra_phantasm:block/scarlet_door_top"
+  }
+}

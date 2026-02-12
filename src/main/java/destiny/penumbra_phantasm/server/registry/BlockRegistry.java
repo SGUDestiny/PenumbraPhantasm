@@ -7,6 +7,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraftforge.registries.DeferredRegister;
@@ -47,6 +48,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> SCARLET_PLANKS = registerBlock("scarlet_planks",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> SCARLET_DOOR = registerBlock("scarlet_door",
+            () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD), BlockSetType.CHERRY));
 
     public static final RegistryObject<Block> DARK_CANDY_BLOCK = registerBlock("dark_candy_block",
             () -> new DarkCandyBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
@@ -60,6 +64,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> DARK_CANDY_PLANKS = registerBlock("dark_candy_planks",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> DARK_CANDY_DOOR = registerBlock("dark_candy_door",
+            () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD), BlockSetType.CHERRY));
 
     public static final RegistryObject<Block> SCARLET_MARBLE = registerBlock("scarlet_marble",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE)
