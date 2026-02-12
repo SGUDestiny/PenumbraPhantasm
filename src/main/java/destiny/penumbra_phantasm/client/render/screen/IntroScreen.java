@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.client.render.screen;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
@@ -8,16 +9,21 @@ import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.TypewriterText;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
+import net.minecraft.Util;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.Screenshot;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.server.IntegratedServer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -695,7 +701,16 @@ public class IntroScreen extends Screen {
 
     @Override
     public void onClose() {
-        if (minecraft.player.getAbilities().instabuild) {
+        if (minecraft.player.getAbilities().instabuild)
+        {
+
+            //TODO - Make this actually run after exiting intro and having loaded the world
+            IntegratedServer integratedserver = this.minecraft.getSingleplayerServer();
+            if(integratedserver != null && !integratedserver.isStopped())
+            {
+                minecraft.getSingleplayerServer().getWorldScreenshotFile().ifPresent(this::takeAutoScreenshot);
+            }
+
             this.onFinished.run();
             minecraft.getSoundManager().stop();
             PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
@@ -703,8 +718,46 @@ public class IntroScreen extends Screen {
     }
 
     public void closeScreen() {
+
+        //TODO - Make this actually run after exiting intro and having loaded the world
+        IntegratedServer integratedserver = this.minecraft.getSingleplayerServer();
+        if(integratedserver != null && !integratedserver.isStopped())
+        {
+            minecraft.getSingleplayerServer().getWorldScreenshotFile().ifPresent(this::takeAutoScreenshot);
+        }
+
         this.onFinished.run();
         minecraft.getSoundManager().stop();
         PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
+    }
+
+    private void takeAutoScreenshot(Path pPath) {
+        if (this.minecraft.levelRenderer.countRenderedChunks() > 10 && this.minecraft.levelRenderer.hasRenderedAllChunks()) {
+            NativeImage nativeimage = Screenshot.takeScreenshot(this.minecraft.getMainRenderTarget());
+            Util.ioPool().execute(() -> {
+                int i = nativeimage.getWidth();
+                int j = nativeimage.getHeight();
+                int k = 0;
+                int l = 0;
+                if (i > j) {
+                    k = (i - j) / 2;
+                    i = j;
+                } else {
+                    l = (j - i) / 2;
+                    j = i;
+                }
+
+                try (NativeImage nativeimage1 = new NativeImage(64, 64, false)) {
+                    nativeimage.resizeSubRectTo(k, l, i, j, nativeimage1);
+                    nativeimage1.writeToFile(pPath);
+                } catch (IOException ioexception) {
+                    //LOGGER.warn("Couldn't save auto screenshot", (Throwable)ioexception);
+                } finally {
+                    nativeimage.close();
+                }
+
+            });
+        }
+
     }
 }
