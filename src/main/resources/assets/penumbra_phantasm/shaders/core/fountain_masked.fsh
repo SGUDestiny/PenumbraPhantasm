@@ -4,6 +4,7 @@ uniform sampler2D Sampler0; // mask
 uniform sampler2D Sampler1; // texture
 uniform float Time;
 uniform vec4 TintColor;
+uniform float AspectRatio;
 
 in vec4 texProj0;
 in vec2 vUv;
@@ -39,8 +40,17 @@ void main() {
     0.0, 0.0, 0.0,  1.0
     );
 
+
+    vec4 projFront = texProj0 * scaleMat * scrollFront;
+
+    // manual perspective divide
+    vec2 uvFront = projFront.xy / projFront.w;
+
+    // undo horizontal compression
+    uvFront.x *= AspectRatio;
+
     //flowing texture, aka moving
-    vec4 flowFront = textureProj(Sampler1, texProj0 * scaleMat * scrollFront);
+    vec4 flowFront = texture(Sampler1, uvFront);
 
     // offset for the behind flowing texture
     mat4 offsetRight = mat4(
@@ -50,10 +60,14 @@ void main() {
     0.0, 0.0, 0.0, 1.0
     );
 
-    vec4 flowBehind = textureProj(
-    Sampler1,
-    texProj0 * scaleMat * scrollBehind * offsetRight
-    );
+    vec4 projBehind = texProj0 * scaleMat * scrollBehind * offsetRight;
+    // manual perspective divide
+    vec2 uvBehind = projBehind.xy / projBehind.w;
+
+    uvBehind.x *= AspectRatio;
+
+    vec4 flowBehind = texture(Sampler1, uvBehind);
+
 
    //base black background
     vec3 color = vec3(0.0);

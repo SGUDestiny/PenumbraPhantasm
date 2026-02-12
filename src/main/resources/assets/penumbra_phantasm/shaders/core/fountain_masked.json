@@ -37,7 +37,12 @@
       "type": "float",
       "count": 4,
       "values": [1.0, 1.0, 1.0, 1.0]
+    },
+    {
+      "name": "AspectRatio",
+      "type": "float",
+      "count": 1,
+      "values": [1.0]
     }
-
   ]
 }

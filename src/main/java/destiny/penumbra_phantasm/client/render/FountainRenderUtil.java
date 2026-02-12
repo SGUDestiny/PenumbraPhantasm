@@ -141,6 +141,12 @@ public class FountainRenderUtil
 		if (shaderInstance != null) {
 			float shadertime = (level.getGameTime() + partialTick) * 0.05f;
 			shaderInstance.safeGetUniform("Time").set(shadertime);
+			Minecraft mc = Minecraft.getInstance();
+			float aspect = (float) mc.getWindow().getWidth() /
+					(float) mc.getWindow().getHeight();
+
+			shaderInstance.safeGetUniform("AspectRatio").set(aspect);
+
 		}
 		if(player != null)
 		{
