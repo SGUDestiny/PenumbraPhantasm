@@ -1,0 +1,8 @@
+{
+  "parent": "penumbra_phantasm:block/inner_stairs_emissive",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/scarlet_planks",
+    "side": "penumbra_phantasm:block/scarlet_planks",
+    "top": "penumbra_phantasm:block/scarlet_planks"
+  }
+}

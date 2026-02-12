@@ -41,10 +41,12 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.UMBRASTONE.get());
                 output.accept(BlockRegistry.COBBLED_UMBRASTONE.get());
 
+                output.accept(BlockRegistry.SCARLET_SAPLING.get());
                 output.accept(BlockRegistry.SCARLET_LEAVES.get());
                 output.accept(BlockRegistry.SCARLET_LOG.get());
-                output.accept(BlockRegistry.SCARLET_SAPLING.get());
                 output.accept(BlockRegistry.SCARLET_PLANKS.get());
+                output.accept(BlockRegistry.SCARLET_SLAB.get());
+                output.accept(BlockRegistry.SCARLET_STAIRS.get());
                 output.accept(BlockRegistry.SCARLET_DOOR.get());
 
                 output.accept(ItemRegistry.DARK_CANDY.get());
@@ -52,6 +54,8 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.DARK_CANDY_LEAVES.get());
                 output.accept(BlockRegistry.DARK_CANDY_LOG.get());
                 output.accept(BlockRegistry.DARK_CANDY_PLANKS.get());
+                output.accept(BlockRegistry.DARK_CANDY_SLAB.get());
+                output.accept(BlockRegistry.DARK_CANDY_STAIRS.get());
                 output.accept(BlockRegistry.DARK_CANDY_DOOR.get());
 
                 output.accept(BlockRegistry.SCARLET_MARBLE.get());

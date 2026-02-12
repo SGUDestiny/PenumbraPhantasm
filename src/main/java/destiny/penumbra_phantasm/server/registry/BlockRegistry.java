@@ -48,6 +48,12 @@ public class BlockRegistry {
     public static final RegistryObject<Block> SCARLET_PLANKS = registerBlock("scarlet_planks",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> SCARLET_STAIRS = registerBlock("scarlet_stairs",
+            () -> new StairBlock(SCARLET_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> SCARLET_SLAB = registerBlock("scarlet_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block> SCARLET_DOOR = registerBlock("scarlet_door",
             () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD), BlockSetType.CHERRY));
@@ -63,6 +69,12 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block> DARK_CANDY_PLANKS = registerBlock("dark_candy_planks",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> DARK_CANDY_STAIRS = registerBlock("dark_candy_stairs",
+            () -> new StairBlock(DARK_CANDY_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> DARK_CANDY_SLAB = registerBlock("dark_candy_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block> DARK_CANDY_DOOR = registerBlock("dark_candy_door",
             () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
