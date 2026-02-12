@@ -14,6 +14,8 @@ import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
@@ -105,6 +107,13 @@ public class PenumbraPhantasm {
                 ItemProperties.register(ItemRegistry.DELTASHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
                     return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F;
                 });
+            });
+        }
+
+        @SubscribeEvent
+        public static void onCommonSetup(FMLCommonSetupEvent event) {
+            event.enqueueWork(() -> {
+                ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.SCARLET_SAPLING.getId(), BlockRegistry.POTTED_SCARLET_SAPLING);
             });
         }
 

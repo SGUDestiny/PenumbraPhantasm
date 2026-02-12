@@ -1,13 +1,13 @@
 {
   "variants": {
     "type=bottom": {
-      "model": "penumbra_phantasm:block/dark_candy_slab"
+      "model": "penumbra_phantasm:block/scarlet_slab"
     },
     "type=double": {
-      "model": "penumbra_phantasm:block/dark_candy_planks"
+      "model": "penumbra_phantasm:block/scarlet_planks"
     },
     "type=top": {
-      "model": "penumbra_phantasm:block/dark_candy_slab_top"
+      "model": "penumbra_phantasm:block/scarlet_slab_top"
     }
   }
 }

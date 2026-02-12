@@ -1,6 +1,5 @@
 {
-  "parent": "minecraft:block/cross",
-  "render_type": "minecraft:cutout",
+  "parent": "penumbra_phantasm:block/tinted_cross_emissive",
   "textures": {
     "cross": "penumbra_phantasm:block/scarlet_sapling"
   }

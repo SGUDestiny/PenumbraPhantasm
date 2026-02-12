@@ -45,6 +45,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> SCARLET_SAPLING = registerBlock("scarlet_sapling",
             () -> new SaplingBlock(new ScarletGrower(), BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_SAPLING)));
+    public static final RegistryObject<Block> POTTED_SCARLET_SAPLING = BLOCKS.register("potted_scarlet_sapling",
+            () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.SCARLET_SAPLING,
+                    BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING).noOcclusion()));
     public static final RegistryObject<Block> SCARLET_PLANKS = registerBlock("scarlet_planks",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
