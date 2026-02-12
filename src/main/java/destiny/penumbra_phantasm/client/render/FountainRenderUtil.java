@@ -1,21 +1,28 @@
 package destiny.penumbra_phantasm.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.*;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.ModShaders;
 import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
+import com.mojang.blaze3d.platform.Window;
+
 import java.awt.*;
+
 
 public class FountainRenderUtil
 {
@@ -99,6 +106,7 @@ public class FountainRenderUtil
 		}
 	}
 
+
 	public static void renderOpenFountain(DarkFountain fountain, Level level, float initialAnimationTime, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
 		DarkFountainGroundCrackModel crackModel = new DarkFountainGroundCrackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_crack_model"), "main")));
 		DarkFountainBackModel backModel = new DarkFountainBackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_back_model"), "main")));
@@ -110,7 +118,7 @@ public class FountainRenderUtil
 		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_" + frame + ".png");
 		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_" + frame + ".png");
 		ResourceLocation textureMiddleEdges = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle_edges/fountain_middle_edges_" + frame + ".png");
-
+		ResourceLocation textureBottomEdges = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_edges.png");
 		float pixel = 1f / 16f;
 		float time = (level.getGameTime() + partialTick) * 0.1f;
 		float pulse = (1.0f + 0.08f * (float) Math.sin(time * 1.2)) / 0.92f;
@@ -128,7 +136,12 @@ public class FountainRenderUtil
 		Color middleColor = Color.getHSBColor(fountainHue, 0.8f, 1f);
 		Color middleEdgesColor = Color.getHSBColor(fountainHue, 0.8f, brightness_middle);
 		Color backColor = Color.getHSBColor(fountainHue, 0.8f, brightness_back);
-
+		//increment time for the shader
+		ShaderInstance shaderInstance = ModShaders.FOUNTAIN_MASKED;
+		if (shaderInstance != null) {
+			float shadertime = (level.getGameTime() + partialTick) * 0.05f;
+			shaderInstance.safeGetUniform("Time").set(shadertime);
+		}
 		if(player != null)
 		{
 			double playerX = player.getX();
@@ -146,8 +159,30 @@ public class FountainRenderUtil
 			if(playerY < fountainY)
 				distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos()));
 
-			if(distance < Math.pow(16, 2))
+			if(distance < Math.pow(16, 2)) {
 				RenderSystem.setShaderColor(middleColor.getRed() / 255f, middleColor.getGreen() / 255f, middleColor.getBlue() / 255f, 1F);
+				// this here applies the color to the actual shader as well
+				if (shaderInstance != null) {
+					shaderInstance.safeGetUniform("TintColor").set(
+							middleColor.getRed() / 255f,
+							middleColor.getGreen() / 255f,
+							middleColor.getBlue() / 255f,
+							1f
+					);
+				}
+
+			}else {
+				// reset tint to default
+				if (shaderInstance != null) {
+					shaderInstance.safeGetUniform("TintColor").set(
+							1f,
+							1f,
+							1f,
+							1f
+					);
+				}
+			}
+
 
 		}
 
@@ -168,7 +203,25 @@ public class FountainRenderUtil
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, 7 - (4 * pixel), 0f);
 		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-		middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
+
+
+		//shader
+		VertexConsumer bottomVertexConsumer = buffer.getBuffer(
+				RenderTypes.fountainMaskedPortal(
+						textureBottom,
+						new ResourceLocation(
+								PenumbraPhantasm.MODID,
+								"textures/misc/image_depth.png"
+						)
+				)
+		);
+		middleModel.renderToBuffer(
+				poseStack,
+				bottomVertexConsumer,
+				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, 1F);
+
+		//render the bottom edge highlight thing overtop the shader
+		middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomEdges)),
 				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, 1F);
 		poseStack.popPose();
 
@@ -183,8 +236,29 @@ public class FountainRenderUtil
 			poseStack.translate(0f, -20f * pixel, 0f);
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-			middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
-					LightTexture.FULL_BRIGHT, overlay, middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, 1F);
+			//middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
+			//		LightTexture.FULL_BRIGHT, overlay, middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, 1F);
+
+			//shader
+			VertexConsumer middleVertexConsumer = buffer.getBuffer(
+					RenderTypes.fountainMaskedPortal(
+							textureMiddle,
+							new ResourceLocation(
+									PenumbraPhantasm.MODID,
+									"textures/misc/image_depth.png"
+							)
+					)
+			);
+			middleModel.renderToBuffer(
+					poseStack,
+					middleVertexConsumer,
+					LightTexture.FULL_BRIGHT, overlay,
+					middleEdgesColor.getRed() / 255f,
+					middleEdgesColor.getGreen() / 255f,
+					middleEdgesColor.getGreen() / 255f,
+					1F
+			);
+
 			poseStack.popPose();
 			// Render middle edges
 			poseStack.pushPose();
@@ -203,8 +277,31 @@ public class FountainRenderUtil
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 			poseStack.scale(pulse, 1.0f, pulse);
-			backModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
-					LightTexture.FULL_BRIGHT, overlay, backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, 1F);
+//			backModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
+//					LightTexture.FULL_BRIGHT, overlay, backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, 1F);
+
+			//shader
+			VertexConsumer backVertexConsumer = buffer.getBuffer(
+					RenderTypes.fountainMaskedPortal(
+							textureMiddle,
+							new ResourceLocation(
+									PenumbraPhantasm.MODID,
+									"textures/misc/image_depth.png"
+							)
+					)
+			);
+			backModel.renderToBuffer(
+					poseStack,
+					backVertexConsumer,
+					LightTexture.FULL_BRIGHT,
+					overlay,
+					backColor.getRed() / 255f,
+					backColor.getGreen() / 255f,
+					backColor.getGreen() / 255f,
+					1F
+			);
+
+
 			poseStack.popPose();
 			// Render back edges
 			poseStack.pushPose();
@@ -217,6 +314,9 @@ public class FountainRenderUtil
 					LightTexture.FULL_BRIGHT, overlay, backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, 1F);
 			poseStack.popPose();
 
+
+
+
 			// Render front
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.5f, 0.5f);
@@ -224,8 +324,32 @@ public class FountainRenderUtil
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 			poseStack.scale(pulse_front, 1.0f, pulse_front);
-			frontModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureMiddle)),
-					LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, 1F);
+//			frontModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureMiddle)),
+//					LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, 1F);
+
+			//shader
+			VertexConsumer frontVertexConsumer = buffer.getBuffer(
+					RenderTypes.fountainMaskedPortal(
+							textureMiddle,
+							new ResourceLocation(
+									PenumbraPhantasm.MODID,
+									"textures/misc/image_depth.png"
+							)
+					)
+			);
+			frontModel.renderToBuffer(
+					poseStack,
+					frontVertexConsumer,
+					LightTexture.FULL_BRIGHT, overlay,
+					frontColor.getRed() / 255f,
+					frontColor.getGreen() / 255f,
+					frontColor.getGreen() / 255f,
+					1F
+			);
+
+
+
+
 			poseStack.popPose();
 			// Render front edges
 			poseStack.pushPose();

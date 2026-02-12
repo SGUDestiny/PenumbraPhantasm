@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.client.render;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import destiny.penumbra_phantasm.client.ModShaders;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -32,5 +33,31 @@ public class RenderTypes extends RenderType {
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setCullState(CULL)
                         .createCompositeState(true));
+    }
+
+    private static final RenderStateShard.ShaderStateShard FOUNTAIN_MASKED_SHADER =
+            new RenderStateShard.ShaderStateShard(() -> ModShaders.FOUNTAIN_MASKED);
+
+    public static RenderType fountainMaskedPortal(
+            ResourceLocation maskTex,
+            ResourceLocation flowTex
+    ) {
+        return RenderType.create(
+                "fountain_masked_portal",
+                DefaultVertexFormat.POSITION_COLOR_TEX,
+                VertexFormat.Mode.QUADS,
+                256,
+                false,
+                false,
+                RenderType.CompositeState.builder()
+                        .setShaderState(FOUNTAIN_MASKED_SHADER)
+                        .setTextureState(
+                                RenderStateShard.MultiTextureStateShard.builder()
+                                        .add(maskTex, false, false)
+                                        .add(flowTex, false, false)
+                                        .build()
+                        )
+                        .createCompositeState(false)
+        );
     }
 }
