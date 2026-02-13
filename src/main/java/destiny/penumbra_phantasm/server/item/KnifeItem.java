@@ -89,7 +89,7 @@ public class KnifeItem extends SwordItem {
             }
         }
 
-        if (needsNetherStar && !tag.getBoolean("determination")) {
+        if (needsNetherStar && tag.getBoolean("determination")) {
             return InteractionResultHolder.fail(stack);
         }
         tag.putInt("tick", 0);

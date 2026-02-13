@@ -1,0 +1,8 @@
+{
+  "type": "minecraft:stonecutting",
+  "count": 1,
+  "ingredient": {
+    "item": "penumbra_phantasm:cobbled_umbrastone"
+  },
+  "result": "penumbra_phantasm:umbrastone"
+}

@@ -2,6 +2,14 @@
   "replace": false,
   "values": [
     "penumbra_phantasm:dark_candy_log",
-    "penumbra_phantasm:scarlet_log"
+    "penumbra_phantasm:dark_candy_planks",
+    "penumbra_phantasm:dark_candy_slab",
+    "penumbra_phantasm:dark_candy_stairs",
+    "penumbra_phantasm:dark_candy_door",
+    "penumbra_phantasm:scarlet_log",
+    "penumbra_phantasm:scarlet_planks",
+    "penumbra_phantasm:scarlet_slab",
+    "penumbra_phantasm:scarlet_stairs",
+    "penumbra_phantasm:scarlet_door"
   ]
 }

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "group": "planks",
+  "ingredients": [
+    {
+      "item": "penumbra_phantasm:dark_candy_log"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "penumbra_phantasm:dark_candy_planks"
+  }
+}
