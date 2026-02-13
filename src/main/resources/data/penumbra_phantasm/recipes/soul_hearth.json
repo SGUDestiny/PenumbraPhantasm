@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "C": {
+      "item": "minecraft:chain"
+    }
+  },
+  "pattern": [
+    "ICI",
+    "B B",
+    "III"
+  ],
+  "result": {
+    "count": 1,
+    "item": "penumbra_phantasm:soul_hearth"
+  },
+  "show_notification": true
+}
