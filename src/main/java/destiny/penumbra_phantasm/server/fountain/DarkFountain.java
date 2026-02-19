@@ -67,7 +67,7 @@ public class DarkFountain {
 
     private static final int FILL_START_TICK = 126;
     private static final int TRANSPORT_TICKER_DURATION = 100;
-    private static final int FILL_DURATION_TICKS = TRANSPORT_TICKER_DURATION;
+    private static final int FILL_DURATION_TICKS = TRANSPORT_TICKER_DURATION + 20;
 
     BlockPos fountainPos;
     ResourceKey<Level> fountainDimension;
@@ -295,7 +295,7 @@ public class DarkFountain {
     private void tickTransportTickers(ServerLevel level) {
         if (this.animationTimer >= 0 && this.animationTimer < FILL_START_TICK) return;
 
-                ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
+        ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
         if (destinationLevel == null) return;
 
         for (DarkRoom room : rooms) {
@@ -322,7 +322,7 @@ public class DarkFountain {
                     entry.setValue(ticker);
 
                     if (ticker >= TRANSPORT_TICKER_DURATION) {
-                destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+                        destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                             DarkFountain destFountain = cap.darkFountains.get(destinationPos);
                             if (destFountain != null) {
                                 Vec3 target = randomTeleportTarget(destinationLevel);

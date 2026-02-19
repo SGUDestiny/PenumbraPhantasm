@@ -21,7 +21,7 @@ public class DarknessTransportScreen extends Screen {
     public final ResourceKey<Level> dimension;
 
     public int tick = 0;
-    public int screenDuration = 3 * 20;
+    public int screenDuration = 2 * 20;
     public boolean shouldClose = false;
 
     public DarknessTransportScreen(Runnable onFinished, net.minecraft.core.BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dimension) {
@@ -44,9 +44,9 @@ public class DarknessTransportScreen extends Screen {
                 shouldClose = true;
             }
 
-            if (tick >= 0 && tick <= 30) {
-                if (tick == 1 || tick % 10 == 0) {
-                    minecraft.player.playSound(SoundRegistry.DARK_WORLD_FALL.get(), 1, 1);
+            if (tick >= 0 && tick <= 12) {
+                if (tick == 1 || tick % 4 == 0) {
+                    minecraft.player.playSound(SoundRegistry.DARK_WORLD_FALL.get(), 0.5f, 1);
                 }
             }
 
