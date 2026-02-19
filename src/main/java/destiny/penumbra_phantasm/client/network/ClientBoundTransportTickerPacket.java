@@ -6,7 +6,6 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class ClientBoundTransportTickerPacket {
-
     private final float progress;
 
     public ClientBoundTransportTickerPacket(float progress) {

@@ -15,7 +15,6 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public class ServerBoundTransportIntroPacket {
-
     public final BlockPos destinationPos;
     public final double spawnX;
     public final double spawnY;
