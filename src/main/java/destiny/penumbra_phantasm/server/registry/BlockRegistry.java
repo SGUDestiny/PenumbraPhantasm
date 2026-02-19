@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -136,6 +137,14 @@ public class BlockRegistry {
     public static final RegistryObject<Block> HEARTH = registerBlock("hearth",
             () -> new HearthBlock(BlockBehaviour.Properties.copy(Blocks.LANTERN)
                     .mapColor(MapColor.COLOR_GRAY).sound(SoundType.LANTERN).noOcclusion()));
+
+    public static final RegistryObject<Block> DARKNESS = BLOCKS.register("darkness",
+            () -> new DarknessBlock(BlockBehaviour.Properties.of()
+                    .mapColor(MapColor.COLOR_BLACK)
+                    .strength(-1.0F, 3600000.0F)
+                    .noLootTable()
+                    .pushReaction(PushReaction.BLOCK)
+                    .randomTicks()));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

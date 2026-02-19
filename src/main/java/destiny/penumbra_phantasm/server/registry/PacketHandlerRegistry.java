@@ -66,5 +66,23 @@ public class PacketHandlerRegistry {
                 .decoder(ClientBoundSoulBreakPacket::decode)
                 .consumerMainThread(ClientBoundSoulBreakPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(ClientBoundTransportTickerPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundTransportTickerPacket::encode)
+                .decoder(ClientBoundTransportTickerPacket::decode)
+                .consumerMainThread(ClientBoundTransportTickerPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ClientBoundTransportIntroPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundTransportIntroPacket::encode)
+                .decoder(ClientBoundTransportIntroPacket::decode)
+                .consumerMainThread(ClientBoundTransportIntroPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ServerBoundTransportIntroPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ServerBoundTransportIntroPacket::encode)
+                .decoder(ServerBoundTransportIntroPacket::decode)
+                .consumerMainThread(ServerBoundTransportIntroPacket::handle)
+                .add();
     }
 }

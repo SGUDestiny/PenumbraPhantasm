@@ -2,9 +2,12 @@ package destiny.penumbra_phantasm.server.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
+import destiny.penumbra_phantasm.server.fountain.DarkRoom;
+import destiny.penumbra_phantasm.server.fountain.RoomScanner;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
@@ -35,6 +38,7 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
 
@@ -130,6 +134,20 @@ public class KnifeItem extends SwordItem {
                     tag.putInt("tick", -2);
                     if (!level.getBlockState(player.getOnPos()).isAir()) {
                         if (!level.isClientSide()) {
+                            BlockPos lightFountainPos = player.getOnPos().above();
+
+                            int lightLevel = level.getMaxLocalRawBrightness(lightFountainPos);
+                            if (lightLevel > Config.maxLightLevel) {
+                                player.displayClientMessage(Component.literal("Too bright to create a Dark Fountain"), true);
+                                return;
+                            }
+
+                            RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, lightFountainPos, Config.maxRoomVolume, false);
+                            if (!roomResult.isValid()) {
+                                player.displayClientMessage(Component.literal(roomResult.getFailReason()), true);
+                                return;
+                            }
+
                             Iterator<ResourceKey<Level>> set = level.getServer().levelKeys().iterator();
                             ResourceKey<Level> target = null;
                             while (set.hasNext()) {
@@ -150,15 +168,28 @@ public class KnifeItem extends SwordItem {
                             ChunkPos fountainChunk = level.getChunk(player.blockPosition()).getPos();
                             targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
 
-                            BlockPos fountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
+                            BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
 
-                            //Make Light World fountain
-                            level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.addDarkFountain(level, player.getOnPos().above(), level.dimension(), fountainPos, finalTarget, 0, 0, 0, new HashSet<>()));
+                            level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+                                cap.addDarkFountain(level, lightFountainPos, level.dimension(), darkFountainPos, finalTarget, 0, 0, 0, new HashSet<>());
+                                DarkFountain fountain = cap.darkFountains.get(lightFountainPos);
+                                if (fountain != null) {
+                                    DarkRoom initialRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
+                                    ServerLevel serverLevel = (ServerLevel) level;
+                                    AABB roomBox = computeRoomAABB(roomResult.getPositions());
+                                    Set<BlockPos> posSet = new HashSet<>(roomResult.getPositions());
+                                    for (Entity ent : serverLevel.getEntitiesOfClass(Entity.class, roomBox)) {
+                                        if (posSet.contains(ent.blockPosition()) || posSet.contains(ent.blockPosition().above())) {
+                                            initialRoom.getTransportTickers().put(ent.getUUID(), 0);
+                                        }
+                                    }
+                                    fountain.addRoom(initialRoom);
+                                }
+                            });
 
-                            //Make Dark World fountain
                             targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(
-                                    cap -> cap.addDarkFountain(targetLevel, fountainPos,
-                                            targetLevel.dimension(), player.getOnPos().above(), level.dimension(), 0, 0, 0, new HashSet<>()));
+                                    cap -> cap.addDarkFountain(targetLevel, darkFountainPos,
+                                            targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, new HashSet<>()));
 
                             targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
 
@@ -230,6 +261,20 @@ public class KnifeItem extends SwordItem {
                     tag.putInt("tick", tick);
                 }
             }
+    }
+
+    private static AABB computeRoomAABB(List<BlockPos> positions) {
+        int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+        for (BlockPos pos : positions) {
+            minX = Math.min(minX, pos.getX());
+            minY = Math.min(minY, pos.getY());
+            minZ = Math.min(minZ, pos.getZ());
+            maxX = Math.max(maxX, pos.getX());
+            maxY = Math.max(maxY, pos.getY());
+            maxZ = Math.max(maxZ, pos.getZ());
+        }
+        return new AABB(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
     }
 
     @Override

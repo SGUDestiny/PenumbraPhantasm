@@ -138,5 +138,26 @@
     [
       "penumbra_phantasm:soul_shatter"
     ]
+  },
+  "dark_world_fall": {
+    "subtitle": "sound.penumbra_phantasm.dark_world_fall",
+    "sounds":
+    [
+      "penumbra_phantasm:dark_world_fall"
+    ]
+  },
+  "dark_world_land": {
+    "subtitle": "sound.penumbra_phantasm.dark_world_land",
+    "sounds":
+    [
+      "penumbra_phantasm:dark_world_land"
+    ]
+  },
+  "him_quick": {
+    "subtitle": "sound.penumbra_phantasm.him_quick",
+    "sounds":
+    [
+      "penumbra_phantasm:him_quick"
+    ]
   }
 }

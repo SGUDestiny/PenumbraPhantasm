@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.client.render.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.network.ClientboundPacketHandler;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -90,15 +91,16 @@ public class FountainDarknessOverlay {
             guiGraphics.blit(DARKNESS, 0, 0, -90, 0.0F, 0.0F, width, height, width, height);
             pose.popPose();
         } else {
-            PoseStack pose = guiGraphics.pose();
-            double distance = fountain.getFountainPos().getCenter().distanceTo(player.getEyePosition().add(0, -1, 0));
-            float distanceDelta = (float) ((distance - 0.8f) / 5);
-            float verticalTranslation = (int) (Mth.lerp(distanceDelta, 0, -height + (height / 10f)));
+            float veilProgress = ClientboundPacketHandler.transportVeilProgress;
+            if (veilProgress > 0f) {
+                PoseStack pose = guiGraphics.pose();
+                float verticalTranslation = Mth.lerp(veilProgress, -height - height / 4f, -height / 4f);
 
-            pose.pushPose();
-            pose.translate(0f, verticalTranslation - height / 4f, 0f);
-            guiGraphics.blit(DARKNESS_VERTICAL, 0, 0, 0, 0.0F, 0.0F, width, height + height / 2, width, height + height / 2);
-            pose.popPose();
+                pose.pushPose();
+                pose.translate(0f, verticalTranslation, 0f);
+                guiGraphics.blit(DARKNESS_VERTICAL, 0, 0, 0, 0.0F, 0.0F, width, height + height / 2, width, height + height / 2);
+                pose.popPose();
+            }
         }
     });
 }

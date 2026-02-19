@@ -30,6 +30,9 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> OCEAN = registerSoundEvent("ocean");
     public static RegistryObject<SoundEvent> SOUL_BREAK = registerSoundEvent("soul_break");
     public static RegistryObject<SoundEvent> SOUL_SHATTER = registerSoundEvent("soul_shatter");
+    public static RegistryObject<SoundEvent> DARK_WORLD_FALL = registerSoundEvent("dark_world_fall");
+    public static RegistryObject<SoundEvent> DARK_WORLD_LAND = registerSoundEvent("dark_world_land");
+    public static RegistryObject<SoundEvent> HIM_QUICK = registerSoundEvent("him_quick");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {
