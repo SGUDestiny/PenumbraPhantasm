@@ -3,6 +3,8 @@ package destiny.penumbra_phantasm.client.render.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
+import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
@@ -12,6 +14,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
+import net.minecraftforge.common.util.LazyOptional;
 
 public class DarknessLandOverlay {
     public static final ResourceLocation BLACK_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/black_screen.png");
@@ -22,7 +25,14 @@ public class DarknessLandOverlay {
 
         if (player == null) return;
 
-        int ticker = player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).map(cap -> cap.darknessLandTicker).orElse(-1);
+        //Getting capability
+        ScreenAnimationCapability cap;
+        LazyOptional<ScreenAnimationCapability> lazyCapability = player.getCapability(CapabilityRegistry.SCREEN_ANIMATION);
+        if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
+            cap = lazyCapability.resolve().get();
+        else return; // If capability isn't present
+
+        int ticker = cap.darknessLandTicker;
 
         if (ticker < 0) return;
 
