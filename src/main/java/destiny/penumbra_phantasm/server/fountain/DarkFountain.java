@@ -322,15 +322,12 @@ public class DarkFountain {
                     entry.setValue(ticker);
 
                     if (ticker >= TRANSPORT_TICKER_DURATION) {
-                        destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+                destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                             DarkFountain destFountain = cap.darkFountains.get(destinationPos);
                             if (destFountain != null) {
                                 Vec3 target = randomTeleportTarget(destinationLevel);
                                 if (entity instanceof ServerPlayer player) {
-                                    float yaw = (float) Math.toDegrees(Math.atan2(-((destinationPos.getX() + 0.5) - target.x), (destinationPos.getZ() + 0.5) - target.z));
-                                    level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
-                                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
-                                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportIntroPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension));
+                                    destFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
                                 } else {
                                     Entity teleported = teleportEntity(entity, destinationLevel, target);
                                     if (teleported != null) destFountain.teleportedEntities.add(teleported.getUUID());
