@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.event;
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.registry.*;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -148,6 +149,9 @@ public class CommonEvents {
     public void playerTick(TickEvent.PlayerTickEvent event) {
         if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof ServerPlayer player) {
             event.player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> cap.tick(event.player.level(), player));
+        }
+        if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof LocalPlayer player)
+        {
             event.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.tick(event.player.level(), player));
         }
     }

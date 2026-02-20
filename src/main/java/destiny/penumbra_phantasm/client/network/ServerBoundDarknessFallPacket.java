@@ -68,8 +68,6 @@ public class ServerBoundDarknessFallPacket {
                     fountain.teleportedEntities.add(player.getUUID());
                 }
             });
-
-            player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(anim -> anim.darknessLandTicker = 0);
         });
         return true;
     }
