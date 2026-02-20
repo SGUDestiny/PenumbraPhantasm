@@ -3,7 +3,7 @@ package destiny.penumbra_phantasm.client.render.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.network.ServerBoundDarknessFallPacket;
+import destiny.penumbra_phantasm.server.network.ServerBoundDarknessFallPacket;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;

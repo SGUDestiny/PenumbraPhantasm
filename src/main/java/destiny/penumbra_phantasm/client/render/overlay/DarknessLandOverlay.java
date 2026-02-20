@@ -1,10 +1,9 @@
-package destiny.penumbra_phantasm.client.render.screen;
+package destiny.penumbra_phantasm.client.render.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
-import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
@@ -36,7 +35,7 @@ public class DarknessLandOverlay {
 
         if (ticker < 0) return;
 
-        if (ticker == 0) {
+        if (ticker == 1) {
             player.playSound(SoundRegistry.DARK_WORLD_FALL.get(), 0.5f, 1f);
         }
         if (ticker == 20) {

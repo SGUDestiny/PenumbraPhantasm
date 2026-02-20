@@ -113,7 +113,7 @@ public class KnifeItem extends SwordItem {
     }
 
     //FIXME:
-    // - Fix particles being seen only on one client
+    // - Fix particle being seen only on one client
     // - Make animations synced between all clients
 
     //TODO:

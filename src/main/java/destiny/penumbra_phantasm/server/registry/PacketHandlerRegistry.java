@@ -1,7 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.network.*;
+import destiny.penumbra_phantasm.server.network.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkRegistry;

@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.network;
+package destiny.penumbra_phantasm.server.network;
 
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.network.FriendlyByteBuf;

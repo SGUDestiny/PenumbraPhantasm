@@ -1,7 +1,7 @@
 package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.Config;
-import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
+import destiny.penumbra_phantasm.server.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;

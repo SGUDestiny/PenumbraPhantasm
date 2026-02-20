@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.render.particles;
+package destiny.penumbra_phantasm.client.render.particle;
 
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.multiplayer.ClientLevel;

@@ -1,9 +1,9 @@
-package destiny.penumbra_phantasm.client.render.screen;
+package destiny.penumbra_phantasm.client.render.overlay;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.network.ClientboundPacketHandler;
+import destiny.penumbra_phantasm.server.network.ClientboundPacketHandler;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -12,8 +12,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
@@ -22,7 +20,6 @@ import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.Map;
-import java.util.UUID;
 
 public class FountainDarknessOverlay {
     public static final ResourceLocation DARKNESS_VERTICAL = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/fountain_darkness_vertical.png");

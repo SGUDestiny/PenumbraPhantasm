@@ -1,8 +1,5 @@
-package destiny.penumbra_phantasm.client.network;
+package destiny.penumbra_phantasm.server.network;
 
-import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
-import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;

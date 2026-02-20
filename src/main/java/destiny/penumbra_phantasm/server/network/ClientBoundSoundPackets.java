@@ -1,11 +1,10 @@
-package destiny.penumbra_phantasm.client.network;
+package destiny.penumbra_phantasm.server.network;
 
 import destiny.penumbra_phantasm.client.sounds.SoundAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public abstract class ClientBoundSoundPackets {

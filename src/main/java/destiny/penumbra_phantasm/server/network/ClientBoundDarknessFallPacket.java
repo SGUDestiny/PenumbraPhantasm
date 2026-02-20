@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.network;
+package destiny.penumbra_phantasm.server.network;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;

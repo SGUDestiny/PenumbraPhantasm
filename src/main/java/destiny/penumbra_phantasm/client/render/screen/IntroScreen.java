@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.network.ServerBoundSoulPacket;
+import destiny.penumbra_phantasm.server.network.ServerBoundSoulPacket;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.TypewriterText;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;

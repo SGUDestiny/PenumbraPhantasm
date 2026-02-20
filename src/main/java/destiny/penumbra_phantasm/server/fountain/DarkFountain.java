@@ -15,10 +15,10 @@ import javax.annotation.Nullable;
 
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.network.ClientBoundSingleFountainData;
-import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
-import destiny.penumbra_phantasm.client.network.ClientBoundDarknessFallPacket;
-import destiny.penumbra_phantasm.client.network.ClientBoundTransportTickerPacket;
+import destiny.penumbra_phantasm.server.network.ClientBoundSingleFountainData;
+import destiny.penumbra_phantasm.server.network.ClientBoundSoundPackets;
+import destiny.penumbra_phantasm.server.network.ClientBoundDarknessFallPacket;
+import destiny.penumbra_phantasm.server.network.ClientBoundTransportTickerPacket;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;

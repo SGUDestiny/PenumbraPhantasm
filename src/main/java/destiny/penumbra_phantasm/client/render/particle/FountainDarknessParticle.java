@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.render.particles;
+package destiny.penumbra_phantasm.client.render.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
