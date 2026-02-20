@@ -1,6 +1,6 @@
 package destiny.penumbra_phantasm.client.network;
 
-import destiny.penumbra_phantasm.client.render.screen.DarknessTransportScreen;
+import destiny.penumbra_phantasm.client.render.screen.DarknessFallScreen;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
@@ -31,7 +31,7 @@ public class ClientboundPacketHandler
 
 	public static void openTransportScreen(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dim) {
 		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.setScreen(new DarknessTransportScreen(() -> minecraft.setScreen(null), destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dim));
+		minecraft.setScreen(new DarknessFallScreen(() -> minecraft.setScreen(null), destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dim));
 	}
 
 	public static void syncSoulBreak(boolean diedWithSoulHearth, int soulType)

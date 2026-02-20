@@ -33,7 +33,6 @@ public class FountainDarknessOverlay {
         ClientLevel level = Minecraft.getInstance().level;
 
         if (player == null) return;
-        UUID playerUuid = player.getUUID();
 
         double playerX = player.getX();
         double playerY = player.getY();

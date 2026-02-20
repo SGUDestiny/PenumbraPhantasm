@@ -17,7 +17,7 @@ import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.network.ClientBoundSingleFountainData;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoundPackets;
-import destiny.penumbra_phantasm.client.network.ClientBoundTransportIntroPacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundDarknessFallPacket;
 import destiny.penumbra_phantasm.client.network.ClientBoundTransportTickerPacket;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
@@ -577,7 +577,7 @@ public class DarkFountain {
                             float yaw = (float) Math.toDegrees(Math.atan2(-((destinationPos.getX() + 0.5) - target.x), (destinationPos.getZ() + 0.5) - target.z));
                             level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
                             PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
-                            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportIntroPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension));
+                            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension));
                         } else {
                             Entity teleported = teleportEntity(entity, destinationLevel, target);
                             if (teleported != null) destFountain.teleportedEntities.add(teleported.getUUID());

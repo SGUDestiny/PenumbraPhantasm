@@ -3,7 +3,7 @@ package destiny.penumbra_phantasm.client.render.screen;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.network.ServerBoundTransportIntroPacket;
+import destiny.penumbra_phantasm.client.network.ServerBoundDarknessFallPacket;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DarknessTransportScreen extends Screen {
+public class DarknessFallScreen extends Screen {
     Minecraft minecraft = Minecraft.getInstance();
 
     public static final ResourceLocation FRAME = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/darkness_fall.png");
@@ -38,7 +38,7 @@ public class DarknessTransportScreen extends Screen {
     public final float frameLifeTime = 15f;
     public List<Float> activeFrames = new ArrayList<>();
 
-    public DarknessTransportScreen(Runnable onFinished, net.minecraft.core.BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dimension) {
+    public DarknessFallScreen(Runnable onFinished, net.minecraft.core.BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dimension) {
         super(GameNarrator.NO_TITLE);
         this.onFinished = onFinished;
         this.destinationPos = destinationPos;
@@ -111,6 +111,6 @@ public class DarknessTransportScreen extends Screen {
     public void closeScreen() {
         onFinished.run();
         Minecraft.getInstance().getSoundManager().stop();
-        PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundTransportIntroPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
+        PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
     }
 }

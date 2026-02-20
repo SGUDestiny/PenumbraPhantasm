@@ -14,7 +14,7 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ServerBoundTransportIntroPacket {
+public class ServerBoundDarknessFallPacket {
     public final BlockPos destinationPos;
     public final double spawnX;
     public final double spawnY;
@@ -22,7 +22,7 @@ public class ServerBoundTransportIntroPacket {
     public final float spawnYaw;
     public final ResourceKey<Level> dimension;
 
-    public ServerBoundTransportIntroPacket(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dimension) {
+    public ServerBoundDarknessFallPacket(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dimension) {
         this.destinationPos = destinationPos;
         this.spawnX = spawnX;
         this.spawnY = spawnY;
@@ -40,14 +40,14 @@ public class ServerBoundTransportIntroPacket {
         buffer.writeResourceKey(dimension);
     }
 
-    public static ServerBoundTransportIntroPacket decode(FriendlyByteBuf buffer) {
+    public static ServerBoundDarknessFallPacket decode(FriendlyByteBuf buffer) {
         BlockPos destinationPos = buffer.readBlockPos();
         double spawnX = buffer.readDouble();
         double spawnY = buffer.readDouble();
         double spawnZ = buffer.readDouble();
         float spawnYaw = buffer.readFloat();
         ResourceKey<Level> dimension = buffer.readResourceKey(Registries.DIMENSION);
-        return new ServerBoundTransportIntroPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension);
+        return new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {

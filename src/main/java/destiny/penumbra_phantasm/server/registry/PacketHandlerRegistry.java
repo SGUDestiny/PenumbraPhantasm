@@ -73,16 +73,16 @@ public class PacketHandlerRegistry {
                 .consumerMainThread(ClientBoundTransportTickerPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(ClientBoundTransportIntroPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(ClientBoundTransportIntroPacket::encode)
-                .decoder(ClientBoundTransportIntroPacket::decode)
-                .consumerMainThread(ClientBoundTransportIntroPacket::handle)
+        INSTANCE.messageBuilder(ClientBoundDarknessFallPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundDarknessFallPacket::encode)
+                .decoder(ClientBoundDarknessFallPacket::decode)
+                .consumerMainThread(ClientBoundDarknessFallPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(ServerBoundTransportIntroPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(ServerBoundTransportIntroPacket::encode)
-                .decoder(ServerBoundTransportIntroPacket::decode)
-                .consumerMainThread(ServerBoundTransportIntroPacket::handle)
+        INSTANCE.messageBuilder(ServerBoundDarknessFallPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ServerBoundDarknessFallPacket::encode)
+                .decoder(ServerBoundDarknessFallPacket::decode)
+                .consumerMainThread(ServerBoundDarknessFallPacket::handle)
                 .add();
     }
 }
