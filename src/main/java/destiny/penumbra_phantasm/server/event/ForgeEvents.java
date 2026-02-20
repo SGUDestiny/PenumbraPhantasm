@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.GenericProvider;
@@ -24,6 +25,7 @@ public class ForgeEvents {
     public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "soul"), new GenericProvider<>(CapabilityRegistry.SOUL, new SoulCapability()));
+            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "screen_animation"), new GenericProvider<>(CapabilityRegistry.SCREEN_ANIMATION, new ScreenAnimationCapability()));
         }
     }
 }

@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.client.network;
 
+import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
@@ -67,6 +68,8 @@ public class ServerBoundDarknessFallPacket {
                     fountain.teleportedEntities.add(player.getUUID());
                 }
             });
+
+            player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(anim -> anim.darknessLandTicker = 0);
         });
         return true;
     }

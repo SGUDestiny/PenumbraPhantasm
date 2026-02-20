@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm;
 import com.mojang.logging.LogUtils;
 import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
 import destiny.penumbra_phantasm.client.models.item.DeltashieldModel;
+import destiny.penumbra_phantasm.client.render.screen.DarknessLandOverlay;
 import destiny.penumbra_phantasm.client.render.screen.FountainDarknessOverlay;
 import destiny.penumbra_phantasm.client.render.item.DeltashieldRenderer;
 import destiny.penumbra_phantasm.client.render.model.*;
@@ -90,6 +91,7 @@ public class PenumbraPhantasm {
         @SubscribeEvent
         public static void registerOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAboveAll("fountain_darkness", FountainDarknessOverlay.OVERLAY);
+            event.registerAboveAll("darkness_land", DarknessLandOverlay.OVERLAY);
         }
 
         @SubscribeEvent

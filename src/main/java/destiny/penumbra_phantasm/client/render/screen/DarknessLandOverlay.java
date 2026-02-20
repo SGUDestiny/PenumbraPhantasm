@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.client.render.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,9 +22,9 @@ public class DarknessLandOverlay {
 
         if (player == null) return;
 
-        //Get ticker from player capability here
+        int ticker = player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).map(cap -> cap.darknessLandTicker).orElse(-1);
 
-        int ticker = 0;
+        if (ticker < 0) return;
 
         if (ticker == 0) {
             player.playSound(SoundRegistry.DARK_WORLD_FALL.get(), 0.5f, 1f);

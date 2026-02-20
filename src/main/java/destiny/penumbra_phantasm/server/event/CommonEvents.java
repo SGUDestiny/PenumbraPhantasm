@@ -135,12 +135,20 @@ public class CommonEvents {
             });
         });
 
+        original.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
+            player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(copyCap -> {
+                copyCap.sync(cap);
+            });
+        });
+
         original.invalidateCaps();
     }
 
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {
-        if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof ServerPlayer player)
+        if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof ServerPlayer player) {
             event.player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> cap.tick(event.player.level(), player));
+            event.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.tick(event.player.level(), player));
+        }
     }
 }
