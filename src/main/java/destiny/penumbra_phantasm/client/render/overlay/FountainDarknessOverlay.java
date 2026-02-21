@@ -38,7 +38,7 @@ public class FountainDarknessOverlay {
 
         //Rendering shenanigans
         float tickerDelta = ticker / 100f;
-        float alpha = Mth.lerp(tickerDelta, 0f, 3.5f);
+        float alpha = Mth.lerp(tickerDelta, 0f, 3f);
 
         PoseStack pose = guiGraphics.pose();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
