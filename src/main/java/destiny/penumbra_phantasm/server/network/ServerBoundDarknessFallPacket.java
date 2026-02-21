@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.server.network;
 
+import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
@@ -60,6 +61,10 @@ public class ServerBoundDarknessFallPacket {
 
             player.teleportTo(level, spawnX, spawnY, spawnZ, spawnYaw, 0f);
             player.connection.send(new ClientboundSetEntityMotionPacket(player));
+
+            player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
+                cap.darknessLandTicker = 0;
+            });
 
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                 DarkFountain fountain = cap.darkFountains.get(destinationPos);
