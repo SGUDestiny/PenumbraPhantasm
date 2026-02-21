@@ -30,19 +30,19 @@ public class FountainDarknessOverlay {
         else return; // If capability isn't present
 
         int ticker = cap.darknessOverlayTicker;
-        if (ticker < 0)
+        if (ticker <= 0)
             return;
 
-        if(lastTick == -1 || ticker == 0)
+        if(lastTick == -1)
             lastTick = 0;
 
         //Rendering shenanigans
         float tickerDelta = ticker / 100f;
-        float alpha = Mth.lerp(tickerDelta, 3.5f, 0f);
+        float alpha = Mth.lerp(tickerDelta, 0f, 3.5f);
 
         PoseStack pose = guiGraphics.pose();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1f, 1f, 1f, 0f + alpha);
+        RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
         RenderSystem.setShaderTexture(0, DARKNESS);
 
         pose.pushPose();

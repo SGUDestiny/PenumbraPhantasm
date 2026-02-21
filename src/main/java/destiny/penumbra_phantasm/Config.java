@@ -26,12 +26,12 @@ public class Config {
 
     private static final ForgeConfigSpec.IntValue MAX_ROOM_VOLUME = BUILDER
             .comment("Maximum total darkness blocks across all connected rooms for a Dark Fountain")
-            .comment("Default: 1024")
-            .defineInRange("max_room_volume", 1024, 1, 8000);
+            .comment("Default: 2048")
+            .defineInRange("max_room_volume", 2048, 1, 8000);
 
     private static final ForgeConfigSpec.IntValue MAX_LIGHT_LEVEL = BUILDER
             .comment("Maximum light level at fountain position for creation")
-            .comment("Default: 7")
+            .comment("Default: 10")
             .defineInRange("max_light_level", 10, 0, 15);
 
     private static final ForgeConfigSpec.IntValue RESCAN_INTERVAL = BUILDER

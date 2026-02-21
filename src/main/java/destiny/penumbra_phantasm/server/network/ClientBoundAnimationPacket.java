@@ -19,6 +19,7 @@ public class ClientBoundAnimationPacket {
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeInt(darknessLandTicker);
+        buffer.writeInt(darknessOverlayTicker);
     }
 
     public static ClientBoundAnimationPacket decode(FriendlyByteBuf buffer) {

@@ -51,8 +51,8 @@ public class DarkFountain {
     public static final int FILL_START_TICK = 126;
     public static final int TRANSPORT_TICKER_DURATION = 100;
     public static final int FILL_DURATION_TICKS = TRANSPORT_TICKER_DURATION + 20;
-    private static final int TELEPORT_MIN_RADIUS = 48;
-    private static final int TELEPORT_MAX_RADIUS = 64;
+    private static final int TELEPORT_MIN_RADIUS = 32;
+    private static final int TELEPORT_MAX_RADIUS = 33;
 
     public BlockPos fountainPos;
     public ResourceKey<Level> fountainDimension;
@@ -316,7 +316,7 @@ public class DarkFountain {
                             DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
 
                             if (destinationFountain != null) {
-                                Vec3 target = randomTeleportTarget(destinationLevel);
+                                Vec3 target = destinationPos.getCenter();
 
                                 if (entity instanceof ServerPlayer player) {
                                     destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
@@ -641,19 +641,19 @@ public class DarkFountain {
     private void tickSoundPackets(Level level) {
         if (isDarkWorld(level.dimension())) {
             if (Config.darkFountainMusic) {
-                        PacketHandlerRegistry.INSTANCE.send(
-                                PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
-                                new ClientBoundSoundPackets.FountainMusic(this.fountainPos, false));
-                    }
-
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
-                            new ClientBoundSoundPackets.FountainWind(this.fountainPos, false));
-                }
-
                 PacketHandlerRegistry.INSTANCE.send(
                         PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
-                        new ClientBoundSoundPackets.FountainDarkness(this.fountainPos, false));
+                        new ClientBoundSoundPackets.FountainMusic(this.fountainPos, false));
+            }
+
+            PacketHandlerRegistry.INSTANCE.send(
+                    PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
+                    new ClientBoundSoundPackets.FountainWind(this.fountainPos, false));
+        }
+
+        PacketHandlerRegistry.INSTANCE.send(
+                PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
+                new ClientBoundSoundPackets.FountainDarkness(this.fountainPos, false));
     }
 
     public boolean isDarkWorld(ResourceKey<Level> levelKey) {
@@ -669,7 +669,9 @@ public class DarkFountain {
         double distance = TELEPORT_MIN_RADIUS + destinationLevel.getRandom().nextDouble() * (TELEPORT_MAX_RADIUS - TELEPORT_MIN_RADIUS);
         double x = destinationPos.getX() + 0.5 + Math.cos(angle) * distance;
         double z = destinationPos.getZ() + 0.5 + Math.sin(angle) * distance;
-        BlockPos heightmapPos = destinationLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos((int) Math.floor(x), destinationLevel.getMinBuildHeight(), (int) Math.floor(z)));
+
+        BlockPos heightmapPos = destinationLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos((int) x, destinationLevel.getMaxBuildHeight(), (int) z));
+
         return new Vec3(x, heightmapPos.getY() + 1, z);
     }
 
@@ -677,8 +679,10 @@ public class DarkFountain {
         double dx = (destinationPos.getX() + 0.5) - targetPos.x;
         double dz = (destinationPos.getZ() + 0.5) - targetPos.z;
         float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+
         player.teleportTo(destinationLevel, targetPos.x, targetPos.y, targetPos.z, yaw, 0f);
         player.connection.send(new ClientboundSetEntityMotionPacket(player));
+
         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
         return player;
     }

@@ -22,7 +22,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
             darknessLandTicker = -1;
         }
         if (darknessOverlayTicker <= 0) {
-            darknessLandTicker = -1;
+            darknessOverlayTicker = -1;
         }
 
         if (darknessLandTicker >= 0) {
