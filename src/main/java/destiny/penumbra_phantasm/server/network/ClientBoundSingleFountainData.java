@@ -34,6 +34,7 @@ public class ClientBoundSingleFountainData
 		buffer.writeInt(fountain.getAnimationTimer());
 		buffer.writeInt(fountain.getFrameTimer());
 		buffer.writeInt(fountain.getFrame());
+		buffer.writeInt(fountain.getFrameOptimized());
 
 		buffer.writeCollection(fountain.teleportedEntities, FriendlyByteBuf::writeUUID);
 		buffer.writeVarInt(fountain.fadeInTickers.size());
@@ -54,11 +55,12 @@ public class ClientBoundSingleFountainData
 		int animationTimer = buffer.readInt();
 		int frameTimer = buffer.readInt();
 		int frame = buffer.readInt();
+		int frameOptimized = buffer.readInt();
 
 		HashSet<UUID> teleportedEntities = buffer.readCollection(ii -> new HashSet<>(), FriendlyByteBuf::readUUID);
 
 		DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animationTimer,
-				frameTimer, frame, teleportedEntities);
+				frameTimer, frame, frameOptimized, teleportedEntities);
 		int fadeInSize = buffer.readVarInt();
 		for (int i = 0; i < fadeInSize; i++) {
 			fountain.fadeInTickers.put(buffer.readUUID(), buffer.readInt());

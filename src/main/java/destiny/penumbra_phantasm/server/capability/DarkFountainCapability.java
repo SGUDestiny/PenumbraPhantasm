@@ -21,17 +21,6 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
     private static final String DARK_FOUNTAINS = "dark_fountains";
 
     public HashMap<BlockPos, DarkFountain> darkFountains = new HashMap<>();
-    public Map<UUID, PendingDarkWorldArrival> pendingArrivalSpawns = new HashMap<>();
-
-    public record PendingDarkWorldArrival(Vec3 targetPos, float yaw, GameType previousGameType, BlockPos fountainDestinationPos, ResourceKey<Level> destinationDimension) {}
-
-    public void addPendingArrival(UUID playerId, PendingDarkWorldArrival pending) {
-        pendingArrivalSpawns.put(playerId, pending);
-    }
-
-    public PendingDarkWorldArrival removePendingArrival(UUID playerId) {
-        return pendingArrivalSpawns.remove(playerId);
-    }
 
     @Override
     public CompoundTag serializeNBT() {
@@ -56,8 +45,8 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
 
     public void addDarkFountain(Level level, BlockPos fountainPos, ResourceKey<Level> fountainDimension,
                                 BlockPos destinationPos, ResourceKey<Level> destinationDimension,
-                                int animationTimer, int frameTimer, int frame, HashSet<UUID> teleportedEntities) {
-        this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, teleportedEntities));
+                                int animationTimer, int frameTimer, int frame, int frameOptimized, HashSet<UUID> teleportedEntities) {
+        this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, frameOptimized, teleportedEntities));
     }
 
     public void removeDarkFountain(Level level, BlockPos fountainPos)

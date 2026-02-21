@@ -88,7 +88,7 @@ public class ClientEvents {
 								if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
 									FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
 								} else {
-									FountainRenderUtil.renderOpenFountainOptimized(fountain, partialTick, animationTime, length, textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
+									FountainRenderUtil.renderOpenFountainOptimized(fountain, length, stack, buffer, OverlayTexture.NO_OVERLAY);
 								}
 							}
 						}

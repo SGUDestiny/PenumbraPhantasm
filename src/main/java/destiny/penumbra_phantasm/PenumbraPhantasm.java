@@ -79,6 +79,7 @@ public class PenumbraPhantasm {
             event.registerLayerDefinition(DarkFountainGroundCrackModel.LAYER_LOCATION, DarkFountainGroundCrackModel::createBodyLayer);
             event.registerLayerDefinition(DarkFountainBackModel.LAYER_LOCATION, DarkFountainBackModel::createBodyLayer);
             event.registerLayerDefinition(DarkFountainMiddleModel.LAYER_LOCATION, DarkFountainMiddleModel::createBodyLayer);
+            event.registerLayerDefinition(DarkFountainMiddleOptimizedModel.LAYER_LOCATION, DarkFountainMiddleOptimizedModel::createBodyLayer);
             event.registerLayerDefinition(DarkFountainFrontModel.LAYER_LOCATION, DarkFountainFrontModel::createBodyLayer);
             event.registerLayerDefinition(DeltashieldModel.LAYER_LOCATION, DeltashieldModel::createBodyLayer);
         }

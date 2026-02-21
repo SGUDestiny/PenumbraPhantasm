@@ -170,7 +170,7 @@ public class KnifeItem extends SwordItem {
                             BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
 
                             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                                cap.addDarkFountain(level, lightFountainPos, level.dimension(), darkFountainPos, finalTarget, 0, 0, 0, new HashSet<>());
+                                cap.addDarkFountain(level, lightFountainPos, level.dimension(), darkFountainPos, finalTarget, 0, 0, 0, 0, new HashSet<>());
                                 DarkFountain fountain = cap.darkFountains.get(lightFountainPos);
                                 if (fountain != null) {
                                     DarkRoom initialRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
@@ -188,7 +188,7 @@ public class KnifeItem extends SwordItem {
 
                             targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(
                                     cap -> cap.addDarkFountain(targetLevel, darkFountainPos,
-                                            targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, new HashSet<>()));
+                                            targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>()));
 
                             targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
 

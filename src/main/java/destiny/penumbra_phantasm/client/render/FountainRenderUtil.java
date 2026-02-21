@@ -370,42 +370,17 @@ public class FountainRenderUtil
 		}
 	}
 
-	public static void renderOpenFountainOptimized(DarkFountain fountain, float partialTick, float initialAnimationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
-		DarkFountainGroundCrackModel crackModel = new DarkFountainGroundCrackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_crack_model"), "main")));
-		DarkFountainBackModel backModel = new DarkFountainBackModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_back_model"), "main")));
-		DarkFountainMiddleModel middleModel = new DarkFountainMiddleModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_middle_model"), "main")));
+	public static void renderOpenFountainOptimized(DarkFountain fountain, int length, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+		DarkFountainMiddleOptimizedModel middleOptimizedModel = new DarkFountainMiddleOptimizedModel(Minecraft.getInstance().getEntityModels().bakeLayer(new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_middle_optimized_model"), "main")));
 
-		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_0.png");
-		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_0.png");
+		int frameOptimized = fountain.frameOptimized;
+		ResourceLocation textureMiddleOptimized = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/fountain_middle_" + frameOptimized + ".png");
 
 		float pixel = 1f / 16f;
-		float scaleXZ = 1.0f;
-		float animationTime = fountain.animationTimer + partialTick;
-
-		if (initialAnimationTime != -1) {
-			scaleXZ = (animationTime - 140) / 5f;
-		}
-
-		// Render cracks
-		poseStack.pushPose();
-		poseStack.translate(0.5f, 0.5f, 0.5f);
-		poseStack.translate(0f, -1.95f, 0f);
-		crackModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
-				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
-		poseStack.popPose();
-
-		// Render bottom
-		poseStack.pushPose();
-		poseStack.translate(0.5f, 0.5f, 0.5f);
-		poseStack.translate(0f, 7 - (4 * pixel), 0f);
-		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-		middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottom)),
-				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
-		poseStack.popPose();
+		float spriteHeight = 240 * pixel;
 
 		// Render middle segments
 		for (int segment = 0; segment < length; segment++) {
-			float spriteHeight = 140 * pixel;
 			float offset = spriteHeight + (spriteHeight * segment);
 
 			// Render middle
@@ -413,8 +388,7 @@ public class FountainRenderUtil
 			poseStack.translate(0.5f, 0.5f, 0.5f);
 			poseStack.translate(0f, -20f * pixel, 0f);
 			poseStack.translate(0f, offset, 0f);
-			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-			backModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
+			middleOptimizedModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleOptimized)),
 					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
 			poseStack.popPose();
 		}

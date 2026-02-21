@@ -45,6 +45,7 @@ public class DarkFountain {
     public static final String ANIMATION_TIMER = "animationTimer";
     public static final String FRAME_TIMER = "frameTimer";
     public static final String FRAME = "frame";
+    public static final String FRAME_OPTIMIZED = "frameOptimized";
     public static final String TELEPORTED_ENTITIES = "teleportedEntities";
     public static final String FADE_IN_TICKERS = "fadeInTickers";
     public static final String ROOMS = "rooms";
@@ -52,8 +53,6 @@ public class DarkFountain {
     public static final int FILL_START_TICK = 126;
     public static final int TRANSPORT_TICKER_DURATION = 100;
     public static final int FILL_DURATION_TICKS = TRANSPORT_TICKER_DURATION + 20;
-    private static final int TELEPORT_MIN_RADIUS = 32;
-    private static final int TELEPORT_MAX_RADIUS = 33;
 
     public BlockPos fountainPos;
     public ResourceKey<Level> fountainDimension;
@@ -62,6 +61,7 @@ public class DarkFountain {
     public int animationTimer;
     public int frameTimer;
     public int frame;
+    public int frameOptimized;
     public HashSet<UUID> teleportedEntities;
     public Map<UUID, Integer> fadeInTickers = new HashMap<>();
     public List<DarkRoom> rooms = new ArrayList<>();
@@ -74,7 +74,7 @@ public class DarkFountain {
     @Nullable
     public SoundWrapper darknessSound = null;
 
-    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame, HashSet<UUID> teleportedEntities) {
+    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame, int frameOptimized, HashSet<UUID> teleportedEntities) {
         this.fountainPos = fountainPos;
         this.fountainDimension = fountainDimension;
         this.destinationPos = destinationPos;
@@ -82,6 +82,7 @@ public class DarkFountain {
         this.animationTimer = animationTimer;
         this.frameTimer = frameTimer;
         this.frame = frame;
+        this.frameOptimized = frameOptimized;
         this.teleportedEntities = teleportedEntities;
     }
 
@@ -109,6 +110,7 @@ public class DarkFountain {
         tag.putInt(ANIMATION_TIMER, animationTimer);
         tag.putInt(FRAME_TIMER, frameTimer);
         tag.putInt(FRAME, frame);
+        tag.putInt(FRAME_OPTIMIZED, frameOptimized);
         ListTag teleportedEntitiesList = new ListTag();
         for (UUID uuid : teleportedEntities) {
             teleportedEntitiesList.add(StringTag.valueOf(uuid.toString()));
@@ -141,13 +143,14 @@ public class DarkFountain {
         int animationTimer = tag.getInt(ANIMATION_TIMER);
         int frameTimer = tag.getInt(FRAME_TIMER);
         int frame = tag.getInt(FRAME);
+        int frameOptimized = tag.getInt(FRAME_OPTIMIZED);
         HashSet<UUID> teleportedEntities = new HashSet<>();
         ListTag teleportedEntitiesTag = tag.getList(TELEPORTED_ENTITIES, Tag.TAG_STRING);
         for (Tag tg : teleportedEntitiesTag) {
             teleportedEntities.add(UUID.fromString(tg.getAsString()));
         }
 
-        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, teleportedEntities);
+        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, frameOptimized, teleportedEntities);
 
         if (tag.contains(FADE_IN_TICKERS)) {
             ListTag fadeInTag = tag.getList(FADE_IN_TICKERS, Tag.TAG_COMPOUND);
@@ -176,6 +179,7 @@ public class DarkFountain {
         this.frame = fountain.frame;
         this.animationTimer = fountain.animationTimer;
         this.frameTimer = fountain.frameTimer;
+        this.frameOptimized = fountain.frameOptimized;
 
         this.teleportedEntities = fountain.teleportedEntities;
         this.fadeInTickers = fountain.fadeInTickers;
@@ -188,6 +192,7 @@ public class DarkFountain {
     public int getAnimationTimer() { return animationTimer; }
     public int getFrameTimer() { return frameTimer; }
     public int getFrame() { return frame; }
+    public int getFrameOptimized() { return frameOptimized; }
 
     public static ResourceKey<Level> stringToDimension(String dimensionString) {
         String[] split = dimensionString.split(":");
@@ -216,6 +221,13 @@ public class DarkFountain {
                     this.frame = 0;
                 } else {
                     this.frame++;
+                }
+            }
+            if (this.frameTimer % 6 == 0) {
+                if (this.frameOptimized >= 5) {
+                    this.frameOptimized = 0;
+                } else {
+                    this.frameOptimized++;
                 }
             }
 
