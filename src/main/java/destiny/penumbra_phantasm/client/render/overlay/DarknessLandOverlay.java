@@ -17,6 +17,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class DarknessLandOverlay {
     public static final ResourceLocation BLACK_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/black_screen.png");
+    public static int lastTick = -1;
 
     public static final IGuiOverlay OVERLAY = ((gui, guiGraphics, partialTick, width, height) -> {
         LocalPlayer player = Minecraft.getInstance().player;
@@ -31,13 +32,16 @@ public class DarknessLandOverlay {
         else return; // If capability isn't present
 
         int ticker = cap.darknessLandTicker;
-        if (ticker < 0) return;
+        if (ticker < 0)
+            return;
 
-        if (ticker == 2) {
+        if(lastTick == -1 || ticker == 0)
+            lastTick = 0;
+
+        if (ticker == 2 && lastTick != 2) {
             player.playSound(SoundRegistry.DARK_WORLD_LAND.get(), 0.5f, 1f);
-            System.out.println("played sound");
         }
-        if (ticker == 20) {
+        if (ticker == 20 && lastTick != 20) {
             player.playSound(SoundRegistry.HIM_QUICK.get(), 0.5f, 1f);
         }
 
@@ -56,5 +60,7 @@ public class DarknessLandOverlay {
         pose.scale(1f, 1f, 1f);
         guiGraphics.blit(BLACK_SCREEN, 0, 0, -90, 0.0F, 0.0F, width, height, width, height);
         pose.popPose();
+
+        lastTick = ticker;
     });
 }
