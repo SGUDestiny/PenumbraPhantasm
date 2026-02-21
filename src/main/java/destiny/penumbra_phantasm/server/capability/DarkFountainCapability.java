@@ -1,5 +1,6 @@
-package destiny.penumbra_phantasm.server.fountain;
+package destiny.penumbra_phantasm.server.capability;
 
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;

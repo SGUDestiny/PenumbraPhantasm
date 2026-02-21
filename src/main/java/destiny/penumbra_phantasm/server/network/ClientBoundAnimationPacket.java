@@ -10,9 +10,11 @@ import java.util.function.Supplier;
 
 public class ClientBoundAnimationPacket {
     public final int darknessLandTicker;
+    public final int darknessOverlayTicker;
 
-    public ClientBoundAnimationPacket(int darknessLandTicker) {
+    public ClientBoundAnimationPacket(int darknessLandTicker, int darknessOverlayTicker) {
         this.darknessLandTicker = darknessLandTicker;
+        this.darknessOverlayTicker = darknessOverlayTicker;
     }
 
     public void encode(FriendlyByteBuf buffer) {
@@ -21,7 +23,9 @@ public class ClientBoundAnimationPacket {
 
     public static ClientBoundAnimationPacket decode(FriendlyByteBuf buffer) {
         int darknessLandTicker = buffer.readInt();
-        return new ClientBoundAnimationPacket(darknessLandTicker);
+        int darknessOverlayTicker = buffer.readInt();
+
+        return new ClientBoundAnimationPacket(darknessLandTicker, darknessOverlayTicker);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
@@ -30,6 +34,7 @@ public class ClientBoundAnimationPacket {
             if(player != null) {
                 player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
                     cap.darknessLandTicker = darknessLandTicker;
+                    cap.darknessOverlayTicker = darknessOverlayTicker;
                 });
             }
         });

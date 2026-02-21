@@ -1,40 +1,19 @@
 package destiny.penumbra_phantasm.server.fountain;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Function;
-
-import javax.annotation.Nullable;
-
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.network.ClientBoundSingleFountainData;
-import destiny.penumbra_phantasm.server.network.ClientBoundSoundPackets;
-import destiny.penumbra_phantasm.server.network.ClientBoundDarknessFallPacket;
-import destiny.penumbra_phantasm.server.network.ClientBoundTransportTickerPacket;
 import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
-import destiny.penumbra_phantasm.server.registry.BlockRegistry;
-import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
-import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
-import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
-import destiny.penumbra_phantasm.server.registry.SoundRegistry;
+import destiny.penumbra_phantasm.server.network.ClientBoundDarknessFallPacket;
+import destiny.penumbra_phantasm.server.network.ClientBoundSingleFountainData;
+import destiny.penumbra_phantasm.server.network.ClientBoundSoundPackets;
+import destiny.penumbra_phantasm.server.network.ClientBoundTransportTickerPacket;
+import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.*;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -54,6 +33,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.network.PacketDistributor;
 
+import javax.annotation.Nullable;
+import java.util.*;
+import java.util.function.Function;
+
 public class DarkFountain {
     public static final String FOUNTAIN_POS = "fountainPos";
     public static final String FOUNTAIN_DIMENSION = "fountainDimension";
@@ -65,23 +48,22 @@ public class DarkFountain {
     public static final String TELEPORTED_ENTITIES = "teleportedEntities";
     public static final String ROOMS = "rooms";
 
-    private static final int FILL_START_TICK = 126;
-    private static final int TRANSPORT_TICKER_DURATION = 100;
-    private static final int FILL_DURATION_TICKS = TRANSPORT_TICKER_DURATION + 20;
+    public static final int FILL_START_TICK = 126;
+    public static final int TRANSPORT_TICKER_DURATION = 100;
+    public static final int FILL_DURATION_TICKS = TRANSPORT_TICKER_DURATION + 20;
+    private static final int TELEPORT_MIN_RADIUS = 48;
+    private static final int TELEPORT_MAX_RADIUS = 64;
 
-    BlockPos fountainPos;
-    ResourceKey<Level> fountainDimension;
-    BlockPos destinationPos;
-    ResourceKey<Level> destinationDimension;
-
+    public BlockPos fountainPos;
+    public ResourceKey<Level> fountainDimension;
+    public BlockPos destinationPos;
+    public ResourceKey<Level> destinationDimension;
     public int animationTimer;
     public int frameTimer;
     public int frame;
-
     public HashSet<UUID> teleportedEntities;
-
     public List<DarkRoom> rooms = new ArrayList<>();
-    private int rescanTimer = 0;
+    public int rescanTimer = 0;
 
     @Nullable
     public SoundWrapper musicSound = null;
@@ -302,16 +284,16 @@ public class DarkFountain {
             if (room.isDissipating()) continue;
 
             Set<BlockPos> posSet = new HashSet<>(room.getPositions());
-            Iterator<Map.Entry<UUID, Integer>> it = room.getTransportTickers().entrySet().iterator();
+            Iterator<Map.Entry<UUID, Integer>> iterator = room.getTransportTickers().entrySet().iterator();
 
-            while (it.hasNext()) {
-                Map.Entry<UUID, Integer> entry = it.next();
+            while (iterator.hasNext()) {
+                Map.Entry<UUID, Integer> entry = iterator.next();
                 UUID entityId = entry.getKey();
                 int ticker = entry.getValue();
 
                 Entity entity = level.getEntity(entityId);
                 if (entity == null) {
-                    it.remove();
+                    iterator.remove();
                     continue;
                 }
 
@@ -321,28 +303,46 @@ public class DarkFountain {
                     ticker = Math.min(ticker + 1, TRANSPORT_TICKER_DURATION);
                     entry.setValue(ticker);
 
-                    if (ticker >= TRANSPORT_TICKER_DURATION) {
-                destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                            DarkFountain destFountain = cap.darkFountains.get(destinationPos);
-                            if (destFountain != null) {
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        int finalTicker = ticker;
+
+                        serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
+                            cap.darknessOverlayTicker = finalTicker;
+                        });
+                    }
+
+                    if (ticker == TRANSPORT_TICKER_DURATION) {
+                        destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+                            DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
+
+                            if (destinationFountain != null) {
                                 Vec3 target = randomTeleportTarget(destinationLevel);
+
                                 if (entity instanceof ServerPlayer player) {
-                                    destFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
+                                    destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
                                 } else {
                                     Entity teleported = teleportEntity(entity, destinationLevel, target);
-                                    if (teleported != null) destFountain.teleportedEntities.add(teleported.getUUID());
+                                    if (teleported != null) destinationFountain.teleportedEntities.add(teleported.getUUID());
                                 }
                             }
                         });
-                        it.remove();
+                        iterator.remove();
                         continue;
                     }
                 } else {
                     ticker = Math.max(ticker - 1, 0);
                     entry.setValue(ticker);
 
-                    if (ticker <= 0) {
-                        it.remove();
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        int finalTicker = ticker;
+
+                        serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
+                            cap.darknessOverlayTicker = finalTicker;
+                        });
+                    }
+
+                    if (ticker == 0) {
+                        iterator.remove();
                         continue;
                     }
                 }
@@ -570,17 +570,21 @@ public class DarkFountain {
                 if (!posSet.contains(entity.blockPosition()) && !posSet.contains(entity.blockPosition().above())) continue;
 
                 destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                    DarkFountain destFountain = cap.darkFountains.get(destinationPos);
-                    if (destFountain != null) {
+                    DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
+
+                    if (destinationFountain != null) {
                         Vec3 target = randomTeleportTarget(destinationLevel);
+
                         if (entity instanceof ServerPlayer player) {
                             float yaw = (float) Math.toDegrees(Math.atan2(-((destinationPos.getX() + 0.5) - target.x), (destinationPos.getZ() + 0.5) - target.z));
+
                             level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
+
                             PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
                             PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension));
                         } else {
                             Entity teleported = teleportEntity(entity, destinationLevel, target);
-                            if (teleported != null) destFountain.teleportedEntities.add(teleported.getUUID());
+                            if (teleported != null) destinationFountain.teleportedEntities.add(teleported.getUUID());
                         }
                     }
                 });
@@ -660,9 +664,6 @@ public class DarkFountain {
         return levelKey == ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"));
     }
 
-    private static final int TELEPORT_MIN_RADIUS = 8;
-    private static final int TELEPORT_MAX_RADIUS = 16;
-
     private Vec3 randomTeleportTarget(ServerLevel destinationLevel) {
         double angle = destinationLevel.getRandom().nextDouble() * 2 * Math.PI;
         double distance = TELEPORT_MIN_RADIUS + destinationLevel.getRandom().nextDouble() * (TELEPORT_MAX_RADIUS - TELEPORT_MIN_RADIUS);
@@ -683,8 +684,7 @@ public class DarkFountain {
     }
 
     public Entity teleportEntity(Entity entity, ServerLevel destinationLevel, Vec3 targetPos) {
-        return entity.changeDimension(destinationLevel, new DarkFountainTeleporter(targetPos, entity.getDeltaMovement(),
-                entity.getYRot(), entity.getXRot()));
+        return entity.changeDimension(destinationLevel, new DarkFountainTeleporter(targetPos, entity.getDeltaMovement(), entity.getYRot(), entity.getXRot()));
     }
 
     public void playMusic() {

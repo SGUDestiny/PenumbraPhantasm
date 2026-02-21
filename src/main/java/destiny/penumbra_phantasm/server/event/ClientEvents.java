@@ -6,7 +6,7 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
-import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
+import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;

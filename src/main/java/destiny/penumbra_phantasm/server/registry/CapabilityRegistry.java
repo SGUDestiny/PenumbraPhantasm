@@ -3,7 +3,7 @@ package destiny.penumbra_phantasm.server.registry;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
-import destiny.penumbra_phantasm.server.fountain.DarkFountainCapability;
+import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
