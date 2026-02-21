@@ -149,9 +149,6 @@ public class CommonEvents {
     public void playerTick(TickEvent.PlayerTickEvent event) {
         if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof ServerPlayer player) {
             event.player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> cap.tick(event.player.level(), player));
-        }
-        if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof LocalPlayer player)
-        {
             event.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.tick(event.player.level(), player));
         }
     }

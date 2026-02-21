@@ -20,7 +20,6 @@ public class DarknessLandOverlay {
 
     public static final IGuiOverlay OVERLAY = ((gui, guiGraphics, partialTick, width, height) -> {
         LocalPlayer player = Minecraft.getInstance().player;
-        ClientLevel level = Minecraft.getInstance().level;
 
         if (player == null) return;
 

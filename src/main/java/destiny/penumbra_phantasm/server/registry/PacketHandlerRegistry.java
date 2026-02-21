@@ -84,5 +84,11 @@ public class PacketHandlerRegistry {
                 .decoder(ServerBoundDarknessFallPacket::decode)
                 .consumerMainThread(ServerBoundDarknessFallPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(ClientBoundAnimationPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundAnimationPacket::encode)
+                .decoder(ClientBoundAnimationPacket::decode)
+                .consumerMainThread(ClientBoundAnimationPacket::handle)
+                .add();
     }
 }
