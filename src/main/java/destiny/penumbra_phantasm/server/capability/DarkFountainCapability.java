@@ -1,20 +1,24 @@
 package destiny.penumbra_phantasm.server.capability;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.fountain.DarkRoom;
+import destiny.penumbra_phantasm.server.registry.BlockRegistry;
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
 
@@ -49,9 +53,38 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, frameOptimized, teleportedEntities));
     }
 
-    public void removeDarkFountain(Level level, BlockPos fountainPos)
-    {
-        this.darkFountains.remove(fountainPos);
+    public void removeDarkFountain(Level level, BlockPos fountainPos) {
+        if (level instanceof ServerLevel serverLevel) {
+            serverLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+                DarkFountain fountain = cap.darkFountains.get(fountainPos);
+
+                for (DarkRoom room : fountain.rooms) {
+                    List<BlockPos> positions = room.getPositions();
+
+                    for (BlockPos pos : positions) {
+                        serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                    }
+                }
+
+                Map<UUID, Integer> fadeInTickers = fountain.fadeInTickers;
+
+                for (Map.Entry<UUID, Integer> entry : fadeInTickers.entrySet()) {
+                    UUID entityId = entry.getKey();
+                    Entity entity = serverLevel.getEntity(entityId);
+
+                    entry.setValue(0);
+
+                    if (entity instanceof ServerPlayer serverPlayer) {
+
+                        serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(screenCap -> {
+                            screenCap.darknessOverlayTicker = -1;
+                        });
+                    }
+                }
+
+                this.darkFountains.remove(fountainPos);
+            });
+        }
     }
 
     @Override
