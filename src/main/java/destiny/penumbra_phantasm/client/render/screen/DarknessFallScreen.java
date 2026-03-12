@@ -91,10 +91,10 @@ public class DarknessFallScreen extends Screen {
 
         for (float frameTick : sortedFrames) {
             float frameLifeTimeDelta = frameTick / frameLifeTime;
-            float frameAlpha = frameLifeTimeDelta <= 0.5f
+            float frameColor = frameLifeTimeDelta <= 0.5f
                     ? Mth.lerp(frameLifeTimeDelta * 2.0f, 0f, 1f)
                     : Mth.lerp((frameLifeTimeDelta - 0.5f) * 2.0f, 1f, 0f);
-            float frameSize = Mth.lerp(frameLifeTimeDelta, 0f, 3f);
+            float frameSize = Mth.lerp(frameLifeTimeDelta, 0f, 5f);
             float frameRotation = Mth.lerp(frameLifeTimeDelta, 10, -10f);
 
             pose.pushPose();
@@ -102,7 +102,7 @@ public class DarknessFallScreen extends Screen {
             pose.scale(frameSize, frameSize, 1f);
             pose.rotateAround(Axis.ZP.rotationDegrees(frameRotation), 0, 0, 0f);
             pose.translate(-256 / 2f, -256 / 2f, 0f);
-            RenderBlitUtil.blit(FRAME, pose, 0, 0, 1f, 1f, 1f, frameAlpha, 0, 0, 256, 256, 256, 256);
+            RenderBlitUtil.blit(FRAME, pose, 0, 0, frameColor, frameColor, frameColor, 1f, 0, 0, 256, 256, 256, 256);
             pose.popPose();
         }
 
