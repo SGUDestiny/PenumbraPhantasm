@@ -26,7 +26,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> REAL_KNIFE = ITEMS.register("real_knife",
             () -> new RealKnifeItem(Tiers.NETHERITE, 4,-2, true, true, basicItem()));
     public static final RegistryObject<Item> BLACK_KNIFE = ITEMS.register("black_knife",
-            () -> new KnifeItem(Tiers.NETHERITE, 0, -2, false, false, basicItem()));
+            () -> new BlackKnifeItem(Tiers.NETHERITE, 0, -2, false, false, basicItem()));
 
     public static final RegistryObject<Item> FAMILIAR_SWORD = ITEMS.register("familiar_sword",
             () -> new FamiliarSwordItem(Tiers.NETHERITE, 9, -3, basicItem()));

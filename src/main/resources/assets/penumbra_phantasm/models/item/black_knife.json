@@ -1,6 +1,23 @@
 {
-  "parent": "penumbra_phantasm:item/handheld_knife",
-  "textures": {
-    "layer0": "penumbra_phantasm:item/black_knife"
-  }
+	"loader": "forge:separate_transforms",
+	"gui_light": "front",
+	"base":
+	{
+		"parent": "penumbra_phantasm:item/black_knife_third_person"
+	},
+	"perspectives":
+	{
+		"gui":
+		{
+			"parent": "penumbra_phantasm:item/black_knife_item"
+		},
+		"fixed":
+		{
+			"parent": "penumbra_phantasm:item/black_knife_item"
+		},
+		"ground":
+		{
+			"parent": "penumbra_phantasm:item/black_knife_item"
+		}
+	}
 }
