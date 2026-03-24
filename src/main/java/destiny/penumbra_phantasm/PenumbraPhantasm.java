@@ -57,6 +57,7 @@ public class PenumbraPhantasm {
         ParticleTypeRegistry.PARTICLE_TYPES.register(modEventBus);
         FeatureRegistry.FOLIAGES.register(modEventBus);
         FeatureRegistry.TRUNKS.register(modEventBus);
+        FeatureRegistry.FEATURES.register(modEventBus);
         PacketHandlerRegistry.register();
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
