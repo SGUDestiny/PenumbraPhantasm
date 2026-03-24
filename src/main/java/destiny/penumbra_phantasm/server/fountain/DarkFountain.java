@@ -204,7 +204,7 @@ public class DarkFountain {
     public void tick(Level level) {
         if (!level.isClientSide()) {
             if (level instanceof ServerLevel serverLevel) {
-                ChunkPos fountainChunk = serverLevel.getChunk(destinationPos).getPos();
+                ChunkPos fountainChunk = serverLevel.getChunk(fountainPos).getPos();
                 serverLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
             }
 
@@ -236,6 +236,7 @@ public class DarkFountain {
             } else {
                 this.frameTimer++;
             }
+            System.out.println(frameTimer);
 
             if (this.animationTimer >= 144) {
                 this.animationTimer = -1;

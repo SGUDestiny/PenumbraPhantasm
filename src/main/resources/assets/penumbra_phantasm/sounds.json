@@ -159,5 +159,11 @@
     [
       "penumbra_phantasm:him_quick"
     ]
+  },
+  "field_of_hopes_and_dreams": {
+    "sounds":
+    [
+      "penumbra_phantasm:field_of_hopes_and_dreams"
+    ]
   }
 }
