@@ -242,8 +242,6 @@ public class FountainRenderUtil
 			poseStack.translate(0f, -20f * pixel, 0f);
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
-			//middleModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
-			//		LightTexture.FULL_BRIGHT, overlay, middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, 1F);
 
 			//shader
 			VertexConsumer middleVertexConsumer = buffer.getBuffer(
@@ -283,8 +281,6 @@ public class FountainRenderUtil
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 			poseStack.scale(pulse, 1.0f, pulse);
-//			backModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddle)),
-//					LightTexture.FULL_BRIGHT, overlay, backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, 1F);
 
 			//shader
 			VertexConsumer backVertexConsumer = buffer.getBuffer(
@@ -330,8 +326,6 @@ public class FountainRenderUtil
 			poseStack.translate(0f, offset, 0f);
 			poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 			poseStack.scale(pulse_front, 1.0f, pulse_front);
-//			frontModel.renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainDark(textureMiddle)),
-//					LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, 1F);
 
 			//shader
 			VertexConsumer frontVertexConsumer = buffer.getBuffer(
@@ -352,7 +346,6 @@ public class FountainRenderUtil
 					frontColor.getGreen() / 255f,
 					1F
 			);
-
 
 
 
