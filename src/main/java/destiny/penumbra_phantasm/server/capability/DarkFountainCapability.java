@@ -56,32 +56,6 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
     public void removeDarkFountain(Level level, BlockPos fountainPos) {
         if (level instanceof ServerLevel serverLevel) {
             serverLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                DarkFountain fountain = cap.darkFountains.get(fountainPos);
-
-                for (DarkRoom room : fountain.rooms) {
-                    List<BlockPos> positions = room.getPositions();
-
-                    for (BlockPos pos : positions) {
-                        serverLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                    }
-                }
-
-                Map<UUID, Integer> fadeInTickers = fountain.fadeInTickers;
-
-                for (Map.Entry<UUID, Integer> entry : fadeInTickers.entrySet()) {
-                    UUID entityId = entry.getKey();
-                    Entity entity = serverLevel.getEntity(entityId);
-
-                    entry.setValue(0);
-
-                    if (entity instanceof ServerPlayer serverPlayer) {
-
-                        serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(screenCap -> {
-                            screenCap.darknessOverlayTicker = -1;
-                        });
-                    }
-                }
-
                 this.darkFountains.remove(fountainPos);
             });
         }

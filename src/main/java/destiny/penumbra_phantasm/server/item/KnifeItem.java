@@ -135,31 +135,13 @@ public class KnifeItem extends SwordItem {
                         if (!level.isClientSide()) {
                             BlockPos lightFountainPos = player.getOnPos().above();
 
-                            int lightLevel = level.getMaxLocalRawBrightness(lightFountainPos);
-                            if (lightLevel > Config.maxLightLevel) {
-                                player.displayClientMessage(Component.literal("Too bright to create a Dark Fountain"), true);
-                                return;
-                            }
-
                             RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, lightFountainPos, Config.maxRoomVolume, false);
                             if (!roomResult.isValid()) {
                                 player.displayClientMessage(Component.literal(roomResult.getFailReason()), true);
                                 return;
                             }
 
-                            Iterator<ResourceKey<Level>> set = level.getServer().levelKeys().iterator();
-                            ResourceKey<Level> target = null;
-                            while (set.hasNext()) {
-                                ResourceKey<Level> current = set.next();
-                                if (current.equals(ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))))
-                                    target = current;
-                            }
-
-                            if (target == null) {
-                                return;
-                            }
-
-                            ResourceKey<Level> finalTarget = target;
+                            ResourceKey<Level> finalTarget = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"));
                             ServerLevel targetLevel = level.getServer().getLevel(finalTarget);
                             if (targetLevel == null)
                                 return;

@@ -29,11 +29,6 @@ public class Config {
             .comment("Default: 2048")
             .defineInRange("max_room_volume", 2048, 1, 8000);
 
-    private static final ForgeConfigSpec.IntValue MAX_LIGHT_LEVEL = BUILDER
-            .comment("Maximum light level at fountain position for creation")
-            .comment("Default: 10")
-            .defineInRange("max_light_level", 10, 0, 15);
-
     private static final ForgeConfigSpec.IntValue RESCAN_INTERVAL = BUILDER
             .comment("Ticks between room integrity re-scan cycles")
             .comment("Default: 20")
@@ -50,7 +45,6 @@ public class Config {
     public static boolean darkFountainMusic;
     public static boolean alternateDarkFountainMusic;
     public static int maxRoomVolume;
-    public static int maxLightLevel;
     public static int rescanInterval;
     public static int dissipationRate;
 
@@ -60,7 +54,6 @@ public class Config {
         darkFountainMusic = DARK_FOUNTAIN_MUSIC.get();
         alternateDarkFountainMusic = ALTERNATE_DARK_FOUNTAIN_MUSIC.get();
         maxRoomVolume = MAX_ROOM_VOLUME.get();
-        maxLightLevel = MAX_LIGHT_LEVEL.get();
         rescanInterval = RESCAN_INTERVAL.get();
         dissipationRate = DISSIPATION_RATE.get();
     }

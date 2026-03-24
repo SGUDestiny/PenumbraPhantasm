@@ -17,7 +17,7 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.SOUL_HEARTH.get());
                 output.accept(BlockRegistry.HEARTH.get());
 
-                output.accept(ItemRegistry.DELTASHIELD.get());
+                output.accept(ItemRegistry.DELTA_SHIELD.get());
                 output.accept(ItemRegistry.FAMILIAR_SWORD.get());
                 output.accept(ItemRegistry.FAMILIAR_AX.get());
 

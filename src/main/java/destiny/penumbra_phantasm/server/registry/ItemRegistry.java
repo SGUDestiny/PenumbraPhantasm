@@ -33,8 +33,8 @@ public class ItemRegistry {
     public static final RegistryObject<Item> FAMILIAR_AX = ITEMS.register("familiar_ax",
             () -> new FamiliarAxItem(Tiers.NETHERITE, 9, -3, basicItem()));
 
-    public static final RegistryObject<Item> DELTASHIELD = ITEMS.register("deltashield",
-            () -> new DeltashieldItem(basicItem()));
+    public static final RegistryObject<Item> DELTA_SHIELD = ITEMS.register("delta_shield",
+            () -> new DeltaShieldItem(basicItem()));
 
     public static final RegistryObject<Item> SHADOW_CRYSTAL = ITEMS.register("shadow_crystal",
             () -> new Item(basicItem()));

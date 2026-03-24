@@ -3,9 +3,9 @@ package destiny.penumbra_phantasm;
 import com.mojang.logging.LogUtils;
 import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
 import destiny.penumbra_phantasm.client.models.item.DeltashieldModel;
+import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
 import destiny.penumbra_phantasm.client.render.overlay.DarknessLandOverlay;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
-import destiny.penumbra_phantasm.client.render.item.DeltashieldRenderer;
 import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.particle.*;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
@@ -86,7 +86,7 @@ public class PenumbraPhantasm {
 
         @SubscribeEvent
         public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
-            event.registerReloadListener(DeltashieldRenderer.INSTANCE);
+            event.registerReloadListener(DeltaShieldRenderer.INSTANCE);
         }
 
         @SubscribeEvent
@@ -107,7 +107,7 @@ public class PenumbraPhantasm {
             event.enqueueWork(() -> {
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());
                 ItemProperties.register(ItemRegistry.SOUL_HEARTH.get(), new ResourceLocation(MODID, SOUL_TYPE), new SoulHearthItemProperty());
-                ItemProperties.register(ItemRegistry.DELTASHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
+                ItemProperties.register(ItemRegistry.DELTA_SHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
                     return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F;
                 });
             });

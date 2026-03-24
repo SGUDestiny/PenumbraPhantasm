@@ -127,7 +127,7 @@
       "predicate": {
         "blocking": 1
       },
-      "model": "penumbra_phantasm:item/deltashield_blocking"
+      "model": "penumbra_phantasm:item/delta_shield_blocking"
     }
   ]
 }
