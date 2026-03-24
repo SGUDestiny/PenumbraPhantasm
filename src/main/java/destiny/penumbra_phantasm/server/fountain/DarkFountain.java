@@ -236,7 +236,6 @@ public class DarkFountain {
             } else {
                 this.frameTimer++;
             }
-            System.out.println(frameTimer);
 
             if (this.animationTimer >= 144) {
                 this.animationTimer = -1;

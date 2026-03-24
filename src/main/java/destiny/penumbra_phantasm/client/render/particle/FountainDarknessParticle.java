@@ -21,7 +21,7 @@ public class FountainDarknessParticle extends TextureSheetParticle {
         this.gCol = 1f;
         this.bCol = 1f;
         this.gravity = 1f;
-        this.quadSize = 0.1f;
+        this.quadSize = 1f;
     }
 
     @Override
@@ -32,6 +32,9 @@ public class FountainDarknessParticle extends TextureSheetParticle {
         if (this.age++ >= this.lifetime) {
             this.remove();
         } else {
+            int sprite = this.age / (this.lifetime / 6);
+            this.setSprite(sprites.get(sprite, 6));
+
             float reduction = 0.00001f * this.age;
 
             if (this.xd > 0) {
@@ -48,7 +51,7 @@ public class FountainDarknessParticle extends TextureSheetParticle {
                 this.zd = Math.min(this.zd + reduction, 0);
             }
 
-            this.quadSize += Math.min(this.age * 0.001f, 3f);
+            //this.quadSize += Math.min(this.age * 0.001f, 3f);
             this.move(this.xd, this.yd, this.zd);
 
             if (this.speedUpWhenYMotionIsBlocked && this.y == this.yo) {
