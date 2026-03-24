@@ -16,6 +16,18 @@
             "depth": 0,
             "offset": 0
           }
+        },
+        {
+          "biome": "penumbra_phantasm:scarlet_forest",
+          "parameters": {
+            "temperature": 0.5,
+            "humidity": 0,
+            "continentalness": 0,
+            "erosion": 0,
+            "weirdness": 0,
+            "depth": 0,
+            "offset": 0
+          }
         }
       ]
     },
