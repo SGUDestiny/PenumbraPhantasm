@@ -36,6 +36,7 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeMod;
@@ -73,7 +74,14 @@ public class KnifeItem extends SwordItem {
         ItemStack stack = player.getItemInHand(hand);
         CompoundTag tag = stack.getOrCreateTag();
 
-        if (!player.onGround() || DarkFountain.isDarkWorldStatic(level.dimension())) {
+        if (!player.onGround() || DarkFountain.isDarkWorldStatic(level.dimension())|| !level.getBlockState(player.getOnPos()).isSolidRender(level, player.getOnPos())
+                || level.getBlockState(player.getOnPos().above()) != Blocks.AIR.defaultBlockState()) {
+            return InteractionResultHolder.fail(stack);
+        }
+
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, player.getOnPos().above(), Config.maxRoomVolume, false);
+        if (!roomResult.isValid()) {
+            player.displayClientMessage(Component.literal("The room is unsealed or too big"), true);
             return InteractionResultHolder.fail(stack);
         }
 
@@ -136,10 +144,6 @@ public class KnifeItem extends SwordItem {
                             BlockPos lightFountainPos = player.getOnPos().above();
 
                             RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, lightFountainPos, Config.maxRoomVolume, false);
-                            if (!roomResult.isValid()) {
-                                player.displayClientMessage(Component.literal(roomResult.getFailReason()), true);
-                                return;
-                            }
 
                             ResourceKey<Level> finalTarget = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"));
                             ServerLevel targetLevel = level.getServer().getLevel(finalTarget);

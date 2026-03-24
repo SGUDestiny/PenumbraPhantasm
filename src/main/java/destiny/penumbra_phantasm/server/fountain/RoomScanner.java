@@ -33,7 +33,7 @@ public class RoomScanner {
 
         while (!queue.isEmpty()) {
             if (positions.size() > maxVolume) {
-                return RoomScanResult.failure("Room is too large or not sealed (found " + positions.size() + "/" + maxVolume + " blocks)");
+                return RoomScanResult.failure();
             }
 
             BlockPos current = queue.poll();
@@ -64,7 +64,7 @@ public class RoomScanner {
         }
 
         if (positions.size() > maxVolume) {
-            return RoomScanResult.failure("Room is too large or not sealed (found " + positions.size() + "/" + maxVolume + " blocks)");
+            return RoomScanResult.failure();
         }
 
         positions.sort(Comparator.comparingInt((BlockPos pos) -> pos.getY()).reversed());
@@ -87,30 +87,28 @@ public class RoomScanner {
         return false;
     }
 
+
     public static class RoomScanResult {
         private final List<BlockPos> positions;
         private final Set<BlockPos> doorPositions;
         private final boolean valid;
-        private final String failReason;
 
-        private RoomScanResult(List<BlockPos> positions, Set<BlockPos> doorPositions, boolean valid, String failReason) {
+        private RoomScanResult(List<BlockPos> positions, Set<BlockPos> doorPositions, boolean valid) {
             this.positions = positions;
             this.doorPositions = doorPositions;
             this.valid = valid;
-            this.failReason = failReason;
         }
 
         public static RoomScanResult success(List<BlockPos> positions, Set<BlockPos> doorPositions) {
-            return new RoomScanResult(positions, doorPositions, true, null);
+            return new RoomScanResult(positions, doorPositions, true);
         }
 
-        public static RoomScanResult failure(String reason) {
-            return new RoomScanResult(Collections.emptyList(), Collections.emptySet(), false, reason);
+        public static RoomScanResult failure() {
+            return new RoomScanResult(Collections.emptyList(), Collections.emptySet(), false);
         }
 
         public List<BlockPos> getPositions() { return positions; }
         public Set<BlockPos> getDoorPositions() { return doorPositions; }
         public boolean isValid() { return valid; }
-        public String getFailReason() { return failReason; }
     }
 }
