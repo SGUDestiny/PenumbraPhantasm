@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "tall=false": {
+      "model": "penumbra_phantasm:block/scarlet_bush"
+    },
+    "tall=true": {
+      "model": "penumbra_phantasm:block/scarlet_bush_tall"
+    }
+  }
+}

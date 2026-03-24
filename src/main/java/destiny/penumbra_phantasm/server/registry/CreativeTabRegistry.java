@@ -43,6 +43,7 @@ public class CreativeTabRegistry {
 
                 output.accept(BlockRegistry.SCARLET_SAPLING.get());
                 output.accept(BlockRegistry.SCARLET_LEAVES.get());
+                output.accept(BlockRegistry.SCARLET_BUSH.get());
                 output.accept(BlockRegistry.SCARLET_LOG.get());
                 output.accept(BlockRegistry.SCARLET_PLANKS.get());
                 output.accept(BlockRegistry.SCARLET_SLAB.get());

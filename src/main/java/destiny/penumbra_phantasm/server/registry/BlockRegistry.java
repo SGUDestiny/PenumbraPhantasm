@@ -37,6 +37,10 @@ public class BlockRegistry {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
 
+    public static final RegistryObject<Block> SCARLET_BUSH = registerBlock("scarlet_bush",
+            () -> new ScarletBushBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission()));
+
     public static final RegistryObject<Block> SCARLET_LEAVES = registerBlock("scarlet_leaves",
             () -> new ScarletLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES)));

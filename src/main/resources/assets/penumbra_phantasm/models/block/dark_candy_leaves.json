@@ -3,6 +3,7 @@
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/block",
 	"render_type": "minecraft:cutout",
+	"ambientocclusion": false,
 	"textures": {
 		"0": "penumbra_phantasm:block/dark_candy_leaves_inner",
 		"1": "penumbra_phantasm:block/dark_candy_leaves_outer",

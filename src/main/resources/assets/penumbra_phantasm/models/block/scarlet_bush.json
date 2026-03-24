@@ -1,22 +1,24 @@
 {
-	"format_version": "1.9.0",
+	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/block",
-	"ambientocclusion": false,
 	"render_type": "minecraft:cutout",
+	"ambientocclusion": false,
 	"textures": {
-		"0": "penumbra_phantasm:block/scarlet_leaves_inner",
-		"1": "penumbra_phantasm:block/scarlet_leaves_outer",
-		"particle": "penumbra_phantasm:block/scarlet_leaves_outer"
+		"0": "penumbra_phantasm:block/scarlet_bush_outer",
+		"1": "penumbra_phantasm:block/scarlet_bush_inner",
+		"2": "penumbra_phantasm:block/scarlet_bush_top_outer",
+		"particle": "penumbra_phantasm:block/scarlet_bush_outer"
 	},
 	"elements": [
 		{
-			"from": [-0.5, -0.5, -0.5],
-			"to": [16.5, 16.5, 16.5],
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
 			"forge_data": {
 				"block_light": 15,
 				"sky_light": 15
 			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [-24, 16, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
 				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
@@ -27,19 +29,19 @@
 			}
 		},
 		{
-			"from": [0, 0, 0],
-			"to": [16, 16, 16],
+			"from": [-0.5, -0.5, -0.5],
+			"to": [16.5, 16.5, 16.5],
 			"forge_data": {
 				"block_light": 15,
 				"sky_light": 15
 			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [-24.5, 15.5, 7.5]},
 			"faces": {
 				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
 				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#0"},
 				"west": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2"}
 			}
 		}
 	]
