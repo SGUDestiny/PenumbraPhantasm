@@ -92,12 +92,14 @@ public class ClientEvents {
 
 							stack.scale(distanceScale, distanceScale, distanceScale);
 
-							double renderDistance = event.getLevelRenderer().getLastViewDistance();
+							float fade = (float)((distance - referenceDistance) / referenceDistance);
+							fade = Math.max(0f, Math.min(1f, fade));
 
-							if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < (renderDistance / 2) * 16) {
-								FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
-							} else {
-								FountainRenderUtil.renderOpenFountainOptimized(fountain, length, stack, buffer, OverlayTexture.NO_OVERLAY);
+							if (fade < 1.0f) {
+								FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
+							}
+							if (fade > 0.0f) {
+								FountainRenderUtil.renderOpenFountainOptimized(fountain, length, stack, buffer, OverlayTexture.NO_OVERLAY, fade);
 							}
 						}
 

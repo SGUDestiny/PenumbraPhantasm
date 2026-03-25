@@ -92,6 +92,9 @@ void main() {
     vec3 finalColor = color * vColor.rgb * TintColor.rgb;
     float finalAlpha = mask * vColor.a * TintColor.a;
 
+    if (finalAlpha < 0.01)
+        discard;
+
     fragColor = vec4(finalColor, finalAlpha);
 
 

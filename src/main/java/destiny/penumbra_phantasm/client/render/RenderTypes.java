@@ -19,6 +19,7 @@ public class RenderTypes extends RenderType {
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
                         .setTextureState(new TextureStateShard(rl, false, false))
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setCullState(CULL)
                         .createCompositeState(true));
     }
@@ -40,8 +41,20 @@ public class RenderTypes extends RenderType {
 
     public static RenderType fountainMaskedPortal(
             ResourceLocation maskTex,
-            ResourceLocation flowTex
+            ResourceLocation flowTex,
+            boolean depthWrite
     ) {
+        var builder = RenderType.CompositeState.builder()
+                .setShaderState(FOUNTAIN_MASKED_SHADER)
+                .setTextureState(
+                        RenderStateShard.MultiTextureStateShard.builder()
+                                .add(maskTex, false, false)
+                                .add(flowTex, false, false)
+                                .build()
+                )
+                .setTransparencyState(TRANSLUCENT_TRANSPARENCY);
+        if (!depthWrite)
+            builder.setWriteMaskState(COLOR_WRITE);
         return RenderType.create(
                 "fountain_masked_portal",
                 DefaultVertexFormat.POSITION_COLOR_TEX,
@@ -49,15 +62,7 @@ public class RenderTypes extends RenderType {
                 256,
                 false,
                 false,
-                RenderType.CompositeState.builder()
-                        .setShaderState(FOUNTAIN_MASKED_SHADER)
-                        .setTextureState(
-                                RenderStateShard.MultiTextureStateShard.builder()
-                                        .add(maskTex, false, false)
-                                        .add(flowTex, false, false)
-                                        .build()
-                        )
-                        .createCompositeState(false)
+                builder.createCompositeState(false)
         );
     }
 }
