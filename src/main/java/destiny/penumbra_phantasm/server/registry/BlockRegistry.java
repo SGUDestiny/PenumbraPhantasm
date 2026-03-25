@@ -20,6 +20,13 @@ import java.util.function.Supplier;
 public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, PenumbraPhantasm.MODID);
 
+    public static final RegistryObject<Block> TWILIGHT_GRASS_BLOCK = registerBlock("twilight_grass_block",
+            () -> new TwilightGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.GRASS).randomTicks()));
+    public static final RegistryObject<Block> TWILIGHT_GRASS = registerBlock("twilight_grass",
+            () -> new TallGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.GRASS)));
+
     public static final RegistryObject<Block> NIGHT_GRASS_BLOCK = registerBlock("night_grass_block",
             () -> new NightGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
                     .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRASS).randomTicks()));

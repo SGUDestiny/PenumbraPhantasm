@@ -41,6 +41,9 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.UMBRASTONE.get());
                 output.accept(BlockRegistry.COBBLED_UMBRASTONE.get());
 
+                output.accept(BlockRegistry.TWILIGHT_GRASS.get());
+                output.accept(BlockRegistry.TWILIGHT_GRASS_BLOCK.get());
+
                 output.accept(BlockRegistry.SCARLET_SAPLING.get());
                 output.accept(BlockRegistry.SCARLET_LEAVES.get());
                 output.accept(BlockRegistry.SCARLET_BUSH.get());
