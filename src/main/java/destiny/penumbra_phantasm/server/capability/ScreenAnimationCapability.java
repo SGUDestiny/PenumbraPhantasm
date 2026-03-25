@@ -34,8 +34,8 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     public int darknessLandTicker = -1;
     public int darknessOverlayTicker = -1;
 
-    public String previousLocation = null;
-    public String currentLocation = null;
+    public String previousLocation = "";
+    public String currentLocation = "";
     public int titleAlphaTicker = -1;
 
     public void tick(Level level, Player player) {

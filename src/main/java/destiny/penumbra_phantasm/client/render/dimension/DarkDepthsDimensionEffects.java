@@ -75,9 +75,11 @@ public class DarkDepthsDimensionEffects extends DimensionSpecialEffects {
         FogRenderer.levelFogColor();
         RenderSystem.depthMask(false);
         RenderSystem.setShaderColor(skyX, skyY, skyZ, 1.0F);
+        RenderSystem.setShader(GameRenderer::getPositionShader);
 
         this.skyBuffer.bind();
         this.skyBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
+        VertexBuffer.unbind();
 
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.depthMask(true);

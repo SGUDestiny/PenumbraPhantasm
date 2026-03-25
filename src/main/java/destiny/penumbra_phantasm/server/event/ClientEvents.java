@@ -1,7 +1,9 @@
 package destiny.penumbra_phantasm.server.event;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import org.lwjgl.opengl.GL11;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
@@ -50,7 +52,10 @@ public class ClientEvents {
 			ResourceLocation textureCrack = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_ground_crack.png");
 
 			PoseStack stack = event.getPoseStack();
-			MultiBufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(new BufferBuilder(65536));
+
+			GL11.glEnable(0x864F);
+
 			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
 				cap.darkFountains.forEach((key, fountain) ->
 					{
@@ -86,7 +91,7 @@ public class ClientEvents {
 							} else {
 								double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
-								if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
+								if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < (viewDistance / 2) * 16) {
 									FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
 								} else {
 									FountainRenderUtil.renderOpenFountainOptimized(fountain, length, stack, buffer, OverlayTexture.NO_OVERLAY);
@@ -97,6 +102,10 @@ public class ClientEvents {
 						stack.popPose();
 					});
 			});
+
+			buffer.endBatch();
+
+			GL11.glDisable(0x864F);
 		}
 	}
 
