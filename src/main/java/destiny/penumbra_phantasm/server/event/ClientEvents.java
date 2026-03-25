@@ -85,17 +85,19 @@ public class ClientEvents {
 							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
 									fountain.getFountainPos().getZ());
 
-							if (animationTime < 130 && animationTime >= 0) {
-								FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
-										OverlayTexture.NO_OVERLAY);
-							} else {
-								double viewDistance = event.getLevelRenderer().getLastViewDistance();
+							double distance = fountain.getFountainPos().getCenter().distanceTo(camera.getPosition());
+							double referenceDistance = 64.0;
+							float distanceScale = (float)(distance / referenceDistance);
+							distanceScale = Math.max(distanceScale, 1.0f);
 
-								if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < (viewDistance / 2) * 16) {
-									FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
-								} else {
-									FountainRenderUtil.renderOpenFountainOptimized(fountain, length, stack, buffer, OverlayTexture.NO_OVERLAY);
-								}
+							stack.scale(distanceScale, distanceScale, distanceScale);
+
+							double renderDistance = event.getLevelRenderer().getLastViewDistance();
+
+							if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < (renderDistance / 2) * 16) {
+								FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY);
+							} else {
+								FountainRenderUtil.renderOpenFountainOptimized(fountain, length, stack, buffer, OverlayTexture.NO_OVERLAY);
 							}
 						}
 
