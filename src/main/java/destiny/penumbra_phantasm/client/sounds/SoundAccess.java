@@ -7,35 +7,14 @@ import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.level.Level;
 
 import java.util.Optional;
-import java.util.UUID;
 
 public class SoundAccess {
     public static final String EMPTY = PenumbraPhantasm.EMPTY;
 
     protected static Minecraft minecraft = Minecraft.getInstance();
-
-    public static void playFountainMusic(BlockPos fountainPos, boolean stop)
-    {
-        DarkFountain fountain = getFountain(fountainPos);
-
-        if(fountain != null)
-        {
-            if(fountain.musicSound == null)
-            {
-                fountain.musicSound = new DarkFountainSoundWrapper.DarkFountainMusic(fountain);
-            }
-
-            if(stop)
-                fountain.stopMusic();
-            else
-                fountain.playMusic();
-        }
-    }
 
     public static SoundEvent getFountainMusic() {
         return Config.alternateDarkFountainMusic ? SoundRegistry.FOUNTAIN_MUSIC_ALTERNATE.get() : SoundRegistry.FOUNTAIN_MUSIC.get();

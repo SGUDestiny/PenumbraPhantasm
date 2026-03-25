@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
+import destiny.penumbra_phantasm.client.sounds.MusicManager;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -108,11 +109,13 @@ public class ClientEvents {
 			ClientLevel level = Minecraft.getInstance().level;
 			if (player == null) return;
 
+			MusicManager.getInstance().tick();
+
 			DarkFountainCapability cap;
 			LazyOptional<DarkFountainCapability> lazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
 			if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
 				cap = lazyCapability.resolve().get();
-			else return; // If capability isn't present
+			else return;
 
 			DarkFountain fountain = null;
 
@@ -121,7 +124,7 @@ public class ClientEvents {
 				if(entry.getValue().animationTimer == -1 && entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 64)
 				{
 					fountain = entry.getValue();
-					break; // If fountain within 8 blocks of this(8 squared is 64)
+					break;
 				}
 			}
 

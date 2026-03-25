@@ -44,10 +44,6 @@ public abstract class ClientBoundSoundPackets {
         @Override
         public boolean handle(Supplier<NetworkEvent.Context> ctx)
         {
-            ctx.get().enqueueWork(() ->
-            {
-                SoundAccess.playFountainMusic(fountainPos, stop);
-            });
             return true;
         }
     }

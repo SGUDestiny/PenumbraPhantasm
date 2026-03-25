@@ -13,14 +13,7 @@
     "foliage_color": 16711744,
     "sky_color": 0,
     "water_color": 0,
-    "water_fog_color": 0,
-    "ambient_sound": "penumbra_phantasm:everlasting_autumn",
-    "music": {
-      "max_delay": 2,
-      "min_delay": 1,
-      "replace_current_music": false,
-      "sound": "penumbra_phantasm:everlasting_autumn"
-    }
+    "water_fog_color": 0
   },
   "features": [
     [],

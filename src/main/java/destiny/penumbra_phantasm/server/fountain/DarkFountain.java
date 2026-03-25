@@ -68,8 +68,6 @@ public class DarkFountain {
     public int rescanTimer = 0;
 
     @Nullable
-    public SoundWrapper musicSound = null;
-    @Nullable
     public SoundWrapper windSound = null;
     @Nullable
     public SoundWrapper darknessSound = null;
@@ -711,12 +709,6 @@ public class DarkFountain {
 
     private void tickSoundPackets(Level level) {
         if (isDarkWorld(level.dimension())) {
-            if (Config.darkFountainMusic) {
-                PacketHandlerRegistry.INSTANCE.send(
-                        PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
-                        new ClientBoundSoundPackets.FountainMusic(this.fountainPos, false));
-            }
-
             PacketHandlerRegistry.INSTANCE.send(
                     PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
                     new ClientBoundSoundPackets.FountainWind(this.fountainPos, false));
@@ -761,15 +753,6 @@ public class DarkFountain {
     public Entity teleportEntity(Entity entity, ServerLevel destinationLevel, Vec3 targetPos) {
         return entity.changeDimension(destinationLevel, new DarkFountainTeleporter(targetPos, entity.getDeltaMovement(), entity.getYRot(), entity.getXRot()));
     }
-
-    public void playMusic() {
-        if (!this.musicSound.isPlaying()) {
-            this.musicSound.stopSound();
-            this.musicSound.playSound();
-        }
-    }
-
-    public void stopMusic() { this.musicSound.stopSound(); }
 
     public void playWind() {
         if (!this.windSound.isPlaying()) {

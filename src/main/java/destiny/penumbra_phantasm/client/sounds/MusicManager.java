@@ -1,0 +1,297 @@
+package destiny.penumbra_phantasm.client.sounds;
+
+import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.SoundRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraftforge.common.util.LazyOptional;
+
+import javax.annotation.Nullable;
+import java.util.HashMap;
+import java.util.Map;
+
+public class MusicManager {
+    private static final MusicManager INSTANCE = new MusicManager();
+    private static final float MUSIC_VOLUME = 0.2F;
+    private static final double FOUNTAIN_MUSIC_RANGE = 24.0;
+
+    private final Minecraft minecraft = Minecraft.getInstance();
+    private final Map<ResourceLocation, BiomeMusic> biomeMusicMap = new HashMap<>();
+    private final RandomSource random = RandomSource.create();
+    private boolean initialized = false;
+
+    @Nullable
+    private ManagedMusicSound currentSound;
+    @Nullable
+    private SoundEvent currentSoundEvent;
+    private MusicPriority currentPriority = MusicPriority.BIOME;
+
+    private State state = State.SILENT;
+    private int waitTimer = 0;
+
+    @Nullable
+    private SoundEvent pendingSoundEvent;
+    private MusicPriority pendingPriority = MusicPriority.BIOME;
+    private boolean pendingLooping = true;
+
+    public static MusicManager getInstance() {
+        return INSTANCE;
+    }
+
+    private void ensureInitialized() {
+        if (!initialized) {
+            initialized = true;
+            biomeMusicMap.put(
+                    new ResourceLocation(PenumbraPhantasm.MODID, "field_of_hopes_and_dreams"),
+                    new BiomeMusic(() -> SoundRegistry.FIELD_OF_HOPES_AND_DREAMS.get())
+            );
+            biomeMusicMap.put(
+                    new ResourceLocation(PenumbraPhantasm.MODID, "scarlet_forest"),
+                    new BiomeMusic(() -> SoundRegistry.EVERLASTING_AUTUMN.get())
+            );
+        }
+    }
+
+    public void tick() {
+        ensureInitialized();
+        LocalPlayer player = minecraft.player;
+        ClientLevel level = minecraft.level;
+        if (player == null || level == null) {
+            stopImmediate();
+            return;
+        }
+
+        if (!DarkFountain.isDarkWorldStatic(level.dimension())) {
+            stopImmediate();
+            return;
+        }
+
+        SoundEvent desiredSound = null;
+        MusicPriority desiredPriority = MusicPriority.BIOME;
+        boolean desiredLooping = true;
+
+        SoundEvent fountainMusic = resolveFountainMusic(player, level);
+        if (fountainMusic != null) {
+            desiredSound = fountainMusic;
+            desiredPriority = MusicPriority.FOUNTAIN;
+            desiredLooping = true;
+        }
+
+        if (desiredPriority.ordinal() < MusicPriority.FOUNTAIN.ordinal()) {
+            BiomeMusic biomeMusic = resolveBiomeMusic(player, level);
+            if (biomeMusic != null) {
+                desiredSound = biomeMusic.sound();
+                desiredPriority = MusicPriority.BIOME;
+                desiredLooping = biomeMusic.looping();
+            }
+        }
+
+        if (desiredSound == null) {
+            if (state != State.SILENT && state != State.FADING_OUT) {
+                beginFadeOut();
+            }
+            tickFade();
+            return;
+        }
+
+        boolean sameTrack = desiredSound.equals(currentSoundEvent) && desiredPriority == currentPriority;
+
+        if (sameTrack && (state == State.PLAYING || state == State.FADING_IN)) {
+            tickFade();
+            return;
+        }
+
+        if (sameTrack && state == State.WAITING) {
+            tickWait(desiredSound, desiredPriority, desiredLooping);
+            return;
+        }
+
+        if (!sameTrack || state == State.SILENT) {
+            if (state == State.PLAYING || state == State.FADING_IN) {
+                pendingSoundEvent = desiredSound;
+                pendingPriority = desiredPriority;
+                pendingLooping = desiredLooping;
+                beginFadeOut();
+            } else if (state == State.FADING_OUT) {
+                pendingSoundEvent = desiredSound;
+                pendingPriority = desiredPriority;
+                pendingLooping = desiredLooping;
+            } else {
+                startTrack(desiredSound, desiredPriority, desiredLooping);
+            }
+        }
+
+        tickFade();
+    }
+
+    public void requestMusic(SoundEvent sound, MusicPriority priority, boolean looping) {
+        if (priority.ordinal() >= currentPriority.ordinal()) {
+            pendingSoundEvent = sound;
+            pendingPriority = priority;
+            pendingLooping = looping;
+            if (state == State.PLAYING || state == State.FADING_IN) {
+                beginFadeOut();
+            } else if (state == State.SILENT || state == State.WAITING) {
+                startTrack(sound, priority, looping);
+            }
+        }
+    }
+
+    public void stopMusic(MusicPriority priority) {
+        if (currentPriority == priority && state != State.SILENT) {
+            pendingSoundEvent = null;
+            beginFadeOut();
+        }
+    }
+
+    private void tickFade() {
+        if (currentSound == null) return;
+
+        if (currentSound.isStopped()) {
+            if (state == State.PLAYING && currentSoundEvent != null) {
+                BiomeMusic bm = findBiomeMusic(currentSoundEvent);
+                if (bm != null && !bm.looping()) {
+                    state = State.WAITING;
+                    waitTimer = bm.minDelay() + random.nextInt(Math.max(1, bm.maxDelay() - bm.minDelay()));
+                    currentSound = null;
+                    return;
+                }
+            }
+            state = State.SILENT;
+            currentSound = null;
+            currentSoundEvent = null;
+            checkPending();
+            return;
+        }
+
+        if (state == State.FADING_OUT && currentSound.isFadedOut()) {
+            currentSound.stopSound();
+            minecraft.getSoundManager().stop(currentSound);
+            currentSound = null;
+            currentSoundEvent = null;
+            state = State.SILENT;
+            checkPending();
+            return;
+        }
+
+        if (state == State.FADING_IN && currentSound.getTargetVolume() > 0 && currentSound.getVolume() >= currentSound.getTargetVolume() - 0.01F) {
+            state = State.PLAYING;
+        }
+    }
+
+    private void tickWait(SoundEvent desiredSound, MusicPriority desiredPriority, boolean desiredLooping) {
+        waitTimer--;
+        if (waitTimer <= 0) {
+            startTrack(desiredSound, desiredPriority, desiredLooping);
+        }
+    }
+
+    private void beginFadeOut() {
+        if (currentSound != null && !currentSound.isStopped()) {
+            currentSound.setTargetVolume(0.0F);
+            state = State.FADING_OUT;
+        } else {
+            state = State.SILENT;
+            checkPending();
+        }
+    }
+
+    private void startTrack(SoundEvent sound, MusicPriority priority, boolean looping) {
+        if (currentSound != null && !currentSound.isStopped()) {
+            currentSound.stopSound();
+            minecraft.getSoundManager().stop(currentSound);
+        }
+
+        currentSoundEvent = sound;
+        currentPriority = priority;
+        currentSound = new ManagedMusicSound(sound, looping);
+        currentSound.setTargetVolume(MUSIC_VOLUME);
+        minecraft.getSoundManager().queueTickingSound(currentSound);
+        state = State.FADING_IN;
+    }
+
+    private void checkPending() {
+        if (pendingSoundEvent != null) {
+            SoundEvent sound = pendingSoundEvent;
+            MusicPriority priority = pendingPriority;
+            boolean looping = pendingLooping;
+            pendingSoundEvent = null;
+            startTrack(sound, priority, looping);
+        }
+    }
+
+    private void stopImmediate() {
+        if (currentSound != null && !currentSound.isStopped()) {
+            currentSound.stopSound();
+            minecraft.getSoundManager().stop(currentSound);
+        }
+        currentSound = null;
+        currentSoundEvent = null;
+        state = State.SILENT;
+        pendingSoundEvent = null;
+        waitTimer = 0;
+    }
+
+    @Nullable
+    private BiomeMusic resolveBiomeMusic(LocalPlayer player, ClientLevel level) {
+        Holder<Biome> biomeHolder = level.getBiome(player.blockPosition());
+        ResourceLocation biomeId = biomeHolder.unwrapKey()
+                .map(key -> key.location())
+                .orElse(null);
+        if (biomeId == null) return null;
+        return biomeMusicMap.get(biomeId);
+    }
+
+    @Nullable
+    private SoundEvent resolveFountainMusic(LocalPlayer player, ClientLevel level) {
+        if (!Config.darkFountainMusic) return null;
+
+        LazyOptional<DarkFountainCapability> lazyCap = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if (!lazyCap.isPresent()) return null;
+
+        DarkFountainCapability cap = lazyCap.resolve().orElse(null);
+        if (cap == null) return null;
+
+        for (Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet()) {
+            DarkFountain fountain = entry.getValue();
+            if (fountain.animationTimer != -1) continue;
+
+            double distance = fountain.getFountainPos().getCenter().distanceTo(player.position());
+            if (distance <= FOUNTAIN_MUSIC_RANGE) {
+                return SoundAccess.getFountainMusic();
+            }
+        }
+        return null;
+    }
+
+    @Nullable
+    private BiomeMusic findBiomeMusic(SoundEvent sound) {
+        for (BiomeMusic bm : biomeMusicMap.values()) {
+            if (bm.sound().equals(sound)) return bm;
+        }
+        return null;
+    }
+
+    public boolean isPlayingPriority(MusicPriority priority) {
+        return currentPriority == priority && (state == State.PLAYING || state == State.FADING_IN);
+    }
+
+    private enum State {
+        SILENT,
+        FADING_IN,
+        PLAYING,
+        FADING_OUT,
+        WAITING
+    }
+}
