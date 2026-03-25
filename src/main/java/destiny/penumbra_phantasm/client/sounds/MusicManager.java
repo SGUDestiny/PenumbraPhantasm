@@ -39,6 +39,8 @@ public class MusicManager {
 
     private State state = State.SILENT;
     private int waitTimer = 0;
+    private int fadeInTicks = 0;
+    private boolean currentLooping = true;
 
     @Nullable
     private SoundEvent pendingSoundEvent;
@@ -185,8 +187,15 @@ public class MusicManager {
             return;
         }
 
-        if (state == State.FADING_IN && currentSound.getTargetVolume() > 0 && currentSound.getVolume() >= currentSound.getTargetVolume() - 0.01F) {
-            state = State.PLAYING;
+        if (state == State.FADING_IN) {
+            fadeInTicks++;
+            if (fadeInTicks > 10 && !minecraft.getSoundManager().isActive(currentSound)) {
+                startTrack(currentSoundEvent, currentPriority, currentLooping);
+                return;
+            }
+            if (currentSound.getTargetVolume() > 0 && currentSound.getVolume() >= currentSound.getTargetVolume() - 0.005F) {
+                state = State.PLAYING;
+            }
         }
     }
 
@@ -215,10 +224,12 @@ public class MusicManager {
 
         currentSoundEvent = sound;
         currentPriority = priority;
+        currentLooping = looping;
         currentSound = new ManagedMusicSound(sound, looping);
         currentSound.setTargetVolume(MUSIC_VOLUME);
         minecraft.getSoundManager().queueTickingSound(currentSound);
         state = State.FADING_IN;
+        fadeInTicks = 0;
     }
 
     private void checkPending() {

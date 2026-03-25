@@ -18,9 +18,9 @@ public class ManagedMusicSound extends AbstractTickableSoundInstance {
     @Override
     public void tick() {
         if (this.volume < targetVolume) {
-            this.volume = Math.min(this.volume + 0.01F, targetVolume);
+            this.volume = Math.min(this.volume + 0.005F, targetVolume);
         } else if (this.volume > targetVolume) {
-            this.volume = Math.max(this.volume - 0.01F, targetVolume);
+            this.volume = Math.max(this.volume - 0.005F, targetVolume);
         }
 
         if (this.volume <= 0.0F && targetVolume <= 0.0F && !this.looping) {
