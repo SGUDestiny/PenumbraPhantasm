@@ -159,5 +159,11 @@
     [
       "penumbra_phantasm:field_of_hopes_and_dreams"
     ]
+  },
+  "everlasting_autumn": {
+    "sounds":
+    [
+      "penumbra_phantasm:everlasting_autumn"
+    ]
   }
 }

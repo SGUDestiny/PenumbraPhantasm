@@ -12,6 +12,7 @@ public class SoundRegistry {
     public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, PenumbraPhantasm.MODID);
 
     public static RegistryObject<SoundEvent> FIELD_OF_HOPES_AND_DREAMS = registerSoundEvent("field_of_hopes_and_dreams");
+    public static RegistryObject<SoundEvent> EVERLASTING_AUTUMN = registerSoundEvent("everlasting_autumn");
 
     public static RegistryObject<SoundEvent> FOUNTAIN_MAKE = registerSoundEvent("fountain_make");
     public static RegistryObject<SoundEvent> FOUNTAIN_TARGET = registerSoundEvent("fountain_target");
