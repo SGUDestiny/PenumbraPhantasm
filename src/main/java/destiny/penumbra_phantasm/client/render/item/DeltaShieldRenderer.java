@@ -3,7 +3,7 @@ package destiny.penumbra_phantasm.client.render.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.models.item.DeltashieldModel;
+import destiny.penumbra_phantasm.client.model.item.DeltashieldModel;
 import destiny.penumbra_phantasm.server.item.DeltaShieldItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;

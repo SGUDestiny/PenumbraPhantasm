@@ -2,7 +2,7 @@ package destiny.penumbra_phantasm;
 
 import com.mojang.logging.LogUtils;
 import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
-import destiny.penumbra_phantasm.client.models.item.DeltashieldModel;
+import destiny.penumbra_phantasm.client.model.item.DeltashieldModel;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
 import destiny.penumbra_phantasm.client.render.overlay.DarknessLandOverlay;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;

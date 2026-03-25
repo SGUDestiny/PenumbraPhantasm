@@ -1,14 +1,14 @@
-package destiny.penumbra_phantasm.client.sounds;
+package destiny.penumbra_phantasm.client.sound;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.sounds.SoundEvent;
 
-public class DarkFountainWindSound extends DarkFountainSound<DarkFountain>{
+public class DarkFountainDarknessSound extends DarkFountainSound<DarkFountain>{
     private static final float VOLUME_MIN = 0.0F;
     private static final float VOLUME_MAX = 0.1F;
 
-    public DarkFountainWindSound(DarkFountain fountain, SoundEvent soundEvent) {
-        super(fountain, soundEvent, 23, 32);
+    public DarkFountainDarknessSound(DarkFountain fountain, SoundEvent soundEvent) {
+        super(fountain, soundEvent, 8, 12);
         this.looping = true;
         this.volume = VOLUME_MIN;
     }
@@ -16,7 +16,7 @@ public class DarkFountainWindSound extends DarkFountainSound<DarkFountain>{
     @Override
     public void tick()
     {
-        if(getDistanceFromSource() <= 32)
+        if(getDistanceFromSource() <= 16)
             fadeIn();
         else
             fadeOut();

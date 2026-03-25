@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
-import destiny.penumbra_phantasm.client.sounds.MusicManager;
+import destiny.penumbra_phantasm.client.sound.MusicManager;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;

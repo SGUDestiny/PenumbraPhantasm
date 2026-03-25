@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.sounds;
+package destiny.penumbra_phantasm.client.sound;
 
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
@@ -67,15 +67,16 @@ public class MusicManager {
 
     public void tick() {
         ensureInitialized();
+
         LocalPlayer player = minecraft.player;
         ClientLevel level = minecraft.level;
         if (player == null || level == null) {
-            stopImmediate();
+            stopImmediately();
             return;
         }
 
         if (!DarkFountain.isDarkWorldStatic(level.dimension())) {
-            stopImmediate();
+            stopImmediately();
             return;
         }
 
@@ -83,7 +84,7 @@ public class MusicManager {
         MusicPriority desiredPriority = MusicPriority.BIOME;
         boolean desiredLooping = true;
 
-        SoundEvent fountainMusic = resolveFountainMusic(player, level);
+        SoundEvent fountainMusic = fountainMusic(player, level);
         if (fountainMusic != null) {
             desiredSound = fountainMusic;
             desiredPriority = MusicPriority.FOUNTAIN;
@@ -91,7 +92,8 @@ public class MusicManager {
         }
 
         if (desiredPriority.ordinal() < MusicPriority.FOUNTAIN.ordinal()) {
-            BiomeMusic biomeMusic = resolveBiomeMusic(player, level);
+            BiomeMusic biomeMusic = biomeMusic(player, level);
+
             if (biomeMusic != null) {
                 desiredSound = biomeMusic.sound();
                 desiredPriority = MusicPriority.BIOME;
@@ -103,6 +105,7 @@ public class MusicManager {
             if (state != State.SILENT && state != State.FADING_OUT) {
                 beginFadeOut();
             }
+
             tickFade();
             return;
         }
@@ -115,7 +118,7 @@ public class MusicManager {
         }
 
         if (sameTrack && state == State.WAITING) {
-            tickWait(desiredSound, desiredPriority, desiredLooping);
+            tickWaiting(desiredSound, desiredPriority, desiredLooping);
             return;
         }
 
@@ -173,7 +176,7 @@ public class MusicManager {
             state = State.SILENT;
             currentSound = null;
             currentSoundEvent = null;
-            checkPending();
+            checkPendingMusic();
             return;
         }
 
@@ -183,7 +186,7 @@ public class MusicManager {
             currentSound = null;
             currentSoundEvent = null;
             state = State.SILENT;
-            checkPending();
+            checkPendingMusic();
             return;
         }
 
@@ -199,7 +202,7 @@ public class MusicManager {
         }
     }
 
-    private void tickWait(SoundEvent desiredSound, MusicPriority desiredPriority, boolean desiredLooping) {
+    private void tickWaiting(SoundEvent desiredSound, MusicPriority desiredPriority, boolean desiredLooping) {
         waitTimer--;
         if (waitTimer <= 0) {
             startTrack(desiredSound, desiredPriority, desiredLooping);
@@ -212,7 +215,7 @@ public class MusicManager {
             state = State.FADING_OUT;
         } else {
             state = State.SILENT;
-            checkPending();
+            checkPendingMusic();
         }
     }
 
@@ -232,7 +235,7 @@ public class MusicManager {
         fadeInTicks = 0;
     }
 
-    private void checkPending() {
+    private void checkPendingMusic() {
         if (pendingSoundEvent != null) {
             SoundEvent sound = pendingSoundEvent;
             MusicPriority priority = pendingPriority;
@@ -242,7 +245,7 @@ public class MusicManager {
         }
     }
 
-    private void stopImmediate() {
+    private void stopImmediately() {
         if (currentSound != null && !currentSound.isStopped()) {
             currentSound.stopSound();
             minecraft.getSoundManager().stop(currentSound);
@@ -255,7 +258,7 @@ public class MusicManager {
     }
 
     @Nullable
-    private BiomeMusic resolveBiomeMusic(LocalPlayer player, ClientLevel level) {
+    private BiomeMusic biomeMusic(LocalPlayer player, ClientLevel level) {
         Holder<Biome> biomeHolder = level.getBiome(player.blockPosition());
         ResourceLocation biomeId = biomeHolder.unwrapKey()
                 .map(key -> key.location())
@@ -265,7 +268,7 @@ public class MusicManager {
     }
 
     @Nullable
-    private SoundEvent resolveFountainMusic(LocalPlayer player, ClientLevel level) {
+    private SoundEvent fountainMusic(LocalPlayer player, ClientLevel level) {
         if (!Config.darkFountainMusic) return null;
 
         LazyOptional<DarkFountainCapability> lazyCap = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);

@@ -2,7 +2,7 @@ package destiny.penumbra_phantasm.server.fountain;
 
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.sounds.SoundWrapper;
+import destiny.penumbra_phantasm.client.sound.SoundWrapper;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
 import destiny.penumbra_phantasm.server.network.ClientBoundDarknessFallPacket;
 import destiny.penumbra_phantasm.server.network.ClientBoundSingleFountainData;

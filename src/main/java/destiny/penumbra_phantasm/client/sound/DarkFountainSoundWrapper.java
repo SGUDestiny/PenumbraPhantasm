@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.sounds;
+package destiny.penumbra_phantasm.client.sound;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.client.Minecraft;

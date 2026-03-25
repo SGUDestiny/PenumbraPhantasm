@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.sounds;
+package destiny.penumbra_phantasm.client.sound;
 
 public enum MusicPriority {
     BIOME,
