@@ -1,7 +1,15 @@
-package destiny.penumbra_phantasm.client.dimension;
+package destiny.penumbra_phantasm.client.render.dimension;
+
+import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.*;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexBuffer;
+import com.mojang.blaze3d.vertex.VertexFormat;
+
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -13,7 +21,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Matrix4f;
 
 public class DarkDepthsDimensionEffects extends DimensionSpecialEffects {
     public static final ResourceLocation DARK_DEPTHS_EFFECT = new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths");
@@ -90,7 +97,7 @@ public class DarkDepthsDimensionEffects extends DimensionSpecialEffects {
 
     @Override
     public boolean renderClouds(ClientLevel level, int ticks, float partialTick, PoseStack poseStack, double camX, double camY, double camZ, Matrix4f projectionMatrix) {
-        return false;
+        return true;
     }
 
     @Override

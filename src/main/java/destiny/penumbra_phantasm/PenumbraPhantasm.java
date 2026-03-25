@@ -1,25 +1,55 @@
 package destiny.penumbra_phantasm;
 
+import org.slf4j.Logger;
+
 import com.mojang.logging.LogUtils;
-import destiny.penumbra_phantasm.client.dimension.DarkDepthsDimensionEffects;
+
 import destiny.penumbra_phantasm.client.model.item.DeltashieldModel;
+import destiny.penumbra_phantasm.client.render.dimension.DarkDepthsDimensionEffects;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
+import destiny.penumbra_phantasm.client.render.model.DarkFountainBackModel;
+import destiny.penumbra_phantasm.client.render.model.DarkFountainFrontModel;
+import destiny.penumbra_phantasm.client.render.model.DarkFountainGroundCrackModel;
+import destiny.penumbra_phantasm.client.render.model.DarkFountainMiddleModel;
+import destiny.penumbra_phantasm.client.render.model.DarkFountainMiddleOptimizedModel;
+import destiny.penumbra_phantasm.client.render.model.DarkFountainOpeningModel;
 import destiny.penumbra_phantasm.client.render.overlay.DarknessLandOverlay;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
-import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.overlay.LocationTitleOverlay;
-import destiny.penumbra_phantasm.client.render.particle.*;
+import destiny.penumbra_phantasm.client.render.particle.FountainDarknessParticle;
+import destiny.penumbra_phantasm.client.render.particle.FountainTargetParticle;
+import destiny.penumbra_phantasm.client.render.particle.LuminescentParticle;
+import destiny.penumbra_phantasm.client.render.particle.RealKnifeHitParticle;
+import destiny.penumbra_phantasm.client.render.particle.RealKnifeSlashParticle;
+import destiny.penumbra_phantasm.client.render.particle.ScarletLeafParticle;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
+import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
-import destiny.penumbra_phantasm.server.registry.*;
+import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
+import destiny.penumbra_phantasm.server.registry.BlockRegistry;
+import destiny.penumbra_phantasm.server.registry.CreativeTabRegistry;
+import destiny.penumbra_phantasm.server.registry.EffectRegistry;
+import destiny.penumbra_phantasm.server.registry.EntityRegistry;
+import destiny.penumbra_phantasm.server.registry.FeatureRegistry;
+import destiny.penumbra_phantasm.server.registry.FluidRegistry;
+import destiny.penumbra_phantasm.server.registry.FluidTypeRegistry;
+import destiny.penumbra_phantasm.server.registry.ItemRegistry;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
+import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
+import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.*;
+import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
+import net.minecraftforge.client.event.RegisterDimensionSpecialEffectsEvent;
+import net.minecraftforge.client.event.RegisterGuiOverlaysEvent;
+import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,9 +59,6 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.slf4j.Logger;
-
-import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
 
 @Mod(PenumbraPhantasm.MODID)
 public class PenumbraPhantasm {
