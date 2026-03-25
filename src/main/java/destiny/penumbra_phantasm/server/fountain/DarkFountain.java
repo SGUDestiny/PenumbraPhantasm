@@ -242,8 +242,6 @@ public class DarkFountain {
                 this.animationTimer++;
             }
 
-            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(fountainPos)), new ClientBoundSingleFountainData(this));
-
             if (!isDarkWorld(fountainDimension) && level instanceof ServerLevel serverLevel) {
                 tickRoomFill(serverLevel);
                 tickTransportTickers(serverLevel);
@@ -278,6 +276,8 @@ public class DarkFountain {
                 }
             }
         }
+
+        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(level::dimension), new ClientBoundSingleFountainData(this));
     }
 
     private void tickRoomFill(ServerLevel level) {
