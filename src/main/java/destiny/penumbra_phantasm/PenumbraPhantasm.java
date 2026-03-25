@@ -7,6 +7,7 @@ import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
 import destiny.penumbra_phantasm.client.render.overlay.DarknessLandOverlay;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
 import destiny.penumbra_phantasm.client.render.model.*;
+import destiny.penumbra_phantasm.client.render.overlay.LocationTitleOverlay;
 import destiny.penumbra_phantasm.client.render.particle.*;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
@@ -94,6 +95,7 @@ public class PenumbraPhantasm {
         public static void registerOverlays(RegisterGuiOverlaysEvent event) {
             event.registerAboveAll("fountain_darkness", FountainDarknessOverlay.OVERLAY);
             event.registerAboveAll("darkness_land", DarknessLandOverlay.OVERLAY);
+            event.registerAboveAll("location_title", LocationTitleOverlay.OVERLAY);
         }
 
         @SubscribeEvent

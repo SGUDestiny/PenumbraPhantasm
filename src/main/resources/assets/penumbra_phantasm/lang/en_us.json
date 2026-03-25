@@ -119,6 +119,14 @@
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "TRUST: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "THE SOUL WITHIN REJECTS YOU.",
 
+  "location.penumbra_phantasm.dark_fountain": "Dark Fountain",
+  "location.penumbra_phantasm.dark_fountain.description": "'The geyser that gives this land form...'",
+
+  "biome.penumbra_phantasm.field_of_hopes_and_dreams": "Field of Hopes and Dreams",
+  "biome.penumbra_phantasm.field_of_hopes_and_dreams.description": "'Where dream and shadow meet...'",
+  "biome.penumbra_phantasm.scarlet_forest": "Scarlet Forest",
+  "biome.penumbra_phantasm.scarlet_forest.description": "'The forest of eternal autumn'",
+
   "screen.penumbra_phantasm.intro.line.1": "A R E    Y O U",
   "screen.penumbra_phantasm.intro.line.2": "T H E R E ?",
   "screen.penumbra_phantasm.intro.line.3": "A R E   W E",

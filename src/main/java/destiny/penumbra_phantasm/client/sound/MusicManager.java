@@ -22,30 +22,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MusicManager {
-    private static final MusicManager INSTANCE = new MusicManager();
-    private static final float MUSIC_VOLUME = 0.2F;
-    private static final double FOUNTAIN_MUSIC_RANGE = 24.0;
+    public static final MusicManager INSTANCE = new MusicManager();
+    public static final float MUSIC_VOLUME = 0.2F;
+    public static final double FOUNTAIN_MUSIC_RANGE = 24.0;
 
-    private final Minecraft minecraft = Minecraft.getInstance();
-    private final Map<ResourceLocation, BiomeMusic> biomeMusicMap = new HashMap<>();
-    private final RandomSource random = RandomSource.create();
-    private boolean initialized = false;
-
-    @Nullable
-    private ManagedMusicSound currentSound;
-    @Nullable
-    private SoundEvent currentSoundEvent;
-    private MusicPriority currentPriority = MusicPriority.BIOME;
-
-    private State state = State.SILENT;
-    private int waitTimer = 0;
-    private int fadeInTicks = 0;
-    private boolean currentLooping = true;
+    public final Minecraft minecraft = Minecraft.getInstance();
+    public final Map<ResourceLocation, BiomeMusic> biomeMusicMap = new HashMap<>();
+    public final RandomSource random = RandomSource.create();
+    public boolean initialized = false;
 
     @Nullable
-    private SoundEvent pendingSoundEvent;
-    private MusicPriority pendingPriority = MusicPriority.BIOME;
-    private boolean pendingLooping = true;
+    public ManagedMusicSound currentSound;
+    @Nullable
+    public SoundEvent currentSoundEvent;
+    public MusicPriority currentPriority = MusicPriority.BIOME;
+
+    public State state = State.SILENT;
+    public int waitTimer = 0;
+    public int fadeInTicks = 0;
+    public boolean currentLooping = true;
+
+    @Nullable
+    public SoundEvent pendingSoundEvent;
+    public MusicPriority pendingPriority = MusicPriority.BIOME;
+    public boolean pendingLooping = true;
 
     public static MusicManager getInstance() {
         return INSTANCE;
