@@ -53,7 +53,7 @@ public class GameRendererMixin
 			int ticker = mc.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION)
 					.resolve().map(c -> c.darknessOverlayTicker).orElse(0);
 			if (ticker > 0) {
-				fountainAlpha = Math.min(Mth.lerp(ticker / 100f, 0f, 3f), 2.25f);
+				fountainAlpha = Math.min(Mth.lerp(ticker / 100f, 0f, 3f), 2.5f);
 			}
 		}
 
