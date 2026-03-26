@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.network.ServerBoundDarknessFallPacket;
+import destiny.penumbra_phantasm.server.network.ClientboundPacketHandler;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
@@ -110,6 +111,7 @@ public class DarknessFallScreen extends Screen {
     }
 
     public void closeScreen() {
+        ClientboundPacketHandler.fountainTransitioning = true;
         onFinished.run();
         Minecraft.getInstance().getSoundManager().stop();
         PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));

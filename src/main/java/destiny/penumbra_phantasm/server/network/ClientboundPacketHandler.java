@@ -13,10 +13,14 @@ import net.minecraft.world.level.Level;
 public class ClientboundPacketHandler
 {
 	public static float transportVeilProgress = 0f;
+	public static boolean fountainTransitioning = false;
 
 	public static void updateTransportVeil(float progress)
 	{
 		transportVeilProgress = progress;
+		if (progress >= 0.95f) {
+			fountainTransitioning = true;
+		}
 	}
 
 	public static void openIntroScreen(BlockPos pos, ResourceKey<Level> dim)

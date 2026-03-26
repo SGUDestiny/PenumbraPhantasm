@@ -8,6 +8,7 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.client.sound.MusicManager;
+import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -25,6 +26,11 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
+import destiny.penumbra_phantasm.server.network.ClientboundPacketHandler;
+import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
+import net.minecraft.client.gui.screens.ProgressScreen;
+import net.minecraft.client.gui.screens.ReceivingLevelScreen;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,6 +40,9 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
+
+	private static boolean wasOnLoadingScreen = false;
+	private static int postLoadGraceTicks = 0;
 
 	@SubscribeEvent
 	public static void levelRender(RenderLevelStageEvent event)
@@ -118,6 +127,31 @@ public class ClientEvents {
 	{
 		if(event.phase == TickEvent.Phase.END)
 		{
+			if (ClientboundPacketHandler.fountainTransitioning) {
+				Screen screen = Minecraft.getInstance().screen;
+				boolean isLoadingScreen = screen instanceof ReceivingLevelScreen ||
+										  screen instanceof ProgressScreen ||
+										  screen instanceof GenericDirtMessageScreen;
+				if (isLoadingScreen) {
+					wasOnLoadingScreen = true;
+					postLoadGraceTicks = 0;
+				} else if (wasOnLoadingScreen && screen == null) {
+					wasOnLoadingScreen = false;
+					postLoadGraceTicks = 5;
+				}
+				if (!wasOnLoadingScreen && postLoadGraceTicks > 0) {
+					postLoadGraceTicks--;
+					LazyOptional<ScreenAnimationCapability> lazyAnim = Minecraft.getInstance().player != null
+							? Minecraft.getInstance().player.getCapability(CapabilityRegistry.SCREEN_ANIMATION)
+							: LazyOptional.empty();
+					boolean tickerStarted = lazyAnim.resolve().map(c -> c.darknessLandTicker >= 0).orElse(false);
+					if (postLoadGraceTicks == 0 || tickerStarted) {
+						ClientboundPacketHandler.fountainTransitioning = false;
+						postLoadGraceTicks = 0;
+					}
+				}
+			}
+
 			LocalPlayer player = Minecraft.getInstance().player;
 			ClientLevel level = Minecraft.getInstance().level;
 			if (player == null) return;
@@ -207,4 +241,5 @@ public class ClientEvents {
 			}
 		}
 	}
+
 }
