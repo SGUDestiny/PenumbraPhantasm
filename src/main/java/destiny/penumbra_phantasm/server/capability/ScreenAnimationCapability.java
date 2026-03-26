@@ -17,6 +17,8 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static destiny.penumbra_phantasm.client.sound.MusicManager.FOUNTAIN_MUSIC_RANGE;
@@ -35,6 +37,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     public String previousLocation = "";
     public String currentLocation = "";
     public int titleAlphaTicker = -1;
+    public List<String> visitedLocations = new ArrayList<>();
 
     public void tick(Level level, Player player) {
         if (darknessLandTicker >= 40) {
@@ -68,8 +71,18 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         if (!previousLocation.equals(currentLocation)) {
             boolean darkWorldLandFinished = darknessLandTicker < 0 || darknessLandTicker >= 20;
             boolean fountainTransitionFinished = darknessOverlayTicker <= 0;
-            if (darkWorldLandFinished && fountainTransitionFinished) {
+            boolean notVisited = true;
+
+            for (String visitedLocation : visitedLocations) {
+                if (visitedLocation.equals(currentLocation)) {
+                    notVisited = false;
+                    break;
+                }
+            }
+
+            if (darkWorldLandFinished && fountainTransitionFinished && notVisited) {
                 previousLocation = currentLocation;
+                visitedLocations.add(currentLocation);
                 titleAlphaTicker = 0;
             }
         }
