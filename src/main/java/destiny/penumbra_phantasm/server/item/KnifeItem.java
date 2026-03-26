@@ -196,15 +196,17 @@ public class KnifeItem extends SwordItem {
                         }
                     }
 
-                    //Animate particles
-                    animateParticles(tag, level, makingTick);
-
                     //After particles, make fountain
                     if (makingTick >= 14) {
-                        if (level instanceof ServerLevel serverLevel) {
-                            makeFountain(tag, player, serverLevel, stack);
+                        if (!level.isClientSide()) {
+                            makeFountain(tag, player, level, stack);
                         }
-                    } else {
+                    }
+                    if (makingTick > 0 && makingTick < 14) {
+                        //Animate particles
+                        animateParticles(tag, level, makingTick);
+                    }
+                    if (makingTick < 14) {
                         //Keep ticking up as long as ticker isn't or above 14
                         makingTick++;
                         tag.putInt(MAKING_TICK, makingTick);
@@ -247,7 +249,7 @@ public class KnifeItem extends SwordItem {
         level.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), particleX, particleY, particleZ, 0, 0, 0);
     }
 
-    private void makeFountain(CompoundTag tag, Player player, ServerLevel level, ItemStack stack) {
+    private void makeFountain(CompoundTag tag, Player player, Level level, ItemStack stack) {
         //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
         if (!player.onGround() || !level.getBlockState(player.getOnPos()).isSolidRender(level, player.getOnPos())
                 || level.getBlockState(player.getOnPos().above()) != Blocks.AIR.defaultBlockState()) {
@@ -308,18 +310,20 @@ public class KnifeItem extends SwordItem {
         }
 
         //Create dark world fountain position in target level, account for worldgen
-        BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
+        BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, lightFountainPos);
 
         //Add light world fountain to the capability
         cap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>());
-        //Force load light world fountain chunk to pre-generate it
-        ChunkPos lightFountainChunk = level.getChunk(player.blockPosition()).getPos();
-        level.setChunkForced(lightFountainChunk.x, lightFountainChunk.z, true);
 
         //Create new dark room instance for the fountain room
         DarkRoom fountainRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
         AABB roomBox = getRoomAABBFromPositions(roomResult.getPositions());
         Set<BlockPos> positionSet = new HashSet<>(roomResult.getPositions());
+
+        //Get light world fountain from the capability
+        DarkFountain lightFountain = cap.darkFountains.get(lightFountainPos);
+        //Add fountain room to the fountain
+        lightFountain.addRoom(fountainRoom);
 
         //For every entity in fountain room, add to fountain's transport tickers
         for (Entity ent : level.getEntitiesOfClass(Entity.class, roomBox)) {
@@ -328,16 +332,10 @@ public class KnifeItem extends SwordItem {
             }
         }
 
-        //Get light world fountain from the capability
-        DarkFountain lightFountain = cap.darkFountains.get(lightFountainPos);
-
-        //Add fountain room to the fountain
-        lightFountain.addRoom(fountainRoom);
-
         //Add dark world fountain to the capability
         cap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>());
         //Force load dark world fountain chunk to pre-generate it
-        ChunkPos darkFountainChunk = targetLevel.getChunk(player.blockPosition()).getPos();
+        ChunkPos darkFountainChunk = targetLevel.getChunk(darkFountainPos).getPos();
         targetLevel.setChunkForced(darkFountainChunk.x, darkFountainChunk.z, true);
 
         //If player is not creative, put cooldown on knife

@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.event;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.util.Mth;
 import org.lwjgl.opengl.GL11;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
@@ -72,7 +73,7 @@ public class ClientEvents {
 					{
 						float animationTime = fountain.animationTimer;
 
-						if (level.dimension() != ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))) {
+						if (!DarkWorldUtil.isDarkWorld(level)) {
 							stack.pushPose();
 							stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
 							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
