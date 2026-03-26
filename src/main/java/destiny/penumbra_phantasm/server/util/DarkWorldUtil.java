@@ -22,6 +22,9 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.RandomState;
 import org.joml.Random;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DarkWorldUtil
 {
 	public static TagKey<Block> getBlockTag(ResourceLocation location)
@@ -67,6 +70,23 @@ public class DarkWorldUtil
 
 		ServerLevel level = InfiniverseAPI.get().getOrCreateLevel(server, key, () -> stem);
 		return level;
+	}
+
+	public static boolean isDarkWorld(Level level)
+	{
+		return level.dimension().location().getPath().contains("dark_world");
+	}
+
+	public static List<ServerLevel> getAllDarkWorlds(MinecraftServer server)
+	{
+		List<ServerLevel> darkWorlds = new ArrayList<>();
+		for(ServerLevel level : server.getAllLevels())
+		{
+			if(level.dimension().location().getPath().contains("dark_world"))
+				darkWorlds.add(level);
+		}
+
+		return darkWorlds;
 	}
 
 }
