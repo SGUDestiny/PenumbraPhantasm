@@ -1,5 +1,8 @@
 package destiny.penumbra_phantasm;
 
+import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
+import destiny.penumbra_phantasm.server.registry.*;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -27,18 +30,6 @@ import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
-import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
-import destiny.penumbra_phantasm.server.registry.BlockRegistry;
-import destiny.penumbra_phantasm.server.registry.CreativeTabRegistry;
-import destiny.penumbra_phantasm.server.registry.EffectRegistry;
-import destiny.penumbra_phantasm.server.registry.EntityRegistry;
-import destiny.penumbra_phantasm.server.registry.FeatureRegistry;
-import destiny.penumbra_phantasm.server.registry.FluidRegistry;
-import destiny.penumbra_phantasm.server.registry.FluidTypeRegistry;
-import destiny.penumbra_phantasm.server.registry.ItemRegistry;
-import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
-import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
-import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
@@ -86,7 +77,13 @@ public class PenumbraPhantasm {
         FeatureRegistry.FOLIAGES.register(modEventBus);
         FeatureRegistry.TRUNKS.register(modEventBus);
         FeatureRegistry.FEATURES.register(modEventBus);
+        ChunkGeneratorRegistry.CHUNK_GENERATORS.register(modEventBus);
         PacketHandlerRegistry.register();
+
+        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) ->
+            {
+                event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, DarkWorldType.CODEC);
+            });
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 

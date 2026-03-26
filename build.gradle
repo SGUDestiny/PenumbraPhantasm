@@ -13,6 +13,9 @@ buildscript {
             url = "https://maven.blamejared.com/"
         }
         maven {
+            url "https://cursemaven.com"
+        }
+        maven {
             // location of a maven mirror for JEI files, as a fallback
             name = "ModMaven"
             url = "https://modmaven.dev"
@@ -79,7 +82,7 @@ minecraft {
     // However, it must be at "META-INF/accesstransformer.cfg" in the final mod jar to be loaded by Forge.
     // This default location is a best practice to automatically put the file in the right place in the final jar.
     // See https://docs.minecraftforge.net/en/latest/advanced/accesstransformers/ for more information.
-    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -196,6 +199,8 @@ dependencies {
     implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.4.1")) {
         jarJar.ranged(it, "[0.4.1,)")
     }
+
+    implementation fg.deobf("curse.maven:infiniverse-568341:4597298")
 
     //implementation fg.deobf("curse.maven:epic-fight-mod-405076:4922094")
 

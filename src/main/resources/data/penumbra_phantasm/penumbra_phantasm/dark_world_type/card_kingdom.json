@@ -1,0 +1,36 @@
+{
+  "block_tag": "minecraft:beds",
+  "block_amount": 2,
+  "noise_settings": "penumbra_phantasm:dark_depths",
+  "dimension_type": "penumbra_phantasm:dark_depths",
+
+  "biome_source": {
+    "type": "minecraft:multi_noise",
+    "biomes": [
+      {
+        "biome": "penumbra_phantasm:field_of_hopes_and_dreams",
+        "parameters": {
+          "temperature": 0,
+          "humidity": 0,
+          "continentalness": 0,
+          "erosion": 0,
+          "weirdness": 0,
+          "depth": 0,
+          "offset": 0
+        }
+      },
+      {
+        "biome": "penumbra_phantasm:scarlet_forest",
+        "parameters": {
+          "temperature": 0.5,
+          "humidity": 0,
+          "continentalness": 0,
+          "erosion": 0,
+          "weirdness": 0,
+          "depth": 0,
+          "offset": 0
+        }
+      }
+    ]
+  }
+}

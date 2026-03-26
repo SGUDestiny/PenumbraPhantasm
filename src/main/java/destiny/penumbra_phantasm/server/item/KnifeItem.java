@@ -4,12 +4,14 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.fountain.RoomScanner;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
 import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
 import dev.kosmx.playerAnim.api.layered.ModifierLayer;
@@ -17,6 +19,7 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -152,6 +155,15 @@ public class KnifeItem extends SwordItem {
 
                             ChunkPos fountainChunk = level.getChunk(player.blockPosition()).getPos();
                             targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
+
+                            Optional<Holder.Reference<DarkWorldType>> randomType = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY).getRandom(level.random);
+                            if(randomType.isPresent())
+                            {
+                                DarkWorldType type = randomType.get().get();
+                                ServerLevel newLevel = DarkWorldUtil.createDarkWorld(level.getServer(), lightFountainPos, level.dimension(), type);
+
+                                System.out.println("new dimension - " + newLevel.dimension().location().getPath() + " - " + newLevel.dimensionTypeId().location().getPath());
+                            }
 
                             BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
 
