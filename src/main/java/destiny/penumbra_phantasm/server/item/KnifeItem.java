@@ -263,11 +263,11 @@ public class KnifeItem extends SwordItem {
         //Create light world fountain position from player feet position
         BlockPos lightFountainPos = player.getOnPos().above();
 
-        //Get fountain capability
-        DarkFountainCapability cap;
-        LazyOptional<DarkFountainCapability> lazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
-        if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
-            cap = lazyCapability.resolve().get();
+        //Get light fountain capability
+        DarkFountainCapability lightCap;
+        LazyOptional<DarkFountainCapability> lightLazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if(lightLazyCapability.isPresent() && lightLazyCapability.resolve().isPresent())
+            lightCap = lightLazyCapability.resolve().get();
         else {
             // If capability isn't present
             sendErrorMessage(player);
@@ -309,11 +309,22 @@ public class KnifeItem extends SwordItem {
             return;
         }
 
+        //Get light fountain capability
+        DarkFountainCapability darkCap;
+        LazyOptional<DarkFountainCapability> darkLazyCapability = targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if(darkLazyCapability.isPresent() && darkLazyCapability.resolve().isPresent())
+            darkCap = darkLazyCapability.resolve().get();
+        else {
+            // If capability isn't present
+            sendErrorMessage(player);
+            return;
+        }
+
         //Create dark world fountain position in target level, account for worldgen
         BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, lightFountainPos);
 
         //Add light world fountain to the capability
-        cap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>());
+        lightCap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>());
 
         //Create new dark room instance for the fountain room
         DarkRoom fountainRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
@@ -321,7 +332,7 @@ public class KnifeItem extends SwordItem {
         Set<BlockPos> positionSet = new HashSet<>(roomResult.getPositions());
 
         //Get light world fountain from the capability
-        DarkFountain lightFountain = cap.darkFountains.get(lightFountainPos);
+        DarkFountain lightFountain = lightCap.darkFountains.get(lightFountainPos);
         //Add fountain room to the fountain
         lightFountain.addRoom(fountainRoom);
 
@@ -333,7 +344,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //Add dark world fountain to the capability
-        cap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>());
+        darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>());
         //Force load dark world fountain chunk to pre-generate it
         ChunkPos darkFountainChunk = targetLevel.getChunk(darkFountainPos).getPos();
         targetLevel.setChunkForced(darkFountainChunk.x, darkFountainChunk.z, true);

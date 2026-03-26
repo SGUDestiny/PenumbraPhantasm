@@ -6,6 +6,7 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -25,7 +26,7 @@ public class LocationTitleOverlay {
 
         if (player == null) return;
 
-        if (!player.level().dimension().location().equals(new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"))) return;
+        if (!DarkWorldUtil.isDarkWorld(player.level())) return;
 
         //Getting capability
         ScreenAnimationCapability cap;
