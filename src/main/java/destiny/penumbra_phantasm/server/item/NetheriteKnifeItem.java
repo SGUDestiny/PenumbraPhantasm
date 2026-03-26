@@ -13,8 +13,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class NetheriteKnifeItem extends KnifeItem {
-    public NetheriteKnifeItem(Tier tier, int damage, float speed, boolean isSingleUse, boolean needsNetherStar, Properties properties) {
-        super(tier, damage, speed, isSingleUse, needsNetherStar, properties);
+    public NetheriteKnifeItem(Tier tier, int damage, float speed, boolean isSingleUse, Properties properties) {
+        super(tier, damage, speed, isSingleUse, properties);
     }
 
     @Override

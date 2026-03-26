@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.RandomState;
 import org.joml.Random;
@@ -62,11 +61,11 @@ public class DarkWorldUtil
 
 		long seed = Random.newSeed();
 
-		RandomState randomState = RandomState.create(server.registryAccess().asGetterLookup(), getNoiseGeneratorKey(type.getNoiseSettings()), seed);
-		ChunkGenerator chunkGenerator = new SeededNoiseBasedChunkGenerator(type.getSource(),
-				getNoiseGenerator(server, type.getNoiseSettings()), randomState);
+		RandomState randomState = RandomState.create(server.registryAccess().asGetterLookup(), getNoiseGeneratorKey(type.noiseSettings()), seed);
+		ChunkGenerator chunkGenerator = new SeededNoiseBasedChunkGenerator(type.source(),
+				getNoiseGenerator(server, type.noiseSettings()), randomState);
 
-		LevelStem stem = new LevelStem(getDimensionType(server, type.getDimensionType()), chunkGenerator);
+		LevelStem stem = new LevelStem(getDimensionType(server, type.dimensionType()), chunkGenerator);
 
 		ServerLevel level = InfiniverseAPI.get().getOrCreateLevel(server, key, () -> stem);
 		return level;

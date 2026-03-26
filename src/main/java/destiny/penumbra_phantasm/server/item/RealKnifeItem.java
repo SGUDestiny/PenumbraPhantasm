@@ -14,8 +14,8 @@ import net.minecraftforge.common.ForgeMod;
 public class RealKnifeItem extends KnifeItem {
     public int damage;
 
-    public RealKnifeItem(Tier tier, float speed, int damage, boolean isSingleUse, boolean needsNetherStar, Properties properties) {
-        super(tier, damage, speed, isSingleUse, needsNetherStar, properties);
+    public RealKnifeItem(Tier tier, float speed, int damage, boolean isSingleUse, Properties properties) {
+        super(tier, damage, speed, isSingleUse, properties);
         this.damage = damage;
     }
 

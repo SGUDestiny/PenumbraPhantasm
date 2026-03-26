@@ -14,8 +14,8 @@ import java.util.function.Consumer;
 public class BlackKnifeItem extends KnifeItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
-    public BlackKnifeItem(Tier tier, int damage, float speed, boolean isSingleUse, boolean needsNetherStar, Properties properties) {
-        super(tier, damage, speed, isSingleUse, needsNetherStar, properties);
+    public BlackKnifeItem(Tier tier, int damage, float speed, boolean isSingleUse, Properties properties) {
+        super(tier, damage, speed, isSingleUse, properties);
     }
 
     @Override

@@ -1,63 +1,77 @@
 package destiny.penumbra_phantasm.server.fountain;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
+import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 public class RoomScanner {
 
-    public static RoomScanResult scan(Level level, BlockPos seedPos, int maxVolume, boolean includeDarkness) {
-        return scan(level, seedPos, maxVolume, includeDarkness, false);
+    public static RoomScanResult scan(Level level, BlockPos fountainPos, int maxVolume, boolean includeDarkness) {
+        return scan(level, fountainPos, maxVolume, includeDarkness, false);
     }
 
-    public static RoomScanResult scan(Level level, BlockPos seedPos, int maxVolume, boolean includeDarkness, boolean openDoorsAsWalls) {
+    public static RoomScanResult scan(Level level, BlockPos fountainPos, int maxVolume, boolean includeDarkness, boolean openDoorsAsWalls) {
         List<BlockPos> positions = new ArrayList<>();
-        Set<BlockPos> visited = new HashSet<>();
+        List<BlockPos> keyBlockPositions = new ArrayList<>();
+        Set<BlockPos> visitedPositions = new HashSet<>();
         Set<BlockPos> doorPositions = new HashSet<>();
         Queue<BlockPos> queue = new LinkedList<>();
+        Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
 
-        queue.add(seedPos);
-        visited.add(seedPos);
+        queue.add(fountainPos);
+        visitedPositions.add(fountainPos);
 
         while (!queue.isEmpty()) {
             if (positions.size() > maxVolume) {
                 return RoomScanResult.failure();
             }
 
-            BlockPos current = queue.poll();
-            positions.add(current);
+            BlockPos currentPos = queue.poll();
+            positions.add(currentPos);
 
             for (Direction direction : Direction.values()) {
-                BlockPos neighbor = current.relative(direction);
-                if (visited.contains(neighbor)) continue;
+                BlockPos neighborPos = currentPos.relative(direction);
 
-                BlockState state = level.getBlockState(neighbor);
+                if (visitedPositions.contains(neighborPos)) continue;
+
+                BlockState state = level.getBlockState(neighborPos);
 
                 if (state.is(Blocks.AIR) || state.is(Blocks.CAVE_AIR) || state.is(Blocks.VOID_AIR)) {
-                    visited.add(neighbor);
-                    queue.add(neighbor);
+                    visitedPositions.add(neighborPos);
+                    queue.add(neighborPos);
                 } else if (includeDarkness && state.getBlock() instanceof DarknessBlock) {
-                    visited.add(neighbor);
-                    queue.add(neighbor);
+                    visitedPositions.add(neighborPos);
+                    queue.add(neighborPos);
                 } else if (state.getBlock() instanceof DoorBlock) {
                     boolean open = state.getValue(DoorBlock.OPEN);
+
                     if (open && !openDoorsAsWalls) {
-                        visited.add(neighbor);
-                        queue.add(neighbor);
+                        visitedPositions.add(neighborPos);
+                        queue.add(neighborPos);
                     } else {
-                        doorPositions.add(neighbor);
+                        doorPositions.add(neighborPos);
+                    }
+                } else {
+                    for (Map.Entry<ResourceKey<DarkWorldType>, DarkWorldType> darkWorldTypeEntry : darkWorldTypeRegistry.entrySet()) {
+                        DarkWorldType darkWorldType = darkWorldTypeEntry.getValue();
+                        TagKey<Block> currentTag = DarkWorldUtil.getBlockTag(darkWorldType.blockTag());
+
+                        if (state.is(currentTag)) {
+                            visitedPositions.add(neighborPos);
+                            keyBlockPositions.add(neighborPos);
+                            queue.add(neighborPos);
+                        }
                     }
                 }
             }
@@ -69,7 +83,7 @@ public class RoomScanner {
 
         positions.sort(Comparator.comparingInt((BlockPos pos) -> pos.getY()).reversed());
 
-        return RoomScanResult.success(positions, doorPositions);
+        return RoomScanResult.success(positions, keyBlockPositions, doorPositions);
     }
 
     public static boolean hasBreach(Level level, Set<BlockPos> roomPositions, Set<BlockPos> allRoomPositions) {
@@ -87,28 +101,38 @@ public class RoomScanner {
         return false;
     }
 
-
     public static class RoomScanResult {
         private final List<BlockPos> positions;
+        private final List<BlockPos> keyBlockPositions;
         private final Set<BlockPos> doorPositions;
         private final boolean valid;
 
-        private RoomScanResult(List<BlockPos> positions, Set<BlockPos> doorPositions, boolean valid) {
+        private RoomScanResult(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, boolean valid) {
             this.positions = positions;
+            this.keyBlockPositions = keyBlockPositions;
             this.doorPositions = doorPositions;
             this.valid = valid;
         }
 
-        public static RoomScanResult success(List<BlockPos> positions, Set<BlockPos> doorPositions) {
-            return new RoomScanResult(positions, doorPositions, true);
+        public static RoomScanResult success(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions) {
+            return new RoomScanResult(positions, keyBlockPositions, doorPositions, true);
         }
 
         public static RoomScanResult failure() {
-            return new RoomScanResult(Collections.emptyList(), Collections.emptySet(), false);
+            return new RoomScanResult(Collections.emptyList(), Collections.emptyList(), Collections.emptySet(), false);
         }
 
-        public List<BlockPos> getPositions() { return positions; }
-        public Set<BlockPos> getDoorPositions() { return doorPositions; }
-        public boolean isValid() { return valid; }
+        public List<BlockPos> getPositions() {
+            return positions;
+        }
+        public List<BlockPos> getKeyBlockPositions() {
+            return keyBlockPositions;
+        }
+        public Set<BlockPos> getDoorPositions() {
+            return doorPositions;
+        }
+        public boolean isValid() {
+            return valid;
+        }
     }
 }

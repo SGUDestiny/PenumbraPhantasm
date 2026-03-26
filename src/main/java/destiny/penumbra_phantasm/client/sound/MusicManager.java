@@ -6,6 +6,7 @@ import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -75,7 +76,7 @@ public class MusicManager {
             return;
         }
 
-        if (!DarkFountain.isDarkWorldStatic(level.dimension())) {
+        if (!DarkWorldUtil.isDarkWorld(level)) {
             stopImmediately();
             return;
         }

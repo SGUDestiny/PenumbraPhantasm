@@ -19,13 +19,13 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
@@ -39,6 +39,7 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
@@ -48,13 +49,18 @@ import net.minecraftforge.common.util.LazyOptional;
 import java.util.*;
 
 public class KnifeItem extends SwordItem {
+    public static final String MAKING_TICK = "makingTick";
+    public static final String ORIGIN_YAW = "originYaw";
+    public static final String ORIGIN_X = "originX";
+    public static final String ORIGIN_Y = "originY";
+    public static final String ORIGIN_Z = "originZ";
+
     public boolean isSingleUse;
-    public boolean needsNetherStar;
     private final int damage;
-    public KnifeItem(Tier tier, int damage, float speed, boolean isSingleUse, boolean needsNetherStar, Properties properties) {
+
+    public KnifeItem(Tier tier, int damage, float speed, boolean isSingleUse, Properties properties) {
         super(tier, damage, speed, properties);
         this.isSingleUse = isSingleUse;
-        this.needsNetherStar = needsNetherStar;
         this.damage = damage;
     }
 
@@ -77,47 +83,77 @@ public class KnifeItem extends SwordItem {
         ItemStack stack = player.getItemInHand(hand);
         CompoundTag tag = stack.getOrCreateTag();
 
-        if (!player.onGround() || DarkFountain.isDarkWorldStatic(level.dimension())|| !level.getBlockState(player.getOnPos()).isSolidRender(level, player.getOnPos())
-                || level.getBlockState(player.getOnPos().above()) != Blocks.AIR.defaultBlockState()) {
+        //Cancel making a fountain in dark worlds
+        if (DarkWorldUtil.isDarkWorld(level)) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_inside_dark_world"), true);
             return InteractionResultHolder.fail(stack);
         }
 
+        //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
+        if (!player.onGround() || !level.getBlockState(player.getOnPos()).isSolidRender(level, player.getOnPos())
+                || level.getBlockState(player.getOnPos().above()) != Blocks.AIR.defaultBlockState()) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
+            return InteractionResultHolder.fail(stack);
+        }
+
+        //Cancel if player isn't inside a valid room
         RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, player.getOnPos().above(), Config.maxRoomVolume, false);
         if (!roomResult.isValid()) {
-            player.displayClientMessage(Component.literal("The room is unsealed or too big"), true);
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_unsealed_or_too_big"), true);
             return InteractionResultHolder.fail(stack);
         }
 
+        //Count blocks for every dark world type's block tag, if enough, select that type as final
+        Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
+        DarkWorldType finalDarkWorldType = null;
+        for (Map.Entry<ResourceKey<DarkWorldType>, DarkWorldType> darkWorldTypeEntry : darkWorldTypeRegistry.entrySet()) {
+            DarkWorldType darkWorldType = darkWorldTypeEntry.getValue();
+            TagKey<Block> currentTag = DarkWorldUtil.getBlockTag(darkWorldType.blockTag());
+            int blockCount = 0;
+
+            for (BlockPos keyBlockPos : roomResult.getKeyBlockPositions()) {
+                if (level.getBlockState(keyBlockPos).is(currentTag)) {
+                    blockCount++;
+                }
+            }
+
+            if (blockCount >= darkWorldType.blockAmount()) {
+                finalDarkWorldType = darkWorldType;
+            }
+        }
+        //If not enough key blocks are present, cancel
+        if (finalDarkWorldType == null) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_not_enough_key_blocks"), true);
+            return InteractionResultHolder.fail(stack);
+        }
+
+        //Get fountain capability
         DarkFountainCapability cap;
         LazyOptional<DarkFountainCapability> lazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
         if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
             cap = lazyCapability.resolve().get();
-        else return InteractionResultHolder.fail(stack); // If capability isn't present
+        else {
+            // If capability isn't present
+            sendErrorMessage(player);
+            return InteractionResultHolder.fail(stack);
+        }
 
+        //Cancel if there is another dark fountain nearby
         for(Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet())
         {
             if(entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 256)
             {
-                player.displayClientMessage(Component.literal("Too close to another Dark Fountain"), true);
+                player.displayClientMessage(Component.translatable("making_fountain_another_fountain_nearby"), true);
                 return InteractionResultHolder.fail(stack); // If fountain within 16 blocks of this(16 squared is 256)
             }
         }
 
-        if (needsNetherStar && tag.getBoolean("determination")) {
-            return InteractionResultHolder.fail(stack);
-        }
-        tag.putInt("tick", 0);
-
-        float initYaw = player.getYHeadRot() * -1;
-        double initX = player.getX();
-        double initY = player.getEyeY();
-        double initZ = player.getZ();
-        tag.putFloat("initYaw", initYaw);
-        tag.putDouble("initX", initX);
-        tag.putDouble("initY", initY);
-        tag.putDouble("initZ", initZ);
-
-        //player.push(0, 0.6, 0);
+        //Cancel checks passed, begin fountain making
+        tag.putInt(MAKING_TICK, 0);
+        tag.putFloat(ORIGIN_YAW, player.getYHeadRot() * -1);
+        tag.putDouble(ORIGIN_X, player.getX());
+        tag.putDouble(ORIGIN_Y, player.getEyeY());
+        tag.putDouble(ORIGIN_Z, player.getZ());
 
         return InteractionResultHolder.sidedSuccess(stack, false);
     }
@@ -134,78 +170,17 @@ public class KnifeItem extends SwordItem {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean b) {
             if (entity instanceof Player player) {
                 CompoundTag tag = stack.getOrCreateTag();
-                if (!tag.contains("tick")) {
-                    tag.putInt("tick", -2);
+
+                //Failsafe if tag isn't present
+                if (!tag.contains(MAKING_TICK)) {
+                    tag.putInt(MAKING_TICK, -2);
                 }
 
-                int tick = tag.getInt("tick");
+                int makingTick = tag.getInt(MAKING_TICK);
 
-                if (tick >= 14) {
-                    tag.putInt("tick", -2);
-                    if (!level.getBlockState(player.getOnPos()).isAir()) {
-                        if (!level.isClientSide()) {
-                            BlockPos lightFountainPos = player.getOnPos().above();
-
-                            RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, lightFountainPos, Config.maxRoomVolume, false);
-
-                            ResourceKey<Level> finalTarget = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"));
-                            ServerLevel targetLevel = level.getServer().getLevel(finalTarget);
-                            if (targetLevel == null)
-                                return;
-
-                            ChunkPos fountainChunk = level.getChunk(player.blockPosition()).getPos();
-                            targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
-
-                            Optional<Holder.Reference<DarkWorldType>> randomType = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY).getRandom(level.random);
-                            if(randomType.isPresent())
-                            {
-                                DarkWorldType type = randomType.get().get();
-                                ServerLevel newLevel = DarkWorldUtil.createDarkWorld(level.getServer(), lightFountainPos, level.dimension(), type);
-
-                                System.out.println("new dimension - " + newLevel.dimension().location().getPath() + " - " + newLevel.dimensionTypeId().location().getPath());
-                            }
-
-                            BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
-
-                            level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                                cap.addDarkFountain(level, lightFountainPos, level.dimension(), darkFountainPos, finalTarget, 0, 0, 0, 0, new HashSet<>());
-                                DarkFountain fountain = cap.darkFountains.get(lightFountainPos);
-                                if (fountain != null) {
-                                    DarkRoom initialRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
-                                    ServerLevel serverLevel = (ServerLevel) level;
-                                    AABB roomBox = computeRoomAABB(roomResult.getPositions());
-                                    Set<BlockPos> posSet = new HashSet<>(roomResult.getPositions());
-                                    for (Entity ent : serverLevel.getEntitiesOfClass(Entity.class, roomBox)) {
-                                        if (posSet.contains(ent.blockPosition()) || posSet.contains(ent.blockPosition().above())) {
-                                            initialRoom.getTransportTickers().put(ent.getUUID(), 0);
-                                        }
-                                    }
-                                    fountain.addRoom(initialRoom);
-                                }
-                            });
-
-                            targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(
-                                    cap -> cap.addDarkFountain(targetLevel, darkFountainPos,
-                                            targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>()));
-
-                            targetLevel.setChunkForced(fountainChunk.x, fountainChunk.z, false);
-
-                            if (!player.isCreative()) {
-                                player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
-                            }
-
-                            if (needsNetherStar) {
-                                tag.putBoolean("determination", false);
-                            }
-
-                            if (isSingleUse) {
-                                stack.hurtAndBreak(stack.getMaxDamage(), player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
-                            }
-                        }
-                    }
-
-                } else if (tick >= 0) {
-                    if (tick == 0) {
+                if (makingTick >= 0) {
+                    //Play player animation on first tick
+                    if (makingTick == 0) {
                         if (level.isClientSide()) {
                             //Get the animation for that player
                             ModifierLayer<IAnimation> animation = (ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData((AbstractClientPlayer) player).get(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"));
@@ -221,62 +196,185 @@ public class KnifeItem extends SwordItem {
                         }
                     }
 
-                    float initYaw = tag.getFloat("initYaw");
-                    double initX = tag.getDouble("initX");
-                    double initY = tag.getDouble("initY");
-                    double initZ = tag.getDouble("initZ");
+                    //Animate particles
+                    animateParticles(tag, level, makingTick);
 
-                    double yawRad = Math.toRadians(initYaw);
-                    double forwardX = Math.sin(yawRad);
-                    double forwardZ = Math.cos(yawRad);
+                    //After particles, make fountain
+                    if (makingTick >= 14) {
+                        if (level instanceof ServerLevel serverLevel) {
+                            makeFountain(tag, player, serverLevel, stack);
+                        }
+                    }
 
-                    // Center: offset in front
-                    double offsetDist = 2.0;
-                    double centerX = initX + forwardX * offsetDist;
-                    double centerY = initY;
-                    double centerZ = initZ + forwardZ * offsetDist;
-
-                    // Row direction: to the right from player perspective
-                    double rowX = -forwardZ;
-                    double rowZ = forwardX;
-
-                    // Spacing
-                    double spacing = 0.5;
-
-                    // Index for left-to-right: -4 to +4
-                    int index = tick - 7;
-                    double offsetAlongRow = index * spacing;
-
-                    // Particle position
-                    double partX = centerX + rowX * offsetAlongRow;
-                    double partY = centerY + (-0.5f + level.getRandom().nextFloat() * 0.5f);
-                    double partZ = centerZ + rowZ * offsetAlongRow;
-
-                    level.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), partX, partY, partZ, 0, 0, 0);
-
-                    tick++;
-                    tag.putInt("tick", tick);
+                    //Keep ticking up as long as ticker equals or above zero
+                    makingTick++;
+                    tag.putInt(MAKING_TICK, makingTick);
                 }
             }
     }
 
-    private static AABB computeRoomAABB(List<BlockPos> positions) {
-        int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+    private void animateParticles(CompoundTag tag, Level level, int tick) {
+        float originYaw = tag.getFloat(ORIGIN_YAW);
+        double originX = tag.getDouble(ORIGIN_X);
+        double originY = tag.getDouble(ORIGIN_Y);
+        double originZ = tag.getDouble(ORIGIN_Z);
+
+        double yawRad = Math.toRadians(originYaw);
+        double forwardX = Math.sin(yawRad);
+        double forwardZ = Math.cos(yawRad);
+
+        //Center with an offset forward from the player
+        double offsetDist = 2.0;
+        double centerX = originX + forwardX * offsetDist;
+        double centerZ = originZ + forwardZ * offsetDist;
+
+        //Row should move to the right from player perspective
+        double rowX = -forwardZ;
+
+        //Spacing between particles
+        double spacing = 0.5;
+
+        //Index for particles [-4;4]
+        int index = tick - 7;
+        double offsetAlongRow = index * spacing;
+
+        //Final particle positioning
+        double particleX = centerX + rowX * offsetAlongRow;
+        double particleY = originY + (-0.5f + level.getRandom().nextFloat() * 0.5f);
+        double particleZ = centerZ + forwardX * offsetAlongRow;
+
+        //Spawn particle
+        level.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), particleX, particleY, particleZ, 0, 0, 0);
+    }
+
+    private void makeFountain(CompoundTag tag, Player player, ServerLevel level, ItemStack stack) {
+        //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
+        if (!player.onGround() || !level.getBlockState(player.getOnPos()).isSolidRender(level, player.getOnPos())
+                || level.getBlockState(player.getOnPos().above()) != Blocks.AIR.defaultBlockState()) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
+            return;
+        }
+
+        //Immediately stop ticking
+        tag.putInt(MAKING_TICK, -2);
+
+        //Create light world fountain position from player feet position
+        BlockPos lightFountainPos = player.getOnPos().above();
+
+        //Get fountain capability
+        DarkFountainCapability cap;
+        LazyOptional<DarkFountainCapability> lazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
+            cap = lazyCapability.resolve().get();
+        else {
+            // If capability isn't present
+            sendErrorMessage(player);
+            return;
+        }
+
+        //Add light world fountain to the capability
+        cap.addDarkFountain(level, lightFountainPos, level.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>());
+        //Force load light world fountain chunk to pre-generate it
+        ChunkPos lightFountainChunk = level.getChunk(player.blockPosition()).getPos();
+        level.setChunkForced(lightFountainChunk.x, lightFountainChunk.z, true);
+
+        //Scan if the room is still valid, get result with all blocks
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, lightFountainPos, Config.maxRoomVolume, false);
+
+        //Create new dark room instance for the fountain room
+        DarkRoom fountainRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
+        AABB roomBox = getRoomAABBFromPositions(roomResult.getPositions());
+        Set<BlockPos> positionSet = new HashSet<>(roomResult.getPositions());
+
+        //For every entity in fountain room, add to fountain's transport tickers
+        for (Entity ent : level.getEntitiesOfClass(Entity.class, roomBox)) {
+            if (positionSet.contains(ent.blockPosition()) || positionSet.contains(ent.blockPosition().above())) {
+                fountainRoom.getTransportTickers().put(ent.getUUID(), 0);
+            }
+        }
+
+        //Get light world fountain from the capability
+        DarkFountain lightFountain = cap.darkFountains.get(lightFountainPos);
+
+        //Add fountain room to the fountain
+        lightFountain.addRoom(fountainRoom);
+
+        Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
+        DarkWorldType finalDarkWorldType = null;
+
+        //Count blocks for every dark world type's block tag, if enough, select that type as final
+        for (Map.Entry<ResourceKey<DarkWorldType>, DarkWorldType> darkWorldTypeEntry : darkWorldTypeRegistry.entrySet()) {
+            DarkWorldType darkWorldType = darkWorldTypeEntry.getValue();
+            TagKey<Block> currentTag = DarkWorldUtil.getBlockTag(darkWorldType.blockTag());
+            int blockCount = 0;
+
+            for (BlockPos keyBlockPos : roomResult.getKeyBlockPositions()) {
+                if (level.getBlockState(keyBlockPos).is(currentTag)) {
+                    blockCount++;
+                }
+            }
+
+            if (blockCount >= darkWorldType.blockAmount()) {
+                finalDarkWorldType = darkWorldType;
+            }
+        }
+
+        //If not enough key blocks are present, cancel
+        if (finalDarkWorldType == null) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_not_enough_key_blocks"), true);
+            return;
+        }
+
+        //Create dark world level based on position, dimension and dark world type
+        ServerLevel targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), lightFountainPos, level.dimension(), finalDarkWorldType);
+        if (targetLevel == null) {
+            sendErrorMessage(player);
+            return;
+        }
+
+        //Create dark world fountain position in target level, account for worldgen
+        BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
+
+        //Add dark world fountain to the capability
+        cap.addDarkFountain(targetLevel, darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>());
+        //Force load dark world fountain chunk to pre-generate it
+        ChunkPos darkFountainChunk = targetLevel.getChunk(player.blockPosition()).getPos();
+        targetLevel.setChunkForced(darkFountainChunk.x, darkFountainChunk.z, true);
+
+        //If player is not creative, put cooldown on knife
+        if (!player.isCreative()) {
+            player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
+        }
+
+        //Break knife if single use
+        if (isSingleUse) {
+            stack.hurtAndBreak(stack.getMaxDamage(), player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+        }
+    }
+
+    private static AABB getRoomAABBFromPositions(List<BlockPos> positions) {
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int minZ = Integer.MAX_VALUE;
+
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+        int maxZ = Integer.MIN_VALUE;
+
         for (BlockPos pos : positions) {
             minX = Math.min(minX, pos.getX());
             minY = Math.min(minY, pos.getY());
             minZ = Math.min(minZ, pos.getZ());
+
             maxX = Math.max(maxX, pos.getX());
             maxY = Math.max(maxY, pos.getY());
             maxZ = Math.max(maxZ, pos.getZ());
         }
+
         return new AABB(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
     }
 
-    @Override
-    public boolean isFoil(ItemStack stack) {
-        CompoundTag tag = stack.getTag();
-        return tag != null && tag.getBoolean("determination") || super.isFoil(stack);
+    private void sendErrorMessage(Player player) {
+        player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_critical_error"), true);
     }
 }

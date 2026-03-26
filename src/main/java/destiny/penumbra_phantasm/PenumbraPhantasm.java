@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import com.mojang.logging.LogUtils;
 
 import destiny.penumbra_phantasm.client.model.item.DeltashieldModel;
-import destiny.penumbra_phantasm.client.render.dimension.DarkDepthsDimensionEffects;
+import destiny.penumbra_phantasm.client.render.dimension.DarkWorldDimensionEffects;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainBackModel;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainFrontModel;
@@ -124,9 +124,9 @@ public class PenumbraPhantasm {
 
         @SubscribeEvent
         public static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
-            DarkDepthsDimensionEffects dark_depths = new DarkDepthsDimensionEffects();
+            DarkWorldDimensionEffects darkWorldDimensionEffects = new DarkWorldDimensionEffects();
 
-            event.register(DarkDepthsDimensionEffects.DARK_DEPTHS_EFFECT, dark_depths);
+            event.register(DarkWorldDimensionEffects.DARK_WORLD_DIMENSION_EFFECTS, darkWorldDimensionEffects);
         }
 
         @SubscribeEvent

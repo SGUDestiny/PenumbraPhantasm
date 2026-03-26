@@ -22,5 +22,5 @@
   "piglin_safe": false,
   "respawn_anchor_works": true,
   "ultrawarm": false,
-  "effects": "penumbra_phantasm:dark_depths"
+  "effects": "penumbra_phantasm:dark_world_dimension_effects"
 }

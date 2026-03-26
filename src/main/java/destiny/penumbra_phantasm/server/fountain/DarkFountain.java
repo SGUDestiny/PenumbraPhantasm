@@ -9,6 +9,7 @@ import destiny.penumbra_phantasm.server.network.ClientBoundSingleFountainData;
 import destiny.penumbra_phantasm.server.network.ClientBoundSoundPackets;
 import destiny.penumbra_phantasm.server.network.ClientBoundTransportTickerPacket;
 import destiny.penumbra_phantasm.server.registry.*;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -242,7 +243,7 @@ public class DarkFountain {
                 this.animationTimer++;
             }
 
-            if (!isDarkWorld(fountainDimension) && level instanceof ServerLevel serverLevel) {
+            if (!DarkWorldUtil.isDarkWorld(level) && level instanceof ServerLevel serverLevel) {
                 tickRoomFill(serverLevel);
                 tickTransportTickers(serverLevel);
                 tickDissipation(serverLevel);
@@ -255,7 +256,7 @@ public class DarkFountain {
                 }
             }
 
-            if (isDarkWorld(fountainDimension) && level instanceof ServerLevel serverLevel) {
+            if (DarkWorldUtil.isDarkWorld(level) && level instanceof ServerLevel serverLevel) {
                 if (this.animationTimer > 125 || this.animationTimer == -1) {
                     tickDarkWorldTeleport(serverLevel);
                 }
@@ -267,7 +268,7 @@ public class DarkFountain {
             }
         }
 
-        if (!isDarkWorld(level.dimension())) {
+        if (!DarkWorldUtil.isDarkWorld(level)) {
             if (this.animationTimer > 125 || this.animationTimer == -1) {
                 if (level.getGameTime() % 2 == 0) {
                     level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), fountainPos.getX() + 0.5f, fountainPos.getY(), fountainPos.getZ() + 0.5f, ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f), ModUtil.getBoundRandomFloatStatic(level, 0f, 0.1f), ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f));
@@ -708,7 +709,7 @@ public class DarkFountain {
     }
 
     private void tickSoundPackets(Level level) {
-        if (isDarkWorld(level.dimension())) {
+        if (DarkWorldUtil.isDarkWorld(level)) {
             PacketHandlerRegistry.INSTANCE.send(
                     PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
                     new ClientBoundSoundPackets.FountainWind(this.fountainPos, false));
@@ -717,14 +718,6 @@ public class DarkFountain {
         PacketHandlerRegistry.INSTANCE.send(
                 PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
                 new ClientBoundSoundPackets.FountainDarkness(this.fountainPos, false));
-    }
-
-    public boolean isDarkWorld(ResourceKey<Level> levelKey) {
-        return levelKey == ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"));
-    }
-
-    public static boolean isDarkWorldStatic(ResourceKey<Level> levelKey) {
-        return levelKey == ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths"));
     }
 
     private Vec3 randomTeleportTarget(ServerLevel destinationLevel, int teleportMinRadius, int teleportMaxRadius) {

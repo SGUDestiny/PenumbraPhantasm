@@ -1,9 +1,8 @@
 {
-  "block_tag": "minecraft:beds",
-  "block_amount": 2,
-  "noise_settings": "penumbra_phantasm:dark_depths",
-  "dimension_type": "penumbra_phantasm:dark_depths",
-
+  "block_tag": "penumbra_phantasm:influences_card_kingdom",
+  "block_amount": 10,
+  "noise_settings": "penumbra_phantasm:dark_world_noise_settings",
+  "dimension_type": "penumbra_phantasm:dark_world_dimension_type",
   "biome_source": {
     "type": "minecraft:multi_noise",
     "biomes": [

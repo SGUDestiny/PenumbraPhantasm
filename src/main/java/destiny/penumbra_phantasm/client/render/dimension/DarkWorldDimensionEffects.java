@@ -22,10 +22,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
-public class DarkDepthsDimensionEffects extends DimensionSpecialEffects {
-    public static final ResourceLocation DARK_DEPTHS_EFFECT = new ResourceLocation(PenumbraPhantasm.MODID, "dark_depths");
+public class DarkWorldDimensionEffects extends DimensionSpecialEffects {
+    public static final ResourceLocation DARK_WORLD_DIMENSION_EFFECTS = new ResourceLocation(PenumbraPhantasm.MODID, "dark_world_dimension_effects");
     protected VertexBuffer skyBuffer;
-    public DarkDepthsDimensionEffects() {
+    public DarkWorldDimensionEffects() {
         super(OverworldEffects.CLOUD_LEVEL, true, SkyType.NORMAL, false, false);
         this.skyBuffer = createLightSky();
     }
