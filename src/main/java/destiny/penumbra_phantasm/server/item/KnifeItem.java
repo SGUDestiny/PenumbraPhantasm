@@ -204,11 +204,11 @@ public class KnifeItem extends SwordItem {
                         if (level instanceof ServerLevel serverLevel) {
                             makeFountain(tag, player, serverLevel, stack);
                         }
+                    } else {
+                        //Keep ticking up as long as ticker isn't or above 14
+                        makingTick++;
+                        tag.putInt(MAKING_TICK, makingTick);
                     }
-
-                    //Keep ticking up as long as ticker equals or above zero
-                    makingTick++;
-                    tag.putInt(MAKING_TICK, makingTick);
                 }
             }
     }
@@ -272,33 +272,8 @@ public class KnifeItem extends SwordItem {
             return;
         }
 
-        //Add light world fountain to the capability
-        cap.addDarkFountain(level, lightFountainPos, level.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>());
-        //Force load light world fountain chunk to pre-generate it
-        ChunkPos lightFountainChunk = level.getChunk(player.blockPosition()).getPos();
-        level.setChunkForced(lightFountainChunk.x, lightFountainChunk.z, true);
-
         //Scan if the room is still valid, get result with all blocks
         RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, lightFountainPos, Config.maxRoomVolume, false);
-
-        //Create new dark room instance for the fountain room
-        DarkRoom fountainRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
-        AABB roomBox = getRoomAABBFromPositions(roomResult.getPositions());
-        Set<BlockPos> positionSet = new HashSet<>(roomResult.getPositions());
-
-        //For every entity in fountain room, add to fountain's transport tickers
-        for (Entity ent : level.getEntitiesOfClass(Entity.class, roomBox)) {
-            if (positionSet.contains(ent.blockPosition()) || positionSet.contains(ent.blockPosition().above())) {
-                fountainRoom.getTransportTickers().put(ent.getUUID(), 0);
-            }
-        }
-
-        //Get light world fountain from the capability
-        DarkFountain lightFountain = cap.darkFountains.get(lightFountainPos);
-
-        //Add fountain room to the fountain
-        lightFountain.addRoom(fountainRoom);
-
         Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
         DarkWorldType finalDarkWorldType = null;
 
@@ -335,8 +310,32 @@ public class KnifeItem extends SwordItem {
         //Create dark world fountain position in target level, account for worldgen
         BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getOnPos());
 
+        //Add light world fountain to the capability
+        cap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>());
+        //Force load light world fountain chunk to pre-generate it
+        ChunkPos lightFountainChunk = level.getChunk(player.blockPosition()).getPos();
+        level.setChunkForced(lightFountainChunk.x, lightFountainChunk.z, true);
+
+        //Create new dark room instance for the fountain room
+        DarkRoom fountainRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
+        AABB roomBox = getRoomAABBFromPositions(roomResult.getPositions());
+        Set<BlockPos> positionSet = new HashSet<>(roomResult.getPositions());
+
+        //For every entity in fountain room, add to fountain's transport tickers
+        for (Entity ent : level.getEntitiesOfClass(Entity.class, roomBox)) {
+            if (positionSet.contains(ent.blockPosition()) || positionSet.contains(ent.blockPosition().above())) {
+                fountainRoom.getTransportTickers().put(ent.getUUID(), 0);
+            }
+        }
+
+        //Get light world fountain from the capability
+        DarkFountain lightFountain = cap.darkFountains.get(lightFountainPos);
+
+        //Add fountain room to the fountain
+        lightFountain.addRoom(fountainRoom);
+
         //Add dark world fountain to the capability
-        cap.addDarkFountain(targetLevel, darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>());
+        cap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>());
         //Force load dark world fountain chunk to pre-generate it
         ChunkPos darkFountainChunk = targetLevel.getChunk(player.blockPosition()).getPos();
         targetLevel.setChunkForced(darkFountainChunk.x, darkFountainChunk.z, true);
