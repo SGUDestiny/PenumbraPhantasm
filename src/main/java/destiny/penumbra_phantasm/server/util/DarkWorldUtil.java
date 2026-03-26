@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.util;
 import commoble.infiniverse.api.InfiniverseAPI;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
+import destiny.penumbra_phantasm.server.worldgen.SeededNoiseBasedChunkGenerator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -54,13 +55,13 @@ public class DarkWorldUtil
 
 		ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION,
 				new ResourceLocation(PenumbraPhantasm.MODID,
-						"dark_world_"+pos.asLong()+"_"+origin.location().getPath()+"_"+typeKey.getPath()));
+						("dark_world_"+pos.asLong()+"_"+origin.location()+"_"+typeKey).replace(':', '-')));
 
 		long seed = Random.newSeed();
 
 		RandomState randomState = RandomState.create(server.registryAccess().asGetterLookup(), getNoiseGeneratorKey(type.getNoiseSettings()), seed);
-		ChunkGenerator chunkGenerator = new NoiseBasedChunkGenerator(type.getSource(),
-				getNoiseGenerator(server, type.getNoiseSettings()));
+		ChunkGenerator chunkGenerator = new SeededNoiseBasedChunkGenerator(type.getSource(),
+				getNoiseGenerator(server, type.getNoiseSettings()), randomState);
 
 		LevelStem stem = new LevelStem(getDimensionType(server, type.getDimensionType()), chunkGenerator);
 
