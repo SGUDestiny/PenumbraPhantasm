@@ -5,11 +5,9 @@ import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.network.ClientBoundAnimationPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
-import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -68,8 +66,12 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         }
 
         if (!previousLocation.equals(currentLocation)) {
-            previousLocation = currentLocation;
-            titleAlphaTicker = 0;
+            boolean darkWorldLandFinished = darknessLandTicker < 0 || darknessLandTicker >= 20;
+            boolean fountainTransitionFinished = darknessOverlayTicker <= 0;
+            if (darkWorldLandFinished && fountainTransitionFinished) {
+                previousLocation = currentLocation;
+                titleAlphaTicker = 0;
+            }
         }
         if (titleAlphaTicker >= 80) {
             titleAlphaTicker = -1;

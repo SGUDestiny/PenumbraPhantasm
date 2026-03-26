@@ -408,7 +408,7 @@ public class DarkFountain {
                 continue;
             }
 
-            ticker = Math.max(ticker - 1, 0);
+            ticker = Math.max(ticker - 5, 0);
             entry.setValue(ticker);
 
             if (entity instanceof ServerPlayer serverPlayer) {

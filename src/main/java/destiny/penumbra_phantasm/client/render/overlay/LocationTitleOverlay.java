@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
-import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.Util;
@@ -43,7 +42,7 @@ public class LocationTitleOverlay {
         if(lastTick == -1 || ticker == 0)
             lastTick = 0;
 
-        if (ticker == 2 && lastTick != 2) {
+        if (ticker == 2 && lastTick != 2 && cap.darknessLandTicker < 0) {
             player.playSound(SoundRegistry.HIM_QUICK.get(), 0.125f, 1f);
         }
 
