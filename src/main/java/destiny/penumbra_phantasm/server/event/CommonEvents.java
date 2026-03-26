@@ -97,6 +97,7 @@ public class CommonEvents {
     public void levelTick(TickEvent.LevelTickEvent event) {
         if (event.phase == TickEvent.Phase.END) {
             Level level = event.level;
+            if (level.isClientSide) return;
 
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                 cap.darkFountains.forEach((uid, fountain) -> {

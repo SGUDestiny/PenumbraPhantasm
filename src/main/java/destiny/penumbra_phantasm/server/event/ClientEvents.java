@@ -41,6 +41,7 @@ import java.util.Map;
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
 
+	private static final BufferBuilder FOUNTAIN_BUFFER = new BufferBuilder(65536);
 	private static boolean wasOnLoadingScreen = false;
 	private static int postLoadGraceTicks = 0;
 
@@ -61,7 +62,7 @@ public class ClientEvents {
 			ResourceLocation textureCrack = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_ground_crack.png");
 
 			PoseStack stack = event.getPoseStack();
-			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(new BufferBuilder(65536));
+			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(FOUNTAIN_BUFFER);
 
 			GL11.glEnable(0x864F);
 
