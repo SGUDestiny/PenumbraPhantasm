@@ -28,6 +28,9 @@ public class GameRendererMixin
 	{
 		Minecraft minecraft = Minecraft.getInstance();
 
+		if (minecraft.isPaused())
+			return;
+
 		float landAlpha = 0f;
 		float fountainAlpha = 0f;
 
