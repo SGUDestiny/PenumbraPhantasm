@@ -21,6 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -155,6 +156,7 @@ public class IntroScreen extends Screen {
     @Override
     protected void init() {
         minecraft.getSoundManager().stop();
+        GLFW.glfwSetInputMode(minecraft.getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
         activeDepths.add(0f);
         activeDepths.add(depthsSpacing);
         activeDepths.add(depthsSpacing * 2f);
