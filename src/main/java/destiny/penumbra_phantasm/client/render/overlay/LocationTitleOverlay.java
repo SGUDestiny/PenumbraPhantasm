@@ -26,7 +26,8 @@ public class LocationTitleOverlay {
 
         if (player == null) return;
 
-        if (!DarkWorldUtil.isDarkWorld(player.level())) return;
+        if (!DarkWorldUtil.isDarkWorld(player.level()))
+            return;
 
         //Getting capability
         ScreenAnimationCapability cap;

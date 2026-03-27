@@ -323,9 +323,13 @@ public class KnifeItem extends SwordItem {
             return;
         }
 
+        ChunkPos chunkPos = new ChunkPos(lightFountainPos);
+        targetLevel.setChunkForced(chunkPos.x, chunkPos.z, true);
+
         //Create dark world fountain position in target level, account for worldgen
         BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, lightFountainPos);
 
+        targetLevel.setChunkForced(chunkPos.x, chunkPos.z, false);
         //Add light world fountain to the capability
         lightCap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>());
 

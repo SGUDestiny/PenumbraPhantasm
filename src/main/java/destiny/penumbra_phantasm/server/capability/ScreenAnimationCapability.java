@@ -61,7 +61,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
                 DarkFountain fountain = entry.getValue();
                 if (fountain.animationTimer != -1) continue;
 
-                double distance = fountain.getFountainPos().getCenter().distanceTo(player.position());
+                double distance = fountain.getFountainPos().getCenter().subtract(player.position()).horizontalDistance();
                 if (distance <= FOUNTAIN_MUSIC_RANGE) {
                     currentLocation = Util.makeDescriptionId("location", new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain"));
                 }
