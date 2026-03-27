@@ -18,7 +18,7 @@ import java.util.function.Predicate;
 @Mixin(ServerLevel.class)
 public class ServerLevelMixin {
 	@Inject(method = "findClosestBiome3d", at = @At("HEAD"), cancellable = true)
-	private void penumbraPhantasm$findClosestBiome3d(Predicate<Holder<Biome>> biomePredicate, BlockPos pos, int radius, int horizontalBlockCheckInterval, int verticalBlockCheckInterval, CallbackInfoReturnable<Pair<BlockPos, Holder<Biome>>> cir) {
+	private void findClosestBiome3d(Predicate<Holder<Biome>> biomePredicate, BlockPos pos, int radius, int horizontalBlockCheckInterval, int verticalBlockCheckInterval, CallbackInfoReturnable<Pair<BlockPos, Holder<Biome>>> cir) {
 		ServerLevel level = (ServerLevel)(Object)this;
 		ChunkGenerator generator = level.getChunkSource().getGenerator();
 		if(generator instanceof SeededNoiseBasedChunkGenerator seededGenerator) {
