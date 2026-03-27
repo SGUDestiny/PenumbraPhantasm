@@ -90,5 +90,11 @@ public class PacketHandlerRegistry {
                 .decoder(ClientBoundAnimationPacket::decode)
                 .consumerMainThread(ClientBoundAnimationPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(ClientBoundParticlePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundParticlePacket::encode)
+                .decoder(ClientBoundParticlePacket::decode)
+                .consumerMainThread(ClientBoundParticlePacket::handle)
+                .add();
     }
 }

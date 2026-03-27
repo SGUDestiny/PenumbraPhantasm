@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.block;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -73,8 +74,8 @@ public class DarknessBlock extends Block {
             double vy = particleDirection.getStepY() * baseSpeed + random.nextDouble() * 0.02;
             double vz = particleDirection.getStepZ() * baseSpeed + (random.nextDouble() - 0.5) * 0.02;
 
-            if (level instanceof net.minecraft.server.level.ServerLevel serverLevel) {
-                serverLevel.sendParticles(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), px, py, pz, 1, vx, vy, vz, 0.0);
+            if (level instanceof ServerLevel serverLevel) {
+                serverLevel.sendParticles(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), px, py, pz, 1, vx, vy, vz, 0);
             } else {
                 level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), px, py, pz, vx, vy, vz);
             }
