@@ -13,6 +13,7 @@ import net.minecraft.core.QuartPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.*;
@@ -43,6 +44,8 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
          return generator.biomeSource;
       }), NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter((generator) -> {
          return generator.settings;
+      }), Codec.LONG.fieldOf("seed").forGetter((generator) -> {
+         return generator.seed;
       })).apply(instance, instance.stable(SeededNoiseBasedChunkGenerator::new));
    });
    private static final BlockState AIR = Blocks.AIR.defaultBlockState();
@@ -50,22 +53,26 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
    private final Supplier<Aquifer.FluidPicker> globalFluidPicker;
    private RandomState customState = null;
 
-   public SeededNoiseBasedChunkGenerator(BiomeSource source, Holder<NoiseGeneratorSettings> noise) {
+   private final long seed;
+
+   public SeededNoiseBasedChunkGenerator(BiomeSource source, Holder<NoiseGeneratorSettings> noise, long seed) {
       super(source, noise);
       this.settings = noise;
       this.globalFluidPicker = Suppliers.memoize(() -> {
          return createFluidPicker(noise.value());
       });
+      this.seed = seed;
    }
 
    public SeededNoiseBasedChunkGenerator(BiomeSource source, Holder<NoiseGeneratorSettings> noise,
-                                         RandomState randomState) {
+										 RandomState randomState, long seed) {
       super(source, noise);
       this.settings = noise;
       this.globalFluidPicker = Suppliers.memoize(() -> {
          return createFluidPicker(noise.value());
       });
       this.customState = randomState;
+      this.seed = seed;
    }
 
    private static Aquifer.FluidPicker createFluidPicker(NoiseGeneratorSettings pSettings) {
@@ -86,6 +93,12 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
    }
 
    private void doCreateBiomes(Blender pBlender, RandomState pRandom, StructureManager pStructureManager, ChunkAccess pChunk) {
+	   if(this.customState == null)
+      {
+         this.customState = RandomState.create(pStructureManager.registryAccess().asGetterLookup(),
+                 settings.unwrapKey().get(), seed);
+      }
+
       NoiseChunk noisechunk = pChunk.getOrCreateNoiseChunk((p_224340_) -> {
          return this.createNoiseChunk(p_224340_, pStructureManager, pBlender, customState);
       });

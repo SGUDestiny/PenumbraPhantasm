@@ -143,7 +143,7 @@ public class KnifeItem extends SwordItem {
         {
             if(entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 256)
             {
-                player.displayClientMessage(Component.translatable("making_fountain_another_fountain_nearby"), true);
+                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_another_fountain_nearby"), true);
                 return InteractionResultHolder.fail(stack); // If fountain within 16 blocks of this(16 squared is 256)
             }
         }
@@ -257,8 +257,11 @@ public class KnifeItem extends SwordItem {
             return;
         }
 
+        tag = stack.getOrCreateTag();
+
         //Immediately stop ticking
         tag.putInt(MAKING_TICK, -2);
+        stack.setTag(tag);
 
         //Create light world fountain position from player feet position
         BlockPos lightFountainPos = player.getOnPos().above();

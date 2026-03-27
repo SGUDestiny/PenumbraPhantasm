@@ -63,7 +63,7 @@ public class DarkWorldUtil
 
 		RandomState randomState = RandomState.create(server.registryAccess().asGetterLookup(), getNoiseGeneratorKey(type.noiseSettings()), seed);
 		ChunkGenerator chunkGenerator = new SeededNoiseBasedChunkGenerator(type.source(),
-				getNoiseGenerator(server, type.noiseSettings()), randomState);
+				getNoiseGenerator(server, type.noiseSettings()), randomState, seed);
 
 		LevelStem stem = new LevelStem(getDimensionType(server, type.dimensionType()), chunkGenerator);
 
