@@ -161,6 +161,9 @@ public class ClientEvents {
 			LocalPlayer player = Minecraft.getInstance().player;
 			ClientLevel level = Minecraft.getInstance().level;
 			if (player == null) return;
+			if (level != null && DarkWorldUtil.isDarkWorld(level)) {
+				Minecraft.getInstance().getMusicManager().stopPlaying();
+			}
 
 			MusicManager.getInstance().tick();
 
