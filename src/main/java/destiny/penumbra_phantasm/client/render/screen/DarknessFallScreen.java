@@ -117,4 +117,8 @@ public class DarknessFallScreen extends Screen {
         PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
         Minecraft.getInstance().player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(anim -> anim.darknessLandTicker = 0);
     }
+
+    @Override
+    public void onClose() {
+    }
 }

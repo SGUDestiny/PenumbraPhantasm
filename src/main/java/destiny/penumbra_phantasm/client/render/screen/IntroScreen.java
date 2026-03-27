@@ -718,7 +718,6 @@ public class IntroScreen extends Screen {
     }
 
     public void closeScreen() {
-
         //TODO - Make this actually run after exiting intro and having loaded the world
         IntegratedServer integratedserver = this.minecraft.getSingleplayerServer();
         if(integratedserver != null && !integratedserver.isStopped())
