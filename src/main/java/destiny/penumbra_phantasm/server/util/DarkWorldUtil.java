@@ -19,10 +19,13 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.RandomState;
-import org.joml.Random;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class DarkWorldUtil
 {
@@ -59,7 +62,11 @@ public class DarkWorldUtil
 				new ResourceLocation(PenumbraPhantasm.MODID,
 						("dark_world_"+pos.asLong()+"_"+origin.location()+"_"+typeKey).replace(':', '-')));
 
-		long seed = Random.newSeed();
+		ServerLevel existingLevel = server.getLevel(key);
+		if(existingLevel != null)
+			return existingLevel;
+
+		long seed = createUniqueDarkWorldSeed(server, key);
 
 		RandomState randomState = RandomState.create(server.registryAccess().asGetterLookup(), getNoiseGeneratorKey(type.noiseSettings()), seed);
 		ChunkGenerator chunkGenerator = new SeededNoiseBasedChunkGenerator(type.source(),
@@ -69,6 +76,31 @@ public class DarkWorldUtil
 
 		ServerLevel level = InfiniverseAPI.get().getOrCreateLevel(server, key, () -> stem);
 		return level;
+	}
+
+	private static long createUniqueDarkWorldSeed(MinecraftServer server, ResourceKey<Level> levelKey)
+	{
+		long serverSeed = server.overworld().getSeed();
+		UUID dimensionId = UUID.nameUUIDFromBytes(levelKey.location().toString().getBytes(StandardCharsets.UTF_8));
+		long seed = dimensionId.getMostSignificantBits() ^ dimensionId.getLeastSignificantBits() ^ serverSeed;
+		if(seed == 0L)
+			seed = 1L;
+
+		Set<Long> usedSeeds = new HashSet<>();
+		for(ServerLevel level : getAllDarkWorlds(server))
+		{
+			if(level.getChunkSource().getGenerator() instanceof SeededNoiseBasedChunkGenerator seededGenerator)
+				usedSeeds.add(seededGenerator.getSeed());
+		}
+
+		while(usedSeeds.contains(seed))
+		{
+			seed = Long.rotateLeft(seed ^ 0x9E3779B97F4A7C15L, 17);
+			if(seed == 0L)
+				seed = 1L;
+		}
+
+		return seed;
 	}
 
 	public static boolean isDarkWorld(Level level)
