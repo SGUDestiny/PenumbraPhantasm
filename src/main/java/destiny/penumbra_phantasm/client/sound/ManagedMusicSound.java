@@ -9,7 +9,7 @@ public class ManagedMusicSound extends AbstractTickableSoundInstance {
     private float targetVolume = 0.0F;
 
     public ManagedMusicSound(SoundEvent soundEvent, boolean looping) {
-        super(soundEvent, SoundSource.AMBIENT, SoundInstance.createUnseededRandom());
+        super(soundEvent, SoundSource.MUSIC, SoundInstance.createUnseededRandom());
         this.looping = looping;
         this.volume = 0.0F;
         this.relative = true;

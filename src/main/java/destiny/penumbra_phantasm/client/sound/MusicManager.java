@@ -81,6 +81,14 @@ public class MusicManager {
             return;
         }
 
+        if (currentSound != null && (state == State.PLAYING || state == State.FADING_IN)
+                && !minecraft.getSoundManager().isActive(currentSound)) {
+            currentSound = null;
+            currentSoundEvent = null;
+            state = State.SILENT;
+            fadeInTicks = 0;
+        }
+
         SoundEvent desiredSound = null;
         MusicPriority desiredPriority = MusicPriority.BIOME;
         boolean desiredLooping = true;
