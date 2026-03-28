@@ -135,22 +135,25 @@ public class ClientEvents {
 		{
 			if (ClientboundPacketHandler.fountainTransitioning) {
 				Screen screen = Minecraft.getInstance().screen;
-				boolean isLoadingScreen = screen instanceof ReceivingLevelScreen ||
-										  screen instanceof ProgressScreen ||
-										  screen instanceof GenericDirtMessageScreen;
+				boolean isLoadingScreen = screen instanceof ReceivingLevelScreen || screen instanceof ProgressScreen || screen instanceof GenericDirtMessageScreen;
+
 				if (isLoadingScreen) {
 					wasOnLoadingScreen = true;
 					postLoadGraceTicks = 0;
 				} else if (wasOnLoadingScreen && screen == null) {
 					wasOnLoadingScreen = false;
-					postLoadGraceTicks = 5;
+					postLoadGraceTicks = 15;
 				}
+
 				if (!wasOnLoadingScreen && postLoadGraceTicks > 0) {
 					postLoadGraceTicks--;
+
 					LazyOptional<ScreenAnimationCapability> lazyAnim = Minecraft.getInstance().player != null
 							? Minecraft.getInstance().player.getCapability(CapabilityRegistry.SCREEN_ANIMATION)
 							: LazyOptional.empty();
+
 					boolean tickerStarted = lazyAnim.resolve().map(c -> c.darknessLandTicker >= 0).orElse(false);
+
 					if (postLoadGraceTicks == 0 || tickerStarted) {
 						ClientboundPacketHandler.fountainTransitioning = false;
 						postLoadGraceTicks = 0;
@@ -164,8 +167,9 @@ public class ClientEvents {
 			if (level != null && DarkWorldUtil.isDarkWorld(level)) {
 				Minecraft.getInstance().getMusicManager().stopPlaying();
 			}
-
 			MusicManager.getInstance().tick();
+
+
 
 			DarkFountainCapability cap;
 			LazyOptional<DarkFountainCapability> lazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);

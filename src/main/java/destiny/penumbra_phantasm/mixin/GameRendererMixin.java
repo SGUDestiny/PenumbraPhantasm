@@ -53,6 +53,7 @@ public class GameRendererMixin
 		if (landAlpha == 0f && minecraft.player != null) {
 			int ticker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION)
 					.resolve().map(c -> c.darknessLandTicker).orElse(-1);
+
 			if (ticker >= 0 && ticker < 40) {
 				landAlpha = ticker < 20 ? 1f : Mth.lerp(ticker / 40f, 1f, 0f);
 			}
@@ -61,6 +62,7 @@ public class GameRendererMixin
 		if (minecraft.player != null) {
 			int ticker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION)
 					.resolve().map(c -> c.darknessOverlayTicker).orElse(0);
+
 			if (ticker > 0) {
 				fountainAlpha = Math.min(Mth.lerp(ticker / 100f, 0f, 3f), 2.5f);
 			}

@@ -101,21 +101,11 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putInt(DARKNESS_LAND_TICKER, darknessLandTicker);
-        tag.putInt(DARKNESS_OVERLAY_TICKER, darknessOverlayTicker);
-        tag.putString(PREVIOUS_LOCATION, previousLocation);
-        tag.putString(CURRENT_LOCATION, currentLocation);
-        tag.putInt(TITLE_ALPHA_TICKER, titleAlphaTicker);
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        darknessLandTicker = tag.getInt(DARKNESS_LAND_TICKER);
-        darknessOverlayTicker = tag.getInt(DARKNESS_OVERLAY_TICKER);
-        previousLocation = tag.getString(PREVIOUS_LOCATION);
-        currentLocation = tag.getString(CURRENT_LOCATION);
-        titleAlphaTicker = tag.getInt(TITLE_ALPHA_TICKER);
     }
 
     public void sync(@NotNull ScreenAnimationCapability cap) {
