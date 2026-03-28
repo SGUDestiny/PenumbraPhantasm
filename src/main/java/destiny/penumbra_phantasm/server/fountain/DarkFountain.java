@@ -362,7 +362,7 @@ public class DarkFountain {
                             DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
 
                             if (destinationFountain != null) {
-                                Vec3 target = randomTeleportTarget(destinationLevel, 8, 16);
+                                Vec3 target = getRandomTeleportTarget(destinationLevel, 8, 16);
 
                                 if (entity instanceof ServerPlayer player) {
                                     destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
@@ -651,7 +651,7 @@ public class DarkFountain {
                     DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
 
                     if (destinationFountain != null) {
-                        Vec3 target = randomTeleportTarget(destinationLevel, 32, 33);
+                        Vec3 target = getRandomTeleportTarget(destinationLevel, 256, 512);
 
                         if (entity instanceof ServerPlayer player) {
                             float yaw = (float) Math.toDegrees(Math.atan2(-((destinationPos.getX() + 0.5) - target.x), (destinationPos.getZ() + 0.5) - target.z));
@@ -681,7 +681,7 @@ public class DarkFountain {
     }
 
     private void tickDarkWorldTeleport(ServerLevel level) {
-        AABB teleportBox = new AABB(fountainPos.above()).inflate(1).setMaxY(128);
+        AABB teleportBox = new AABB(fountainPos.above()).inflate(1).setMaxY(level.dimensionType().height());
         HashSet<UUID> teleportBoxEntities = new HashSet<>();
         ServerLevel fountainLevel = level.getServer().getLevel(this.fountainDimension);
         ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
@@ -728,13 +728,17 @@ public class DarkFountain {
         }
     }
 
-    private Vec3 randomTeleportTarget(ServerLevel destinationLevel, int teleportMinRadius, int teleportMaxRadius) {
+    private Vec3 getRandomTeleportTarget(ServerLevel destinationLevel, int teleportMinRadius, int teleportMaxRadius) {
         double angle = destinationLevel.getRandom().nextDouble() * 2 * Math.PI;
         double distance = teleportMinRadius + destinationLevel.getRandom().nextDouble() * (teleportMaxRadius - teleportMinRadius);
         double x = destinationPos.getX() + 0.5 + Math.cos(angle) * distance;
         double z = destinationPos.getZ() + 0.5 + Math.sin(angle) * distance;
 
-        BlockPos heightmapPos = destinationLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, new BlockPos((int) x, destinationLevel.getMaxBuildHeight(), (int) z));
+        BlockPos pos = BlockPos.containing(x, destinationPos.getY(), z);
+        ChunkPos chunk = destinationLevel.getChunk(pos).getPos();
+        destinationLevel.setChunkForced(chunk.x, chunk.z, false);
+
+        BlockPos heightmapPos = destinationLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.containing(x, destinationLevel.getMaxBuildHeight(), z));
 
         return new Vec3(x, heightmapPos.getY() + 1, z);
     }
