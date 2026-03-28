@@ -729,8 +729,7 @@ public class DarkFountain {
         double x = destinationPos.getX() + 0.5 + Math.cos(angle) * distance;
         double z = destinationPos.getZ() + 0.5 + Math.sin(angle) * distance;
 
-        BlockPos pos = BlockPos.containing(x, destinationPos.getY(), z);
-        ChunkPos chunk = destinationLevel.getChunk(pos).getPos();
+        ChunkPos chunk = new ChunkPos((int) x, (int) z);
 
         destinationLevel.setChunkForced(chunk.x, chunk.z, true);
         BlockPos heightmapPos = destinationLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.containing(x, destinationLevel.getMaxBuildHeight(), z));
