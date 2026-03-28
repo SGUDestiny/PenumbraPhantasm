@@ -46,7 +46,7 @@ public class ClientBoundDarknessFallPacket {
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ClientboundPacketHandler.openTransportScreen(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
+        ctx.get().enqueueWork(() -> ClientboundPacketHandler.openDarknessFallScreen(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
         return true;
     }
 }

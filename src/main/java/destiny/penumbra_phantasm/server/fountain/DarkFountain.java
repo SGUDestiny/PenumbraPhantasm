@@ -62,7 +62,6 @@ public class DarkFountain {
     public int frame;
     public int frameOptimized;
     public HashSet<UUID> teleportedEntities;
-    public Map<UUID, Integer> fadeInTickers = new HashMap<>();
     public List<DarkRoom> rooms = new ArrayList<>();
     public int rescanTimer = 0;
 
@@ -83,123 +82,55 @@ public class DarkFountain {
         this.teleportedEntities = teleportedEntities;
     }
 
-    public void addRoom(DarkRoom room) {
-        rooms.add(room);
-    }
-
-    public int getTotalDarknessCount() {
-        int total = 0;
-        for (DarkRoom room : rooms) {
-            if (!room.isDissipating()) {
-                total += room.getPositions().size();
-            }
-        }
-        return total;
-    }
-
-    public CompoundTag save() {
-        CompoundTag tag = new CompoundTag();
-
-        tag.put(FOUNTAIN_POS, NbtUtils.writeBlockPos(fountainPos));
-        tag.putString(FOUNTAIN_DIMENSION, fountainDimension.location().toString());
-        tag.put(DESTINATION_POS, NbtUtils.writeBlockPos(destinationPos));
-        tag.putString(DESTINATION_DIMENSION, destinationDimension.location().toString());
-        tag.putInt(ANIMATION_TIMER, animationTimer);
-        tag.putInt(FRAME_TIMER, frameTimer);
-        tag.putInt(FRAME, frame);
-        tag.putInt(FRAME_OPTIMIZED, frameOptimized);
-        ListTag teleportedEntitiesList = new ListTag();
-        for (UUID uuid : teleportedEntities) {
-            teleportedEntitiesList.add(StringTag.valueOf(uuid.toString()));
-        }
-        tag.put(TELEPORTED_ENTITIES, teleportedEntitiesList);
-
-        ListTag fadeInTickersTag = new ListTag();
-        for (Map.Entry<UUID, Integer> entry : fadeInTickers.entrySet()) {
-            CompoundTag entryTag = new CompoundTag();
-            entryTag.putString("UUID", entry.getKey().toString());
-            entryTag.putInt("Ticker", entry.getValue());
-            fadeInTickersTag.add(entryTag);
-        }
-        tag.put(FADE_IN_TICKERS, fadeInTickersTag);
-
-        ListTag roomsTag = new ListTag();
-        for (DarkRoom room : rooms) {
-            roomsTag.add(room.save());
-        }
-        tag.put(ROOMS, roomsTag);
-
-        return tag;
-    }
-
-    public static DarkFountain load(CompoundTag tag) {
-        BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
-        ResourceKey<Level> fountainDimension = stringToDimension(tag.getString(FOUNTAIN_DIMENSION));
-        BlockPos destinationPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS));
-        ResourceKey<Level> destinationDimension = stringToDimension(tag.getString(DESTINATION_DIMENSION));
-        int animationTimer = tag.getInt(ANIMATION_TIMER);
-        int frameTimer = tag.getInt(FRAME_TIMER);
-        int frame = tag.getInt(FRAME);
-        int frameOptimized = tag.getInt(FRAME_OPTIMIZED);
-        HashSet<UUID> teleportedEntities = new HashSet<>();
-        ListTag teleportedEntitiesTag = tag.getList(TELEPORTED_ENTITIES, Tag.TAG_STRING);
-        for (Tag tg : teleportedEntitiesTag) {
-            teleportedEntities.add(UUID.fromString(tg.getAsString()));
-        }
-
-        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, frameOptimized, teleportedEntities);
-
-        if (tag.contains(FADE_IN_TICKERS)) {
-            ListTag fadeInTag = tag.getList(FADE_IN_TICKERS, Tag.TAG_COMPOUND);
-            for (Tag t : fadeInTag) {
-                CompoundTag entryTag = (CompoundTag) t;
-                fountain.fadeInTickers.put(UUID.fromString(entryTag.getString("UUID")), entryTag.getInt("Ticker"));
-            }
-        }
-
-        if (tag.contains(ROOMS)) {
-            ListTag roomsTag = tag.getList(ROOMS, Tag.TAG_COMPOUND);
-            for (Tag rt : roomsTag) {
-                fountain.rooms.add(DarkRoom.load((CompoundTag) rt));
-            }
-        }
-
-        return fountain;
-    }
-
-    public void sync(DarkFountain fountain) {
-        this.fountainPos = fountain.fountainPos;
-        this.destinationPos = fountain.destinationPos;
-        this.fountainDimension = fountain.fountainDimension;
-        this.destinationDimension = fountain.destinationDimension;
-
-        this.frame = fountain.frame;
-        this.animationTimer = fountain.animationTimer;
-        this.frameTimer = fountain.frameTimer;
-        this.frameOptimized = fountain.frameOptimized;
-
-        this.teleportedEntities = fountain.teleportedEntities;
-        this.fadeInTickers = fountain.fadeInTickers;
-    }
-
-    public BlockPos getFountainPos() { return fountainPos; }
-    public ResourceKey<Level> getFountainDimension() { return fountainDimension; }
-    public BlockPos getDestinationPos() { return destinationPos; }
-    public ResourceKey<Level> getDestinationDimension() { return destinationDimension; }
-    public int getAnimationTimer() { return animationTimer; }
-    public int getFrameTimer() { return frameTimer; }
-    public int getFrame() { return frame; }
-    public int getFrameOptimized() { return frameOptimized; }
-
-    public static ResourceKey<Level> stringToDimension(String dimensionString) {
-        String[] split = dimensionString.split(":");
-        if (split.length > 1)
-            return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("minecraft", "dimension")), new ResourceLocation(split[0], split[1]));
-        return null;
-    }
-
     public void tick(Level level) {
         if (!level.isClientSide()) {
+            if (!DarkWorldUtil.isDarkWorld(level)) {
+                if (level instanceof ServerLevel serverLevel) {
+                    tickRoomDarknessFill(serverLevel);
+                    tickDarkWorldTransportTickers(serverLevel);
+                    tickRoomDissipation(serverLevel);
+                    tickDarkWorldTeleportContact(serverLevel);
+
+                    rescanTimer++;
+                    if (rescanTimer >= Config.rescanInterval && (this.animationTimer == -1)) {
+                        rescanTimer = 0;
+                        tickRoomManagement(serverLevel);
+                    }
+                }
+
+                if (this.animationTimer > 125 || this.animationTimer == -1) {
+                    if (level.getGameTime() % 2 == 0) {
+                        double x = fountainPos.getX() + 0.5;
+                        double y = fountainPos.getY();
+                        double z = fountainPos.getZ() + 0.5;
+                        double vx = ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f);
+                        double vy = ModUtil.getBoundRandomFloatStatic(level, 0f, 0.1f);
+                        double vz = ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f);
+
+                        level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
+                        level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
+                        level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
+
+                        PacketHandlerRegistry.INSTANCE.send(
+                                PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
+                                new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
+                        );
+                        PacketHandlerRegistry.INSTANCE.send(
+                                PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
+                                new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
+                        );
+                        PacketHandlerRegistry.INSTANCE.send(
+                                PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
+                                new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
+                        );
+                    }
+                }
+            } else {
+                if (level instanceof ServerLevel serverLevel) {
+                    tickDarkWorldFountainPushing(serverLevel);
+                }
+            }
+
             if (this.animationTimer == 1) {
                 level.players().forEach(player -> {
                     if (player.level().dimension() == fountainDimension) {
@@ -236,56 +167,8 @@ public class DarkFountain {
                 this.animationTimer++;
             }
 
-            if (!DarkWorldUtil.isDarkWorld(level) && level instanceof ServerLevel serverLevel) {
-                tickRoomDarknessFill(serverLevel);
-                tickDarkWorldTransportTickers(serverLevel);
-                tickRoomDissipation(serverLevel);
-                tickDarkWorldTeleportContact(serverLevel);
-
-                rescanTimer++;
-                if (rescanTimer >= Config.rescanInterval && (this.animationTimer == -1)) {
-                    rescanTimer = 0;
-                    tickRoomManagement(serverLevel);
-                }
-            }
-
-            if (DarkWorldUtil.isDarkWorld(level) && level instanceof ServerLevel serverLevel) {
-                tickDarkWorldFountainPushing(serverLevel);
-                tickFadeInTickers(serverLevel);
-            }
-
             if (this.animationTimer > 125 || this.animationTimer == -1) {
                 tickSoundPackets(level);
-            }
-        }
-
-        if (!DarkWorldUtil.isDarkWorld(level)) {
-            if (this.animationTimer > 125 || this.animationTimer == -1) {
-                if (level.getGameTime() % 2 == 0) {
-                    double x = fountainPos.getX() + 0.5;
-                    double y = fountainPos.getY();
-                    double z = fountainPos.getZ() + 0.5;
-                    double vx = ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f);
-                    double vy = ModUtil.getBoundRandomFloatStatic(level, 0f, 0.1f);
-                    double vz = ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f);
-
-                    level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
-                    level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
-                    level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
-
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
-                            new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
-                    );
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
-                            new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
-                    );
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
-                            new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
-                    );
-                }
             }
         }
 
@@ -361,13 +244,11 @@ public class DarkFountain {
 
                                 if (entity instanceof ServerPlayer player) {
                                     destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
-                                    destinationFountain.fadeInTickers.put(player.getUUID(), TRANSPORT_TICKER_DURATION);
                                     PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(1f));
                                 } else {
                                     Entity teleported = teleportEntity(entity, destinationLevel, target);
                                     if (teleported != null) {
                                         destinationFountain.teleportedEntities.add(teleported.getUUID());
-                                        destinationFountain.fadeInTickers.put(teleported.getUUID(), TRANSPORT_TICKER_DURATION);
                                     }
                                 }
                             }
@@ -398,35 +279,6 @@ public class DarkFountain {
             }
 
             room.checkActivation();
-        }
-    }
-
-    private void tickFadeInTickers(ServerLevel level) {
-        Iterator<Map.Entry<UUID, Integer>> iterator = fadeInTickers.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<UUID, Integer> entry = iterator.next();
-            UUID entityId = entry.getKey();
-            int ticker = entry.getValue();
-
-            Entity entity = level.getEntity(entityId);
-            if (entity == null) {
-                iterator.remove();
-                continue;
-            }
-
-            ticker = Math.max(ticker - 5, 0);
-            entry.setValue(ticker);
-
-            if (entity instanceof ServerPlayer serverPlayer) {
-                int finalTicker = ticker;
-                serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = finalTicker);
-                float progress = (float) ticker / TRANSPORT_TICKER_DURATION;
-                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundTransportTickerPacket(progress));
-            }
-
-            if (ticker == 0) {
-                iterator.remove();
-            }
         }
     }
 
@@ -489,12 +341,11 @@ public class DarkFountain {
             }
         }
 
-        checkConnectivityViaDoors(level);
-
-        expandThroughDoors(level);
+        tickConnectivityViaDoors(level);
+        tickExpansionThroughDoors(level);
     }
 
-    private void checkConnectivityViaDoors(ServerLevel level) {
+    private void tickConnectivityViaDoors(ServerLevel level) {
         if (rooms.isEmpty()) return;
 
         DarkRoom fountainRoom = null;
@@ -521,7 +372,7 @@ public class DarkFountain {
             DarkRoom current = queue.poll();
             for (DarkRoom other : rooms) {
                 if (reachableViaOpenDoors.contains(other) || other.isDissipating()) continue;
-                if (sharesAnOpenDoor(level, current, other)) {
+                if (DarkRoom.sharesAnOpenDoor(level, current, other)) {
                     reachableViaOpenDoors.add(other);
                     queue.add(other);
                 }
@@ -535,25 +386,10 @@ public class DarkFountain {
         }
     }
 
-    private boolean sharesAnOpenDoor(ServerLevel level, DarkRoom a, DarkRoom b) {
-        Set<BlockPos> aPositions = new HashSet<>(a.getPositions());
-        for (BlockPos doorPos : a.getDoorPositions()) {
-            if (!b.getDoorPositions().contains(doorPos)) continue;
-            BlockState state = level.getBlockState(doorPos);
-            for (Direction dir : Direction.values()) {
-                if (!aPositions.contains(doorPos.relative(dir))) continue;
-                if (DarknessBlock.isDoorVisuallyOpenFromSide(level, doorPos, state, dir)) {
-                    return true;
-                }
-                break;
-            }
-        }
-        return false;
-    }
-
-    private void expandThroughDoors(ServerLevel level) {
-        int remainingBudget = Config.maxRoomVolume - getTotalDarknessCount();
-        if (remainingBudget <= 0) return;
+    private void tickExpansionThroughDoors(ServerLevel level) {
+        //Subtract total used volume from max volume, if zero or below, don't expand
+        int remainingVolume = Config.maxRoomVolume - DarkRoom.getTotalDarknessCount(rooms);
+        if (remainingVolume <= 0) return;
 
         Set<BlockPos> allPositions = new HashSet<>();
         for (DarkRoom room : rooms) {
@@ -577,19 +413,19 @@ public class DarkFountain {
                     if (!adjState.is(Blocks.AIR) && !adjState.is(Blocks.CAVE_AIR) && !adjState.is(Blocks.VOID_AIR))
                         continue;
 
-                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingBudget, false);
+                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false);
                     if (result.isValid()) {
                         DarkRoom newRoom = new DarkRoom(adjacent, result.getPositions(), result.getDoorPositions());
                         addEntitiesInRoomToTickers(level, newRoom);
                         newRooms.add(newRoom);
                         allPositions.addAll(result.getPositions());
-                        remainingBudget -= result.getPositions().size();
-                        if (remainingBudget <= 0) break;
+                        remainingVolume -= result.getPositions().size();
+                        if (remainingVolume <= 0) break;
                     }
                 }
-                if (remainingBudget <= 0) break;
+                if (remainingVolume <= 0) break;
             }
-            if (remainingBudget <= 0) break;
+            if (remainingVolume <= 0) break;
         }
 
         rooms.addAll(newRooms);
@@ -808,6 +644,93 @@ public class DarkFountain {
     }
 
     public void stopDarkness() { this.darknessSound.stopSound(); }
+
+    public void addRoom(DarkRoom room) {
+        rooms.add(room);
+    }
+
+    public CompoundTag save() {
+        CompoundTag tag = new CompoundTag();
+
+        tag.put(FOUNTAIN_POS, NbtUtils.writeBlockPos(fountainPos));
+        tag.putString(FOUNTAIN_DIMENSION, fountainDimension.location().toString());
+        tag.put(DESTINATION_POS, NbtUtils.writeBlockPos(destinationPos));
+        tag.putString(DESTINATION_DIMENSION, destinationDimension.location().toString());
+        tag.putInt(ANIMATION_TIMER, animationTimer);
+        tag.putInt(FRAME_TIMER, frameTimer);
+        tag.putInt(FRAME, frame);
+        tag.putInt(FRAME_OPTIMIZED, frameOptimized);
+        ListTag teleportedEntitiesList = new ListTag();
+        for (UUID uuid : teleportedEntities) {
+            teleportedEntitiesList.add(StringTag.valueOf(uuid.toString()));
+        }
+        tag.put(TELEPORTED_ENTITIES, teleportedEntitiesList);
+
+        ListTag roomsTag = new ListTag();
+        for (DarkRoom room : rooms) {
+            roomsTag.add(room.save());
+        }
+        tag.put(ROOMS, roomsTag);
+
+        return tag;
+    }
+
+    public static DarkFountain load(CompoundTag tag) {
+        BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
+        ResourceKey<Level> fountainDimension = stringToDimension(tag.getString(FOUNTAIN_DIMENSION));
+        BlockPos destinationPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS));
+        ResourceKey<Level> destinationDimension = stringToDimension(tag.getString(DESTINATION_DIMENSION));
+        int animationTimer = tag.getInt(ANIMATION_TIMER);
+        int frameTimer = tag.getInt(FRAME_TIMER);
+        int frame = tag.getInt(FRAME);
+        int frameOptimized = tag.getInt(FRAME_OPTIMIZED);
+        HashSet<UUID> teleportedEntities = new HashSet<>();
+        ListTag teleportedEntitiesTag = tag.getList(TELEPORTED_ENTITIES, Tag.TAG_STRING);
+        for (Tag tg : teleportedEntitiesTag) {
+            teleportedEntities.add(UUID.fromString(tg.getAsString()));
+        }
+
+        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, frameOptimized, teleportedEntities);
+
+        if (tag.contains(ROOMS)) {
+            ListTag roomsTag = tag.getList(ROOMS, Tag.TAG_COMPOUND);
+            for (Tag rt : roomsTag) {
+                fountain.rooms.add(DarkRoom.load((CompoundTag) rt));
+            }
+        }
+
+        return fountain;
+    }
+
+    public void sync(DarkFountain fountain) {
+        this.fountainPos = fountain.fountainPos;
+        this.destinationPos = fountain.destinationPos;
+        this.fountainDimension = fountain.fountainDimension;
+        this.destinationDimension = fountain.destinationDimension;
+
+        this.frame = fountain.frame;
+        this.animationTimer = fountain.animationTimer;
+        this.frameTimer = fountain.frameTimer;
+        this.frameOptimized = fountain.frameOptimized;
+
+        this.teleportedEntities = fountain.teleportedEntities;
+    }
+
+    public BlockPos getFountainPos() { return fountainPos; }
+    public ResourceKey<Level> getFountainDimension() { return fountainDimension; }
+    public BlockPos getDestinationPos() { return destinationPos; }
+    public ResourceKey<Level> getDestinationDimension() { return destinationDimension; }
+    public int getAnimationTimer() { return animationTimer; }
+    public int getFrameTimer() { return frameTimer; }
+    public int getFrame() { return frame; }
+    public int getFrameOptimized() { return frameOptimized; }
+
+    public static ResourceKey<Level> stringToDimension(String dimensionString) {
+        String[] split = dimensionString.split(":");
+        if (split.length > 1)
+            return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("minecraft", "dimension")), new ResourceLocation(split[0], split[1]));
+        return null;
+    }
 
     public static class DarkFountainTeleporter implements ITeleporter {
         private final Vec3 pos;

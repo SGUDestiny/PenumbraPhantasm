@@ -47,10 +47,14 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
             darknessLandTicker++;
         }
 
+        if (darknessOverlayTicker > 0) {
+            darknessOverlayTicker--;
+        }
         if (darknessOverlayTicker <= 0) {
             darknessOverlayTicker = -1;
         }
 
+        //Location title stuff below this point
         currentLocation = Util.makeDescriptionId("biome", level.getBiome(player.getOnPos()).unwrapKey().get().location());
 
         LazyOptional<DarkFountainCapability> lazyCap = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);

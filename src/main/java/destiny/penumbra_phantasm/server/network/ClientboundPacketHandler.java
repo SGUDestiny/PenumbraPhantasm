@@ -17,14 +17,9 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ClientboundPacketHandler
 {
 	public static float transportVeilProgress = 0f;
-	public static boolean fountainTransitioning = false;
 
-	public static void updateTransportVeil(float progress)
-	{
+	public static void updateTransportVeil(float progress) {
 		transportVeilProgress = progress;
-		if (progress >= 0.95f) {
-			fountainTransitioning = true;
-		}
 	}
 
 	public static void openIntroScreen(BlockPos pos, ResourceKey<Level> dim)
@@ -37,7 +32,7 @@ public class ClientboundPacketHandler
 		}));
 	}
 
-	public static void openTransportScreen(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dim) {
+	public static void openDarknessFallScreen(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dim) {
 		Minecraft minecraft = Minecraft.getInstance();
 		minecraft.setScreen(new DarknessFallScreen(() -> minecraft.setScreen(null), destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dim));
 	}

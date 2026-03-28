@@ -37,11 +37,6 @@ public class ClientBoundSingleFountainData
 		buffer.writeInt(fountain.getFrameOptimized());
 
 		buffer.writeCollection(fountain.teleportedEntities, FriendlyByteBuf::writeUUID);
-		buffer.writeVarInt(fountain.fadeInTickers.size());
-		for (Map.Entry<UUID, Integer> entry : fountain.fadeInTickers.entrySet()) {
-			buffer.writeUUID(entry.getKey());
-			buffer.writeInt(entry.getValue());
-		}
 	}
 
 	public static ClientBoundSingleFountainData decode(FriendlyByteBuf buffer)
@@ -61,10 +56,6 @@ public class ClientBoundSingleFountainData
 
 		DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animationTimer,
 				frameTimer, frame, frameOptimized, teleportedEntities);
-		int fadeInSize = buffer.readVarInt();
-		for (int i = 0; i < fadeInSize; i++) {
-			fountain.fadeInTickers.put(buffer.readUUID(), buffer.readInt());
-		}
 
 		return new ClientBoundSingleFountainData(fountain);
 	}

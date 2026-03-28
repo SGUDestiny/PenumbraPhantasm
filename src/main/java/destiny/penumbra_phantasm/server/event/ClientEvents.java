@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.event;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import destiny.penumbra_phantasm.client.render.screen.DarknessFallScreen;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.util.Mth;
 import org.lwjgl.opengl.GL11;
@@ -44,8 +45,6 @@ import java.util.Map;
 public class ClientEvents {
 
 	private static final BufferBuilder FOUNTAIN_BUFFER = new BufferBuilder(65536);
-	private static boolean wasOnLoadingScreen = false;
-	private static int postLoadGraceTicks = 0;
 
 	@SubscribeEvent
 	public static void levelRender(RenderLevelStageEvent event)
@@ -129,38 +128,8 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void clientTick(TickEvent.ClientTickEvent event)
-	{
-		if(event.phase == TickEvent.Phase.END)
-		{
-			if (ClientboundPacketHandler.fountainTransitioning) {
-				Screen screen = Minecraft.getInstance().screen;
-				boolean isLoadingScreen = screen instanceof ReceivingLevelScreen || screen instanceof ProgressScreen || screen instanceof GenericDirtMessageScreen;
-
-				if (isLoadingScreen) {
-					wasOnLoadingScreen = true;
-					postLoadGraceTicks = 0;
-				} else if (wasOnLoadingScreen && screen == null) {
-					wasOnLoadingScreen = false;
-					postLoadGraceTicks = 15;
-				}
-
-				if (!wasOnLoadingScreen && postLoadGraceTicks > 0) {
-					postLoadGraceTicks--;
-
-					LazyOptional<ScreenAnimationCapability> lazyAnim = Minecraft.getInstance().player != null
-							? Minecraft.getInstance().player.getCapability(CapabilityRegistry.SCREEN_ANIMATION)
-							: LazyOptional.empty();
-
-					boolean tickerStarted = lazyAnim.resolve().map(c -> c.darknessLandTicker >= 0).orElse(false);
-
-					if (postLoadGraceTicks == 0 || tickerStarted) {
-						ClientboundPacketHandler.fountainTransitioning = false;
-						postLoadGraceTicks = 0;
-					}
-				}
-			}
-
+	public static void clientTick(TickEvent.ClientTickEvent event) {
+		if(event.phase == TickEvent.Phase.END) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			ClientLevel level = Minecraft.getInstance().level;
 			if (player == null) return;
@@ -168,8 +137,6 @@ public class ClientEvents {
 				Minecraft.getInstance().getMusicManager().stopPlaying();
 			}
 			MusicManager.getInstance().tick();
-
-
 
 			DarkFountainCapability cap;
 			LazyOptional<DarkFountainCapability> lazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
@@ -254,5 +221,4 @@ public class ClientEvents {
 			}
 		}
 	}
-
 }
