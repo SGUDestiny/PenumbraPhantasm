@@ -198,11 +198,6 @@ public class DarkFountain {
 
     public void tick(Level level) {
         if (!level.isClientSide()) {
-            if (level instanceof ServerLevel serverLevel) {
-                ChunkPos fountainChunk = serverLevel.getChunk(fountainPos).getPos();
-                serverLevel.setChunkForced(fountainChunk.x, fountainChunk.z, true);
-            }
-
             if (this.animationTimer == 1) {
                 level.players().forEach(player -> {
                     if (player.level().dimension() == fountainDimension) {
@@ -736,9 +731,10 @@ public class DarkFountain {
 
         BlockPos pos = BlockPos.containing(x, destinationPos.getY(), z);
         ChunkPos chunk = destinationLevel.getChunk(pos).getPos();
-        destinationLevel.setChunkForced(chunk.x, chunk.z, false);
 
+        destinationLevel.setChunkForced(chunk.x, chunk.z, true);
         BlockPos heightmapPos = destinationLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.containing(x, destinationLevel.getMaxBuildHeight(), z));
+        destinationLevel.setChunkForced(chunk.x, chunk.z, false);
 
         return new Vec3(x, heightmapPos.getY() + 1, z);
     }
