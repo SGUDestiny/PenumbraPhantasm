@@ -10,7 +10,7 @@ import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import java.util.function.Supplier;
 
-public class ClientBoundParticlePacket {
+public class    ClientBoundParticlePacket {
     private final ResourceLocation particleId;
     private final double x;
     private final double y;
@@ -53,16 +53,8 @@ public class ClientBoundParticlePacket {
         return new ClientBoundParticlePacket(id, x, y, z, vx, vy, vz, count);
     }
 
-    public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            Level level = Minecraft.getInstance().level;
-            if (level == null) return;
-            ParticleType<?> type = ForgeRegistries.PARTICLE_TYPES.getValue(this.particleId);
-            if (!(type instanceof SimpleParticleType simpleType)) return;
-            for (int i = 0; i < this.count; i++) {
-                level.addParticle(simpleType, this.x, this.y, this.z, this.vx, this.vy, this.vz);
-            }
-        });
-        ctx.get().setPacketHandled(true);
+    public boolean handle(Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> ClientboundPacketHandler.sendParticle(particleId, x, y, z, vx, vy, vz, count));
+        return true;
     }
 }
