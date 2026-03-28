@@ -4,7 +4,7 @@ license="MIT License"
 
 [[mods]]
 modId="penumbra_phantasm"
-version="2.5"
+version="1.0"
 displayName="PENUMBRA PHANTASM"
 authors="Destiny"
 logoFile="assets/penumbra_phantasm/textures/misc/penumbra_phantasm_logo.gif"
@@ -42,5 +42,12 @@ description='''AT 'SHADOW'S EDGE,' SHATTER THE TWILIGHT REVERIE.'''
     modId="playeranimator"
     mandatory=true
     versionRange="[1.0.2-rc1+1.20, )"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.penumbra_phantasm]]
+    modId="infiniverse"
+    mandatory=true
+    versionRange="[1.0.0.5, )"
     ordering="NONE"
     side="BOTH"
