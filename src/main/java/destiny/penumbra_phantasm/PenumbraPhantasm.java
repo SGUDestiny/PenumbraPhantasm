@@ -82,7 +82,7 @@ public class PenumbraPhantasm {
 
         modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) ->
             {
-                event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, DarkWorldType.CODEC);
+                event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null);
             });
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
