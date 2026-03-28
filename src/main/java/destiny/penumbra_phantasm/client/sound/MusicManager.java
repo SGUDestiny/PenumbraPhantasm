@@ -14,6 +14,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.util.LazyOptional;
@@ -48,6 +49,8 @@ public class MusicManager {
     public MusicPriority pendingPriority = MusicPriority.BIOME;
     public boolean pendingLooping = true;
 
+    private float lastMusicSlider = Float.NaN;
+
     public static MusicManager getInstance() {
         return INSTANCE;
     }
@@ -81,8 +84,16 @@ public class MusicManager {
             return;
         }
 
+        float musicSlider = minecraft.options.getSoundSourceVolume(SoundSource.MUSIC);
+        boolean musicUnmuted = !Float.isNaN(lastMusicSlider) && lastMusicSlider <= 1.0E-4F && musicSlider > 1.0E-4F;
+        lastMusicSlider = musicSlider;
+
         if (currentSound != null && (state == State.PLAYING || state == State.FADING_IN)
                 && !minecraft.getSoundManager().isActive(currentSound)) {
+            if (!currentSound.isStopped()) {
+                currentSound.stopSound();
+                minecraft.getSoundManager().stop(currentSound);
+            }
             currentSound = null;
             currentSoundEvent = null;
             state = State.SILENT;
@@ -115,6 +126,14 @@ public class MusicManager {
                 beginFadeOut();
             }
 
+            tickFade();
+            return;
+        }
+
+        if (musicUnmuted && currentSoundEvent != null && desiredSound.equals(currentSoundEvent)
+                && desiredPriority == currentPriority
+                && (state == State.PLAYING || state == State.FADING_IN)) {
+            startTrack(desiredSound, desiredPriority, desiredLooping);
             tickFade();
             return;
         }
@@ -205,7 +224,8 @@ public class MusicManager {
                 startTrack(currentSoundEvent, currentPriority, currentLooping);
                 return;
             }
-            if (currentSound.getTargetVolume() > 0 && currentSound.getVolume() >= currentSound.getTargetVolume() - 0.005F) {
+            if (currentSound.getTargetVolume() > 0
+                    && currentSound.getLinearVolume() >= currentSound.getTargetVolume() - 0.005F) {
                 state = State.PLAYING;
             }
         }
