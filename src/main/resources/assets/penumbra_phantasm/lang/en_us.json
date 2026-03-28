@@ -129,11 +129,11 @@
   "biome.penumbra_phantasm.scarlet_forest": "Scarlet Forest",
   "biome.penumbra_phantasm.scarlet_forest.description": "'The forest of eternal autumn'",
 
-  "message.penumbra_phantasm.making_fountain_invalid_position": "Invalid position, must be on a full block",
-  "message.penumbra_phantasm.making_fountain_not_enough_key_blocks": "Not enough key blocks in the room",
+  "message.penumbra_phantasm.making_fountain_invalid_position": "Must be standing on a full block",
+  "message.penumbra_phantasm.making_fountain_not_enough_key_blocks": "Not enough blocks to power your imagination...",
   "message.penumbra_phantasm.making_fountain_inside_dark_world": "You feel like that's not a good idea...",
   "message.penumbra_phantasm.making_fountain_unsealed_or_too_big": "The room is unsealed or too big",
-  "message.penumbra_phantasm.making_fountain_another_fountain_nearby": "The room is unsealed or too big",
+  "message.penumbra_phantasm.making_fountain_another_fountain_nearby": "Too close to another fountain",
   "message.penumbra_phantasm.making_fountain_critical_error": "Couldn't make a fountain due to an error, please reach out to the developer!",
   "message.penumbra_phantasm.pushed_away_by_fountain": "The flow of darkness pushes you away...",
 
