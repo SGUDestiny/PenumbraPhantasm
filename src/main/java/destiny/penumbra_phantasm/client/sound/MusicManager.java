@@ -12,11 +12,13 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
@@ -108,7 +110,6 @@ public class MusicManager {
         if (fountainMusic != null) {
             desiredSound = fountainMusic;
             desiredPriority = MusicPriority.FOUNTAIN;
-            desiredLooping = true;
         }
 
         if (desiredPriority.ordinal() < MusicPriority.FOUNTAIN.ordinal()) {
@@ -116,7 +117,6 @@ public class MusicManager {
 
             if (biomeMusic != null) {
                 desiredSound = biomeMusic.sound();
-                desiredPriority = MusicPriority.BIOME;
                 desiredLooping = biomeMusic.looping();
             }
         }
@@ -130,7 +130,7 @@ public class MusicManager {
             return;
         }
 
-        if (musicUnmuted && currentSoundEvent != null && desiredSound.equals(currentSoundEvent)
+        if (musicUnmuted && desiredSound.equals(currentSoundEvent)
                 && desiredPriority == currentPriority
                 && (state == State.PLAYING || state == State.FADING_IN)) {
             startTrack(desiredSound, desiredPriority, desiredLooping);
@@ -290,7 +290,7 @@ public class MusicManager {
     private BiomeMusic biomeMusic(LocalPlayer player, ClientLevel level) {
         Holder<Biome> biomeHolder = level.getBiome(player.blockPosition());
         ResourceLocation biomeId = biomeHolder.unwrapKey()
-                .map(key -> key.location())
+                .map(ResourceKey::location)
                 .orElse(null);
         if (biomeId == null) return null;
         return biomeMusicMap.get(biomeId);
@@ -310,7 +310,23 @@ public class MusicManager {
             DarkFountain fountain = entry.getValue();
             if (fountain.animationTimer != -1) continue;
 
-            double distance = fountain.getFountainPos().getCenter().distanceTo(player.position());
+            Vec3 playerPos = player.position();
+            BlockPos fountainPos = fountain.getFountainPos();
+            double distance;
+
+            if (!DarkWorldUtil.isDarkWorld(minecraft.level)) {
+                distance = fountainPos.getCenter().distanceTo(playerPos);
+            } else {
+                if (playerPos.y < fountainPos.getY()) {
+                    distance = fountainPos.getCenter().distanceTo(playerPos);
+                } else {
+                    Vec3 playerPos2d = new Vec3(playerPos.x, 0f, playerPos.z);
+                    Vec3 fountainPos2d = new Vec3(fountainPos.getX(), 0, fountainPos.getZ());
+
+                    distance = fountainPos2d.distanceTo(playerPos2d);
+                }
+            }
+
             if (distance <= FOUNTAIN_MUSIC_RANGE) {
                 return SoundAccess.getFountainMusic();
             }

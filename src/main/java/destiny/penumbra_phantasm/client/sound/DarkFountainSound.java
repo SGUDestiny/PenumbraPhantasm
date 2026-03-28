@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.client.sound;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -8,6 +9,7 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 public class DarkFountainSound<T extends DarkFountain> extends AbstractTickableSoundInstance {
@@ -49,7 +51,19 @@ public class DarkFountainSound<T extends DarkFountain> extends AbstractTickableS
     {
         LocalPlayer player = minecraft.player;
         Vec3 playerPos = player.position();
-        return fountainPos.getCenter().distanceTo(playerPos);
+
+        if (!DarkWorldUtil.isDarkWorld(minecraft.level)) {
+            return fountainPos.getCenter().distanceTo(playerPos);
+        } else {
+            if (playerPos.y < fountainPos.getY()) {
+                return fountainPos.getCenter().distanceTo(playerPos);
+            } else {
+                Vec3 playerPos2d = new Vec3(playerPos.x, 0f, playerPos.z);
+                Vec3 fountainPos2d = new Vec3(fountainPos.getX(), 0, fountainPos.getZ());
+
+                return  fountainPos2d.distanceTo(playerPos2d);
+            }
+        }
     }
 
     public float getVolume()
