@@ -9,7 +9,9 @@ import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.fountain.RoomScanner;
+import destiny.penumbra_phantasm.server.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
@@ -45,6 +47,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
@@ -249,7 +253,11 @@ public class KnifeItem extends SwordItem {
         double particleZ = centerZ + forwardX * offsetAlongRow;
 
         //Spawn particle
-        level.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), particleX, particleY, particleZ, 0, 0, 0);
+        //level.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), particleX, particleY, particleZ, 0, 0, 0);
+        PacketHandlerRegistry.INSTANCE.send(
+                PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(particleX, particleY, particleZ, 32.0, level.dimension())),
+                new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_TARGET.get()), particleX, particleY, particleZ, 0, 0, 0, 1)
+        );
     }
 
     private void makeFountain(CompoundTag tag, Player player, Level level, ItemStack stack) {

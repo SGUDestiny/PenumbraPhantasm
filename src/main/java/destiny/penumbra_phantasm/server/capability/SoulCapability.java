@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.capability;
 import destiny.penumbra_phantasm.server.network.ClientBoundIntroPacket;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -27,7 +28,7 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
 
     public void tick(Level level, Player player) {
         if (!seenIntro) {
-            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (net.minecraft.server.level.ServerPlayer) player), new ClientBoundIntroPacket(player.getOnPos().above(), player.level().dimension()));
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), new ClientBoundIntroPacket(player.getOnPos().above(), player.level().dimension()));
             seenIntro = true;
         }
     }
