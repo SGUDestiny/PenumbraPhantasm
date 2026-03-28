@@ -10,6 +10,7 @@ import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.*;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -17,6 +18,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -235,10 +237,10 @@ public class DarkFountain {
             }
 
             if (!DarkWorldUtil.isDarkWorld(level) && level instanceof ServerLevel serverLevel) {
-                tickRoomFill(serverLevel);
-                tickTransportTickers(serverLevel);
-                tickDissipation(serverLevel);
-                tickContactTransport(serverLevel);
+                tickRoomDarknessFill(serverLevel);
+                tickDarkWorldTransportTickers(serverLevel);
+                tickRoomDissipation(serverLevel);
+                tickDarkWorldTeleportContact(serverLevel);
 
                 rescanTimer++;
                 if (rescanTimer >= Config.rescanInterval && (this.animationTimer == -1)) {
@@ -248,9 +250,7 @@ public class DarkFountain {
             }
 
             if (DarkWorldUtil.isDarkWorld(level) && level instanceof ServerLevel serverLevel) {
-                if (this.animationTimer > 125 || this.animationTimer == -1) {
-                    tickDarkWorldTeleport(serverLevel);
-                }
+                tickDarkWorldFountainPushing(serverLevel);
                 tickFadeInTickers(serverLevel);
             }
 
@@ -292,7 +292,7 @@ public class DarkFountain {
         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(level::dimension), new ClientBoundSingleFountainData(this));
     }
 
-    private void tickRoomFill(ServerLevel level) {
+    private void tickRoomDarknessFill(ServerLevel level) {
         for (DarkRoom room : rooms) {
             if (!room.isFilling()) continue;
 
@@ -317,7 +317,7 @@ public class DarkFountain {
         }
     }
 
-    private void tickTransportTickers(ServerLevel level) {
+    private void tickDarkWorldTransportTickers(ServerLevel level) {
         if (this.animationTimer >= 0 && this.animationTimer < FILL_START_TICK) return;
 
         ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
@@ -430,7 +430,7 @@ public class DarkFountain {
         }
     }
 
-    private void tickDissipation(ServerLevel level) {
+    private void tickRoomDissipation(ServerLevel level) {
         Iterator<DarkRoom> roomIt = rooms.iterator();
         while (roomIt.hasNext()) {
             DarkRoom room = roomIt.next();
@@ -618,7 +618,7 @@ public class DarkFountain {
         }
     }
 
-    private void tickContactTransport(ServerLevel level) {
+    private void tickDarkWorldTeleportContact(ServerLevel level) {
         ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
         if (destinationLevel == null) return;
 
@@ -675,13 +675,50 @@ public class DarkFountain {
         }
     }
 
-    private void tickDarkWorldTeleport(ServerLevel level) {
+    private void tickDarkWorldFountainPushing(ServerLevel level) {
+        AABB pushBox = new AABB(fountainPos.offset(0, 5, 0)).inflate(5).setMaxY(level.dimensionType().height());
+
+        for (Entity entity : level.getEntitiesOfClass(Entity.class, pushBox)) {
+            Vec3 entityPos = entity.position();
+            Vec3 awayVec;
+            double distance;
+
+            if (entityPos.y < fountainPos.getCenter().y) {
+                awayVec = entityPos.subtract(fountainPos.getCenter());
+            } else {
+                double dx = entityPos.x - fountainPos.getCenter().x;
+                double dz = entityPos.z - fountainPos.getCenter().z;
+
+                awayVec = new Vec3(dx, 0.0, dz);
+            }
+
+            distance = awayVec.length();
+            if (distance >= 4) {
+                return;
+            }
+
+            Vec3 directionVec = awayVec.scale(1.0 / distance);
+            double falloff = 1.0 - distance / 4;
+            Vec3 pushAwayVec = directionVec.scale(3 * falloff);
+
+            entity.push(pushAwayVec.x, pushAwayVec.y, pushAwayVec.z);
+
+            if (entity instanceof ServerPlayer serverPlayer) {
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+            }
+
+            if (entity instanceof Player player) {
+                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.pushed_away_by_fountain"), true);
+            }
+        }
+    }
+
+    private void tickLightWorldTeleport(ServerLevel level) {
         AABB teleportBox = new AABB(fountainPos.above()).inflate(1).setMaxY(level.dimensionType().height());
         HashSet<UUID> teleportBoxEntities = new HashSet<>();
-        ServerLevel fountainLevel = level.getServer().getLevel(this.fountainDimension);
         ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
 
-        if (fountainLevel == null || destinationLevel == null) return;
+        if (destinationLevel == null) return;
 
         destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
             DarkFountain destinationFountain = cap.darkFountains.get(this.destinationPos);

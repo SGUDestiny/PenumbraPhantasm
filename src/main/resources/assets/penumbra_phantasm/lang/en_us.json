@@ -135,6 +135,7 @@
   "message.penumbra_phantasm.making_fountain_unsealed_or_too_big": "The room is unsealed or too big",
   "message.penumbra_phantasm.making_fountain_another_fountain_nearby": "The room is unsealed or too big",
   "message.penumbra_phantasm.making_fountain_critical_error": "Couldn't make a fountain due to an error, please reach out to the developer!",
+  "message.penumbra_phantasm.pushed_away_by_fountain": "The flow of darkness pushes you away...",
 
   "screen.penumbra_phantasm.intro.line.1": "A R E    Y O U",
   "screen.penumbra_phantasm.intro.line.2": "T H E R E ?",
