@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Minecraft.class)
 public class MusicSuppressionMixin {
     @Inject(method = "getSituationalMusic", at = @At("HEAD"), cancellable = true)
-    private void penumbraPhantasm$suppressDarkWorldMusic(CallbackInfoReturnable<Music> cir) {
+    private void suppressDarkWorldMusic(CallbackInfoReturnable<Music> cir) {
         Minecraft mc = (Minecraft) (Object) this;
         LocalPlayer player = mc.player;
         if (player != null && DarkWorldUtil.isDarkWorld(player.level())) {

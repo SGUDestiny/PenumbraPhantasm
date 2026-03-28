@@ -14,7 +14,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.*;
@@ -40,15 +39,11 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
-   public static final Codec<SeededNoiseBasedChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> {
-      return instance.group(BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> {
-         return generator.biomeSource;
-      }), NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter((generator) -> {
-         return generator.settings;
-      }), Codec.LONG.optionalFieldOf("seed", 0L).forGetter((generator) -> {
-         return generator.seed;
-      })).apply(instance, instance.stable(SeededNoiseBasedChunkGenerator::new));
-   });
+   public static final Codec<SeededNoiseBasedChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
+           instance.group(BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) ->
+                   generator.biomeSource), NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter((generator) ->
+                   generator.settings), Codec.LONG.optionalFieldOf("seed", 0L).forGetter((generator) ->
+                   generator.seed)).apply(instance, instance.stable(SeededNoiseBasedChunkGenerator::new)));
    private static final BlockState AIR = Blocks.AIR.defaultBlockState();
    private final Holder<NoiseGeneratorSettings> settings;
    private final Supplier<Aquifer.FluidPicker> globalFluidPicker;
@@ -59,9 +54,7 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
    public SeededNoiseBasedChunkGenerator(BiomeSource source, Holder<NoiseGeneratorSettings> noise, long seed) {
       super(source, noise);
       this.settings = noise;
-      this.globalFluidPicker = Suppliers.memoize(() -> {
-         return createFluidPicker(noise.value());
-      });
+      this.globalFluidPicker = Suppliers.memoize(() -> createFluidPicker(noise.value()));
       this.seed = seed;
    }
 
@@ -69,9 +62,7 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
 										 RandomState randomState, long seed) {
       super(source, noise);
       this.settings = noise;
-      this.globalFluidPicker = Suppliers.memoize(() -> {
-         return createFluidPicker(noise.value());
-      });
+      this.globalFluidPicker = Suppliers.memoize(() -> createFluidPicker(noise.value()));
       this.customState = randomState;
       this.seed = seed;
    }
@@ -81,9 +72,7 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
       int i = pSettings.seaLevel();
       Aquifer.FluidStatus aquifer$fluidstatus1 = new Aquifer.FluidStatus(i, pSettings.defaultFluid());
       Aquifer.FluidStatus aquifer$fluidstatus2 = new Aquifer.FluidStatus(DimensionType.MIN_Y * 2, Blocks.AIR.defaultBlockState());
-      return (p_224274_, p_224275_, p_224276_) -> {
-         return p_224275_ < Math.min(-54, i) ? aquifer$fluidstatus : aquifer$fluidstatus1;
-      };
+      return (p_224274_, p_224275_, p_224276_) -> p_224275_ < Math.min(-54, i) ? aquifer$fluidstatus : aquifer$fluidstatus1;
    }
 
    private RandomState getResolvedState(RandomState pFallbackState) {
@@ -111,9 +100,7 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
                  settings.unwrapKey().get(), seed);
       }
 
-      NoiseChunk noisechunk = pChunk.getOrCreateNoiseChunk((p_224340_) -> {
-         return this.createNoiseChunk(p_224340_, pStructureManager, pBlender, customState);
-      });
+      NoiseChunk noisechunk = pChunk.getOrCreateNoiseChunk((p_224340_) -> this.createNoiseChunk(p_224340_, pStructureManager, pBlender, customState));
       BiomeResolver biomeresolver = BelowZeroRetrogen.getBiomeResolver(pBlender.getBiomeResolver(this.biomeSource), pChunk);
       pChunk.fillBiomesFromNoise(biomeresolver, noisechunk.cachedClimateSampler(customState.router(), this.settings.value().spawnTarget()));
    }
