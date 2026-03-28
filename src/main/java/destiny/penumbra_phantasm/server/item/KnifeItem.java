@@ -83,6 +83,9 @@ public class KnifeItem extends SwordItem {
         ItemStack stack = player.getItemInHand(hand);
         CompoundTag tag = stack.getOrCreateTag();
 
+        if (level.isClientSide())
+            return InteractionResultHolder.pass(stack);
+
         //Cancel making a fountain in dark worlds
         if (DarkWorldUtil.isDarkWorld(level)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_inside_dark_world"), true);
