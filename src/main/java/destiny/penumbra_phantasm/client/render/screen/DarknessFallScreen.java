@@ -113,7 +113,6 @@ public class DarknessFallScreen extends Screen {
     }
 
     public void closeScreen() {
-        //ClientboundPacketHandler.fountainTransitioning = true;
         onFinished.run();
         Minecraft.getInstance().getSoundManager().stop();
         PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
