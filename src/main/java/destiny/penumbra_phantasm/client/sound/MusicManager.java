@@ -274,7 +274,7 @@ public class MusicManager {
         }
     }
 
-    private void stopImmediately() {
+    public void stopImmediately() {
         if (currentSound != null && !currentSound.isStopped()) {
             currentSound.stopSound();
             minecraft.getSoundManager().stop(currentSound);

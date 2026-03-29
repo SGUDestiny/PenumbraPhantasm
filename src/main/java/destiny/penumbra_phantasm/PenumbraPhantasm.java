@@ -24,6 +24,7 @@ import destiny.penumbra_phantasm.client.render.particle.FountainTargetParticle;
 import destiny.penumbra_phantasm.client.render.particle.LuminescentParticle;
 import destiny.penumbra_phantasm.client.render.particle.RealKnifeHitParticle;
 import destiny.penumbra_phantasm.client.render.particle.RealKnifeSlashParticle;
+import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
 import destiny.penumbra_phantasm.client.render.particle.ScarletLeafParticle;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
@@ -113,6 +114,7 @@ public class PenumbraPhantasm {
         @SubscribeEvent
         public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
             event.registerReloadListener(DeltaShieldRenderer.INSTANCE);
+            event.registerReloadListener(DarkWorldMusicReloadListener.INSTANCE);
         }
 
         @SubscribeEvent
