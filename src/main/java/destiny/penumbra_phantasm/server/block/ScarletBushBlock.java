@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -49,6 +50,8 @@ public class ScarletBushBlock extends Block implements SimpleWaterloggedBlock {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         entity.makeStuckInBlock(state, new Vec3(0.5d, 0.5d, 0.5d));
+
+        if (!(entity instanceof Player)) return;
 
         if (!state.getValue(HOLE).getSerializedName().equals("none")) return;
 
