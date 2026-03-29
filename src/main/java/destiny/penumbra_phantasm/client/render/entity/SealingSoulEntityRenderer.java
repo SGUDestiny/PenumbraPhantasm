@@ -27,58 +27,67 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
     public void render(@NotNull SealingSoulEntity sealingSoulEntity, float entity, float partialTick, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int packedLight) {
         int tick = sealingSoulEntity.getTick();
 
-        float endingSoulAlpha = 0f;
-        float endingSoulSize = 1f;
-        float endingSoulSecondarySize = 0f;
+        float soulAlpha = 0f;
+        float soulSize = 0.5f;
+        float shineSize = 0f;
 
-        float endingSoulAppearStart = 0;
-        float endingSoulAppearDuration = 10f;
-        float endingSoulAppearDelta = (tick - endingSoulAppearStart) / endingSoulAppearDuration;
-        if (tick < endingSoulAppearStart + endingSoulAppearDuration) {
-            endingSoulSize = Mth.lerp(endingSoulAppearDelta, 0f, 0.5f);
+        float soulAppearStart = 0;
+        float soulAppearDuration = 10f;
+        float soulAppearDelta = (tick - soulAppearStart) / soulAppearDuration;
+        if (tick < soulAppearStart + soulAppearDuration) {
+            soulSize = Mth.lerp(soulAppearDelta, 0f, 0.5f);
         }
 
-        float endingSoulSecondaryAppearDuration = 20f;
-        float endingSoulSecondaryAppearDelta = (tick - endingSoulAppearStart) / endingSoulSecondaryAppearDuration;
-        if (tick < endingSoulAppearStart + endingSoulSecondaryAppearDuration) {
-            endingSoulAlpha = Mth.lerp(endingSoulSecondaryAppearDelta, 1f, 0f);
-            endingSoulSecondarySize = Mth.lerp(endingSoulSecondaryAppearDelta, 0f, 5f);
+        float shineAppearDuration = 20f;
+        float shineAppearDelta = (tick - soulAppearStart) / shineAppearDuration;
+        if (tick < soulAppearStart + shineAppearDuration) {
+            soulAlpha = Mth.lerp(shineAppearDelta, 1f, 0f);
+            shineSize = Mth.lerp(shineAppearDelta, 0f, 5f);
         }
 
-        float endingSoulShineStart = 4 * 20;
-        float endingSoulShineDuration = 20;
-        float endingSoulSecondaryShineDelta = (tick - endingSoulShineStart) / endingSoulShineDuration;
-        if (tick >= endingSoulShineStart && tick < endingSoulShineStart + endingSoulShineDuration) {
-            endingSoulAlpha = Mth.lerp(endingSoulSecondaryShineDelta, 1f, 0f);
-            endingSoulSecondarySize = Mth.lerp(endingSoulSecondaryShineDelta, 0f, 5f);
+        float endingShineAppearStart = 4 * 20;
+        float endingShineAppearDuration = 20;
+        float endingShineDuration = (tick - endingShineAppearStart) / endingShineAppearDuration;
+        if (tick >= endingShineAppearStart && tick < endingShineAppearStart + endingShineAppearDuration) {
+            soulAlpha = Mth.lerp(endingShineDuration, 1f, 0f);
+            shineSize = Mth.lerp(endingShineDuration, 0f, 5f);
         }
-
         pose.pushPose();
         pose.translate(0f, 0.5f, 0f);
-        pose.scale(1.25f * endingSoulSize, 1.25f * endingSoulSize, 1.25f * endingSoulSize);
-        renderSoul(sealingSoulEntity, pose, buffer, packedLight, 1);
+        pose.scale(soulSize, soulSize, soulSize);
+
+        pose.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
+        pose.mulPose(Axis.YP.rotationDegrees(180));
+
+        Matrix4f soulMatrix = pose.last().pose();
+        Matrix3f soulNormalMatrix = pose.last().normal();
+        VertexConsumer soulConsumer = buffer.getBuffer(RenderTypes.entityTranslucentEmissive(getTextureLocation(sealingSoulEntity)));
+        int overlay = OverlayTexture.NO_OVERLAY;
+
+        soulConsumer.vertex(soulMatrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(soulNormalMatrix, 0, 0, 1).endVertex();
+        soulConsumer.vertex(soulMatrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(soulNormalMatrix, 0, 0, 1).endVertex();
+        soulConsumer.vertex(soulMatrix, 0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(1, 0).overlayCoords(overlay).uv2(packedLight).normal(soulNormalMatrix, 0, 0, 1).endVertex();
+        soulConsumer.vertex(soulMatrix, -0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(0, 0).overlayCoords(overlay).uv2(packedLight).normal(soulNormalMatrix, 0, 0, 1).endVertex();
+
         pose.popPose();
 
         pose.pushPose();
         pose.translate(0f, 0.5f, 0f);
-        pose.scale(endingSoulSecondarySize, endingSoulSecondarySize, endingSoulSecondarySize);
-        renderSoul(sealingSoulEntity, pose, buffer, packedLight, endingSoulAlpha);
-        pose.popPose();
-    }
+        pose.scale(shineSize, shineSize, shineSize);
 
-    public void renderSoul(SealingSoulEntity sealingSoulEntity, PoseStack pose, MultiBufferSource buffer, int packedLight, float alpha) {
         pose.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
         pose.mulPose(Axis.YP.rotationDegrees(180));
 
         Matrix4f matrix = pose.last().pose();
         Matrix3f normalMatrix = pose.last().normal();
         VertexConsumer consumerA = buffer.getBuffer(RenderTypes.fountain(getTextureLocation(sealingSoulEntity)));
-        int overlay = OverlayTexture.NO_OVERLAY;
 
-        consumerA.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255 * alpha).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-        consumerA.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255 * alpha).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-        consumerA.vertex(matrix, 0.5f, 0.5f, 0).color(255, 255, 255, 255 * alpha).uv(1, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-        consumerA.vertex(matrix, -0.5f, 0.5f, 0).color(255, 255, 255, 255 * alpha).uv(0, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, 0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(1, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, -0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(0, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+
+        pose.popPose();
     }
 
     @Override

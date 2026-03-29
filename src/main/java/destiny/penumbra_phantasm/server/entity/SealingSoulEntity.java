@@ -37,6 +37,13 @@ public class SealingSoulEntity extends Entity {
             if (tick == 0) {
                 level.playSound(null, this.blockPosition(), SoundRegistry.GREAT_SHINE.get(), SoundSource.AMBIENT, 1, 1);
             }
+            if (tick == 4 * 20) {
+                level.players().forEach(player -> {
+                    if (player.level().dimension() == level.dimension()) {
+                        level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_SEAL.get(), SoundSource.AMBIENT, 1f, 1f);
+                    }
+                });
+            }
 
             tick++;
             this.entityData.set(TICK_ENTITY_DATA, tick);
