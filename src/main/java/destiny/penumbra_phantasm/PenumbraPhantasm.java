@@ -1,7 +1,9 @@
 package destiny.penumbra_phantasm;
 
+import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.registry.*;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.registries.DataPackRegistryEvent;
 import org.slf4j.Logger;
 
@@ -74,6 +76,7 @@ public class PenumbraPhantasm {
         CreativeTabRegistry.DEF_REG.register(modEventBus);
         BlockEntityRegistry.BLOCK_ENTITIES.register(modEventBus);
         EffectRegistry.DEF_REG.register(modEventBus);
+        EntityRegistry.ENTITY_TYPES.register(modEventBus);
         ParticleTypeRegistry.PARTICLE_TYPES.register(modEventBus);
         FeatureRegistry.FOLIAGES.register(modEventBus);
         FeatureRegistry.TRUNKS.register(modEventBus);
@@ -134,6 +137,8 @@ public class PenumbraPhantasm {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
+                EntityRenderers.register(EntityRegistry.SEALING_SOUL.get(), SealingSoulEntityRenderer::new);
+
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());
                 ItemProperties.register(ItemRegistry.SOUL_HEARTH.get(), new ResourceLocation(MODID, SOUL_TYPE), new SoulHearthItemProperty());
                 ItemProperties.register(ItemRegistry.DELTA_SHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
