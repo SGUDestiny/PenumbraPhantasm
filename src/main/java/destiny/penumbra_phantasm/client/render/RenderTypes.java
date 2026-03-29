@@ -24,18 +24,6 @@ public class RenderTypes extends RenderType {
                         .createCompositeState(true));
     }
 
-    public static RenderType fountainDark(ResourceLocation rl)
-    {
-        return create("fountain_dark", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
-                false, false,
-                RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
-                        .setTextureState(new TextureStateShard(rl, false, false))
-                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                        .setCullState(CULL)
-                        .createCompositeState(true));
-    }
-
     private static final RenderStateShard.ShaderStateShard FOUNTAIN_MASKED_SHADER =
             new RenderStateShard.ShaderStateShard(() -> ModShaders.FOUNTAIN_MASKED);
 

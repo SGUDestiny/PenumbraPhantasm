@@ -3,12 +3,6 @@ package destiny.penumbra_phantasm;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.registry.*;
-import net.minecraft.client.renderer.entity.EntityRenderers;
-import net.minecraftforge.registries.DataPackRegistryEvent;
-import org.slf4j.Logger;
-
-import com.mojang.logging.LogUtils;
-
 import destiny.penumbra_phantasm.client.model.item.DeltashieldModel;
 import destiny.penumbra_phantasm.client.render.dimension.DarkWorldDimensionEffects;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
@@ -30,9 +24,10 @@ import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
 import destiny.penumbra_phantasm.client.render.particle.ScarletLeafParticle;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
-import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
@@ -53,6 +48,10 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.slf4j.Logger;
+import com.mojang.logging.LogUtils;
+
+import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
 
 @Mod(PenumbraPhantasm.MODID)
 public class PenumbraPhantasm {
@@ -76,7 +75,6 @@ public class PenumbraPhantasm {
         CreativeTabRegistry.DEF_REG.register(modEventBus);
         BlockEntityRegistry.BLOCK_ENTITIES.register(modEventBus);
         EffectRegistry.DEF_REG.register(modEventBus);
-        EntityRegistry.ENTITY_TYPES.register(modEventBus);
         ParticleTypeRegistry.PARTICLE_TYPES.register(modEventBus);
         FeatureRegistry.FOLIAGES.register(modEventBus);
         FeatureRegistry.TRUNKS.register(modEventBus);

@@ -16,12 +16,11 @@ public class SealingSoulEntity extends Entity {
     public static final String SOUL_TYPE = "soulType";
     public static final String TICK = "tick";
 
-    public int soulType;
+    public int soulType = 1;
     public int tick = 0;
 
-    public SealingSoulEntity(EntityType<SealingSoulEntity> type, Level level, int soulType) {
+    public SealingSoulEntity(EntityType<SealingSoulEntity> type, Level level) {
         super(type, level);
-        this.soulType = soulType;
     }
 
     @Override

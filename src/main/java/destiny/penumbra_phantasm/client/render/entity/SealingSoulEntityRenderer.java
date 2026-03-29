@@ -4,19 +4,19 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.render.RenderTypes;
 import destiny.penumbra_phantasm.server.entity.SealingSoulEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 
 public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity> {
-    public static final ResourceLocation WHITE_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/white_screen.png");
-
     public SealingSoulEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
     }
@@ -25,17 +25,20 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
     public void render(@NotNull SealingSoulEntity sealingSoulEntity, float entity, float partialTick, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int packedLight) {
         pose.pushPose();
 
-        pose.translate(0.5f, 0.5f, 0.5f);
+        pose.translate(0f, 0.5f, 0f);
 
         pose.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
         pose.mulPose(Axis.YP.rotationDegrees(180));
 
-        VertexConsumer consumerA = buffer.getBuffer(RenderType.entityTranslucent(getTextureLocation(sealingSoulEntity)));
+        Matrix4f matrix = pose.last().pose();
+        Matrix3f normalMatrix = pose.last().normal();
+        VertexConsumer consumerA = buffer.getBuffer(RenderTypes.fountain(getTextureLocation(sealingSoulEntity)));
+        int overlay = OverlayTexture.NO_OVERLAY;
 
-        consumerA.vertex(pose.last().pose(), -0.5f, -0.5f, 0).color(FastColor.ABGR32.color(255, 255, 255, 255)).uv(0, 1).endVertex();
-        consumerA.vertex(pose.last().pose(), 0.5f, -0.5f, 0).color(FastColor.ABGR32.color(255, 255, 255, 255)).uv(1, 1).endVertex();
-        consumerA.vertex(pose.last().pose(), 0.5f, 0.5f, 0).color(FastColor.ABGR32.color(255, 255, 255, 255)).uv(1, 0).endVertex();
-        consumerA.vertex(pose.last().pose(), -0.5f, 0.5f, 0).color(FastColor.ABGR32.color(255, 255, 255, 255)).uv(0, 0).endVertex();
+        consumerA.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, 0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(1, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, -0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(0, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
 
         pose.popPose();
     }

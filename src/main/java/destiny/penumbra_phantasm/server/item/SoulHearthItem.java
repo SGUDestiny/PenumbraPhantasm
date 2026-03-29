@@ -2,7 +2,9 @@ package destiny.penumbra_phantasm.server.item;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.SoulType;
+import destiny.penumbra_phantasm.server.entity.SealingSoulEntity;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.EntityRegistry;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
@@ -11,6 +13,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
@@ -66,6 +69,21 @@ public class SoulHearthItem extends Item {
                 return IClientItemExtensions.super.getArmPose(entityLiving, hand, itemStack);
             }
         });
+    }
+
+    @Override
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (!level.isClientSide()) {
+            SealingSoulEntity soulEntity = new SealingSoulEntity(EntityRegistry.SEALING_SOUL.get(), level);
+            soulEntity.soulType = 7;
+            soulEntity.setPos(player.position());
+
+            level.addFreshEntity(soulEntity);
+        }
+
+        return InteractionResultHolder.consume(stack);
     }
 
     @Override
