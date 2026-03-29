@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SealingSoulEntity extends Entity {
     public static final EntityDataAccessor<Integer> SOUL_TYPE_ENTITY_DATA = SynchedEntityData.defineId(SealingSoulEntity.class, EntityDataSerializers.INT);
+    public static final EntityDataAccessor<Integer> TICK_ENTITY_DATA = SynchedEntityData.defineId(SealingSoulEntity.class, EntityDataSerializers.INT);
     public static final String SOUL_TYPE = "soulType";
     public static final String TICK = "tick";
 
@@ -27,7 +28,7 @@ public class SealingSoulEntity extends Entity {
     public void tick() {
         Level level = this.level();
 
-        if (tick >= 100) {
+        if (tick >= 5 * 20) {
             tick = 0;
 
             //Send packets here
@@ -38,12 +39,23 @@ public class SealingSoulEntity extends Entity {
             }
 
             tick++;
+            this.entityData.set(TICK_ENTITY_DATA, tick);
         }
+    }
+
+    public void setSoulType(int soulType) {
+        this.soulType = soulType;
+        this.entityData.set(SOUL_TYPE_ENTITY_DATA, soulType);
+    }
+
+    public int getTick() {
+        return this.entityData.get(TICK_ENTITY_DATA);
     }
 
     @Override
     protected void defineSynchedData() {
         this.entityData.define(SOUL_TYPE_ENTITY_DATA, soulType);
+        this.entityData.define(TICK_ENTITY_DATA, tick);
     }
 
     @Override

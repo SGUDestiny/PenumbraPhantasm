@@ -77,7 +77,7 @@ public class SoulHearthItem extends Item {
 
         if (!level.isClientSide()) {
             SealingSoulEntity soulEntity = new SealingSoulEntity(EntityRegistry.SEALING_SOUL.get(), level);
-            soulEntity.soulType = 7;
+            soulEntity.setSoulType(7);
             soulEntity.setPos(player.position());
 
             level.addFreshEntity(soulEntity);

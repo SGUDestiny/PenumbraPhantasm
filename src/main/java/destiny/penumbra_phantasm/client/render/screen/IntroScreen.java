@@ -590,13 +590,13 @@ public class IntroScreen extends Screen {
 
             //Ending
             if (tickText >= 92 * 20 + 5) {
-                float endingSizeX1 = 1;
-                float endingSizeX2 = 2;
-                float endingSizeX3 = 3;
+                float endingSizeX1;
+                float endingSizeX2;
+                float endingSizeX3;
 
-                float endingAlpha1 = 1f;
-                float endingAlpha2 = 1f;
-                float endingAlpha3 = 1f;
+                float endingAlpha1;
+                float endingAlpha2;
+                float endingAlpha3;
                 float endingStart = 92 * 20 + 5;
                 float endingDuration = 60;
                 float endingDelta = (tickText - endingStart) / endingDuration;
