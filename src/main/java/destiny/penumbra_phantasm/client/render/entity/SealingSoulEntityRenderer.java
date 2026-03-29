@@ -42,7 +42,7 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
         float shineAppearDelta = (tick - soulAppearStart) / shineAppearDuration;
         if (tick < soulAppearStart + shineAppearDuration) {
             soulAlpha = Mth.lerp(shineAppearDelta, 1f, 0f);
-            shineSize = Mth.lerp(shineAppearDelta, 0f, 5f);
+            shineSize = Mth.lerp(shineAppearDelta, 0f, 4f);
         }
 
         float endingShineAppearStart = 4 * 20;
@@ -50,8 +50,10 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
         float endingShineDuration = (tick - endingShineAppearStart) / endingShineAppearDuration;
         if (tick >= endingShineAppearStart && tick < endingShineAppearStart + endingShineAppearDuration) {
             soulAlpha = Mth.lerp(endingShineDuration, 1f, 0f);
-            shineSize = Mth.lerp(endingShineDuration, 0f, 5f);
+            shineSize = Mth.lerp(endingShineDuration, 0f, 4f);
         }
+
+        //Soul
         pose.pushPose();
         pose.translate(0f, 0.5f, 0f);
         pose.scale(soulSize, soulSize, soulSize);
@@ -68,9 +70,9 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
         soulConsumer.vertex(soulMatrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(soulNormalMatrix, 0, 0, 1).endVertex();
         soulConsumer.vertex(soulMatrix, 0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(1, 0).overlayCoords(overlay).uv2(packedLight).normal(soulNormalMatrix, 0, 0, 1).endVertex();
         soulConsumer.vertex(soulMatrix, -0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(0, 0).overlayCoords(overlay).uv2(packedLight).normal(soulNormalMatrix, 0, 0, 1).endVertex();
-
         pose.popPose();
 
+        //Shine
         pose.pushPose();
         pose.translate(0f, 0.5f, 0f);
         pose.scale(shineSize, shineSize, shineSize);
@@ -80,13 +82,12 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
 
         Matrix4f matrix = pose.last().pose();
         Matrix3f normalMatrix = pose.last().normal();
-        VertexConsumer consumerA = buffer.getBuffer(RenderTypes.fountain(getTextureLocation(sealingSoulEntity)));
+        VertexConsumer consumerA = buffer.getBuffer(RenderTypes.entityTranslucentEmissive(getTextureLocation(sealingSoulEntity)));
 
-        consumerA.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-        consumerA.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-        consumerA.vertex(matrix, 0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(1, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-        consumerA.vertex(matrix, -0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(0, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-
+        consumerA.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, (int)(soulAlpha * 255)).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, (int)(soulAlpha * 255)).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, 0.5f, 0.5f, 0).color(255, 255, 255, (int)(soulAlpha * 255)).uv(1, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumerA.vertex(matrix, -0.5f, 0.5f, 0).color(255, 255, 255, (int)(soulAlpha * 255)).uv(0, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
         pose.popPose();
     }
 
