@@ -46,7 +46,7 @@ public class GameRendererMixin {
 			sealShineTick = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve().map(c -> c.sealShineTicker).orElse(-1);
 		}
 
-		if (landAlpha == 0f && fountainAlpha == 0f) return;
+		if (landAlpha == 0f && fountainAlpha == 0f && sealShineTick < 0) return;
 
 		int width = minecraft.getWindow().getGuiScaledWidth();
 		int height = minecraft.getWindow().getGuiScaledHeight();
@@ -66,9 +66,7 @@ public class GameRendererMixin {
 
 		renderLandScreenFadeOut(graphics, width, height, landAlpha);
 		renderTransitionFadeOut(graphics, width, height, fountainAlpha);
-		if (sealShineTick >= 0) {
-			renderSealShine(pose, width, height, sealShineTick);
-		}
+		renderSealShine(pose, width, height, sealShineTick);
 
 		graphics.flush();
 

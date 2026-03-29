@@ -1,20 +1,16 @@
 package destiny.penumbra_phantasm.server.entity;
 
-import destiny.penumbra_phantasm.server.network.ClientBoundTransportTickerPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
-import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 public class SealingSoulEntity extends Entity {
@@ -48,8 +44,8 @@ public class SealingSoulEntity extends Entity {
             }
             if (tick == 4 * 20) {
                 level.players().forEach(player -> {
-                    if (player.level().dimension() == level.dimension() && player instanceof ServerPlayer serverPlayer) {
-                        serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.sealShineTicker = 0);
+                    if (player.level().dimension() == level.dimension()) {
+                        player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.sealShineTicker = 0);
                         level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_SEAL.get(), SoundSource.AMBIENT, 1f, 1f);
                     }
                 });
