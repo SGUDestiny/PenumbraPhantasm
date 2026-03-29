@@ -8,20 +8,8 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ClientBoundAnimationPacket {
-    public final int darknessLandTicker;
-    public final int darknessOverlayTicker;
-    public final String previousLocation;
-    public final String currentLocation;
-    public final int titleAlphaTicker;
-
-    public ClientBoundAnimationPacket(int darknessLandTicker, int darknessOverlayTicker, String previousLocation, String currentLocation, int titleAlphaTicker) {
-        this.darknessLandTicker = darknessLandTicker;
-        this.darknessOverlayTicker = darknessOverlayTicker;
-        this.previousLocation = previousLocation;
-        this.currentLocation = currentLocation;
-        this.titleAlphaTicker = titleAlphaTicker;
-    }
+public record ClientBoundAnimationPacket(int darknessLandTicker, int darknessOverlayTicker, String previousLocation,
+                                         String currentLocation, int titleAlphaTicker) {
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeInt(darknessLandTicker);
@@ -44,7 +32,7 @@ public class ClientBoundAnimationPacket {
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             LocalPlayer player = Minecraft.getInstance().player;
-            if(player != null) {
+            if (player != null) {
                 player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
                     cap.darknessLandTicker = darknessLandTicker;
                     cap.darknessOverlayTicker = darknessOverlayTicker;

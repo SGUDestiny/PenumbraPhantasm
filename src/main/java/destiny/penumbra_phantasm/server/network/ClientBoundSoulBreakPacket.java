@@ -31,7 +31,7 @@ public class ClientBoundSoulBreakPacket
 	public boolean handle(Supplier<NetworkEvent.Context> ctx)
 	{
 		ctx.get().enqueueWork(() -> {
-			ClientboundPacketHandler.syncSoulBreak(diedWithSoulHearth, soulType);
+			ClientBoundPacketHandler.syncSoulBreak(diedWithSoulHearth, soulType);
 		});
 		return true;
 	}

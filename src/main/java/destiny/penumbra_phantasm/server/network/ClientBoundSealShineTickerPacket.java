@@ -5,19 +5,19 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ClientBoundTransportTickerPacket {
-    private final float progress;
+public class ClientBoundSealShineTickerPacket {
+    private final int sealShineTicker;
 
-    public ClientBoundTransportTickerPacket(float progress) {
-        this.progress = progress;
+    public ClientBoundSealShineTickerPacket(int sealShineTicker) {
+        this.sealShineTicker = sealShineTicker;
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeFloat(progress);
+        buffer.writeInt(sealShineTicker);
     }
 
     public static ClientBoundTransportTickerPacket decode(FriendlyByteBuf buffer) {
-        return new ClientBoundTransportTickerPacket(buffer.readFloat());
+        return new ClientBoundTransportTickerPacket(buffer.readInt());
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {

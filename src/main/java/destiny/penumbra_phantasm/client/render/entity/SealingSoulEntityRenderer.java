@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.RenderTypes;
 import destiny.penumbra_phantasm.server.entity.SealingSoulEntity;
 import net.minecraft.client.Minecraft;
@@ -25,7 +24,7 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
 
     @Override
     public void render(@NotNull SealingSoulEntity sealingSoulEntity, float entity, float partialTick, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int packedLight) {
-        int tick = sealingSoulEntity.getTick();
+        float tick = sealingSoulEntity.getTick() + partialTick;;
 
         float soulAlpha = 0f;
         float soulSize = 0.5f;
@@ -63,7 +62,7 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
 
         Matrix4f soulMatrix = pose.last().pose();
         Matrix3f soulNormalMatrix = pose.last().normal();
-        VertexConsumer soulConsumer = buffer.getBuffer(RenderTypes.entityTranslucentEmissive(getTextureLocation(sealingSoulEntity)));
+        VertexConsumer soulConsumer = buffer.getBuffer(RenderTypes.fountain(getTextureLocation(sealingSoulEntity)));
         int overlay = OverlayTexture.NO_OVERLAY;
 
         soulConsumer.vertex(soulMatrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(soulNormalMatrix, 0, 0, 1).endVertex();
@@ -82,7 +81,7 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
 
         Matrix4f matrix = pose.last().pose();
         Matrix3f normalMatrix = pose.last().normal();
-        VertexConsumer consumerA = buffer.getBuffer(RenderTypes.entityTranslucentEmissive(getTextureLocation(sealingSoulEntity)));
+        VertexConsumer consumerA = buffer.getBuffer(RenderTypes.fountain(getTextureLocation(sealingSoulEntity)));
 
         consumerA.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, (int)(soulAlpha * 255)).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
         consumerA.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, (int)(soulAlpha * 255)).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();

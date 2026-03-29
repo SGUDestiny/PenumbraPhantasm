@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.item;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.capability.SoulType;
 import destiny.penumbra_phantasm.server.entity.SealingSoulEntity;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.EntityRegistry;
@@ -22,7 +21,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -72,13 +73,20 @@ public class SoulHearthItem extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+
+        if (stack.getTag() == null) return InteractionResultHolder.pass(stack);
 
         if (!level.isClientSide()) {
             SealingSoulEntity soulEntity = new SealingSoulEntity(EntityRegistry.SEALING_SOUL.get(), level);
-            soulEntity.setSoulType(7);
-            soulEntity.setPos(player.position());
+            soulEntity.setSoulType(stack.getTag().getInt(SOUL_TYPE));
+
+            float yawRad = player.getYRot() * Mth.DEG_TO_RAD;
+            Vec3 playerPos = player.position();
+            double forwardX = -Mth.sin(yawRad);
+            double forwardZ = Mth.cos(yawRad);
+            soulEntity.setPos(playerPos.x + forwardX, playerPos.y + 1, playerPos.z + (forwardZ * 2));
 
             level.addFreshEntity(soulEntity);
         }
@@ -87,7 +95,7 @@ public class SoulHearthItem extends Item {
     }
 
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
         if (level.isClientSide()) return;
 
         if (entity instanceof Player player) {
@@ -118,7 +126,7 @@ public class SoulHearthItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> components, TooltipFlag isAdvanced) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag isAdvanced) {
         if (stack.getTag() == null) return;
 
         UUID ownerUuid = stack.getTag().getUUID(OWNER_UUID);

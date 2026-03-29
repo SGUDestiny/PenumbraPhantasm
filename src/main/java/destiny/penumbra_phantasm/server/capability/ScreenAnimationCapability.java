@@ -31,6 +31,8 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     public static final String CURRENT_LOCATION = "currentLocation";
     public static final String TITLE_ALPHA_TICKER = "titleAlphaTicker";
 
+    public static final String SEAL_SHINE_TICKER = "sealShineTicker";
+
     public int darknessLandTicker = -1;
     public int darknessOverlayTicker = -1;
 
@@ -38,6 +40,8 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     public String currentLocation = "";
     public int titleAlphaTicker = -1;
     public List<String> visitedLocations = new ArrayList<>();
+
+    public int sealShineTicker = -1;
 
     public void tick(Level level, Player player) {
         if (darknessLandTicker >= 40) {
@@ -52,6 +56,13 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         }
         if (darknessOverlayTicker <= 0) {
             darknessOverlayTicker = -1;
+        }
+
+        if (sealShineTicker >= 2 * 20) {
+            sealShineTicker = -1;
+        }
+        if (sealShineTicker >= 0) {
+            sealShineTicker++;
         }
 
         //Location title stuff below this point
@@ -118,5 +129,6 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         this.previousLocation = cap.previousLocation;
         this.currentLocation = cap.currentLocation;
         this.titleAlphaTicker = cap.titleAlphaTicker;
+        this.sealShineTicker = cap.sealShineTicker;
     }
 }

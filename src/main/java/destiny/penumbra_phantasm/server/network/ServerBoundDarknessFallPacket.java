@@ -1,6 +1,5 @@
 package destiny.penumbra_phantasm.server.network;
 
-import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
@@ -15,23 +14,8 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ServerBoundDarknessFallPacket {
-    public final BlockPos destinationPos;
-    public final double spawnX;
-    public final double spawnY;
-    public final double spawnZ;
-    public final float spawnYaw;
-    public final ResourceKey<Level> dimension;
-
-    public ServerBoundDarknessFallPacket(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dimension) {
-        this.destinationPos = destinationPos;
-        this.spawnX = spawnX;
-        this.spawnY = spawnY;
-        this.spawnZ = spawnZ;
-        this.spawnYaw = spawnYaw;
-        this.dimension = dimension;
-    }
-
+public record ServerBoundDarknessFallPacket(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ,
+                                            float spawnYaw, ResourceKey<Level> dimension) {
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(destinationPos);
         buffer.writeDouble(spawnX);

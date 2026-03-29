@@ -2,15 +2,11 @@ package destiny.penumbra_phantasm.server.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.particles.ParticleType;
-import net.minecraft.core.particles.SimpleParticleType;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
+
 import java.util.function.Supplier;
 
-public class    ClientBoundParticlePacket {
+public class ClientBoundParticlePacket {
     private final ResourceLocation particleId;
     private final double x;
     private final double y;
@@ -54,7 +50,7 @@ public class    ClientBoundParticlePacket {
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ClientboundPacketHandler.sendParticle(particleId, x, y, z, vx, vy, vz, count));
+        ctx.get().enqueueWork(() -> ClientBoundPacketHandler.sendParticle(particleId, x, y, z, vx, vy, vz, count));
         return true;
     }
 }

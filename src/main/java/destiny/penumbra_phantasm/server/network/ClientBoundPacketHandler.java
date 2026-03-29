@@ -14,14 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class ClientboundPacketHandler
+public class ClientBoundPacketHandler
 {
-	public static float transportVeilProgress = 0f;
-
-	public static void updateTransportVeil(float progress) {
-		transportVeilProgress = progress;
-	}
-
 	public static void openIntroScreen(BlockPos pos, ResourceKey<Level> dim)
 	{
 		Minecraft minecraft = Minecraft.getInstance();

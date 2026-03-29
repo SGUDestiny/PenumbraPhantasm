@@ -9,22 +9,8 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ClientBoundDarknessFallPacket {
-    public final BlockPos destinationPos;
-    public final double spawnX;
-    public final double spawnY;
-    public final double spawnZ;
-    public final float spawnYaw;
-    public final ResourceKey<Level> dimension;
-
-    public ClientBoundDarknessFallPacket(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dimension) {
-        this.destinationPos = destinationPos;
-        this.spawnX = spawnX;
-        this.spawnY = spawnY;
-        this.spawnZ = spawnZ;
-        this.spawnYaw = spawnYaw;
-        this.dimension = dimension;
-    }
+public record ClientBoundDarknessFallPacket(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ,
+                                            float spawnYaw, ResourceKey<Level> dimension) {
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(destinationPos);
@@ -46,7 +32,7 @@ public class ClientBoundDarknessFallPacket {
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ClientboundPacketHandler.openDarknessFallScreen(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
+        ctx.get().enqueueWork(() -> ClientBoundPacketHandler.openDarknessFallScreen(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
         return true;
     }
 }
