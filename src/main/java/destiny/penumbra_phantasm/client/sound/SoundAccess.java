@@ -11,6 +11,8 @@ import net.minecraft.sounds.SoundEvent;
 
 import java.util.Optional;
 
+import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
+
 public class SoundAccess {
     public static final String EMPTY = PenumbraPhantasm.EMPTY;
 
@@ -71,5 +73,21 @@ public class SoundAccess {
                 ).map(cap ->
                         cap.darkFountains.get(fountainPos)
                 ).orElse(null);
+    }
+
+    public static void refreshFountainAmbientsAfterReload() {
+        if (minecraft.level == null) return;
+        minecraft.level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(SoundAccess::refreshFountainAmbients);
+    }
+
+    private static void refreshFountainAmbients(DarkFountainCapability cap) {
+        cap.darkFountains.values().forEach(fountain -> {
+            if (fountain.windSound instanceof DarkFountainSoundWrapper<?> w) {
+                w.recoverAfterResourceReload();
+            }
+            if (fountain.darknessSound instanceof DarkFountainSoundWrapper<?> d) {
+                d.recoverAfterResourceReload();
+            }
+        });
     }
 }
