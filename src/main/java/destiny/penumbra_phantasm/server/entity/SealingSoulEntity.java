@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.entity;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
@@ -20,10 +21,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 public class SealingSoulEntity extends Entity {
@@ -52,9 +55,9 @@ public class SealingSoulEntity extends Entity {
         }
 
         DarkFountainCapability darkFountainCapability = null;
-        LazyOptional<DarkFountainCapability> lazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
-        if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
-            darkFountainCapability = lazyCapability.resolve().get();
+        LazyOptional<DarkFountainCapability> darkLazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if(darkLazyCapability.isPresent() && darkLazyCapability.resolve().isPresent())
+            darkFountainCapability = darkLazyCapability.resolve().get();
 
         if (darkFountainCapability == null){
             this.discard();
@@ -85,21 +88,49 @@ public class SealingSoulEntity extends Entity {
         if (tick >= 7 * 20) {
             tick = 0;
 
-            for (Player player : level.players()) {
+            ServerLevel lightLevel = level.getServer().getLevel(darkFountain.destinationDimension);
+
+            if (lightLevel == null) {
+                this.discard();
+                return;
+            }
+
+            //Teleport all players to light fountain
+            for (Player player : new ArrayList<>(level.players())) {
                 if (player instanceof ServerPlayer serverPlayer) {
-                    ServerLevel destinationLevel = level.getServer().getLevel(darkFountain.destinationDimension);
 
-                    if (destinationLevel == null) break;
+                    Vec3 lightPos = darkFountain.destinationPos.getCenter();
 
-                    Vec3 destinationPos = darkFountain.destinationPos.getCenter();
-
-                    serverPlayer.teleportTo(destinationLevel, destinationPos.x, destinationPos.y,
-                            destinationPos.z, player.getYHeadRot(), player.getXRot());
+                    serverPlayer.teleportTo(lightLevel, lightPos.x, lightPos.y,
+                            lightPos.z, player.getYHeadRot(), player.getXRot());
                     serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(player));
                 }
             }
 
-            //Send packets here
+            //Get light fountain capability
+            DarkFountainCapability lightFountainCapability = null;
+            LazyOptional<DarkFountainCapability> lightLazyCapability = lightLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+            if(lightLazyCapability.isPresent() && lightLazyCapability.resolve().isPresent())
+                lightFountainCapability = lightLazyCapability.resolve().get();
+
+            if (lightFountainCapability == null){
+                this.discard();
+                return;
+            }
+
+            //Get light fountain from destination pos
+            DarkFountain lightFountain = lightFountainCapability.darkFountains.get(darkFountain.destinationPos);
+
+            //Clear darkness blocks in light fountain
+            for (DarkRoom room : lightFountain.rooms) {
+                for (BlockPos pos : room.getPositions()) {
+                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                }
+            }
+
+            //Remove light fountain
+            lightFountainCapability.removeDarkFountain(lightLevel, darkFountain.destinationPos);
+
             this.discard();
         } else {
             if (tick == 0) {
