@@ -161,8 +161,8 @@ public class FountainRenderUtil
 		ResourceLocation textureFountainTarget = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_shockwave.png");
 		List<Integer> shockwaveTickers = fountain.shockwaveTickers;
 
-		for (float ticker : shockwaveTickers) {
-			ticker = ticker + partialTick;
+		for (int i = 0; i < shockwaveTickers.size(); i++) {
+			float ticker = shockwaveTickers.get(i) + partialTick;
 			float shockwaveDelta = Mth.clamp(ticker / 5, 0f, 1f);
 			float alpha = Mth.lerp(shockwaveDelta, 1f, 0f);
 			float size = Mth.lerp(shockwaveDelta, 0f, 3f);
