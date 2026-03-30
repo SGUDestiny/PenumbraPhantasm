@@ -22,6 +22,7 @@ import destiny.penumbra_phantasm.client.render.particle.RealKnifeHitParticle;
 import destiny.penumbra_phantasm.client.render.particle.RealKnifeSlashParticle;
 import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
 import destiny.penumbra_phantasm.client.render.particle.ScarletLeafParticle;
+import destiny.penumbra_phantasm.server.advancement.EnteredDimensionIdTrigger;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
@@ -29,6 +30,7 @@ import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -92,7 +94,9 @@ public class PenumbraPhantasm {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event) {}
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> CriteriaTriggers.register(EnteredDimensionIdTrigger.INSTANCE));
+    }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
