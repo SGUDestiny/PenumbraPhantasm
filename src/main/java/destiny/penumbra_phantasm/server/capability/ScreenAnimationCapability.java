@@ -74,7 +74,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
 
             for (Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet()) {
                 DarkFountain fountain = entry.getValue();
-                if (fountain.animationTimer != -1) continue;
+                if (fountain.openingTick != -1) continue;
 
                 double distance = fountain.getFountainPos().getCenter().subtract(player.position()).horizontalDistance();
                 if (distance <= FOUNTAIN_MUSIC_RANGE) {

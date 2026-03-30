@@ -31,7 +31,7 @@ public class ClientBoundSingleFountainData
 		buffer.writeBlockPos(fountain.getDestinationPos());
 		buffer.writeResourceKey(fountain.getDestinationDimension());
 
-		buffer.writeInt(fountain.getAnimationTimer());
+		buffer.writeInt(fountain.getOpeningTick());
 		buffer.writeInt(fountain.getFrameTimer());
 		buffer.writeInt(fountain.getFrame());
 		buffer.writeInt(fountain.getFrameOptimized());
@@ -49,7 +49,7 @@ public class ClientBoundSingleFountainData
 		BlockPos targetPos = buffer.readBlockPos();
 		ResourceKey<Level> targetDim = buffer.readResourceKey(Registries.DIMENSION);
 
-		int animationTimer = buffer.readInt();
+		int openingTick = buffer.readInt();
 		int frameTimer = buffer.readInt();
 		int frame = buffer.readInt();
 		int frameOptimized = buffer.readInt();
@@ -58,7 +58,7 @@ public class ClientBoundSingleFountainData
 
 		List<Integer> shockwaveTickers = buffer.readCollection(ii -> new ArrayList<>(), FriendlyByteBuf::readInt);
 
-		DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animationTimer,
+		DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, openingTick,
 				frameTimer, frame, frameOptimized, teleportedEntities, shockwaveTickers);
 
 		return new ClientBoundSingleFountainData(fountain);

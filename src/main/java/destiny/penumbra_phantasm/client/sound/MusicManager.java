@@ -308,7 +308,7 @@ public class MusicManager {
 
         for (Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet()) {
             DarkFountain fountain = entry.getValue();
-            if (fountain.animationTimer != -1) continue;
+            if (fountain.openingTick != -1) continue;
 
             Vec3 playerPos = player.position();
             BlockPos fountainPos = fountain.getFountainPos();

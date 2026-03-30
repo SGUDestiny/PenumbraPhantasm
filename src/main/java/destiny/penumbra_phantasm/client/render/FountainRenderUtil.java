@@ -90,7 +90,7 @@ public class FountainRenderUtil
 		}
 	}
 
-	public static void renderOpeningFoutain(float animationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+	public static void renderOpeningFoutain(float openingTick, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
 		ResourceLocation textureFountainOpeningBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom.png");
 		ResourceLocation textureFountainOpeningMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
 		ResourceLocation textureFountainOpeningBottomShadow = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom_shadow.png");
@@ -105,25 +105,25 @@ public class FountainRenderUtil
 		float baseScale = 1f;
 		boolean applyPulse = false;
 
-		if (animationTime < expandTime) {
-			baseScale = animationTime / expandTime;
-		} else if (animationTime < expandTime + pulsateTime) {
+		if (openingTick < expandTime) {
+			baseScale = openingTick / expandTime;
+		} else if (openingTick < expandTime + pulsateTime) {
 			baseScale = 1f;
 			applyPulse = true;
 		} else {
-			float shrinkProg = (animationTime - (expandTime + pulsateTime)) / shrinkTime;
+			float shrinkProg = (openingTick - (expandTime + pulsateTime)) / shrinkTime;
 			baseScale = 1f - shrinkProg;
 		}
 
-		float pulse = applyPulse ? (1f + pulseAmp * (float) Math.sin(animationTime * pulseFreq)) : 1f;
+		float pulse = applyPulse ? (1f + pulseAmp * (float) Math.sin(openingTick * pulseFreq)) : 1f;
 		float scaleXZ = baseScale * pulse;
 
 		float fadeStart = 70;
 		float fadeDuration = 20f;
 		float alphaDark = 0f;
-		if (animationTime >= fadeStart) {
-			if (animationTime < fadeStart + fadeDuration) {
-				float prog = (animationTime - fadeStart) / fadeDuration;
+		if (openingTick >= fadeStart) {
+			if (openingTick < fadeStart + fadeDuration) {
+				float prog = (openingTick - fadeStart) / fadeDuration;
 				alphaDark = prog;
 			} else {
 				alphaDark = 1f;
@@ -194,7 +194,7 @@ public class FountainRenderUtil
 		float brightness_middle = 0.8f - 0.2f * (float) Math.sin(time * 1.2);
 		float brightness_back = 0.7f - 0.3f * (float) Math.sin(time * 1.2);
 		float scaleXZ = 1.0f;
-		float animationTime = fountain.animationTimer + partialTick;
+		float openingTick = fountain.openingTick + partialTick;
 		float fountainHue = time * 0.03f % 1f;
 
 		Player player = Minecraft.getInstance().player;
@@ -260,7 +260,7 @@ public class FountainRenderUtil
 		}
 
 		if (initialAnimationTime != -1) {
-			scaleXZ = (animationTime - 140) / 5f;
+			scaleXZ = Mth.clamp((openingTick - 140) / 5f, 0f, 1f);
 		}
 
 		boolean depthWrite = alpha >= 0.85f;

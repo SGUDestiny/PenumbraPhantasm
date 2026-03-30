@@ -101,7 +101,7 @@ public class SoulHearthItem extends Item {
         for(Map.Entry<BlockPos, DarkFountain> entry : darkFountainCapability.darkFountains.entrySet()) {
             DarkFountain entryFountain = entry.getValue();
 
-            if(entryFountain.animationTimer > 125 || entryFountain.animationTimer == -1) {
+            if(entryFountain.openingTick > 125 || entryFountain.openingTick == -1) {
                 BlockPos fountainPos = entry.getValue().getFountainPos();
                 Vec3 fountainPos2d = new Vec3(fountainPos.getX(), 0, fountainPos.getZ());
                 Vec3 playerPos2d = new Vec3(player.getX(), 0, player.getZ());

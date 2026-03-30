@@ -63,7 +63,7 @@ public class ClientEvents {
 			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
 				cap.darkFountains.forEach((key, fountain) ->
 				{
-					float animationTime = fountain.animationTimer;
+					float openingTick = fountain.openingTick;
 
 					if (!DarkWorldUtil.isDarkWorld(level)) {
 						pose.pushPose();
@@ -72,8 +72,8 @@ public class ClientEvents {
 								fountain.getFountainPos().getZ());
 
 						if (renderSkyPass) {
-							if (animationTime < 130 && animationTime >= 0) {
-								FountainRenderUtil.renderOpeningFoutain(animationTime + partialTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
+							if (openingTick < 130 && openingTick >= 0) {
+								FountainRenderUtil.renderOpeningFoutain(openingTick + partialTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 							} else {
 								double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
@@ -109,7 +109,7 @@ public class ClientEvents {
 						fade = Math.max(0f, Math.min(1f, fade));
 
 						if (fade < 1.0f) {
-							FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
+							FountainRenderUtil.renderOpenFountain(fountain, level, openingTick, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
 						}
 						if (fade > 0.0f) {
 							FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, OverlayTexture.NO_OVERLAY, fade);
@@ -146,7 +146,7 @@ public class ClientEvents {
 
 			for(Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet())
 			{
-				if(entry.getValue().animationTimer == -1 && entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 64)
+				if(entry.getValue().openingTick == -1 && entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 64)
 				{
 					fountain = entry.getValue();
 					break;

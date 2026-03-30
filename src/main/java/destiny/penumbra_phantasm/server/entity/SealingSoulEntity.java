@@ -69,7 +69,7 @@ public class SealingSoulEntity extends Entity {
         for(Map.Entry<BlockPos, DarkFountain> entry : darkFountainCapability.darkFountains.entrySet()) {
             DarkFountain entryFountain = entry.getValue();
 
-            if(entryFountain.animationTimer > 125 || entryFountain.animationTimer == -1) {
+            if(entryFountain.openingTick > 125 || entryFountain.openingTick == -1) {
                 BlockPos fountainPos = entry.getValue().getFountainPos();
                 Vec3 fountainPos2d = new Vec3(fountainPos.getX(), 0, fountainPos.getZ());
                 Vec3 soulPos2d = new Vec3(this.position().x, 0, this.position().z);
