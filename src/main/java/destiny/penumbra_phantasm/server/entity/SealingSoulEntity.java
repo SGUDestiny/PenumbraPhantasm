@@ -8,6 +8,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -42,10 +43,15 @@ public class SealingSoulEntity extends Entity {
             if (tick == 0) {
                 level.playSound(null, this.blockPosition(), SoundRegistry.GREAT_SHINE.get(), SoundSource.AMBIENT, 1, 1);
             }
-            if (tick == 4 * 20) {
+            if (tick == 4 * 20 && !level.isClientSide) {
                 level.players().forEach(player -> {
                     if (player.level().dimension() == level.dimension()) {
-                        player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.sealShineTicker = 0);
+                        player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
+                            cap.sealShineTicker = 0;
+                            if (player instanceof ServerPlayer serverPlayer) {
+                                cap.syncToClient(serverPlayer);
+                            }
+                        });
                         level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_SEAL.get(), SoundSource.AMBIENT, 1f, 1f);
                     }
                 });

@@ -58,7 +58,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
             darknessOverlayTicker = -1;
         }
 
-        if (sealShineTicker >= 2 * 20) {
+        if (sealShineTicker >= 60) {
             sealShineTicker = -1;
         }
         if (sealShineTicker >= 0) {
@@ -109,8 +109,12 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
-            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundAnimationPacket(darknessLandTicker, darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker));
+            syncToClient(serverPlayer);
         }
+    }
+
+    public void syncToClient(ServerPlayer serverPlayer) {
+        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundAnimationPacket(darknessLandTicker, darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker));
     }
 
     @Override

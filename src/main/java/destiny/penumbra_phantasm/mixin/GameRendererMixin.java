@@ -3,15 +3,15 @@ package destiny.penumbra_phantasm.mixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
-import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
+import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraftforge.client.ForgeHooksClient;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -51,30 +51,37 @@ public class GameRendererMixin {
 		int width = minecraft.getWindow().getGuiScaledWidth();
 		int height = minecraft.getWindow().getGuiScaledHeight();
 
-		Matrix4f ortho = new Matrix4f().setOrtho(0.0F, width, height, 0.0F, 1000.0F, 21000.0F);
-		RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);
-		PoseStack pose = RenderSystem.getModelViewStack();
-		pose.pushPose();
-		pose.setIdentity();
-		pose.translate(0.0, 0.0, -11000.0);
+		minecraft.getMainRenderTarget().bindWrite(false);
+		RenderSystem.disableDepthTest();
+
+		var window = minecraft.getWindow();
+		float guiFarPlane = ForgeHooksClient.getGuiFarPlane();
+		Matrix4f guiProjection = new Matrix4f().setOrtho(0.0F, (float) ((double) window.getWidth() / window.getGuiScale()), (float) ((double) window.getHeight() / window.getGuiScale()), 0.0F, 1000.0F, guiFarPlane);
+		RenderSystem.setProjectionMatrix(guiProjection, VertexSorting.ORTHOGRAPHIC_Z);
+		PoseStack modelViewStack = RenderSystem.getModelViewStack();
+		modelViewStack.pushPose();
+		modelViewStack.setIdentity();
+		modelViewStack.translate(0.0D, 0.0D, 1000F - guiFarPlane);
 		RenderSystem.applyModelViewMatrix();
 
 		GuiGraphics graphics = new GuiGraphics(minecraft, minecraft.renderBuffers().bufferSource());
 
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
+		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
 		renderLandScreenFadeOut(graphics, width, height, landAlpha);
 		renderTransitionFadeOut(graphics, width, height, fountainAlpha);
-		renderSealShine(pose, width, height, sealShineTick);
+		PoseStack sealShinePose = new PoseStack();
+		renderSealShine(sealShinePose, width, height, sealShineTick);
 
 		graphics.flush();
 
 		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		RenderSystem.disableBlend();
-
-		pose.popPose();
+		modelViewStack.popPose();
 		RenderSystem.applyModelViewMatrix();
+		RenderSystem.enableDepthTest();
 	}
 
 	@Unique
@@ -95,7 +102,9 @@ public class GameRendererMixin {
 
 	@Unique
 	private void renderSealShine(PoseStack pose, int width, int height, int tick) {
-		ResourceLocation WHITE_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/white_screen.png");
+		if (tick < 0) {
+			return;
+		}
 
 		float endingSizeX1;
 		float endingSizeX2;
@@ -129,21 +138,21 @@ public class GameRendererMixin {
 		pose.translate(width / 2f, height / 2f, 0);
 		pose.scale(endingSizeX3, 1, 1);
 		pose.translate(-width / 2f, -height / 2f, 0);
-		RenderBlitUtil.blit(WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha3, 0.0F, 0.0F, width, height, width, height);
+		RenderBlitUtil.blit(IntroScreen.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha3, 0.0F, 0.0F, width, height, width, height);
 		pose.popPose();
 
 		pose.pushPose();
 		pose.translate(width / 2f, height / 2f, 0);
 		pose.scale(endingSizeX2, 1, 1);
 		pose.translate(-width / 2f, -height / 2f, 0);
-		RenderBlitUtil.blit(WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha2, 0.0F, 0.0F, width, height, width, height);
+		RenderBlitUtil.blit(IntroScreen.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha2, 0.0F, 0.0F, width, height, width, height);
 		pose.popPose();
 
 		pose.pushPose();
 		pose.translate(width / 2f, height / 2f, 0);
 		pose.scale(endingSizeX1, 1, 1);
 		pose.translate(-width / 2f, -height / 2f, 0);
-		RenderBlitUtil.blit(WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha1, 0.0F, 0.0F, width, height, width, height);
+		RenderBlitUtil.blit(IntroScreen.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha1, 0.0F, 0.0F, width, height, width, height);
 		pose.popPose();
 	}
 }
