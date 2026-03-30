@@ -93,6 +93,7 @@ public class FountainRenderUtil
 		ResourceLocation textureFountainOpeningMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
 		ResourceLocation textureFountainOpeningBottomShadow = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom_shadow.png");
 		ResourceLocation textureFountainOpeningMiddleShadow = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle_shadow.png");
+		ResourceLocation textureFountainTarget = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_shockwave.png");
 
 		float animationTime = initialAnimationTime + partialTick;
 		float expandTime = 5f;
@@ -133,6 +134,13 @@ public class FountainRenderUtil
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
 		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
+				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
+		poseStack.popPose();
+
+		poseStack.pushPose();
+		poseStack.translate(0.5f, 0.5f, 0.5f);
+		poseStack.translate(0f, -1.94f, 0f);
+		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainTarget)),
 				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
 		poseStack.popPose();
 
