@@ -161,8 +161,8 @@ public class FountainRenderUtil
 		ResourceLocation textureFountainTarget = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_shockwave.png");
 		List<Integer> shockwaveTickers = fountain.shockwaveTickers;
 
-		for (float ticker : shockwaveTickers) {
-			ticker = ticker + partialTick;
+		for (int i = 0; i < shockwaveTickers.size(); i++) {
+			float ticker = shockwaveTickers.get(i) + partialTick;
 			float shockwaveDelta = Mth.clamp(ticker / 5, 0f, 1f);
 			float alpha = Mth.lerp(shockwaveDelta, 1f, 0f);
 			float size = Mth.lerp(shockwaveDelta, 0f, 3f);
@@ -194,7 +194,7 @@ public class FountainRenderUtil
 		float brightness_middle = 0.8f - 0.2f * (float) Math.sin(time * 1.2);
 		float brightness_back = 0.7f - 0.3f * (float) Math.sin(time * 1.2);
 		float scaleXZ = 1.0f;
-		float openingTick = fountain.openingTick + partialTick;
+		float openingTick = fountain.getOpeningTick(partialTick);
 		float fountainHue = time * 0.03f % 1f;
 
 		Player player = Minecraft.getInstance().player;

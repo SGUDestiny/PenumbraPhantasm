@@ -63,7 +63,7 @@ public class ClientEvents {
 			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
 				cap.darkFountains.forEach((key, fountain) ->
 				{
-					float openingTick = fountain.openingTick;
+					float openingTick = fountain.getOpeningTick(partialTick);
 
 					if (!DarkWorldUtil.isDarkWorld(level)) {
 						pose.pushPose();
@@ -73,7 +73,7 @@ public class ClientEvents {
 
 						if (renderSkyPass) {
 							if (openingTick < 130 && openingTick >= 0) {
-								FountainRenderUtil.renderOpeningFoutain(openingTick + partialTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
+								FountainRenderUtil.renderOpeningFoutain(openingTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 							} else {
 								double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
@@ -131,7 +131,13 @@ public class ClientEvents {
 			LocalPlayer player = Minecraft.getInstance().player;
 			ClientLevel level = Minecraft.getInstance().level;
 			if (player == null) return;
-			if (level != null && DarkWorldUtil.isDarkWorld(level)) {
+			if (level == null) return;
+
+			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+				cap.darkFountains.forEach((pos, fountain) -> fountain.clientTickOpening());
+			});
+
+			if (DarkWorldUtil.isDarkWorld(level)) {
 				Minecraft.getInstance().getMusicManager().stopPlaying();
 			}
 			MusicManager.getInstance().tick();

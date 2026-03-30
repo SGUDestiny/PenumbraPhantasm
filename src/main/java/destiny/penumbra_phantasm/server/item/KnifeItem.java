@@ -22,6 +22,7 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -44,7 +45,7 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeMod;
@@ -92,6 +93,10 @@ public class KnifeItem extends SwordItem {
         if (level.isClientSide())
             return InteractionResultHolder.pass(stack);
 
+        if (tag.contains(MAKING_TICK) && tag.getInt(MAKING_TICK) >= 0) {
+            return InteractionResultHolder.pass(stack);
+        }
+
         //Cancel making a fountain in dark worlds
         if (DarkWorldUtil.isDarkWorld(level)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_inside_dark_world"), true);
@@ -99,8 +104,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
-        if (!player.onGround() || !level.getBlockState(player.getOnPos()).isSolidRender(level, player.getOnPos())
-                || level.getBlockState(player.getOnPos().above()) != Blocks.AIR.defaultBlockState()) {
+        if (!isStandingOnFullFace(level, player)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
             return InteractionResultHolder.fail(stack);
         }
@@ -260,10 +264,19 @@ public class KnifeItem extends SwordItem {
         );
     }
 
+    private static boolean isStandingOnFullFace(Level level, Player player) {
+        if (!player.onGround()) {
+            return false;
+        }
+        BlockPos groundPos = player.getOnPos();
+        BlockState groundState = level.getBlockState(groundPos);
+        BlockState feetState = level.getBlockState(groundPos.above());
+        return Block.isFaceFull(groundState.getCollisionShape(level, groundPos), Direction.UP) && feetState.isAir();
+    }
+
     private void makeFountain(CompoundTag tag, Player player, Level level, ItemStack stack) {
         //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
-        if (!player.onGround() || !level.getBlockState(player.getOnPos()).isSolidRender(level, player.getOnPos())
-                || level.getBlockState(player.getOnPos().above()) != Blocks.AIR.defaultBlockState()) {
+        if (!isStandingOnFullFace(level, player)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
             return;
         }

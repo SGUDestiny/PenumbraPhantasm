@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
@@ -67,6 +68,11 @@ public class DarkFountain {
     public int rescanTimer = 0;
     public List<Integer> shockwaveTickers;
 
+    public int openingTickTarget;
+    public float openingTickClientO;
+    public float openingTickClient;
+    public boolean openingTickClientInitialized;
+
     @Nullable
     public SoundWrapper windSound = null;
     @Nullable
@@ -83,6 +89,31 @@ public class DarkFountain {
         this.frameOptimized = frameOptimized;
         this.teleportedEntities = teleportedEntities;
         this.shockwaveTickers = shockwaveTickers;
+        this.openingTickTarget = openingTick;
+    }
+
+    public void clientTickOpening() {
+        this.openingTickClientO = this.openingTickClient;
+
+        if (!this.openingTickClientInitialized) {
+            this.openingTickClientInitialized = true;
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+        } else {
+            float diff = this.openingTickTarget - this.openingTickClient;
+            if (diff > 0f) {
+                this.openingTickClient += Math.min(diff, 1f);
+            } else if (diff < 0f) {
+                this.openingTickClient -= Math.min(-diff, 1f);
+            }
+        }
+    }
+
+    public float getOpeningTick(float partialTick) {
+        if (!this.openingTickClientInitialized) {
+            return this.openingTickTarget + partialTick;
+        }
+        return Mth.lerp(partialTick, this.openingTickClientO, this.openingTickClient);
     }
 
     public void tick(Level level) {
@@ -176,8 +207,9 @@ public class DarkFountain {
                     toRemove.add(i);
                 }
             }
-            for (int ticker : toRemove) {
-                this.shockwaveTickers.remove(ticker);
+            toRemove.sort(Collections.reverseOrder());
+            for (int idx : toRemove) {
+                this.shockwaveTickers.remove(idx);
             }
 
             if (this.openingTick >= FILL_START_TICK) {
@@ -749,6 +781,13 @@ public class DarkFountain {
         this.teleportedEntities = fountain.teleportedEntities;
 
         this.shockwaveTickers = fountain.shockwaveTickers;
+
+        this.openingTickTarget = fountain.openingTick;
+        if (!this.openingTickClientInitialized) {
+            this.openingTickClientInitialized = true;
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+        }
     }
 
     public BlockPos getFountainPos() { return fountainPos; }
