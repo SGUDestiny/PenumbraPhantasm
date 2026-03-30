@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.server.network;
+package destiny.penumbra_phantasm.client.network;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -42,6 +42,7 @@ public class ClientBoundSingleFountainData
 
 		buffer.writeInt(fountain.sealingTick);
 		buffer.writeInt(fountain.sealingFrameTick);
+		buffer.writeFloat(fountain.sealingFrameTickProgress);
 	}
 
 	public static ClientBoundSingleFountainData decode(FriendlyByteBuf buffer)
@@ -63,9 +64,10 @@ public class ClientBoundSingleFountainData
 
 		int sealingTick = buffer.readInt();
 		int sealingFrameTick = buffer.readInt();
+		float sealingFrameTickProgress = buffer.readFloat();
 
 		DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, openingTick,
-				frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick);
+				frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick, sealingFrameTickProgress);
 
 		return new ClientBoundSingleFountainData(fountain);
 	}

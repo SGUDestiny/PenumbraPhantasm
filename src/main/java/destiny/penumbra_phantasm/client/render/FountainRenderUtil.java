@@ -11,7 +11,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.ModShaders;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainGroundCrackModel;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainMiddleModel;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainOpeningModel;

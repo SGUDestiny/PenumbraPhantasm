@@ -1,6 +1,6 @@
 package destiny.penumbra_phantasm.server.capability;
 
-import destiny.penumbra_phantasm.server.network.ClientBoundIntroPacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundIntroPacket;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;

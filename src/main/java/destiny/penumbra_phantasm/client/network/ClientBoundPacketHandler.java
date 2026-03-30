@@ -1,17 +1,26 @@
-package destiny.penumbra_phantasm.server.network;
+package destiny.penumbra_phantasm.client.network;
 
 import destiny.penumbra_phantasm.client.render.screen.DarknessFallScreen;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
+import destiny.penumbra_phantasm.server.network.ServerBoundIntroPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
+import dev.kosmx.playerAnim.api.layered.IAnimation;
+import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
+import dev.kosmx.playerAnim.api.layered.ModifierLayer;
+import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
+import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class ClientBoundPacketHandler
@@ -55,6 +64,40 @@ public class ClientBoundPacketHandler
 
 		for (int i = 0; i < count; i++) {
 			level.addParticle(simpleType, x, y, z, vx, vy, vz);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void playPlayerAnimation(int entityId, ResourceLocation animationId) {
+		Level level = Minecraft.getInstance().level;
+		if (level == null) return;
+
+		Entity entity = level.getEntity(entityId);
+		if (!(entity instanceof AbstractClientPlayer player)) return;
+
+		ModifierLayer<IAnimation> animation = (ModifierLayer<IAnimation>) PlayerAnimationAccess
+				.getPlayerAssociatedData(player)
+				.get(animationId);
+
+		if (animation != null) {
+			animation.setAnimation(new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(animationId)));
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void cancelPlayerAnimation(int entityId, ResourceLocation animationId) {
+		Level level = Minecraft.getInstance().level;
+		if (level == null) return;
+
+		Entity entity = level.getEntity(entityId);
+		if (!(entity instanceof AbstractClientPlayer player)) return;
+
+		ModifierLayer<IAnimation> animation = (ModifierLayer<IAnimation>) PlayerAnimationAccess
+				.getPlayerAssociatedData(player)
+				.get(animationId);
+
+		if (animation != null) {
+			animation.setAnimation(null);
 		}
 	}
 }

@@ -4,13 +4,14 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.network.ClientBoundPlayPlayerAnimationPacket;
 import destiny.penumbra_phantasm.server.advancement.TriggerCriterions;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.fountain.RoomScanner;
-import destiny.penumbra_phantasm.server.network.ClientBoundParticlePacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
@@ -192,18 +193,11 @@ public class KnifeItem extends SwordItem {
                 if (makingTick >= 0) {
                     //Play player animation on first tick
                     if (makingTick == 0) {
-                        if (level.isClientSide()) {
-                            //Get the animation for that player
-                            ModifierLayer<IAnimation> animation = (ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData((AbstractClientPlayer) player).get(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"));
-
-                            if (animation != null) {
-                                //You can set an animation from anywhere ON THE CLIENT
-                                //Do not attempt to do this on a server, that will only fail
-
-                                animation.setAnimation(new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))));
-                                //You might use  animation.replaceAnimationWithFade(); to create fade effect instead of sudden change
-                                //See javadoc for details
-                            }
+                        if (!level.isClientSide()) {
+                            PacketHandlerRegistry.INSTANCE.send(
+                                    PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                                    new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))
+                            );
                         }
                     }
 
@@ -358,7 +352,7 @@ public class KnifeItem extends SwordItem {
         targetLevel.setChunkForced(darkChunkPos.x, darkChunkPos.z, false);
 
         //Add light world fountain to the capability
-        lightCap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1);
+        lightCap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //Create new dark room instance for the fountain room
         DarkRoom fountainRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
@@ -378,7 +372,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //Add dark world fountain to the capability
-        darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1);
+        darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //If player is not creative, put cooldown on knife
         if (!player.isCreative()) {

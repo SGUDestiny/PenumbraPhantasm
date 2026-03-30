@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client;
+package destiny.penumbra_phantasm.client.render;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import destiny.penumbra_phantasm.PenumbraPhantasm;

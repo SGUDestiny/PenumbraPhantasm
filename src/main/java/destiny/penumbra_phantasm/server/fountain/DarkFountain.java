@@ -1,9 +1,9 @@
 package destiny.penumbra_phantasm.server.fountain;
 
 import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.client.network.*;
 import destiny.penumbra_phantasm.client.sound.SoundWrapper;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
-import destiny.penumbra_phantasm.server.network.*;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
@@ -51,6 +51,7 @@ public class DarkFountain {
     public static final String SHOCKWAVE_TICKERS = "shockwaveTickers";
     public static final String SEALING_TICK = "sealingTick";
     public static final String SEALING_FRAME_TICK = "sealingFrameTick";
+    public static final String SEALING_FRAME_TICK_PROGRESS = "sealingFrameTickProgress";
 
     public static final int OPENING_FINISH = 144;
     public static final int FILL_DELAY = 60;
@@ -72,6 +73,7 @@ public class DarkFountain {
     public List<Integer> shockwaveTickers;
     public int sealingTick;
     public int sealingFrameTick;
+    public float sealingFrameTickProgress;
 
     public int openingTickTarget;
     public float openingTickClientO;
@@ -83,7 +85,7 @@ public class DarkFountain {
     @Nullable
     public SoundWrapper darknessSound = null;
 
-    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int openingTick, int frameTick, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers, int sealingTick, int sealingFrameTick) {
+    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int openingTick, int frameTick, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers, int sealingTick, int sealingFrameTick, float sealingFrameTickProgress) {
         this.fountainPos = fountainPos;
         this.fountainDimension = fountainDimension;
         this.destinationPos = destinationPos;
@@ -97,6 +99,7 @@ public class DarkFountain {
         this.openingTickTarget = openingTick;
         this.sealingTick = sealingTick;
         this.sealingFrameTick = sealingFrameTick;
+        this.sealingFrameTickProgress = sealingFrameTickProgress;
     }
 
     public void clientTickOpening() {
@@ -189,10 +192,19 @@ public class DarkFountain {
                             }
                         }
 
-                        if (this.sealingFrameTick >= 27 * 3) {
-                            this.sealingFrameTick = 0;
-                        } else {
-                            this.sealingFrameTick++;
+                        float delta = Mth.clamp((float) this.sealingTick / (float) SEAL_DURATION, 0.0F, 1.0F);
+                        float frameSpeed = Mth.lerp(delta, 1.0F, 0.0F);
+                        frameSpeed *= frameSpeed;
+
+                        this.sealingFrameTickProgress += frameSpeed;
+
+                        while (this.sealingFrameTickProgress >= 1.0F) {
+                            this.sealingFrameTickProgress -= 1.0F;
+                            if (this.sealingFrameTick >= 27 * 3) {
+                                this.sealingFrameTick = 0;
+                            } else {
+                                this.sealingFrameTick++;
+                            }
                         }
                     }
                 } else {
@@ -771,6 +783,7 @@ public class DarkFountain {
 
         tag.putInt(SEALING_TICK, sealingTick);
         tag.putInt(SEALING_FRAME_TICK, sealingFrameTick);
+        tag.putFloat(SEALING_FRAME_TICK_PROGRESS, sealingFrameTickProgress);
 
         return tag;
     }
@@ -800,8 +813,9 @@ public class DarkFountain {
 
         int sealingTick = tag.getInt(SEALING_TICK);
         int sealingFrameTick = tag.getInt(SEALING_FRAME_TICK);
+        float sealingFrameTickProgress = tag.getFloat(SEALING_FRAME_TICK_PROGRESS);
 
-        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick);
+        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick, sealingFrameTickProgress);
 
         if (tag.contains(ROOMS)) {
             ListTag roomsTag = tag.getList(ROOMS, Tag.TAG_COMPOUND);
@@ -837,6 +851,7 @@ public class DarkFountain {
 
         this.sealingTick = fountain.sealingTick;
         this.sealingFrameTick = fountain.sealingFrameTick;
+        this.sealingFrameTickProgress = fountain.sealingFrameTickProgress;
     }
 
     public BlockPos getFountainPos() { return fountainPos; }

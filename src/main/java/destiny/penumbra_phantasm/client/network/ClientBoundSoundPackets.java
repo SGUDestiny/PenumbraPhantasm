@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.server.network;
+package destiny.penumbra_phantasm.client.network;
 
 import destiny.penumbra_phantasm.client.sound.SoundAccess;
 import net.minecraft.core.BlockPos;
