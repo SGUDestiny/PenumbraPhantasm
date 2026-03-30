@@ -42,8 +42,8 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
 
     public void addDarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension,
                                 BlockPos destinationPos, ResourceKey<Level> destinationDimension,
-                                int openingTick, int frameTick, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers) {
-        this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers));
+                                int openingTick, int frameTick, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers, int sealingTick, int sealingFrameTick) {
+        this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick));
     }
 
     public void removeDarkFountain(Level level, BlockPos fountainPos) {

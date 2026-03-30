@@ -39,6 +39,9 @@ public class ClientBoundSingleFountainData
 		buffer.writeCollection(fountain.teleportedEntities, FriendlyByteBuf::writeUUID);
 
 		buffer.writeCollection(fountain.shockwaveTickers, FriendlyByteBuf::writeInt);
+
+		buffer.writeInt(fountain.sealingTick);
+		buffer.writeInt(fountain.sealingFrameTick);
 	}
 
 	public static ClientBoundSingleFountainData decode(FriendlyByteBuf buffer)
@@ -58,8 +61,11 @@ public class ClientBoundSingleFountainData
 
 		List<Integer> shockwaveTickers = buffer.readCollection(ii -> new ArrayList<>(), FriendlyByteBuf::readInt);
 
+		int sealingTick = buffer.readInt();
+		int sealingFrameTick = buffer.readInt();
+
 		DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, openingTick,
-				frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers);
+				frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick);
 
 		return new ClientBoundSingleFountainData(fountain);
 	}

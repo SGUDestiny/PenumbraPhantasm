@@ -17,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
@@ -48,11 +49,14 @@ public class DarkFountain {
     public static final String TELEPORTED_ENTITIES = "teleportedEntities";
     public static final String ROOMS = "rooms";
     public static final String SHOCKWAVE_TICKERS = "shockwaveTickers";
+    public static final String SEALING_TICK = "sealingTick";
+    public static final String SEALING_FRAME_TICK = "sealingFrameTick";
 
     public static final int OPENING_FINISH = 144;
     public static final int FILL_DELAY = 60;
     public static final int FILL_START_TICK = OPENING_FINISH + FILL_DELAY;
     public static final int TRANSPORT_TICKER_DURATION = 5 * 20;
+    public static final int SEAL_DURATION = 3 * 20;
 
     public BlockPos fountainPos;
     public ResourceKey<Level> fountainDimension;
@@ -66,13 +70,20 @@ public class DarkFountain {
     public List<DarkRoom> rooms = new ArrayList<>();
     public int rescanTimer = 0;
     public List<Integer> shockwaveTickers;
+    public int sealingTick;
+    public int sealingFrameTick;
+
+    public int openingTickTarget;
+    public float openingTickClientO;
+    public float openingTickClient;
+    public boolean openingTickClientInitialized;
 
     @Nullable
     public SoundWrapper windSound = null;
     @Nullable
     public SoundWrapper darknessSound = null;
 
-    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int openingTick, int frameTick, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers) {
+    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int openingTick, int frameTick, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers, int sealingTick, int sealingFrameTick) {
         this.fountainPos = fountainPos;
         this.fountainDimension = fountainDimension;
         this.destinationPos = destinationPos;
@@ -83,6 +94,34 @@ public class DarkFountain {
         this.frameOptimized = frameOptimized;
         this.teleportedEntities = teleportedEntities;
         this.shockwaveTickers = shockwaveTickers;
+        this.openingTickTarget = openingTick;
+        this.sealingTick = sealingTick;
+        this.sealingFrameTick = sealingFrameTick;
+    }
+
+    public void clientTickOpening() {
+        this.openingTickClientO = this.openingTickClient;
+
+        if (!this.openingTickClientInitialized) {
+            this.openingTickClientInitialized = true;
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+            return;
+        }
+
+        float diff = this.openingTickTarget - this.openingTickClient;
+        if (diff > 0f) {
+            this.openingTickClient += Math.min(diff, 1f);
+        } else if (diff < 0f) {
+            this.openingTickClient -= Math.min(-diff, 1f);
+        }
+    }
+
+    public float getOpeningTick(float partialTick) {
+        if (!this.openingTickClientInitialized) {
+            return this.openingTickTarget + partialTick;
+        }
+        return Mth.lerp(partialTick, this.openingTickClientO, this.openingTickClient);
     }
 
     public void tick(Level level) {
@@ -132,37 +171,70 @@ public class DarkFountain {
                 if (level instanceof ServerLevel serverLevel) {
                     tickDarkWorldFountainPushing(serverLevel);
                 }
+
+                if (this.sealingTick >= 0) {
+                    if (this.sealingFrameTick >= 0) {
+                        if (this.sealingFrameTick % 3 == 0) {
+                            if (this.frame >= 27) {
+                                this.frame = 0;
+                            } else {
+                                this.frame++;
+                            }
+                        }
+                        if (this.sealingFrameTick % 6 == 0) {
+                            if (this.frameOptimized >= 5) {
+                                this.frameOptimized = 0;
+                            } else {
+                                this.frameOptimized++;
+                            }
+                        }
+
+                        if (this.sealingFrameTick >= 27 * 3) {
+                            this.sealingFrameTick = 0;
+                        } else {
+                            this.sealingFrameTick++;
+                        }
+                    }
+                } else {
+                    if (this.frameTick % 3 == 0) {
+                        if (this.frame >= 27) {
+                            this.frame = 0;
+                        } else {
+                            this.frame++;
+                        }
+                    }
+                    if (this.frameTick % 6 == 0) {
+                        if (this.frameOptimized >= 5) {
+                            this.frameOptimized = 0;
+                        } else {
+                            this.frameOptimized++;
+                        }
+                    }
+
+                    if (this.frameTick >= 27 * 3) {
+                        this.frameTick = 0;
+                    } else {
+                        this.frameTick++;
+                    }
+                }
+
+                if (this.sealingTick >= 0) {
+                    if (sealingTick < SEAL_DURATION) {
+                        sealingTick++;
+                    } else {
+                        sealingTick = -1;
+                    }
+                }
             }
 
             if (this.openingTick == 1) {
                 level.playSound(null, fountainPos, SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 0.5f, 1f);
             }
 
-            if (this.frameTick % 3 == 0) {
-                if (this.frame >= 27) {
-                    this.frame = 0;
-                } else {
-                    this.frame++;
-                }
-            }
-            if (this.frameTick % 6 == 0) {
-                if (this.frameOptimized >= 5) {
-                    this.frameOptimized = 0;
-                } else {
-                    this.frameOptimized++;
-                }
-            }
-
-            if (this.frameTick >= 27 * 3) {
-                this.frameTick = 0;
-            } else {
-                this.frameTick++;
-            }
-
             if (this.openingTick == 0) {
                 this.shockwaveTickers.add(0);
             }
-            if (this.openingTick % 3 == 0 && this.openingTick < OPENING_FINISH - 20) {
+            if (this.openingTick % 3 == 0 && this.openingTick < OPENING_FINISH - 10) {
                 this.shockwaveTickers.add(0);
             }
 
@@ -598,9 +670,9 @@ public class DarkFountain {
         for (UUID entity : teleportedEntities) {
             if (teleportBoxEntities.contains(entity)) {
                 newTeleportedEntities.add(entity);
-                    }
-                }
-                this.teleportedEntities = newTeleportedEntities;
+            }
+        }
+        this.teleportedEntities = newTeleportedEntities;
     }
 
     private void tickSoundPackets(Level level) {
@@ -697,6 +769,9 @@ public class DarkFountain {
         }
         tag.put(SHOCKWAVE_TICKERS, shockwaveTickersTag);
 
+        tag.putInt(SEALING_TICK, sealingTick);
+        tag.putInt(SEALING_FRAME_TICK, sealingFrameTick);
+
         return tag;
     }
 
@@ -723,7 +798,10 @@ public class DarkFountain {
             }
         }
 
-        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers);
+        int sealingTick = tag.getInt(SEALING_TICK);
+        int sealingFrameTick = tag.getInt(SEALING_FRAME_TICK);
+
+        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick);
 
         if (tag.contains(ROOMS)) {
             ListTag roomsTag = tag.getList(ROOMS, Tag.TAG_COMPOUND);
@@ -749,6 +827,16 @@ public class DarkFountain {
         this.teleportedEntities = fountain.teleportedEntities;
 
         this.shockwaveTickers = fountain.shockwaveTickers;
+
+        this.openingTickTarget = fountain.openingTick;
+        if (!this.openingTickClientInitialized) {
+            this.openingTickClientInitialized = true;
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+        }
+
+        this.sealingTick = fountain.sealingTick;
+        this.sealingFrameTick = fountain.sealingFrameTick;
     }
 
     public BlockPos getFountainPos() { return fountainPos; }

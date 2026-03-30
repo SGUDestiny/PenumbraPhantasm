@@ -147,6 +147,8 @@ public class SealingSoulEntity extends Entity {
             this.discard();
         } else {
             if (tick == 0) {
+                darkFountain.sealingTick = 0;
+                darkFountain.sealingFrameTick = darkFountain.getFrameTick();
                 level.playSound(null, this.blockPosition(), SoundRegistry.GREAT_SHINE.get(), SoundSource.AMBIENT, 0.5f, 1f);
             }
             if (tick == 4 * 20 && !level.isClientSide) {

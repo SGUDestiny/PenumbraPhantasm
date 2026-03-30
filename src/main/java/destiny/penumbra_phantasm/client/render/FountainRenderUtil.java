@@ -194,7 +194,7 @@ public class FountainRenderUtil
 		float brightness_middle = 0.8f - 0.2f * (float) Math.sin(time * 1.2);
 		float brightness_back = 0.7f - 0.3f * (float) Math.sin(time * 1.2);
 		float scaleXZ = 1.0f;
-		float openingTick = fountain.openingTick + partialTick;
+		float openingTick = fountain.getOpeningTick(partialTick);
 		float fountainHue = time * 0.03f % 1f;
 
 		Player player = Minecraft.getInstance().player;

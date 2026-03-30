@@ -345,7 +345,7 @@ public class KnifeItem extends SwordItem {
         targetLevel.setChunkForced(darkChunkPos.x, darkChunkPos.z, false);
 
         //Add light world fountain to the capability
-        lightCap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>());
+        lightCap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1);
 
         //Create new dark room instance for the fountain room
         DarkRoom fountainRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
@@ -365,7 +365,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //Add dark world fountain to the capability
-        darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>());
+        darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1);
 
         //If player is not creative, put cooldown on knife
         if (!player.isCreative()) {
