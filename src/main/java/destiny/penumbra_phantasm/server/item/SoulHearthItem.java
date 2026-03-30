@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.item;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.advancement.TriggerCriterions;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.entity.SealingSoulEntity;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
@@ -14,6 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -127,6 +129,10 @@ public class SoulHearthItem extends Item {
             soulEntity.setPos(playerPos.x + forwardX, playerPos.y + 1, playerPos.z + (forwardZ * 2));
 
             level.addFreshEntity(soulEntity);
+        }
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            TriggerCriterions.DARK_FOUNTAIN_SEAL.trigger(serverPlayer);
         }
 
         player.getCooldowns().addCooldown(stack.getItem(), 10 * 20);

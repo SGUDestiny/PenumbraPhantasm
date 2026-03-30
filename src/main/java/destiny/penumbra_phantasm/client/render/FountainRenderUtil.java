@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
@@ -207,22 +206,32 @@ public class FountainRenderUtil
 			Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
 			Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
 
-			float distanceSquared = flatPlayerPos.distanceToSqr(flatFountainPos);
+			float distance = flatPlayerPos.distanceToSqr(flatFountainPos);
 			if(playerY < fountainY)
-				distanceSquared = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos()));
+				distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos()));
 
-			float distanceInBlocks = Mth.sqrt(distanceSquared);
-			float middleTintBlend = Mth.clamp((24f - distanceInBlocks) / 8f, 0f, 1f);
-			float middleRed = middleColor.getRed() / 255f;
-			float middleGreen = middleColor.getGreen() / 255f;
-			float middleBlue = middleColor.getBlue() / 255f;
-			float tintRed = Mth.lerp(middleTintBlend, 1f, middleRed);
-			float tintGreen = Mth.lerp(middleTintBlend, 1f, middleGreen);
-			float tintBlue = Mth.lerp(middleTintBlend, 1f, middleBlue);
-			RenderSystem.setShaderColor(tintRed, tintGreen, tintBlue, 1F);
-			if (shaderInstance != null) {
-				shaderInstance.safeGetUniform("TintColor").set(tintRed, tintGreen, tintBlue, alpha);
+			if(distance < Math.pow(16, 2)) {
+				RenderSystem.setShaderColor(middleColor.getRed() / 255f, middleColor.getGreen() / 255f, middleColor.getBlue() / 255f, 1F);
+				if (shaderInstance != null) {
+					shaderInstance.safeGetUniform("TintColor").set(
+							middleColor.getRed() / 255f,
+							middleColor.getGreen() / 255f,
+							middleColor.getBlue() / 255f,
+							alpha
+					);
+				}
+
+			}else {
+				if (shaderInstance != null) {
+					shaderInstance.safeGetUniform("TintColor").set(
+							1f,
+							1f,
+							1f,
+							alpha
+					);
+				}
 			}
+
 
 		}
 

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.advancement.TriggerCriterions;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
@@ -27,6 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -369,6 +371,8 @@ public class KnifeItem extends SwordItem {
         if (!player.isCreative()) {
             player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
         }
+
+        TriggerCriterions.DARK_FOUNTAIN_MAKE.trigger((ServerPlayer) player);
 
         //Break knife if single use
         if (isSingleUse) {

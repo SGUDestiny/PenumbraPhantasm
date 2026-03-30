@@ -1,0 +1,32 @@
+{
+  "parent": "penumbra_phantasm:dark_fountain_make",
+  "display": {
+    "icon": {
+      "item": "penumbra_phantasm:soul_hearth"
+    },
+    "title": {
+      "translate": "advancement.penumbra_phantasm.dark_fountain_seal.title"
+    },
+    "description": {
+      "translate": "advancement.penumbra_phantasm.dark_fountain_seal.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "dark_fountain_seal": {
+      "trigger": "penumbra_phantasm:dark_fountain_seal"
+    }
+  },
+  "requirements": [
+    [
+      "dark_fountain_seal"
+    ]
+  ],
+  "rewards": {
+    "experience": 0
+  },
+  "sends_telemetry_event": false
+}

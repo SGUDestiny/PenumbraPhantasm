@@ -1,0 +1,32 @@
+{
+  "parent": "penumbra_phantasm:soul_hearth",
+  "display": {
+    "icon": {
+      "item": "penumbra_phantasm:iron_knife"
+    },
+    "title": {
+      "translate": "advancement.penumbra_phantasm.dark_fountain_make.title"
+    },
+    "description": {
+      "translate": "advancement.penumbra_phantasm.dark_fountain_make.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "dark_fountain_make": {
+      "trigger": "penumbra_phantasm:dark_fountain_make"
+    }
+  },
+  "requirements": [
+    [
+      "dark_fountain_make"
+    ]
+  ],
+  "rewards": {
+    "experience": 0
+  },
+  "sends_telemetry_event": false
+}

@@ -22,7 +22,7 @@ import destiny.penumbra_phantasm.client.render.particle.RealKnifeHitParticle;
 import destiny.penumbra_phantasm.client.render.particle.RealKnifeSlashParticle;
 import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
 import destiny.penumbra_phantasm.client.render.particle.ScarletLeafParticle;
-import destiny.penumbra_phantasm.server.advancement.EnteredDimensionIdTrigger;
+import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
@@ -64,7 +64,6 @@ public class PenumbraPhantasm {
 
     public PenumbraPhantasm() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
 
@@ -83,6 +82,7 @@ public class PenumbraPhantasm {
         FeatureRegistry.FEATURES.register(modEventBus);
         ChunkGeneratorRegistry.CHUNK_GENERATORS.register(modEventBus);
         PacketHandlerRegistry.register();
+        AdvancementRegistry.register();
 
         modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) ->
             {
@@ -92,10 +92,6 @@ public class PenumbraPhantasm {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
-    }
-
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> CriteriaTriggers.register(EnteredDimensionIdTrigger.INSTANCE));
     }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

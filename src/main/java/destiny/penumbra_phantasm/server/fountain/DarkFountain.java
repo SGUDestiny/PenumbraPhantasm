@@ -132,11 +132,7 @@ public class DarkFountain {
             }
 
             if (this.animationTimer == 1) {
-                level.players().forEach(player -> {
-                    if (player.level().dimension() == fountainDimension) {
-                        level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 0.75f, 1f);
-                    }
-                });
+                level.playSound(null, fountainPos, SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 0.5f, 1f);
             }
 
             if (this.frameTimer % 3 == 0) {

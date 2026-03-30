@@ -1,10 +1,9 @@
 package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.Config;
-import destiny.penumbra_phantasm.server.advancement.EnteredDimensionIdTrigger;
+import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.registry.*;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -150,7 +149,7 @@ public class CommonEvents {
     @SubscribeEvent
     public void playerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            EnteredDimensionIdTrigger.INSTANCE.trigger(serverPlayer, event.getFrom(), event.getTo());
+            ChangedDimensionContainsTrigger.INSTANCE.trigger(serverPlayer, event.getFrom(), event.getTo());
         }
     }
 

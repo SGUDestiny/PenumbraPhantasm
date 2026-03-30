@@ -147,7 +147,7 @@ public class SealingSoulEntity extends Entity {
             this.discard();
         } else {
             if (tick == 0) {
-                level.playSound(null, this.blockPosition(), SoundRegistry.GREAT_SHINE.get(), SoundSource.AMBIENT, 1, 1);
+                level.playSound(null, this.blockPosition(), SoundRegistry.GREAT_SHINE.get(), SoundSource.AMBIENT, 0.5f, 1f);
             }
             if (tick == 4 * 20 && !level.isClientSide) {
                 level.players().forEach(player -> {
@@ -157,7 +157,7 @@ public class SealingSoulEntity extends Entity {
                             cap.syncToClient(serverPlayer);
                         }
                     });
-                    level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_SEAL.get(), SoundSource.AMBIENT, 1f, 1f);
+                    level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_SEAL.get(), SoundSource.AMBIENT, 0.5f, 1f);
                 });
             }
 
