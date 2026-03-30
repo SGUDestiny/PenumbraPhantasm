@@ -46,8 +46,8 @@ public class DarkFountain {
     public static final String FRAME = "frame";
     public static final String FRAME_OPTIMIZED = "frameOptimized";
     public static final String TELEPORTED_ENTITIES = "teleportedEntities";
-    public static final String FADE_IN_TICKERS = "fadeInTickers";
     public static final String ROOMS = "rooms";
+    public static final String SHOCKWAVE_TICKERS = "shockwaveTickers";
 
     public static final int FILL_START_TICK = 126;
     public static final int TRANSPORT_TICKER_DURATION = 100;
@@ -64,13 +64,14 @@ public class DarkFountain {
     public HashSet<UUID> teleportedEntities;
     public List<DarkRoom> rooms = new ArrayList<>();
     public int rescanTimer = 0;
+    public List<Integer> shockwaveTickers;
 
     @Nullable
     public SoundWrapper windSound = null;
     @Nullable
     public SoundWrapper darknessSound = null;
 
-    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame, int frameOptimized, HashSet<UUID> teleportedEntities) {
+    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers) {
         this.fountainPos = fountainPos;
         this.fountainDimension = fountainDimension;
         this.destinationPos = destinationPos;
@@ -80,6 +81,7 @@ public class DarkFountain {
         this.frame = frame;
         this.frameOptimized = frameOptimized;
         this.teleportedEntities = teleportedEntities;
+        this.shockwaveTickers = shockwaveTickers;
     }
 
     public void tick(Level level) {
@@ -154,6 +156,27 @@ public class DarkFountain {
                 this.frameTimer = 0;
             } else {
                 this.frameTimer++;
+            }
+
+            if (this.animationTimer == 0) {
+                this.shockwaveTickers.add(0);
+            }
+            if (this.animationTimer % 5 == 0) {
+                this.shockwaveTickers.add(0);
+            }
+
+            List<Integer> toRemove = new ArrayList<>();
+            for (int i = 0; i < this.shockwaveTickers.size(); i++) {
+                int ticker = this.shockwaveTickers.get(i);
+
+                if (ticker < 20) {
+                    this.shockwaveTickers.set(i, ticker + 1);
+                } else {
+                    toRemove.add(i);
+                }
+            }
+            for (int ticker : toRemove) {
+                this.shockwaveTickers.remove(ticker);
             }
 
             if (this.animationTimer >= 144) {
@@ -668,6 +691,12 @@ public class DarkFountain {
         }
         tag.put(ROOMS, roomsTag);
 
+        ListTag shockwaveTickersTag = new ListTag();
+        for (int ticker : shockwaveTickers) {
+            shockwaveTickersTag.add(IntTag.valueOf(ticker));
+        }
+        tag.put(SHOCKWAVE_TICKERS, shockwaveTickersTag);
+
         return tag;
     }
 
@@ -686,7 +715,15 @@ public class DarkFountain {
             teleportedEntities.add(UUID.fromString(tg.getAsString()));
         }
 
-        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, frameOptimized, teleportedEntities);
+        List<Integer> shockwaveTickers = new ArrayList<>();
+        if (tag.contains(SHOCKWAVE_TICKERS)) {
+            ListTag shockwaveTickersTag = tag.getList(SHOCKWAVE_TICKERS, Tag.TAG_INT);
+            for (Tag ticker : shockwaveTickersTag) {
+                shockwaveTickers.add(((IntTag) ticker).getAsInt());
+            }
+        }
+
+        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, frameOptimized, teleportedEntities, shockwaveTickers);
 
         if (tag.contains(ROOMS)) {
             ListTag roomsTag = tag.getList(ROOMS, Tag.TAG_COMPOUND);
@@ -710,6 +747,8 @@ public class DarkFountain {
         this.frameOptimized = fountain.frameOptimized;
 
         this.teleportedEntities = fountain.teleportedEntities;
+
+        this.shockwaveTickers = fountain.shockwaveTickers;
     }
 
     public BlockPos getFountainPos() { return fountainPos; }

@@ -53,7 +53,7 @@ public class ClientEvents {
 			int length = level.getHeight() / 6;
 			ResourceLocation textureCrack = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_ground_crack.png");
 
-			PoseStack stack = event.getPoseStack();
+			PoseStack pose = event.getPoseStack();
 			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(FOUNTAIN_BUFFER);
 
 			GL11.glEnable(0x864F);
@@ -64,27 +64,28 @@ public class ClientEvents {
 						float animationTime = fountain.animationTimer;
 
 						if (!DarkWorldUtil.isDarkWorld(level)) {
-							stack.pushPose();
-							stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
+							pose.pushPose();
+							pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
+							pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
 									fountain.getFountainPos().getZ());
 
 							if (animationTime < 130 && animationTime >= 0) {
-								FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
-										OverlayTexture.NO_OVERLAY);
+								//FountainRenderUtil.renderOpeningFoutain(animationTime + partialTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 							} else {
 								double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
 								if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
-									FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
+									//FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 								}
 							}
+
+							FountainRenderUtil.renderShockwaves(fountain, pose, buffer, OverlayTexture.NO_OVERLAY, partialTick);
 						}
 						else
 						{
-							stack.pushPose();
-							stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
+							pose.pushPose();
+							pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
+							pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
 									fountain.getFountainPos().getZ());
 
 							Vec2 fountain2dPos = new Vec2(fountain.getFountainPos().getX(), fountain.getFountainPos().getZ());
@@ -95,20 +96,20 @@ public class ClientEvents {
 							float distanceScale = (float)(distance2d / referenceDistance);
 							distanceScale = Math.max(distanceScale, 1.0f);
 
-							stack.scale(distanceScale, distanceScale, distanceScale);
+							pose.scale(distanceScale, distanceScale, distanceScale);
 
 							float fade = (float)((distance2d - referenceDistance) / referenceDistance);
 							fade = Math.max(0f, Math.min(1f, fade));
 
 							if (fade < 1.0f) {
-								FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
+								FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
 							}
 							if (fade > 0.0f) {
-								FountainRenderUtil.renderOpenFountainOptimized(fountain, length, stack, buffer, OverlayTexture.NO_OVERLAY, fade);
+								FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, OverlayTexture.NO_OVERLAY, fade);
 							}
 						}
 
-						stack.popPose();
+						pose.popPose();
 					});
 			});
 

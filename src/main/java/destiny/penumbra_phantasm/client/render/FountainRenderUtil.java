@@ -1,7 +1,9 @@
 package destiny.penumbra_phantasm.client.render;
 
 import java.awt.Color;
+import java.util.List;
 
+import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -62,8 +64,8 @@ public class FountainRenderUtil
 		float off = deformation / 16f;
 
 		float[][] planes = {
-			{ hw * COS45, -hw * COS45,  COS45, COS45 },
-			{ hw * COS45,  hw * COS45, -COS45, COS45 }
+				{ hw * COS45, -hw * COS45,  COS45, COS45 },
+				{ hw * COS45,  hw * COS45, -COS45, COS45 }
 		};
 
 		for (float[] plane : planes) {
@@ -88,14 +90,12 @@ public class FountainRenderUtil
 		}
 	}
 
-	public static void renderOpeningFoutain(float partialTick, float initialAnimationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
+	public static void renderOpeningFoutain(float animationTime, int length, ResourceLocation textureCrack, PoseStack poseStack, MultiBufferSource buffer, int overlay) {
 		ResourceLocation textureFountainOpeningBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom.png");
 		ResourceLocation textureFountainOpeningMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle.png");
 		ResourceLocation textureFountainOpeningBottomShadow = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_bottom_shadow.png");
 		ResourceLocation textureFountainOpeningMiddleShadow = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_open_middle_shadow.png");
-		ResourceLocation textureFountainTarget = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_shockwave.png");
 
-		float animationTime = initialAnimationTime + partialTick;
 		float expandTime = 5f;
 		float pulsateTime = 120f;
 		float shrinkTime = 5;
@@ -139,13 +139,6 @@ public class FountainRenderUtil
 
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.5f, 0.5f);
-		poseStack.translate(0f, -1.94f, 0f);
-		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainTarget)),
-				LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1F);
-		poseStack.popPose();
-
-		poseStack.pushPose();
-		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, 3f, 0f);
 		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 		getOpeningModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureFountainOpeningBottom)),
@@ -164,6 +157,26 @@ public class FountainRenderUtil
 		poseStack.popPose();
 	}
 
+	public static void renderShockwaves(DarkFountain fountain, PoseStack pose, MultiBufferSource buffer, int overlay, float partialTick) {
+		ResourceLocation textureFountainTarget = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_shockwave.png");
+		List<Integer> shockwaveTickers = fountain.shockwaveTickers;
+
+		for (float ticker : shockwaveTickers) {
+			ticker = ticker + partialTick;
+			float shockwaveDelta = ticker / 20f;
+			float alpha = Mth.lerp(shockwaveDelta, 1f, 0f);
+			float size = Mth.lerp(shockwaveDelta, 0f, 2f);
+			float y = Mth.lerp(shockwaveDelta, -1.5f, -1.9f);
+
+			pose.pushPose();
+			pose.translate(0.5f, 0.5f, 0.5f);
+			pose.translate(0f, y, 0f);
+			pose.scale(size, 1f, size);
+			getCrackModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.fountain(textureFountainTarget)),
+					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, alpha);
+			pose.popPose();
+		}
+	}
 
 	public static void renderOpenFountain(DarkFountain fountain, Level level, float initialAnimationTime, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha) {
 		int frame = fountain.getFrame();
@@ -214,30 +227,33 @@ public class FountainRenderUtil
 			Vec2 flatPlayerPos = new Vec2((float)playerX, (float) playerZ);
 			Vec2 flatFountainPos = new Vec2((float) fountainX, (float) fountainZ);
 
-			float distance = flatPlayerPos.distanceToSqr(flatFountainPos);
+			float distanceSquared = flatPlayerPos.distanceToSqr(flatFountainPos);
 			if(playerY < fountainY)
-				distance = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos()));
+				distanceSquared = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos()));
 
-			if(distance < Math.pow(16, 2)) {
-				RenderSystem.setShaderColor(middleColor.getRed() / 255f, middleColor.getGreen() / 255f, middleColor.getBlue() / 255f, 1F);
-				if (shaderInstance != null) {
-					shaderInstance.safeGetUniform("TintColor").set(
-							middleColor.getRed() / 255f,
-							middleColor.getGreen() / 255f,
-							middleColor.getBlue() / 255f,
-							alpha
-					);
-				}
+			float distanceInBlocks = (float) Math.sqrt(distanceSquared);
+			float fadeStartDistance = 24f;
+			float fadeEndDistance = 16f;
+			float fadeRange = fadeStartDistance - fadeEndDistance;
+			float tintDelta = (fadeStartDistance - distanceInBlocks) / fadeRange;
+			tintDelta = Math.max(0f, Math.min(1f, tintDelta));
 
-			}else {
-				if (shaderInstance != null) {
-					shaderInstance.safeGetUniform("TintColor").set(
-							1f,
-							1f,
-							1f,
-							alpha
-					);
-				}
+			float middleRed = middleColor.getRed() / 255f;
+			float middleGreen = middleColor.getGreen() / 255f;
+			float middleBlue = middleColor.getBlue() / 255f;
+
+			float tintRed = 1f + (middleRed - 1f) * tintDelta;
+			float tintGreen = 1f + (middleGreen - 1f) * tintDelta;
+			float tintBlue = 1f + (middleBlue - 1f) * tintDelta;
+
+			RenderSystem.setShaderColor(tintRed, tintGreen, tintBlue, 1F);
+			if (shaderInstance != null) {
+				shaderInstance.safeGetUniform("TintColor").set(
+						tintRed,
+						tintGreen,
+						tintBlue,
+						alpha
+				);
 			}
 
 
