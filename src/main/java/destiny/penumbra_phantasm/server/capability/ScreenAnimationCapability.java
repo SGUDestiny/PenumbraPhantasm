@@ -58,7 +58,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
             darknessOverlayTicker = -1;
         }
 
-        if (sealShineTicker >= 60) {
+        if (sealShineTicker >= 7 * 20) {
             sealShineTicker = -1;
         }
         if (sealShineTicker >= 0) {
