@@ -42,7 +42,7 @@ public class DarkFountain {
     public static final String DESTINATION_POS = "destinationPos";
     public static final String DESTINATION_DIMENSION = "destinationDimension";
     public static final String OPENING_TICK = "animationTimer";
-    public static final String FRAME_TIMER = "frameTimer";
+    public static final String FRAME_TICK = "frameTick";
     public static final String FRAME = "frame";
     public static final String FRAME_OPTIMIZED = "frameOptimized";
     public static final String TELEPORTED_ENTITIES = "teleportedEntities";
@@ -50,7 +50,7 @@ public class DarkFountain {
     public static final String SHOCKWAVE_TICKERS = "shockwaveTickers";
 
     public static final int OPENING_FINISH = 144;
-    public static final int FILL_DELAY = 40;
+    public static final int FILL_DELAY = 60;
     public static final int FILL_START_TICK = OPENING_FINISH + FILL_DELAY;
     public static final int TRANSPORT_TICKER_DURATION = 5 * 20;
 
@@ -59,7 +59,7 @@ public class DarkFountain {
     public BlockPos destinationPos;
     public ResourceKey<Level> destinationDimension;
     public int openingTick;
-    public int frameTimer;
+    public int frameTick;
     public int frame;
     public int frameOptimized;
     public HashSet<UUID> teleportedEntities;
@@ -72,13 +72,13 @@ public class DarkFountain {
     @Nullable
     public SoundWrapper darknessSound = null;
 
-    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int openingTick, int frameTimer, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers) {
+    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int openingTick, int frameTick, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers) {
         this.fountainPos = fountainPos;
         this.fountainDimension = fountainDimension;
         this.destinationPos = destinationPos;
         this.destinationDimension = destinationDimension;
         this.openingTick = openingTick;
-        this.frameTimer = frameTimer;
+        this.frameTick = frameTick;
         this.frame = frame;
         this.frameOptimized = frameOptimized;
         this.teleportedEntities = teleportedEntities;
@@ -138,14 +138,14 @@ public class DarkFountain {
                 level.playSound(null, fountainPos, SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 0.5f, 1f);
             }
 
-            if (this.frameTimer % 3 == 0) {
+            if (this.frameTick % 3 == 0) {
                 if (this.frame >= 27) {
                     this.frame = 0;
                 } else {
                     this.frame++;
                 }
             }
-            if (this.frameTimer % 6 == 0) {
+            if (this.frameTick % 6 == 0) {
                 if (this.frameOptimized >= 5) {
                     this.frameOptimized = 0;
                 } else {
@@ -153,16 +153,16 @@ public class DarkFountain {
                 }
             }
 
-            if (this.frameTimer >= 27 * 3) {
-                this.frameTimer = 0;
+            if (this.frameTick >= 27 * 3) {
+                this.frameTick = 0;
             } else {
-                this.frameTimer++;
+                this.frameTick++;
             }
 
             if (this.openingTick == 0) {
                 this.shockwaveTickers.add(0);
             }
-            if (this.openingTick % 3 == 0) {
+            if (this.openingTick % 3 == 0 && this.openingTick < OPENING_FINISH - 20) {
                 this.shockwaveTickers.add(0);
             }
 
@@ -676,7 +676,7 @@ public class DarkFountain {
         tag.put(DESTINATION_POS, NbtUtils.writeBlockPos(destinationPos));
         tag.putString(DESTINATION_DIMENSION, destinationDimension.location().toString());
         tag.putInt(OPENING_TICK, openingTick);
-        tag.putInt(FRAME_TIMER, frameTimer);
+        tag.putInt(FRAME_TICK, frameTick);
         tag.putInt(FRAME, frame);
         tag.putInt(FRAME_OPTIMIZED, frameOptimized);
         ListTag teleportedEntitiesList = new ListTag();
@@ -706,7 +706,7 @@ public class DarkFountain {
         BlockPos destinationPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS));
         ResourceKey<Level> destinationDimension = stringToDimension(tag.getString(DESTINATION_DIMENSION));
         int openingTick = tag.getInt(OPENING_TICK);
-        int frameTimer = tag.getInt(FRAME_TIMER);
+        int frameTick = tag.getInt(FRAME_TICK);
         int frame = tag.getInt(FRAME);
         int frameOptimized = tag.getInt(FRAME_OPTIMIZED);
         HashSet<UUID> teleportedEntities = new HashSet<>();
@@ -723,7 +723,7 @@ public class DarkFountain {
             }
         }
 
-        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTimer, frame, frameOptimized, teleportedEntities, shockwaveTickers);
+        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers);
 
         if (tag.contains(ROOMS)) {
             ListTag roomsTag = tag.getList(ROOMS, Tag.TAG_COMPOUND);
@@ -743,7 +743,7 @@ public class DarkFountain {
 
         this.frame = fountain.frame;
         this.openingTick = fountain.openingTick;
-        this.frameTimer = fountain.frameTimer;
+        this.frameTick = fountain.frameTick;
         this.frameOptimized = fountain.frameOptimized;
 
         this.teleportedEntities = fountain.teleportedEntities;
@@ -756,7 +756,7 @@ public class DarkFountain {
     public BlockPos getDestinationPos() { return destinationPos; }
     public ResourceKey<Level> getDestinationDimension() { return destinationDimension; }
     public int getOpeningTick() { return openingTick; }
-    public int getFrameTimer() { return frameTimer; }
+    public int getFrameTick() { return frameTick; }
     public int getFrame() { return frame; }
     public int getFrameOptimized() { return frameOptimized; }
 
