@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.server.entity;
 
+import destiny.penumbra_phantasm.server.block.DarknessBlock;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
@@ -87,8 +88,13 @@ public class SealingSoulEntity extends Entity {
 
         if (tick >= 7 * 20) {
             tick = 0;
+            this.entityData.set(TICK_ENTITY_DATA, tick);
 
-            ServerLevel lightLevel = level.getServer().getLevel(darkFountain.destinationDimension);
+            if (!(level instanceof ServerLevel soulLevel)) {
+                return;
+            }
+
+            ServerLevel lightLevel = soulLevel.getServer().getLevel(darkFountain.destinationDimension);
 
             if (lightLevel == null) {
                 this.discard();
@@ -96,10 +102,15 @@ public class SealingSoulEntity extends Entity {
             }
 
             //Teleport all players to light fountain
-            for (Player player : new ArrayList<>(level.players())) {
+            for (Player player : new ArrayList<>(soulLevel.players())) {
                 if (player instanceof ServerPlayer serverPlayer) {
 
                     Vec3 lightPos = darkFountain.destinationPos.getCenter();
+
+                    serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
+                        cap.sealShineTicker = -1;
+                        cap.syncToClient(serverPlayer);
+                    });
 
                     serverPlayer.teleportTo(lightLevel, lightPos.x, lightPos.y,
                             lightPos.z, player.getYHeadRot(), player.getXRot());
@@ -124,11 +135,13 @@ public class SealingSoulEntity extends Entity {
             //Clear darkness blocks in light fountain
             for (DarkRoom room : lightFountain.rooms) {
                 for (BlockPos pos : room.getPositions()) {
-                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                    if (lightLevel.getBlockState(pos).getBlock() instanceof DarknessBlock) {
+                        lightLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                    }
                 }
             }
 
-            //Remove light fountain
+            darkFountainCapability.removeDarkFountain(level, darkFountain.fountainPos);
             lightFountainCapability.removeDarkFountain(lightLevel, darkFountain.destinationPos);
 
             this.discard();

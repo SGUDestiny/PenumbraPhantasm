@@ -1,12 +1,16 @@
 package destiny.penumbra_phantasm.server.item;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.entity.SealingSoulEntity;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.EntityRegistry;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
@@ -23,10 +27,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
+import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -76,7 +82,39 @@ public class SoulHearthItem extends Item {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
+        if (!DarkWorldUtil.isDarkWorld(level)) return InteractionResultHolder.pass(stack);
+
         if (stack.getTag() == null) return InteractionResultHolder.pass(stack);
+
+        DarkFountainCapability darkFountainCapability = null;
+        LazyOptional<DarkFountainCapability> darkLazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if(darkLazyCapability.isPresent() && darkLazyCapability.resolve().isPresent())
+            darkFountainCapability = darkLazyCapability.resolve().get();
+
+        if (darkFountainCapability == null){
+            return InteractionResultHolder.pass(stack);
+        }
+
+        DarkFountain darkFountain = null;
+        for(Map.Entry<BlockPos, DarkFountain> entry : darkFountainCapability.darkFountains.entrySet()) {
+            DarkFountain entryFountain = entry.getValue();
+
+            if(entryFountain.animationTimer > 125 || entryFountain.animationTimer == -1) {
+                BlockPos fountainPos = entry.getValue().getFountainPos();
+                Vec3 fountainPos2d = new Vec3(fountainPos.getX(), 0, fountainPos.getZ());
+                Vec3 playerPos2d = new Vec3(player.getX(), 0, player.getZ());
+
+                if (fountainPos2d.distanceTo(playerPos2d) < 16) {
+                    darkFountain = entry.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (darkFountain == null){
+            player.displayClientMessage(Component.translatable("But there was no fountain nearby..."), true);
+            return InteractionResultHolder.pass(stack);
+        }
 
         if (!level.isClientSide()) {
             SealingSoulEntity soulEntity = new SealingSoulEntity(EntityRegistry.SEALING_SOUL.get(), level);
@@ -90,6 +128,8 @@ public class SoulHearthItem extends Item {
 
             level.addFreshEntity(soulEntity);
         }
+
+        player.getCooldowns().addCooldown(stack.getItem(), 10 * 20);
 
         return InteractionResultHolder.consume(stack);
     }
