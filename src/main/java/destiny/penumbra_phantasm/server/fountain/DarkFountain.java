@@ -49,9 +49,8 @@ public class DarkFountain {
     public static final String ROOMS = "rooms";
     public static final String SHOCKWAVE_TICKERS = "shockwaveTickers";
 
-    public static final int FILL_START_TICK = 126;
-    public static final int TRANSPORT_TICKER_DURATION = 100;
-    public static final int FILL_DURATION_TICKS = TRANSPORT_TICKER_DURATION + 20;
+    public static final int FILL_START_TICK = 126 + 40;
+    public static final int TRANSPORT_TICKER_DURATION = 5 * 20;
 
     public BlockPos fountainPos;
     public ResourceKey<Level> fountainDimension;
@@ -161,7 +160,7 @@ public class DarkFountain {
             if (this.animationTimer == 0) {
                 this.shockwaveTickers.add(0);
             }
-            if (this.animationTimer % 5 == 0) {
+            if (this.animationTimer % 3 == 0) {
                 this.shockwaveTickers.add(0);
             }
 
@@ -169,7 +168,7 @@ public class DarkFountain {
             for (int i = 0; i < this.shockwaveTickers.size(); i++) {
                 int ticker = this.shockwaveTickers.get(i);
 
-                if (ticker < 20) {
+                if (ticker < 5) {
                     this.shockwaveTickers.set(i, ticker + 1);
                 } else {
                     toRemove.add(i);
@@ -204,7 +203,7 @@ public class DarkFountain {
             if (isInitialRoom && this.animationTimer >= 0) {
                 if (this.animationTimer < FILL_START_TICK) continue;
             }
-            fillRate = Math.max(1, room.getPositions().size() / FILL_DURATION_TICKS);
+            fillRate = Math.max(1, room.getPositions().size() / TRANSPORT_TICKER_DURATION);
 
             for (int i = 0; i < fillRate && room.fillIndex < room.getPositions().size(); i++) {
                 BlockPos pos = room.getPositions().get(room.fillIndex);
@@ -263,7 +262,6 @@ public class DarkFountain {
 
                                 if (entity instanceof ServerPlayer player) {
                                     destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
-                                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(1f));
                                 } else {
                                     Entity teleported = teleportEntity(entity, destinationLevel, target);
                                     if (teleported != null) {

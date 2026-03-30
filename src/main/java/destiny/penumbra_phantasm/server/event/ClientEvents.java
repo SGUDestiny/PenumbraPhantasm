@@ -40,7 +40,9 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void levelRender(RenderLevelStageEvent event)
 	{
-		if(event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY))
+		boolean renderSkyPass = event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY);
+		boolean renderShockwavePass = event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS);
+		if(renderSkyPass || renderShockwavePass)
 		{
 			ClientLevel level = Minecraft.getInstance().level;
 			if(level == null)
@@ -60,57 +62,61 @@ public class ClientEvents {
 
 			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
 				cap.darkFountains.forEach((key, fountain) ->
-					{
-						float animationTime = fountain.animationTimer;
+				{
+					float animationTime = fountain.animationTimer;
 
-						if (!DarkWorldUtil.isDarkWorld(level)) {
-							pose.pushPose();
-							pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-							pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
-									fountain.getFountainPos().getZ());
+					if (!DarkWorldUtil.isDarkWorld(level)) {
+						pose.pushPose();
+						pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
+						pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
+								fountain.getFountainPos().getZ());
 
+						if (renderSkyPass) {
 							if (animationTime < 130 && animationTime >= 0) {
-								//FountainRenderUtil.renderOpeningFoutain(animationTime + partialTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
+								FountainRenderUtil.renderOpeningFoutain(animationTime + partialTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 							} else {
 								double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
 								if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
-									//FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
+									FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 								}
 							}
+						}
 
+						if (renderShockwavePass) {
 							FountainRenderUtil.renderShockwaves(fountain, pose, buffer, OverlayTexture.NO_OVERLAY, partialTick);
 						}
-						else
-						{
-							pose.pushPose();
-							pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-							pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
-									fountain.getFountainPos().getZ());
-
-							Vec2 fountain2dPos = new Vec2(fountain.getFountainPos().getX(), fountain.getFountainPos().getZ());
-							Vec2 camera2dPos = new Vec2((float) camera.getPosition().x, (float) camera.getPosition().z);
-
-							double distance2d = Mth.sqrt(fountain2dPos.distanceToSqr(camera2dPos));
-							double referenceDistance = 64.0;
-							float distanceScale = (float)(distance2d / referenceDistance);
-							distanceScale = Math.max(distanceScale, 1.0f);
-
-							pose.scale(distanceScale, distanceScale, distanceScale);
-
-							float fade = (float)((distance2d - referenceDistance) / referenceDistance);
-							fade = Math.max(0f, Math.min(1f, fade));
-
-							if (fade < 1.0f) {
-								FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
-							}
-							if (fade > 0.0f) {
-								FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, OverlayTexture.NO_OVERLAY, fade);
-							}
-						}
-
 						pose.popPose();
-					});
+					}
+					else if (renderSkyPass)
+					{
+						pose.pushPose();
+						pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
+						pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
+								fountain.getFountainPos().getZ());
+
+						Vec2 fountain2dPos = new Vec2(fountain.getFountainPos().getX(), fountain.getFountainPos().getZ());
+						Vec2 camera2dPos = new Vec2((float) camera.getPosition().x, (float) camera.getPosition().z);
+
+						double distance2d = Mth.sqrt(fountain2dPos.distanceToSqr(camera2dPos));
+						double referenceDistance = 64.0;
+						float distanceScale = (float)(distance2d / referenceDistance);
+						distanceScale = Math.max(distanceScale, 1.0f);
+
+						pose.scale(distanceScale, distanceScale, distanceScale);
+
+						float fade = (float)((distance2d - referenceDistance) / referenceDistance);
+						fade = Math.max(0f, Math.min(1f, fade));
+
+						if (fade < 1.0f) {
+							FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
+						}
+						if (fade > 0.0f) {
+							FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, OverlayTexture.NO_OVERLAY, fade);
+						}
+						pose.popPose();
+					}
+				});
 			});
 
 			buffer.endBatch();
@@ -181,17 +187,17 @@ public class ClientEvents {
 				return;
 
 			if(InputConstants.getKey(InputConstants.KEY_W, event.getScanCode())
-							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
 				introScreen.incrementChoice(-1);
 			}
 			if(InputConstants.getKey(InputConstants.KEY_S, event.getScanCode())
-							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
 				introScreen.incrementChoice(1);
 			}
 			if(InputConstants.getKey(InputConstants.KEY_RETURN, event.getScanCode())
-							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
 				introScreen.pickChoice();
 			}

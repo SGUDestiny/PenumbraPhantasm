@@ -163,16 +163,16 @@ public class FountainRenderUtil
 
 		for (float ticker : shockwaveTickers) {
 			ticker = ticker + partialTick;
-			float shockwaveDelta = ticker / 20f;
+			float shockwaveDelta = Mth.clamp(ticker / 5, 0f, 1f);
 			float alpha = Mth.lerp(shockwaveDelta, 1f, 0f);
-			float size = Mth.lerp(shockwaveDelta, 0f, 2f);
-			float y = Mth.lerp(shockwaveDelta, -1.5f, -1.9f);
+			float size = Mth.lerp(shockwaveDelta, 0f, 3f);
+			float y = Mth.lerp(shockwaveDelta, -1.90f, -1.94f);
 
 			pose.pushPose();
 			pose.translate(0.5f, 0.5f, 0.5f);
 			pose.translate(0f, y, 0f);
 			pose.scale(size, 1f, size);
-			getCrackModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.fountain(textureFountainTarget)),
+			getCrackModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.fountainShockwave(textureFountainTarget)),
 					LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, alpha);
 			pose.popPose();
 		}
