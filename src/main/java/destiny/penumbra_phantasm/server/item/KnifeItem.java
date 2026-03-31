@@ -16,12 +16,6 @@ import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
-import dev.kosmx.playerAnim.api.layered.IAnimation;
-import dev.kosmx.playerAnim.api.layered.KeyframeAnimationPlayer;
-import dev.kosmx.playerAnim.api.layered.ModifierLayer;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -93,6 +87,11 @@ public class KnifeItem extends SwordItem {
 
         if (level.isClientSide())
             return InteractionResultHolder.pass(stack);
+
+        PacketHandlerRegistry.INSTANCE.send(
+                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_jump"))
+        );
 
         if (tag.contains(MAKING_TICK) && tag.getInt(MAKING_TICK) >= 0) {
             return InteractionResultHolder.pass(stack);
@@ -172,9 +171,6 @@ public class KnifeItem extends SwordItem {
         return InteractionResultHolder.sidedSuccess(stack, false);
     }
 
-    //FIXME:
-    // - Make animations synced between all clients
-
     //TODO:
     // - Made opening the fountain depend on the soul capability and determination (100% = 1 fountain)
 
@@ -195,12 +191,10 @@ public class KnifeItem extends SwordItem {
             if (makingTick >= 0) {
                 //Play player animation on first tick
                 if (makingTick == 0) {
-                    if (!level.isClientSide()) {
-                        PacketHandlerRegistry.INSTANCE.send(
-                                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                                new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))
-                        );
-                    }
+                    PacketHandlerRegistry.INSTANCE.send(
+                            PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                            new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_old"))
+                    );
                 }
 
                 //After particles, make fountain

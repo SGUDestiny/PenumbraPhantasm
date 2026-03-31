@@ -87,10 +87,6 @@ public class SealingSoulEntity extends Entity {
             return;
         }
 
-        if (darkFountain.sealingFrameTick >= 0) {
-            this.discard();
-        }
-
         if (tick >= 7 * 20) {
             tick = 0;
             this.entityData.set(TICK_ENTITY_DATA, tick);
