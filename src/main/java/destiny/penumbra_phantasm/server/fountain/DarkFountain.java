@@ -233,8 +233,6 @@ public class DarkFountain {
                 if (this.sealingTick >= 0) {
                     if (sealingTick < SEAL_DURATION) {
                         sealingTick++;
-                    } else {
-                        sealingTick = -1;
                     }
                 }
             }

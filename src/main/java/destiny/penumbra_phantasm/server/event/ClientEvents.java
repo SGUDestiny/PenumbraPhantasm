@@ -109,7 +109,11 @@ public class ClientEvents {
 						fade = Math.max(0f, Math.min(1f, fade));
 
 						if (fade < 1.0f) {
-							FountainRenderUtil.renderOpenFountain(fountain, level, openingTick, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
+							if (fountain.sealingTick >= 0) {
+								FountainRenderUtil.renderSealingFountain(fountain, level, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
+							} else {
+								FountainRenderUtil.renderOpenFountain(fountain, level, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
+							}
 						}
 						if (fade > 0.0f) {
 							FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, OverlayTexture.NO_OVERLAY, fade);
