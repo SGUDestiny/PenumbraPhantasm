@@ -114,6 +114,12 @@ public class DarkFountain {
             return;
         }
 
+        if (this.openingTickTarget < 0f) {
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+            return;
+        }
+
         float diff = this.openingTickTarget - this.openingTickClient;
         if (diff > 0f) {
             this.openingTickClient += Math.min(diff, 1f);
