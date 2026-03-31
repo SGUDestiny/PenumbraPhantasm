@@ -1,18 +1,27 @@
 package destiny.penumbra_phantasm.server.item;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.jetbrains.annotations.NotNull;
+
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.network.ClientBoundCancelPlayerAnimationPacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.client.network.ClientBoundPlayPlayerAnimationPacket;
 import destiny.penumbra_phantasm.server.advancement.TriggerCriterions;
+import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
-import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.fountain.RoomScanner;
-import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
@@ -50,14 +59,13 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.*;
 
 public class KnifeItem extends SwordItem {
     public static final String MAKING_TICK = "makingTick";
     public static final String ORIGIN_YAW = "originYaw";
     public static final String FOUNTAIN_POS = "fountainPos";
+    public static final String STAB_STARTED = "stabStarted";
+    public static final int IDLE_TICK = -1;
 
     public static final int JUMP_DURATION = 15;
     public static final int STAB_DELAY = 8;
@@ -90,11 +98,15 @@ public class KnifeItem extends SwordItem {
         ItemStack stack = player.getItemInHand(hand);
         CompoundTag tag = stack.getOrCreateTag();
 
-        if (level.isClientSide())
-            return InteractionResultHolder.pass(stack);
-
         if (hand == InteractionHand.OFF_HAND)
             return InteractionResultHolder.pass(stack);
+
+        if (level.isClientSide()) {
+            player.startUsingItem(hand);
+            return InteractionResultHolder.consume(stack);
+        }
+
+        ensureTagDefaults(tag);
 
         if (tag.getInt(MAKING_TICK) >= 0) {
             return InteractionResultHolder.pass(stack);
@@ -165,21 +177,33 @@ public class KnifeItem extends SwordItem {
         }
 
         //Cancel checks passed, try fountain making
+        tag.putInt(MAKING_TICK, 0);
+        tag.putFloat(ORIGIN_YAW, player.getYHeadRot() * -1);
+        tag.put(FOUNTAIN_POS, NbtUtils.writeBlockPos(player.getOnPos().above()));
+        tag.putBoolean(STAB_STARTED, false);
         player.startUsingItem(hand);
 
-        return InteractionResultHolder.sidedSuccess(stack, false);
+        return InteractionResultHolder.consume(stack);
     }
 
     @Override
     public void onUseTick(@NotNull Level level, @NotNull LivingEntity player, @NotNull ItemStack stack, int remainingUseDuration) {
         if (level.isClientSide()) return;
 
-        if (player instanceof Player) return;
+        if (!(player instanceof Player)) return;
 
         CompoundTag tag = stack.getOrCreateTag();
+        ensureTagDefaults(tag);
         int makingTick = tag.getInt(MAKING_TICK);
 
         if (makingTick < JUMP_DURATION) {
+            if (makingTick == 0) {
+                PacketHandlerRegistry.INSTANCE.send(
+                        PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                        new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_jump"))
+                );
+            }
+            animateParticles(tag, level, makingTick);
             tag.putInt(MAKING_TICK, makingTick + 1);
         } else {
             player.stopUsingItem();
@@ -190,32 +214,17 @@ public class KnifeItem extends SwordItem {
     public void releaseUsing(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity player, int timeCharged) {
         if (level.isClientSide()) return;
 
-        if (player instanceof Player) return;
+        if (!(player instanceof Player)) return;
 
         CompoundTag tag = stack.getOrCreateTag();
+        ensureTagDefaults(tag);
         int makingTick = tag.getInt(MAKING_TICK);
 
         if (makingTick >= JUMP_DURATION) {
-            tag.putInt(MAKING_TICK, 0);
-            tag.putFloat(ORIGIN_YAW, player.getYHeadRot() * -1);
-            tag.put(FOUNTAIN_POS, NbtUtils.writeBlockPos(player.blockPosition()));
-
-            player.stopUsingItem();
-            PacketHandlerRegistry.INSTANCE.send(
-                    PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                    new ClientBoundCancelPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_jump"))
-            );
-            player.stopUsingItem();
-            PacketHandlerRegistry.INSTANCE.send(
-                    PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                    new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_stab"))
-            );
+            startStabPhase(player, tag);
         } else {
-            tag.putInt(MAKING_TICK, -1);
-            tag.remove(ORIGIN_YAW);
-            tag.remove(FOUNTAIN_POS);
+            resetMakingState(tag);
 
-            player.stopUsingItem();
             PacketHandlerRegistry.INSTANCE.send(
                     PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
                     new ClientBoundCancelPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_jump"))
@@ -224,12 +233,13 @@ public class KnifeItem extends SwordItem {
                     PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
                     new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_cancel"))
             );
+            player.stopUsingItem();
         }
     }
 
     @Override
     public int getUseDuration(ItemStack pStack) {
-        return 32;
+        return 72000;
     }
 
     //TODO:
@@ -242,28 +252,38 @@ public class KnifeItem extends SwordItem {
         if (entity instanceof Player player) {
             CompoundTag tag = stack.getOrCreateTag();
 
-            //Failsafe if tag isn't present
-            if (!tag.contains(MAKING_TICK)) {
-                tag.putInt(MAKING_TICK, -1);
-            }
+            ensureTagDefaults(tag);
 
             int makingTick = tag.getInt(MAKING_TICK);
 
             if (makingTick >= 0) {
-                //After particles, make fountain
-                if (makingTick >= JUMP_DURATION) {
+                boolean isStillCharging = player.isUsingItem() && player.getUseItem() == stack;
+
+                if (isStillCharging) {
+                    return;
+                }
+
+                if (makingTick >= JUMP_DURATION && !tag.getBoolean(STAB_STARTED)) {
+                    startStabPhase(player, tag);
+                    makingTick = tag.getInt(MAKING_TICK);
+                }
+
+                if (makingTick >= JUMP_DURATION + STAB_DELAY) {
                     if (!level.isClientSide()) {
                         makeFountain(tag, player, level, stack);
                     }
                 } else {
-                    //Animate particles
-                    animateParticles(tag, level, makingTick);
+                    tag.putInt(MAKING_TICK, makingTick + 1);
                 }
             }
         }
     }
 
     private void animateParticles(CompoundTag tag, Level level, int tick) {
+        if (!tag.contains(ORIGIN_YAW) || !tag.contains(FOUNTAIN_POS)) {
+            return;
+        }
+
         float originYaw = tag.getFloat(ORIGIN_YAW);
         BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
 
@@ -309,17 +329,17 @@ public class KnifeItem extends SwordItem {
     }
 
     private void makeFountain(CompoundTag tag, Player player, Level level, ItemStack stack) {
-        //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
-        if (!isStandingOnFullFace(level, player)) {
-            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
+        if (!tag.contains(FOUNTAIN_POS)) {
+            resetMakingState(tag);
             return;
         }
 
-        tag = stack.getOrCreateTag();
-
-        //Immediately stop ticking
-        tag.putInt(MAKING_TICK, -1);
-        stack.setTag(tag);
+        //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
+        if (!isStandingOnFullFace(level, player)) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
+            resetMakingState(tag);
+            return;
+        }
 
         //Get fountainPos from tag
         BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
@@ -332,6 +352,7 @@ public class KnifeItem extends SwordItem {
         else {
             // If capability isn't present
             sendErrorMessage(player);
+            resetMakingState(tag);
             return;
         }
 
@@ -360,6 +381,7 @@ public class KnifeItem extends SwordItem {
         //If not enough key blocks are present, cancel
         if (finalDarkWorldType == null) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_not_enough_key_blocks"), true);
+            resetMakingState(tag);
             return;
         }
 
@@ -367,6 +389,7 @@ public class KnifeItem extends SwordItem {
         ServerLevel targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
         if (targetLevel == null) {
             sendErrorMessage(player);
+            resetMakingState(tag);
             return;
         }
 
@@ -378,6 +401,7 @@ public class KnifeItem extends SwordItem {
         else {
             // If capability isn't present
             sendErrorMessage(player);
+            resetMakingState(tag);
             return;
         }
 
@@ -421,14 +445,14 @@ public class KnifeItem extends SwordItem {
 
         TriggerCriterions.DARK_FOUNTAIN_MAKE.trigger((ServerPlayer) player);
 
+        player.getCooldowns().addCooldown(stack.getItem(), 5 * 20);
+
         //Break knife if single use
         if (isSingleUse) {
             stack.hurtAndBreak(stack.getMaxDamage(), player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
 
-        tag.putInt(MAKING_TICK, -1);
-        tag.remove(ORIGIN_YAW);
-        tag.remove(FOUNTAIN_POS);
+        resetMakingState(tag);
     }
 
     private static AABB getRoomAABBFromPositions(List<BlockPos> positions) {
@@ -455,5 +479,36 @@ public class KnifeItem extends SwordItem {
 
     private void sendErrorMessage(Player player) {
         player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_critical_error"), true);
+    }
+
+    private void ensureTagDefaults(CompoundTag tag) {
+        if (!tag.contains(MAKING_TICK)) {
+            tag.putInt(MAKING_TICK, IDLE_TICK);
+        }
+    }
+
+    private void resetMakingState(CompoundTag tag) {
+        tag.putInt(MAKING_TICK, IDLE_TICK);
+        tag.remove(ORIGIN_YAW);
+        tag.remove(FOUNTAIN_POS);
+        tag.remove(STAB_STARTED);
+    }
+
+    private void startStabPhase(LivingEntity player, CompoundTag tag) {
+        if (tag.getBoolean(STAB_STARTED)) {
+            return;
+        }
+
+        tag.putBoolean(STAB_STARTED, true);
+        tag.putInt(MAKING_TICK, JUMP_DURATION);
+
+        PacketHandlerRegistry.INSTANCE.send(
+                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                new ClientBoundCancelPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_jump"))
+        );
+        PacketHandlerRegistry.INSTANCE.send(
+                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_stab"))
+        );
     }
 }
