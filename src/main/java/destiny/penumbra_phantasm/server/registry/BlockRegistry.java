@@ -148,6 +148,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> SCARLET_DOOR = registerBlock("scarlet_door",
             () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD).noOcclusion(), BlockSetType.CHERRY));
+    public static final RegistryObject<Block> SCARLET_TRAPDOOR = registerBlock("scarlet_trapdoor",
+            () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD).noOcclusion(), BlockSetType.CHERRY));
 
     public static final RegistryObject<Block> DARK_CANDY_BLOCK = registerBlock("dark_candy_block",
             () -> new DarkCandyBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
@@ -169,6 +172,9 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block> DARK_CANDY_DOOR = registerBlock("dark_candy_door",
             () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD).noOcclusion(), BlockSetType.CHERRY));
+    public static final RegistryObject<Block> DARK_CANDY_TRAPDOOR = registerBlock("dark_candy_trapdoor",
+            () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD).noOcclusion(), BlockSetType.CHERRY));
 
     public static final RegistryObject<Block> SCARLET_MARBLE = registerBlock("scarlet_marble",
