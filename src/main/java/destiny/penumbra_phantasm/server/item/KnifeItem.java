@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.network.ClientBoundCancelPlayerAnimationPacket;
 import destiny.penumbra_phantasm.client.network.ClientBoundPlayPlayerAnimationPacket;
 import destiny.penumbra_phantasm.server.advancement.TriggerCriterions;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
@@ -20,6 +21,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +32,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -47,15 +50,17 @@ import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class KnifeItem extends SwordItem {
     public static final String MAKING_TICK = "makingTick";
     public static final String ORIGIN_YAW = "originYaw";
-    public static final String ORIGIN_X = "originX";
-    public static final String ORIGIN_Y = "originY";
-    public static final String ORIGIN_Z = "originZ";
+    public static final String FOUNTAIN_POS = "fountainPos";
+
+    public static final int JUMP_DURATION = 15;
+    public static final int STAB_DELAY = 8;
 
     public boolean isSingleUse;
     private final int damage;
@@ -81,19 +86,17 @@ public class KnifeItem extends SwordItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         CompoundTag tag = stack.getOrCreateTag();
 
         if (level.isClientSide())
             return InteractionResultHolder.pass(stack);
 
-        PacketHandlerRegistry.INSTANCE.send(
-                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_jump"))
-        );
+        if (hand == InteractionHand.OFF_HAND)
+            return InteractionResultHolder.pass(stack);
 
-        if (tag.contains(MAKING_TICK) && tag.getInt(MAKING_TICK) >= 0) {
+        if (tag.getInt(MAKING_TICK) >= 0) {
             return InteractionResultHolder.pass(stack);
         }
 
@@ -161,21 +164,79 @@ public class KnifeItem extends SwordItem {
             }
         }
 
-        //Cancel checks passed, begin fountain making
-        tag.putInt(MAKING_TICK, 0);
-        tag.putFloat(ORIGIN_YAW, player.getYHeadRot() * -1);
-        tag.putDouble(ORIGIN_X, player.getX());
-        tag.putDouble(ORIGIN_Y, player.getEyeY());
-        tag.putDouble(ORIGIN_Z, player.getZ());
+        //Cancel checks passed, try fountain making
+        player.startUsingItem(hand);
 
         return InteractionResultHolder.sidedSuccess(stack, false);
+    }
+
+    @Override
+    public void onUseTick(@NotNull Level level, @NotNull LivingEntity player, @NotNull ItemStack stack, int remainingUseDuration) {
+        if (level.isClientSide()) return;
+
+        if (player instanceof Player) return;
+
+        CompoundTag tag = stack.getOrCreateTag();
+        int makingTick = tag.getInt(MAKING_TICK);
+
+        if (makingTick < JUMP_DURATION) {
+            tag.putInt(MAKING_TICK, makingTick + 1);
+        } else {
+            player.stopUsingItem();
+        }
+    }
+
+    @Override
+    public void releaseUsing(@NotNull ItemStack stack, @NotNull Level level, @NotNull LivingEntity player, int timeCharged) {
+        if (level.isClientSide()) return;
+
+        if (player instanceof Player) return;
+
+        CompoundTag tag = stack.getOrCreateTag();
+        int makingTick = tag.getInt(MAKING_TICK);
+
+        if (makingTick >= JUMP_DURATION) {
+            tag.putInt(MAKING_TICK, 0);
+            tag.putFloat(ORIGIN_YAW, player.getYHeadRot() * -1);
+            tag.put(FOUNTAIN_POS, NbtUtils.writeBlockPos(player.blockPosition()));
+
+            player.stopUsingItem();
+            PacketHandlerRegistry.INSTANCE.send(
+                    PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                    new ClientBoundCancelPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_jump"))
+            );
+            player.stopUsingItem();
+            PacketHandlerRegistry.INSTANCE.send(
+                    PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                    new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_stab"))
+            );
+        } else {
+            tag.putInt(MAKING_TICK, -1);
+            tag.remove(ORIGIN_YAW);
+            tag.remove(FOUNTAIN_POS);
+
+            player.stopUsingItem();
+            PacketHandlerRegistry.INSTANCE.send(
+                    PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                    new ClientBoundCancelPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_jump"))
+            );
+            PacketHandlerRegistry.INSTANCE.send(
+                    PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                    new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_cancel"))
+            );
+        }
+    }
+
+    @Override
+    public int getUseDuration(ItemStack pStack) {
+        return 32;
     }
 
     //TODO:
     // - Made opening the fountain depend on the soul capability and determination (100% = 1 fountain)
 
     @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean b) {
+    public void inventoryTick(@NotNull ItemStack stack, Level level, @NotNull Entity entity, int i, boolean b) {
         if (level.isClientSide()) return;
 
         if (entity instanceof Player player) {
@@ -183,34 +244,20 @@ public class KnifeItem extends SwordItem {
 
             //Failsafe if tag isn't present
             if (!tag.contains(MAKING_TICK)) {
-                tag.putInt(MAKING_TICK, -2);
+                tag.putInt(MAKING_TICK, -1);
             }
 
             int makingTick = tag.getInt(MAKING_TICK);
 
             if (makingTick >= 0) {
-                //Play player animation on first tick
-                if (makingTick == 0) {
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                            new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make_old"))
-                    );
-                }
-
                 //After particles, make fountain
-                if (makingTick >= 14) {
+                if (makingTick >= JUMP_DURATION) {
                     if (!level.isClientSide()) {
                         makeFountain(tag, player, level, stack);
                     }
-                }
-                if (makingTick > 0 && makingTick < 14) {
+                } else {
                     //Animate particles
                     animateParticles(tag, level, makingTick);
-                }
-                if (makingTick < 14) {
-                    //Keep ticking up as long as ticker isn't or above 14
-                    makingTick++;
-                    tag.putInt(MAKING_TICK, makingTick);
                 }
             }
         }
@@ -218,9 +265,7 @@ public class KnifeItem extends SwordItem {
 
     private void animateParticles(CompoundTag tag, Level level, int tick) {
         float originYaw = tag.getFloat(ORIGIN_YAW);
-        double originX = tag.getDouble(ORIGIN_X);
-        double originY = tag.getDouble(ORIGIN_Y);
-        double originZ = tag.getDouble(ORIGIN_Z);
+        BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
 
         double yawRad = Math.toRadians(originYaw);
         double forwardX = Math.sin(yawRad);
@@ -228,8 +273,8 @@ public class KnifeItem extends SwordItem {
 
         //Center with an offset forward from the player
         double offsetDist = 2.0;
-        double centerX = originX + forwardX * offsetDist;
-        double centerZ = originZ + forwardZ * offsetDist;
+        double centerX = fountainPos.getX() + forwardX * offsetDist;
+        double centerZ = fountainPos.getZ() + forwardZ * offsetDist;
 
         //Row should move to the right from player perspective
         double rowX = -forwardZ;
@@ -243,7 +288,7 @@ public class KnifeItem extends SwordItem {
 
         //Final particle positioning
         double particleX = centerX + rowX * offsetAlongRow;
-        double particleY = originY + (-0.5f + level.getRandom().nextFloat() * 0.5f);
+        double particleY = fountainPos.getY() + 1 + (-0.5f + level.getRandom().nextFloat() * 0.5f);
         double particleZ = centerZ + forwardX * offsetAlongRow;
 
         //Spawn particle
@@ -273,11 +318,11 @@ public class KnifeItem extends SwordItem {
         tag = stack.getOrCreateTag();
 
         //Immediately stop ticking
-        tag.putInt(MAKING_TICK, -2);
+        tag.putInt(MAKING_TICK, -1);
         stack.setTag(tag);
 
-        //Create light world fountain position from player feet position
-        BlockPos lightFountainPos = player.getOnPos().above();
+        //Get fountainPos from tag
+        BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
 
         //Get light fountain capability
         DarkFountainCapability lightCap;
@@ -291,7 +336,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //Scan if the room is still valid, get result with all blocks
-        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, lightFountainPos, Config.maxRoomVolume, false);
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, Config.maxRoomVolume, false);
         Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
         DarkWorldType finalDarkWorldType = null;
 
@@ -319,7 +364,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //Create dark world level based on position, dimension and dark world type
-        ServerLevel targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), lightFountainPos, level.dimension(), finalDarkWorldType);
+        ServerLevel targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
         if (targetLevel == null) {
             sendErrorMessage(player);
             return;
@@ -337,25 +382,25 @@ public class KnifeItem extends SwordItem {
         }
 
         //Prepare dark world chunk to put the fountain in
-        ChunkPos darkChunkPos = new ChunkPos(lightFountainPos);
+        ChunkPos darkChunkPos = new ChunkPos(fountainPos);
         targetLevel.setChunkForced(darkChunkPos.x, darkChunkPos.z, true);
 
         //Create dark world fountain position in target level, account for worldgen
-        BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, lightFountainPos);
+        BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, fountainPos);
 
         //Unload the dark world chunk
         targetLevel.setChunkForced(darkChunkPos.x, darkChunkPos.z, false);
 
         //Add light world fountain to the capability
-        lightCap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
+        lightCap.addDarkFountain(fountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //Create new dark room instance for the fountain room
-        DarkRoom fountainRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
+        DarkRoom fountainRoom = new DarkRoom(fountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
         AABB roomBox = getRoomAABBFromPositions(roomResult.getPositions());
         Set<BlockPos> positionSet = new HashSet<>(roomResult.getPositions());
 
         //Get light world fountain from the capability
-        DarkFountain lightFountain = lightCap.darkFountains.get(lightFountainPos);
+        DarkFountain lightFountain = lightCap.darkFountains.get(fountainPos);
         //Add fountain room to the fountain
         lightFountain.addRoom(fountainRoom);
 
@@ -367,7 +412,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //Add dark world fountain to the capability
-        darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
+        darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), fountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //If player is not creative, put cooldown on knife
         if (!player.isCreative()) {
@@ -380,6 +425,10 @@ public class KnifeItem extends SwordItem {
         if (isSingleUse) {
             stack.hurtAndBreak(stack.getMaxDamage(), player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
+
+        tag.putInt(MAKING_TICK, -1);
+        tag.remove(ORIGIN_YAW);
+        tag.remove(FOUNTAIN_POS);
     }
 
     private static AABB getRoomAABBFromPositions(List<BlockPos> positions) {

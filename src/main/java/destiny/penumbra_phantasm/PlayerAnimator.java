@@ -21,7 +21,22 @@ public class PlayerAnimator {
         //Set the player construct callback. It can be a lambda function.
         PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
                 new ResourceLocation(MODID, "fountain_make"),
-                42,
+                1500,
+                PlayerAnimator::registerPlayerAnimation);
+
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                new ResourceLocation(MODID, "fountain_make_jump"),
+                1500,
+                PlayerAnimator::registerPlayerAnimation);
+
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                new ResourceLocation(MODID, "fountain_make_stab"),
+                1500,
+                PlayerAnimator::registerPlayerAnimation);
+
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                new ResourceLocation(MODID, "fountain_make_cancel"),
+                1500,
                 PlayerAnimator::registerPlayerAnimation);
     }
 

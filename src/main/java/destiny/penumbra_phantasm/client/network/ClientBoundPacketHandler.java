@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.client.network;
 
 import com.zigythebird.playeranimatorapi.API.PlayerAnimAPIClient;
+import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.screen.DarknessFallScreen;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.server.network.ServerBoundIntroPacket;
@@ -81,7 +82,7 @@ public class ClientBoundPacketHandler
 				.get(animationId);
 
 		if (animation != null) {
-			PlayerAnimAPIClient.playPlayerAnim(player, animationId);
+			animation.setAnimation(new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(animationId)));
 		}
 	}
 
