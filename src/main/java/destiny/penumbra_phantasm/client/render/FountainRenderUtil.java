@@ -1,7 +1,9 @@
 package destiny.penumbra_phantasm.client.render;
 
 import java.awt.Color;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
@@ -35,6 +37,8 @@ public class FountainRenderUtil
 	private static DarkFountainGroundCrackModel cachedCrackModel;
 	private static DarkFountainOpeningModel cachedOpeningModel;
 	private static DarkFountainMiddleModel cachedMiddleModel;
+	private static final Map<Long, Float> sealedPulseMotionByFountain = new HashMap<>();
+	private static final Map<Long, Float> sealedShaderTimeByFountain = new HashMap<>();
 
 	private static DarkFountainGroundCrackModel getCrackModel() {
 		if (cachedCrackModel == null)
@@ -314,7 +318,7 @@ public class FountainRenderUtil
 
 	public static void renderSealingFountain(DarkFountain fountain, Level level, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha) {
 		int frame = fountain.getFrame();
-		float sealDelta = Mth.clamp(Mth.lerp(fountain.sealingTick / 60f, 1f, 0f), 1f, 0f);
+		float sealDelta = Mth.clamp((fountain.sealingTick + partialTick) / 60f, 0f, 1f);
 
 		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_" + frame + ".png");
 		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_" + frame + ".png");
@@ -323,15 +327,26 @@ public class FountainRenderUtil
 		ResourceLocation imageDepth = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/image_depth.png");
 		float pixel = 1f / 16f;
 		float time = (level.getGameTime() + partialTick) * 0.1f;
-		float pulse = (1.0f + 0.08f * (float) Math.sin(time * 1.2)) / 0.92f;
-		float pulse_front = (1.0f - 0.08f * (float) Math.sin(time * 1.2)) / 1.08f;
+		float sealingTicks = fountain.sealingTick + partialTick;
+		float clampedSealingTicks = Mth.clamp(sealingTicks, 0f, DarkFountain.SEAL_DURATION);
+		float basePulseSpeed = 1.2f;
+		float phaseAtSealStart = (time - sealingTicks * 0.1f) * basePulseSpeed;
+		float decelPhase = basePulseSpeed * 0.1f * (clampedSealingTicks - (clampedSealingTicks * clampedSealingTicks) / (2f * DarkFountain.SEAL_DURATION));
+		float pulseMotion = (float) Math.sin(phaseAtSealStart + decelPhase);
+		long fountainKey = fountain.getFountainPos().asLong();
+		if (sealDelta >= 1f) {
+			float currentPulseMotion = pulseMotion;
+			pulseMotion = sealedPulseMotionByFountain.computeIfAbsent(fountainKey, k -> currentPulseMotion);
+		} else {
+			sealedPulseMotionByFountain.remove(fountainKey);
+		}
+		float pulse = (1.0f + 0.08f * pulseMotion) / 0.92f;
+		float pulse_front = (1.0f - 0.08f * pulseMotion) / 1.08f;
 		float brightness_front = 0.9f - 0.1f * (float) Math.sin(time * 1.2);
 		float brightness_middle = 0.8f - 0.2f * (float) Math.sin(time * 1.2);
 		float brightness_back = 0.7f - 0.3f * (float) Math.sin(time * 1.2);
 		float fountainHue = time * 0.03f % 1f;
 
-		pulse *= 1f - sealDelta;
-		pulse_front *= 1f - sealDelta;
 		float fountainSat = 0.8f * (1f - sealDelta);
 
 		Player player = Minecraft.getInstance().player;
@@ -342,8 +357,15 @@ public class FountainRenderUtil
 		Color backColor = Color.getHSBColor(fountainHue, fountainSat, brightness_back);
 		ShaderInstance shaderInstance = ModShaders.FOUNTAIN_MASKED;
 		if (shaderInstance != null) {
-			float shadertime = (level.getGameTime() + partialTick) * 0.05f;
-			shadertime *= 1f - sealDelta;
+			float baseShaderSpeed = 0.05f;
+			float rawTime = level.getGameTime() + partialTick;
+			float shadertime = rawTime * baseShaderSpeed - baseShaderSpeed * (clampedSealingTicks * clampedSealingTicks) / (2f * DarkFountain.SEAL_DURATION);
+			if (sealDelta >= 1f) {
+				float currentShaderTime = shadertime;
+				shadertime = sealedShaderTimeByFountain.computeIfAbsent(fountainKey, k -> currentShaderTime);
+			} else {
+				sealedShaderTimeByFountain.remove(fountainKey);
+			}
 			shaderInstance.safeGetUniform("Time").set(shadertime);
 			Minecraft mc = Minecraft.getInstance();
 			float aspect = (float) mc.getWindow().getWidth() /
@@ -384,19 +406,21 @@ public class FountainRenderUtil
 			float tintGreen = 1f + (middleGreen - 1f) * tintDelta;
 			float tintBlue = 1f + (middleBlue - 1f) * tintDelta;
 
-			Color screenColor = new Color(tintRed, tintGreen, tintBlue);
+			float screenTintRed = Mth.lerp(sealDelta, tintRed, 1f);
+			float screenTintGreen = Mth.lerp(sealDelta, tintGreen, 1f);
+			float screenTintBlue = Mth.lerp(sealDelta, tintBlue, 1f);
 
-			tintRed *= 1f - sealDelta;
-			tintGreen *= 1f - sealDelta;
-			tintBlue *= 1f - sealDelta;
+			float fountainTintRed = Mth.lerp(sealDelta, tintRed, 0f);
+			float fountainTintGreen = Mth.lerp(sealDelta, tintGreen, 0f);
+			float fountainTintBlue = Mth.lerp(sealDelta, tintBlue, 0f);
 
-			RenderSystem.setShaderColor(tintRed, tintGreen, tintBlue, 1F);
+			RenderSystem.setShaderColor(screenTintRed, screenTintGreen, screenTintBlue, 1F);
 
 			if (shaderInstance != null) {
 				shaderInstance.safeGetUniform("TintColor").set(
-						tintRed,
-						tintGreen,
-						tintBlue,
+						fountainTintRed,
+						fountainTintGreen,
+						fountainTintBlue,
 						alpha
 				);
 			}

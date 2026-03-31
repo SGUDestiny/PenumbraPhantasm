@@ -58,6 +58,7 @@ public class DarkFountain {
     public static final int FILL_START_TICK = OPENING_FINISH + FILL_DELAY;
     public static final int TRANSPORT_TICKER_DURATION = 5 * 20;
     public static final int SEAL_DURATION = 3 * 20;
+    public static final int SEAL_FLASH_DURATION = 20;
 
     public BlockPos fountainPos;
     public ResourceKey<Level> fountainDimension;
@@ -177,21 +178,6 @@ public class DarkFountain {
 
                 if (this.sealingTick >= 0) {
                     if (this.sealingFrameTick >= 0) {
-                        if (this.sealingFrameTick % 3 == 0) {
-                            if (this.frame >= 27) {
-                                this.frame = 0;
-                            } else {
-                                this.frame++;
-                            }
-                        }
-                        if (this.sealingFrameTick % 6 == 0) {
-                            if (this.frameOptimized >= 5) {
-                                this.frameOptimized = 0;
-                            } else {
-                                this.frameOptimized++;
-                            }
-                        }
-
                         float delta = Mth.clamp((float) this.sealingTick / (float) SEAL_DURATION, 0.0F, 1.0F);
                         float frameSpeed = Mth.lerp(delta, 1.0F, 0.0F);
                         frameSpeed *= frameSpeed;
@@ -204,6 +190,21 @@ public class DarkFountain {
                                 this.sealingFrameTick = 0;
                             } else {
                                 this.sealingFrameTick++;
+                            }
+
+                            if (this.sealingFrameTick % 3 == 0) {
+                                if (this.frame >= 27) {
+                                    this.frame = 0;
+                                } else {
+                                    this.frame++;
+                                }
+                            }
+                            if (this.sealingFrameTick % 6 == 0) {
+                                if (this.frameOptimized >= 5) {
+                                    this.frameOptimized = 0;
+                                } else {
+                                    this.frameOptimized++;
+                                }
                             }
                         }
                     }
