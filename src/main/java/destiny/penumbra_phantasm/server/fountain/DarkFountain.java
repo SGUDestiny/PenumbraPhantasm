@@ -59,7 +59,7 @@ public class DarkFountain {
     public static final int TRANSPORT_TICKER_DURATION = 5 * 20;
     public static final int SEAL_DURATION = 4 * 20;
     public static final int SEAL_FLASH_DELAY = 20;
-    public static final int SEAL_FLASH_DURATION = 20;
+    public static final int SEAL_FLASH_DURATION = 10;
 
     public BlockPos fountainPos;
     public ResourceKey<Level> fountainDimension;
