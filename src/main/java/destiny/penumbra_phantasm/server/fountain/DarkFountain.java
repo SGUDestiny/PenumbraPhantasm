@@ -57,7 +57,8 @@ public class DarkFountain {
     public static final int FILL_DELAY = 60;
     public static final int FILL_START_TICK = OPENING_FINISH + FILL_DELAY;
     public static final int TRANSPORT_TICKER_DURATION = 5 * 20;
-    public static final int SEAL_DURATION = 3 * 20;
+    public static final int SEAL_DURATION = 4 * 20;
+    public static final int SEAL_FLASH_DELAY = 20;
     public static final int SEAL_FLASH_DURATION = 20;
 
     public BlockPos fountainPos;
@@ -232,7 +233,7 @@ public class DarkFountain {
                 }
 
                 if (this.sealingTick >= 0) {
-                    if (sealingTick < SEAL_DURATION) {
+                    if (sealingTick < SEAL_DURATION + SEAL_FLASH_DELAY + SEAL_FLASH_DURATION) {
                         sealingTick++;
                     }
                 }

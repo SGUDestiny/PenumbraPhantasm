@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import destiny.penumbra_phantasm.client.render.model.DarkFountainFrontModel;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 
@@ -37,6 +38,7 @@ public class FountainRenderUtil
 	private static DarkFountainGroundCrackModel cachedCrackModel;
 	private static DarkFountainOpeningModel cachedOpeningModel;
 	private static DarkFountainMiddleModel cachedMiddleModel;
+	private static DarkFountainFrontModel cachedFrontModel;
 	private static final Map<Long, Float> sealedPulseMotionByFountain = new HashMap<>();
 	private static final Map<Long, Float> sealedShaderTimeByFountain = new HashMap<>();
 
@@ -56,6 +58,12 @@ public class FountainRenderUtil
 		if (cachedMiddleModel == null)
 			cachedMiddleModel = new DarkFountainMiddleModel(Minecraft.getInstance().getEntityModels().bakeLayer(DarkFountainMiddleModel.LAYER_LOCATION));
 		return cachedMiddleModel;
+	}
+
+	private static DarkFountainFrontModel getFrontModel() {
+		if (cachedFrontModel == null)
+			cachedFrontModel = new DarkFountainFrontModel(Minecraft.getInstance().getEntityModels().bakeLayer(DarkFountainFrontModel.LAYER_LOCATION));
+		return cachedFrontModel;
 	}
 
 	private static void renderFountainCross(PoseStack poseStack, VertexConsumer consumer,
@@ -318,7 +326,7 @@ public class FountainRenderUtil
 
 	public static void renderSealingFountain(DarkFountain fountain, Level level, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha) {
 		int frame = fountain.getFrame();
-		float sealDelta = Mth.clamp((fountain.sealingTick + partialTick) / 60f, 0f, 1f);
+		float sealDelta = Mth.clamp((fountain.sealingTick + partialTick) / DarkFountain.SEAL_DURATION, 0f, 1f);
 
 		ResourceLocation textureBottom = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_" + frame + ".png");
 		ResourceLocation textureMiddle = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/fountain_middle_" + frame + ".png");
@@ -346,7 +354,6 @@ public class FountainRenderUtil
 		float brightness_middle = 0.8f - 0.2f * (float) Math.sin(time * 1.2);
 		float brightness_back = 0.7f - 0.3f * (float) Math.sin(time * 1.2);
 		float fountainHue = time * 0.03f % 1f;
-
 		float fountainSat = 0.8f * (1f - sealDelta);
 
 		Player player = Minecraft.getInstance().player;
@@ -444,9 +451,30 @@ public class FountainRenderUtil
 		VertexConsumer bottomVertexConsumer = buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureBottom, imageDepth, depthWrite));
 		getMiddleModel().renderToBuffer(poseStack, bottomVertexConsumer,
 				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha);
+
 		getMiddleModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomEdges)),
 				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha);
 		poseStack.popPose();
+
+		if (fountain.sealingTick >= DarkFountain.SEAL_DURATION) {
+			ResourceLocation textureMiddleSealing = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/sealing/fountain_middle_" + frame + ".png");
+			ResourceLocation textureBottomSealing = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_sealing.png");
+			float sealingFlashTick = fountain.sealingTick - DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY + partialTick;
+			int fullSealingDuration = DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY + DarkFountain.SEAL_FLASH_DURATION;
+			float flashAlpha = Mth.clamp(Mth.lerp((sealingFlashTick / fullSealingDuration), 0f, 1f), 0f, 1f);
+
+			getMiddleModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomSealing)),
+					LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, flashAlpha);
+
+			poseStack.pushPose();
+			poseStack.translate(0.5f, 0.75f, 0.5f);
+			poseStack.scale(1.0f, 1.0f, 1.0f);
+			poseStack.scale(pulse, 1.0f, pulse);
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleSealing)),
+					frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, flashAlpha,
+					48f, 140f, length, 0.3f);
+			poseStack.popPose();
+		}
 
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.75f, 0.5f);

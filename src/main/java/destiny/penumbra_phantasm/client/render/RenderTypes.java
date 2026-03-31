@@ -25,7 +25,7 @@ public class RenderTypes extends RenderType {
 
     public static RenderType fountainShockwave(ResourceLocation rl)
     {
-        return create("fountain", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
+        return create("fountain_shockwave", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
