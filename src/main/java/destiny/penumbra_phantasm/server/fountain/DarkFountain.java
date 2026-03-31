@@ -183,6 +183,18 @@ public class DarkFountain {
                     tickDarkWorldFountainPushing(serverLevel);
                 }
 
+                if (this.sealingTick == 0 && level instanceof ServerLevel sealingServerLevel) {
+                    BlockPos sealingFountainPos = this.getFountainPos();
+                    PacketHandlerRegistry.INSTANCE.send(
+                            PacketDistributor.DIMENSION.with(() -> sealingServerLevel.dimension()),
+                            new ClientBoundSoundPackets.FountainWind(sealingFountainPos, true)
+                    );
+                    PacketHandlerRegistry.INSTANCE.send(
+                            PacketDistributor.DIMENSION.with(() -> sealingServerLevel.dimension()),
+                            new ClientBoundSoundPackets.FountainMusic(sealingFountainPos, true)
+                    );
+                }
+
                 if (this.sealingTick >= 0) {
                     if (this.sealingFrameTick >= 0) {
                         float delta = Mth.clamp((float) this.sealingTick / (float) SEAL_DURATION, 0.0F, 1.0F);
@@ -277,7 +289,7 @@ public class DarkFountain {
                 this.openingTick++;
             }
 
-            if (this.openingTick > 125 || this.openingTick == -1) {
+            if ((this.openingTick > 125 || this.openingTick == -1) && this.sealingTick < 0) {
                 tickSoundPackets(level);
             }
         }

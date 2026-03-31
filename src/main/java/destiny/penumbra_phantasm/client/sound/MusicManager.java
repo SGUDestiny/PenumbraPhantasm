@@ -86,6 +86,21 @@ public class MusicManager {
             return;
         }
 
+        LazyOptional<DarkFountainCapability> sealingLazyCap = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if (sealingLazyCap.isPresent() && sealingLazyCap.resolve().isPresent()) {
+            DarkFountainCapability sealingCap = sealingLazyCap.resolve().get();
+            for (Map.Entry<BlockPos, DarkFountain> entry : sealingCap.darkFountains.entrySet()) {
+                DarkFountain fountain = entry.getValue();
+                if (fountain.sealingTick >= 0) {
+                    if (state != State.SILENT && state != State.FADING_OUT) {
+                        beginFadeOut();
+                    }
+                    tickFade();
+                    return;
+                }
+            }
+        }
+
         float musicSlider = minecraft.options.getSoundSourceVolume(SoundSource.MUSIC);
         boolean musicUnmuted = !Float.isNaN(lastMusicSlider) && lastMusicSlider <= 1.0E-4F && musicSlider > 1.0E-4F;
         lastMusicSlider = musicSlider;
