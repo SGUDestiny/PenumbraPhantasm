@@ -180,44 +180,46 @@ public class KnifeItem extends SwordItem {
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean b) {
-            if (entity instanceof Player player) {
-                CompoundTag tag = stack.getOrCreateTag();
+        if (level.isClientSide()) return;
 
-                //Failsafe if tag isn't present
-                if (!tag.contains(MAKING_TICK)) {
-                    tag.putInt(MAKING_TICK, -2);
+        if (entity instanceof Player player) {
+            CompoundTag tag = stack.getOrCreateTag();
+
+            //Failsafe if tag isn't present
+            if (!tag.contains(MAKING_TICK)) {
+                tag.putInt(MAKING_TICK, -2);
+            }
+
+            int makingTick = tag.getInt(MAKING_TICK);
+
+            if (makingTick >= 0) {
+                //Play player animation on first tick
+                if (makingTick == 0) {
+                    if (!level.isClientSide()) {
+                        PacketHandlerRegistry.INSTANCE.send(
+                                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                                new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))
+                        );
+                    }
                 }
 
-                int makingTick = tag.getInt(MAKING_TICK);
-
-                if (makingTick >= 0) {
-                    //Play player animation on first tick
-                    if (makingTick == 0) {
-                        if (!level.isClientSide()) {
-                            PacketHandlerRegistry.INSTANCE.send(
-                                    PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                                    new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))
-                            );
-                        }
+                //After particles, make fountain
+                if (makingTick >= 14) {
+                    if (!level.isClientSide()) {
+                        makeFountain(tag, player, level, stack);
                     }
-
-                    //After particles, make fountain
-                    if (makingTick >= 14) {
-                        if (!level.isClientSide()) {
-                            makeFountain(tag, player, level, stack);
-                        }
-                    }
-                    if (makingTick > 0 && makingTick < 14) {
-                        //Animate particles
-                        animateParticles(tag, level, makingTick);
-                    }
-                    if (makingTick < 14) {
-                        //Keep ticking up as long as ticker isn't or above 14
-                        makingTick++;
-                        tag.putInt(MAKING_TICK, makingTick);
-                    }
+                }
+                if (makingTick > 0 && makingTick < 14) {
+                    //Animate particles
+                    animateParticles(tag, level, makingTick);
+                }
+                if (makingTick < 14) {
+                    //Keep ticking up as long as ticker isn't or above 14
+                    makingTick++;
+                    tag.putInt(MAKING_TICK, makingTick);
                 }
             }
+        }
     }
 
     private void animateParticles(CompoundTag tag, Level level, int tick) {
@@ -251,7 +253,6 @@ public class KnifeItem extends SwordItem {
         double particleZ = centerZ + forwardX * offsetAlongRow;
 
         //Spawn particle
-        //level.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), particleX, particleY, particleZ, 0, 0, 0);
         PacketHandlerRegistry.INSTANCE.send(
                 PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(particleX, particleY, particleZ, 32.0, level.dimension())),
                 new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_TARGET.get()), particleX, particleY, particleZ, 0, 0, 0, 1)
