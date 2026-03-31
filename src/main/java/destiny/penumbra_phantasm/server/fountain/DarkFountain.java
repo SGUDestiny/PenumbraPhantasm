@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.client.network.*;
 import destiny.penumbra_phantasm.client.sound.SoundWrapper;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
+import destiny.penumbra_phantasm.server.block.entity.DarknessBlockEntity;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
@@ -314,6 +315,9 @@ public class DarkFountain {
                 BlockState current = level.getBlockState(pos);
                 if (current.is(Blocks.AIR) || current.is(Blocks.CAVE_AIR) || current.is(Blocks.VOID_AIR)) {
                     level.setBlock(pos, BlockRegistry.DARKNESS.get().defaultBlockState(), 3);
+                    if (level.getBlockEntity(pos) instanceof DarknessBlockEntity darkness) {
+                        darkness.fountainPos = this.fountainPos;
+                    }
                 }
                 room.fillIndex++;
             }
