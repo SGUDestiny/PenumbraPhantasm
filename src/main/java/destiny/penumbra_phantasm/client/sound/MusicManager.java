@@ -105,6 +105,11 @@ public class MusicManager {
         boolean musicUnmuted = !Float.isNaN(lastMusicSlider) && lastMusicSlider <= 1.0E-4F && musicSlider > 1.0E-4F;
         lastMusicSlider = musicSlider;
 
+        if (currentSound == null && (state == State.PLAYING || state == State.FADING_IN || state == State.FADING_OUT)) {
+            state = State.SILENT;
+            fadeInTicks = 0;
+        }
+
         if (currentSound != null && (state == State.PLAYING || state == State.FADING_IN)
                 && !minecraft.getSoundManager().isActive(currentSound)) {
             if (!currentSound.isStopped()) {
