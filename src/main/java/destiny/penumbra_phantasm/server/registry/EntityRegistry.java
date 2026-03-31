@@ -16,7 +16,7 @@ public class EntityRegistry {
     public static final RegistryObject<EntityType<SealingSoulEntity>> SEALING_SOUL =
             ENTITY_TYPES.register("sealing_soul",
                     () -> EntityType.Builder.of(SealingSoulEntity::new, MobCategory.MISC)
-                            .sized(0.1f, 0.1f)
+                            .sized(1f, 1f)
                             .build(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "sealing_soul").toString()));
 
     public static void register(IEventBus eventBus) {

@@ -137,6 +137,7 @@
   "message.penumbra_phantasm.making_fountain_critical_error": "Couldn't make a fountain due to an error, please reach out to the developer!",
   "message.penumbra_phantasm.pushed_away_by_fountain": "The flow of darkness pushes you away...",
   "message.penumbra_phantasm.sealing_fountain_no_fountain_nearby": "But there was no fountain nearby...",
+  "message.penumbra_phantasm.sealing_fountain_already_being_sealed": "But the fountain was already being sealed...",
 
   "screen.penumbra_phantasm.intro.line.1": "A R E    Y O U",
   "screen.penumbra_phantasm.intro.line.2": "T H E R E ?",

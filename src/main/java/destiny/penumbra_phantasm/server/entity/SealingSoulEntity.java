@@ -21,6 +21,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -86,6 +87,10 @@ public class SealingSoulEntity extends Entity {
             return;
         }
 
+        if (darkFountain.sealingFrameTick >= 0) {
+            this.discard();
+        }
+
         if (tick >= 7 * 20) {
             tick = 0;
             this.entityData.set(TICK_ENTITY_DATA, tick);
@@ -144,9 +149,18 @@ public class SealingSoulEntity extends Entity {
             darkFountainCapability.removeDarkFountain(level, darkFountain.fountainPos);
             lightFountainCapability.removeDarkFountain(lightLevel, darkFountain.destinationPos);
 
+            if (level instanceof ServerLevel serverLevel) {
+                ChunkPos soulChunk = new ChunkPos(getOnPos());
+                serverLevel.setChunkForced(soulChunk.x, soulChunk.z, false);
+            }
+
             this.discard();
         } else {
             if (tick == 0) {
+                if (level instanceof ServerLevel serverLevel) {
+                    ChunkPos soulChunk = new ChunkPos(getOnPos());
+                    serverLevel.setChunkForced(soulChunk.x, soulChunk.z, true);
+                }
                 darkFountain.sealingTick = 0;
                 darkFountain.sealingFrameTick = darkFountain.getFrameTick();
                 level.playSound(null, this.blockPosition(), SoundRegistry.GREAT_SHINE.get(), SoundSource.AMBIENT, 0.5f, 1f);

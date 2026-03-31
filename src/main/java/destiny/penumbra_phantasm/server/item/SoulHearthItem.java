@@ -114,7 +114,12 @@ public class SoulHearthItem extends Item {
         }
 
         if (darkFountain == null){
-            player.displayClientMessage(Component.translatable("But there was no fountain nearby..."), true);
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.sealing_fountain_no_fountain_nearby"), true);
+            return InteractionResultHolder.pass(stack);
+        }
+
+        if (darkFountain.sealingFrameTick >= 0){
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.sealing_fountain_already_being_sealed"), true);
             return InteractionResultHolder.pass(stack);
         }
 
