@@ -456,11 +456,11 @@ public class FountainRenderUtil
 				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha);
 		poseStack.popPose();
 
-		if (fountain.sealingTick >= DarkFountain.SEAL_DURATION) {
+		if (fountain.sealingTick >= DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY) {
 			ResourceLocation textureMiddleSealing = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/sealing/fountain_middle_" + frame + ".png");
 			ResourceLocation textureBottomSealing = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_sealing.png");
 			float sealingFlashTick = fountain.sealingTick - (DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY);
-			float flashDelta = Mth.clamp(Mth.lerp((sealingFlashTick + partialTick / DarkFountain.SEAL_FLASH_DURATION), 0f, 1f), 0f, 1f);
+			float flashDelta = Mth.clamp((sealingFlashTick + partialTick) / DarkFountain.SEAL_FLASH_DURATION, 0f, 1f);
 
 			getMiddleModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomSealing)),
 					LightTexture.FULL_BRIGHT, overlay, flashDelta, flashDelta, flashDelta, 1f);
@@ -471,7 +471,7 @@ public class FountainRenderUtil
 			poseStack.scale(pulse, 1.0f, pulse);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleSealing)),
 					flashDelta, flashDelta, flashDelta, 1f,
-					48f, 140f, length, 0.3f);
+					48f, 140f, length, 0.2f);
 			poseStack.popPose();
 		}
 
