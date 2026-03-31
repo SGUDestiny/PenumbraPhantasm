@@ -4,12 +4,16 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.network.ClientBoundPlayPlayerAnimationPacket;
+import destiny.penumbra_phantasm.server.advancement.TriggerCriterions;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.fountain.RoomScanner;
+import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
@@ -19,12 +23,14 @@ import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationAccess;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationRegistry;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -40,11 +46,13 @@ import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
@@ -86,6 +94,10 @@ public class KnifeItem extends SwordItem {
         if (level.isClientSide())
             return InteractionResultHolder.pass(stack);
 
+        if (tag.contains(MAKING_TICK) && tag.getInt(MAKING_TICK) >= 0) {
+            return InteractionResultHolder.pass(stack);
+        }
+
         //Cancel making a fountain in dark worlds
         if (DarkWorldUtil.isDarkWorld(level)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_inside_dark_world"), true);
@@ -93,8 +105,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
-        if (!player.onGround() || !level.getBlockState(player.getOnPos()).isSolidRender(level, player.getOnPos())
-                || level.getBlockState(player.getOnPos().above()) != Blocks.AIR.defaultBlockState()) {
+        if (!isStandingOnFullFace(level, player)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
             return InteractionResultHolder.fail(stack);
         }
@@ -162,60 +173,53 @@ public class KnifeItem extends SwordItem {
     }
 
     //FIXME:
-    // - Fix particle being seen only on one client
     // - Make animations synced between all clients
 
     //TODO:
     // - Made opening the fountain depend on the soul capability and determination (100% = 1 fountain)
-    // - Clean up code (?)
 
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int i, boolean b) {
-            if (entity instanceof Player player) {
-                CompoundTag tag = stack.getOrCreateTag();
+        if (level.isClientSide()) return;
 
-                //Failsafe if tag isn't present
-                if (!tag.contains(MAKING_TICK)) {
-                    tag.putInt(MAKING_TICK, -2);
+        if (entity instanceof Player player) {
+            CompoundTag tag = stack.getOrCreateTag();
+
+            //Failsafe if tag isn't present
+            if (!tag.contains(MAKING_TICK)) {
+                tag.putInt(MAKING_TICK, -2);
+            }
+
+            int makingTick = tag.getInt(MAKING_TICK);
+
+            if (makingTick >= 0) {
+                //Play player animation on first tick
+                if (makingTick == 0) {
+                    if (!level.isClientSide()) {
+                        PacketHandlerRegistry.INSTANCE.send(
+                                PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                                new ClientBoundPlayPlayerAnimationPacket(player.getId(), new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))
+                        );
+                    }
                 }
 
-                int makingTick = tag.getInt(MAKING_TICK);
-
-                if (makingTick >= 0) {
-                    //Play player animation on first tick
-                    if (makingTick == 0) {
-                        if (level.isClientSide()) {
-                            //Get the animation for that player
-                            ModifierLayer<IAnimation> animation = (ModifierLayer<IAnimation>) PlayerAnimationAccess.getPlayerAssociatedData((AbstractClientPlayer) player).get(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"));
-
-                            if (animation != null) {
-                                //You can set an animation from anywhere ON THE CLIENT
-                                //Do not attempt to do this on a server, that will only fail
-
-                                animation.setAnimation(new KeyframeAnimationPlayer(PlayerAnimationRegistry.getAnimation(new ResourceLocation(PenumbraPhantasm.MODID, "fountain_make"))));
-                                //You might use  animation.replaceAnimationWithFade(); to create fade effect instead of sudden change
-                                //See javadoc for details
-                            }
-                        }
+                //After particles, make fountain
+                if (makingTick >= 14) {
+                    if (!level.isClientSide()) {
+                        makeFountain(tag, player, level, stack);
                     }
-
-                    //After particles, make fountain
-                    if (makingTick >= 14) {
-                        if (!level.isClientSide()) {
-                            makeFountain(tag, player, level, stack);
-                        }
-                    }
-                    if (makingTick > 0 && makingTick < 14) {
-                        //Animate particles
-                        animateParticles(tag, level, makingTick);
-                    }
-                    if (makingTick < 14) {
-                        //Keep ticking up as long as ticker isn't or above 14
-                        makingTick++;
-                        tag.putInt(MAKING_TICK, makingTick);
-                    }
+                }
+                if (makingTick > 0 && makingTick < 14) {
+                    //Animate particles
+                    animateParticles(tag, level, makingTick);
+                }
+                if (makingTick < 14) {
+                    //Keep ticking up as long as ticker isn't or above 14
+                    makingTick++;
+                    tag.putInt(MAKING_TICK, makingTick);
                 }
             }
+        }
     }
 
     private void animateParticles(CompoundTag tag, Level level, int tick) {
@@ -249,13 +253,25 @@ public class KnifeItem extends SwordItem {
         double particleZ = centerZ + forwardX * offsetAlongRow;
 
         //Spawn particle
-        level.addParticle(ParticleTypeRegistry.FOUNTAIN_TARGET.get(), particleX, particleY, particleZ, 0, 0, 0);
+        PacketHandlerRegistry.INSTANCE.send(
+                PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(particleX, particleY, particleZ, 32.0, level.dimension())),
+                new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_TARGET.get()), particleX, particleY, particleZ, 0, 0, 0, 1)
+        );
+    }
+
+    private static boolean isStandingOnFullFace(Level level, Player player) {
+        if (!player.onGround()) {
+            return false;
+        }
+        BlockPos groundPos = player.getOnPos();
+        BlockState groundState = level.getBlockState(groundPos);
+        BlockState feetState = level.getBlockState(groundPos.above());
+        return Block.isFaceFull(groundState.getCollisionShape(level, groundPos), Direction.UP) && feetState.isAir();
     }
 
     private void makeFountain(CompoundTag tag, Player player, Level level, ItemStack stack) {
         //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
-        if (!player.onGround() || !level.getBlockState(player.getOnPos()).isSolidRender(level, player.getOnPos())
-                || level.getBlockState(player.getOnPos().above()) != Blocks.AIR.defaultBlockState()) {
+        if (!isStandingOnFullFace(level, player)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
             return;
         }
@@ -337,7 +353,7 @@ public class KnifeItem extends SwordItem {
         targetLevel.setChunkForced(darkChunkPos.x, darkChunkPos.z, false);
 
         //Add light world fountain to the capability
-        lightCap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>());
+        lightCap.addDarkFountain(lightFountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //Create new dark room instance for the fountain room
         DarkRoom fountainRoom = new DarkRoom(lightFountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
@@ -357,12 +373,14 @@ public class KnifeItem extends SwordItem {
         }
 
         //Add dark world fountain to the capability
-        darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>());
+        darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), lightFountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //If player is not creative, put cooldown on knife
         if (!player.isCreative()) {
             player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
         }
+
+        TriggerCriterions.DARK_FOUNTAIN_MAKE.trigger((ServerPlayer) player);
 
         //Break knife if single use
         if (isSingleUse) {

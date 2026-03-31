@@ -1,10 +1,44 @@
 {
   "variants": {
-    "tall=false": {
+    "tall=false,hole=none": {
       "model": "penumbra_phantasm:block/scarlet_bush"
     },
-    "tall=true": {
+    "tall=true,hole=none": {
       "model": "penumbra_phantasm:block/scarlet_bush_tall"
+    },
+
+    "tall=false,hole=north": {
+      "model": "penumbra_phantasm:block/scarlet_bush_hole"
+    },
+    "tall=true,hole=north": {
+      "model": "penumbra_phantasm:block/scarlet_bush_tall_hole"
+    },
+
+    "tall=false,hole=south": {
+      "model": "penumbra_phantasm:block/scarlet_bush_hole",
+      "y": 180
+    },
+    "tall=true,hole=south": {
+      "model": "penumbra_phantasm:block/scarlet_bush_tall_hole",
+      "y": 180
+    },
+
+    "tall=false,hole=west": {
+      "model": "penumbra_phantasm:block/scarlet_bush_hole",
+      "y": -90
+    },
+    "tall=true,hole=west": {
+      "model": "penumbra_phantasm:block/scarlet_bush_tall_hole",
+      "y": -90
+    },
+
+    "tall=false,hole=east": {
+      "model": "penumbra_phantasm:block/scarlet_bush_hole",
+      "y": 90
+    },
+    "tall=true,hole=east": {
+      "model": "penumbra_phantasm:block/scarlet_bush_tall_hole",
+      "y": 90
     }
   }
 }

@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.server.network;
+package destiny.penumbra_phantasm.client.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -31,7 +31,7 @@ public class ClientBoundSoulBreakPacket
 	public boolean handle(Supplier<NetworkEvent.Context> ctx)
 	{
 		ctx.get().enqueueWork(() -> {
-			ClientboundPacketHandler.syncSoulBreak(diedWithSoulHearth, soulType);
+			ClientBoundPacketHandler.syncSoulBreak(diedWithSoulHearth, soulType);
 		});
 		return true;
 	}

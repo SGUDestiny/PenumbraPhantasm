@@ -53,6 +53,10 @@ public class ManagedMusicSound extends AbstractTickableSoundInstance {
         return this.targetVolume;
     }
 
+    public float getLinearVolume() {
+        return this.volume;
+    }
+
     public boolean isFadedOut() {
         return this.volume <= 0.0F && this.targetVolume <= 0.0F;
     }

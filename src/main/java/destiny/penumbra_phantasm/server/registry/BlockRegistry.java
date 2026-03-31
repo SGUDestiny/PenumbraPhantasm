@@ -141,7 +141,8 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
 
     public static final RegistryObject<LiquidBlock> LUMINESCENT_WATER = BLOCKS.register("luminescent_water",
-            () -> new LuminescentWaterFluidBlock(FluidRegistry.SOURCE_LUMINESCENT_WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable().lightLevel(state -> 15).randomTicks()));
+            () -> new LuminescentWaterFluidBlock(FluidRegistry.SOURCE_LUMINESCENT_WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()
+                    .lightLevel(state -> 15).randomTicks()));
     public static final RegistryObject<LiquidBlock> PURE_DARKNESS = BLOCKS.register("pure_darkness",
             () -> new LiquidBlock(FluidRegistry.SOURCE_PURE_DARKNESS, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable().lightLevel(state -> 15)));
 
@@ -151,11 +152,8 @@ public class BlockRegistry {
 
     public static final RegistryObject<Block> DARKNESS = BLOCKS.register("darkness",
             () -> new DarknessBlock(BlockBehaviour.Properties.of()
-                    .mapColor(MapColor.COLOR_BLACK)
-                    .strength(-1.0F, 3600000.0F)
-                    .noLootTable()
-                    .pushReaction(PushReaction.BLOCK)
-                    .randomTicks()));
+                    .mapColor(MapColor.COLOR_BLACK).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
+                    .randomTicks().noOcclusion()));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

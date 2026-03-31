@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.server.network;
+package destiny.penumbra_phantasm.client.network;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -31,17 +31,18 @@ public class ClientBoundSingleFountainData
 		buffer.writeBlockPos(fountain.getDestinationPos());
 		buffer.writeResourceKey(fountain.getDestinationDimension());
 
-		buffer.writeInt(fountain.getAnimationTimer());
-		buffer.writeInt(fountain.getFrameTimer());
+		buffer.writeInt(fountain.getOpeningTick());
+		buffer.writeInt(fountain.getFrameTick());
 		buffer.writeInt(fountain.getFrame());
 		buffer.writeInt(fountain.getFrameOptimized());
 
 		buffer.writeCollection(fountain.teleportedEntities, FriendlyByteBuf::writeUUID);
-		buffer.writeVarInt(fountain.fadeInTickers.size());
-		for (Map.Entry<UUID, Integer> entry : fountain.fadeInTickers.entrySet()) {
-			buffer.writeUUID(entry.getKey());
-			buffer.writeInt(entry.getValue());
-		}
+
+		buffer.writeCollection(fountain.shockwaveTickers, FriendlyByteBuf::writeInt);
+
+		buffer.writeInt(fountain.sealingTick);
+		buffer.writeInt(fountain.sealingFrameTick);
+		buffer.writeFloat(fountain.sealingFrameTickProgress);
 	}
 
 	public static ClientBoundSingleFountainData decode(FriendlyByteBuf buffer)
@@ -52,19 +53,21 @@ public class ClientBoundSingleFountainData
 		BlockPos targetPos = buffer.readBlockPos();
 		ResourceKey<Level> targetDim = buffer.readResourceKey(Registries.DIMENSION);
 
-		int animationTimer = buffer.readInt();
-		int frameTimer = buffer.readInt();
+		int openingTick = buffer.readInt();
+		int frameTick = buffer.readInt();
 		int frame = buffer.readInt();
 		int frameOptimized = buffer.readInt();
 
 		HashSet<UUID> teleportedEntities = buffer.readCollection(ii -> new HashSet<>(), FriendlyByteBuf::readUUID);
 
-		DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, animationTimer,
-				frameTimer, frame, frameOptimized, teleportedEntities);
-		int fadeInSize = buffer.readVarInt();
-		for (int i = 0; i < fadeInSize; i++) {
-			fountain.fadeInTickers.put(buffer.readUUID(), buffer.readInt());
-		}
+		List<Integer> shockwaveTickers = buffer.readCollection(ii -> new ArrayList<>(), FriendlyByteBuf::readInt);
+
+		int sealingTick = buffer.readInt();
+		int sealingFrameTick = buffer.readInt();
+		float sealingFrameTickProgress = buffer.readFloat();
+
+		DarkFountain fountain = new DarkFountain(fountainPos, fountainDim, targetPos, targetDim, openingTick,
+				frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick, sealingFrameTickProgress);
 
 		return new ClientBoundSingleFountainData(fountain);
 	}

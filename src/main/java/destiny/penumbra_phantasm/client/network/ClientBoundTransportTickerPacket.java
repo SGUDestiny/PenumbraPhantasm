@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.server.network;
+package destiny.penumbra_phantasm.client.network;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
@@ -21,7 +21,6 @@ public class ClientBoundTransportTickerPacket {
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ClientboundPacketHandler.updateTransportVeil(progress));
         return true;
     }
 }

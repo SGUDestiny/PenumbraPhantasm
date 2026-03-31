@@ -1,9 +1,10 @@
 package destiny.penumbra_phantasm.server.fountain;
 
 import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.client.network.*;
 import destiny.penumbra_phantasm.client.sound.SoundWrapper;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
-import destiny.penumbra_phantasm.server.network.*;
+import destiny.penumbra_phantasm.server.block.entity.DarknessBlockEntity;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
@@ -17,6 +18,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
@@ -41,251 +43,255 @@ public class DarkFountain {
     public static final String FOUNTAIN_DIMENSION = "fountainDimension";
     public static final String DESTINATION_POS = "destinationPos";
     public static final String DESTINATION_DIMENSION = "destinationDimension";
-    public static final String ANIMATION_TIMER = "animationTimer";
-    public static final String FRAME_TIMER = "frameTimer";
+    public static final String OPENING_TICK = "animationTimer";
+    public static final String FRAME_TICK = "frameTick";
     public static final String FRAME = "frame";
     public static final String FRAME_OPTIMIZED = "frameOptimized";
     public static final String TELEPORTED_ENTITIES = "teleportedEntities";
-    public static final String FADE_IN_TICKERS = "fadeInTickers";
     public static final String ROOMS = "rooms";
+    public static final String SHOCKWAVE_TICKERS = "shockwaveTickers";
+    public static final String SEALING_TICK = "sealingTick";
+    public static final String SEALING_FRAME_TICK = "sealingFrameTick";
+    public static final String SEALING_FRAME_TICK_PROGRESS = "sealingFrameTickProgress";
 
-    public static final int FILL_START_TICK = 126;
-    public static final int TRANSPORT_TICKER_DURATION = 100;
-    public static final int FILL_DURATION_TICKS = TRANSPORT_TICKER_DURATION + 20;
+    public static final int OPENING_FINISH = 144;
+    public static final int FILL_DELAY = 60;
+    public static final int FILL_START_TICK = OPENING_FINISH + FILL_DELAY;
+    public static final int TRANSPORT_TICKER_DURATION = 5 * 20;
+    public static final int SEAL_DURATION = 3 * 20;
+    public static final int SEAL_FLASH_DELAY = 20;
+    public static final int SEAL_FLASH_DURATION = 30;
 
     public BlockPos fountainPos;
     public ResourceKey<Level> fountainDimension;
     public BlockPos destinationPos;
     public ResourceKey<Level> destinationDimension;
-    public int animationTimer;
-    public int frameTimer;
+    public int openingTick;
+    public int frameTick;
     public int frame;
     public int frameOptimized;
     public HashSet<UUID> teleportedEntities;
-    public Map<UUID, Integer> fadeInTickers = new HashMap<>();
     public List<DarkRoom> rooms = new ArrayList<>();
     public int rescanTimer = 0;
+    public List<Integer> shockwaveTickers;
+    public int sealingTick;
+    public int sealingFrameTick;
+    public float sealingFrameTickProgress;
+
+    public int openingTickTarget;
+    public float openingTickClientO;
+    public float openingTickClient;
+    public boolean openingTickClientInitialized;
 
     @Nullable
     public SoundWrapper windSound = null;
     @Nullable
     public SoundWrapper darknessSound = null;
 
-    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int animationTimer, int frameTimer, int frame, int frameOptimized, HashSet<UUID> teleportedEntities) {
+    public DarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension, int openingTick, int frameTick, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers, int sealingTick, int sealingFrameTick, float sealingFrameTickProgress) {
         this.fountainPos = fountainPos;
         this.fountainDimension = fountainDimension;
         this.destinationPos = destinationPos;
         this.destinationDimension = destinationDimension;
-        this.animationTimer = animationTimer;
-        this.frameTimer = frameTimer;
+        this.openingTick = openingTick;
+        this.frameTick = frameTick;
         this.frame = frame;
         this.frameOptimized = frameOptimized;
         this.teleportedEntities = teleportedEntities;
+        this.shockwaveTickers = shockwaveTickers;
+        this.openingTickTarget = openingTick;
+        this.sealingTick = sealingTick;
+        this.sealingFrameTick = sealingFrameTick;
+        this.sealingFrameTickProgress = sealingFrameTickProgress;
     }
 
-    public void addRoom(DarkRoom room) {
-        rooms.add(room);
+    public void clientTickOpening() {
+        this.openingTickClientO = this.openingTickClient;
+
+        if (!this.openingTickClientInitialized) {
+            this.openingTickClientInitialized = true;
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+            return;
+        }
+
+        if (this.openingTickTarget < 0f) {
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+            return;
+        }
+
+        float diff = this.openingTickTarget - this.openingTickClient;
+        if (diff > 0f) {
+            this.openingTickClient += Math.min(diff, 1f);
+        } else if (diff < 0f) {
+            this.openingTickClient -= Math.min(-diff, 1f);
+        }
     }
 
-    public int getTotalDarknessCount() {
-        int total = 0;
-        for (DarkRoom room : rooms) {
-            if (!room.isDissipating()) {
-                total += room.getPositions().size();
-            }
+    public float getOpeningTick(float partialTick) {
+        if (!this.openingTickClientInitialized) {
+            return this.openingTickTarget + partialTick;
         }
-        return total;
-    }
-
-    public CompoundTag save() {
-        CompoundTag tag = new CompoundTag();
-
-        tag.put(FOUNTAIN_POS, NbtUtils.writeBlockPos(fountainPos));
-        tag.putString(FOUNTAIN_DIMENSION, fountainDimension.location().toString());
-        tag.put(DESTINATION_POS, NbtUtils.writeBlockPos(destinationPos));
-        tag.putString(DESTINATION_DIMENSION, destinationDimension.location().toString());
-        tag.putInt(ANIMATION_TIMER, animationTimer);
-        tag.putInt(FRAME_TIMER, frameTimer);
-        tag.putInt(FRAME, frame);
-        tag.putInt(FRAME_OPTIMIZED, frameOptimized);
-        ListTag teleportedEntitiesList = new ListTag();
-        for (UUID uuid : teleportedEntities) {
-            teleportedEntitiesList.add(StringTag.valueOf(uuid.toString()));
-        }
-        tag.put(TELEPORTED_ENTITIES, teleportedEntitiesList);
-
-        ListTag fadeInTickersTag = new ListTag();
-        for (Map.Entry<UUID, Integer> entry : fadeInTickers.entrySet()) {
-            CompoundTag entryTag = new CompoundTag();
-            entryTag.putString("UUID", entry.getKey().toString());
-            entryTag.putInt("Ticker", entry.getValue());
-            fadeInTickersTag.add(entryTag);
-        }
-        tag.put(FADE_IN_TICKERS, fadeInTickersTag);
-
-        ListTag roomsTag = new ListTag();
-        for (DarkRoom room : rooms) {
-            roomsTag.add(room.save());
-        }
-        tag.put(ROOMS, roomsTag);
-
-        return tag;
-    }
-
-    public static DarkFountain load(CompoundTag tag) {
-        BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
-        ResourceKey<Level> fountainDimension = stringToDimension(tag.getString(FOUNTAIN_DIMENSION));
-        BlockPos destinationPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS));
-        ResourceKey<Level> destinationDimension = stringToDimension(tag.getString(DESTINATION_DIMENSION));
-        int animationTimer = tag.getInt(ANIMATION_TIMER);
-        int frameTimer = tag.getInt(FRAME_TIMER);
-        int frame = tag.getInt(FRAME);
-        int frameOptimized = tag.getInt(FRAME_OPTIMIZED);
-        HashSet<UUID> teleportedEntities = new HashSet<>();
-        ListTag teleportedEntitiesTag = tag.getList(TELEPORTED_ENTITIES, Tag.TAG_STRING);
-        for (Tag tg : teleportedEntitiesTag) {
-            teleportedEntities.add(UUID.fromString(tg.getAsString()));
-        }
-
-        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, animationTimer, frameTimer, frame, frameOptimized, teleportedEntities);
-
-        if (tag.contains(FADE_IN_TICKERS)) {
-            ListTag fadeInTag = tag.getList(FADE_IN_TICKERS, Tag.TAG_COMPOUND);
-            for (Tag t : fadeInTag) {
-                CompoundTag entryTag = (CompoundTag) t;
-                fountain.fadeInTickers.put(UUID.fromString(entryTag.getString("UUID")), entryTag.getInt("Ticker"));
-            }
-        }
-
-        if (tag.contains(ROOMS)) {
-            ListTag roomsTag = tag.getList(ROOMS, Tag.TAG_COMPOUND);
-            for (Tag rt : roomsTag) {
-                fountain.rooms.add(DarkRoom.load((CompoundTag) rt));
-            }
-        }
-
-        return fountain;
-    }
-
-    public void sync(DarkFountain fountain) {
-        this.fountainPos = fountain.fountainPos;
-        this.destinationPos = fountain.destinationPos;
-        this.fountainDimension = fountain.fountainDimension;
-        this.destinationDimension = fountain.destinationDimension;
-
-        this.frame = fountain.frame;
-        this.animationTimer = fountain.animationTimer;
-        this.frameTimer = fountain.frameTimer;
-        this.frameOptimized = fountain.frameOptimized;
-
-        this.teleportedEntities = fountain.teleportedEntities;
-        this.fadeInTickers = fountain.fadeInTickers;
-    }
-
-    public BlockPos getFountainPos() { return fountainPos; }
-    public ResourceKey<Level> getFountainDimension() { return fountainDimension; }
-    public BlockPos getDestinationPos() { return destinationPos; }
-    public ResourceKey<Level> getDestinationDimension() { return destinationDimension; }
-    public int getAnimationTimer() { return animationTimer; }
-    public int getFrameTimer() { return frameTimer; }
-    public int getFrame() { return frame; }
-    public int getFrameOptimized() { return frameOptimized; }
-
-    public static ResourceKey<Level> stringToDimension(String dimensionString) {
-        String[] split = dimensionString.split(":");
-        if (split.length > 1)
-            return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("minecraft", "dimension")), new ResourceLocation(split[0], split[1]));
-        return null;
+        return Mth.lerp(partialTick, this.openingTickClientO, this.openingTickClient);
     }
 
     public void tick(Level level) {
         if (!level.isClientSide()) {
-            if (this.animationTimer == 1) {
-                level.players().forEach(player -> {
-                    if (player.level().dimension() == fountainDimension) {
-                        level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 0.75f, 1f);
+            if (!DarkWorldUtil.isDarkWorld(level)) {
+                if (level instanceof ServerLevel serverLevel) {
+                    tickRoomDarknessFill(serverLevel);
+                    tickDarkWorldTransportTickers(serverLevel);
+                    tickRoomDissipation(serverLevel);
+                    tickDarkWorldTeleportContact(serverLevel);
+
+                    rescanTimer++;
+                    if (rescanTimer >= Config.rescanInterval && (this.openingTick == -1)) {
+                        rescanTimer = 0;
+                        tickRoomManagement(serverLevel);
                     }
-                });
-            }
-
-            if (this.frameTimer % 3 == 0) {
-                if (this.frame >= 27) {
-                    this.frame = 0;
-                } else {
-                    this.frame++;
                 }
-            }
-            if (this.frameTimer % 6 == 0) {
-                if (this.frameOptimized >= 5) {
-                    this.frameOptimized = 0;
-                } else {
-                    this.frameOptimized++;
-                }
-            }
 
-            if (this.frameTimer >= 27 * 3) {
-                this.frameTimer = 0;
+                if (this.openingTick > 125 || this.openingTick == -1) {
+                    if (level.getGameTime() % 2 == 0) {
+                        double x = fountainPos.getX() + 0.5;
+                        double y = fountainPos.getY();
+                        double z = fountainPos.getZ() + 0.5;
+                        double vx = ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f);
+                        double vy = ModUtil.getBoundRandomFloatStatic(level, 0f, 0.1f);
+                        double vz = ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f);
+
+                        level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
+                        level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
+                        level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
+
+                        PacketHandlerRegistry.INSTANCE.send(
+                                PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
+                                new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
+                        );
+                        PacketHandlerRegistry.INSTANCE.send(
+                                PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
+                                new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
+                        );
+                        PacketHandlerRegistry.INSTANCE.send(
+                                PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
+                                new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
+                        );
+                    }
+                }
             } else {
-                this.frameTimer++;
-            }
+                if (level instanceof ServerLevel serverLevel) {
+                    tickDarkWorldFountainPushing(serverLevel);
+                }
 
-            if (this.animationTimer >= 144) {
-                this.animationTimer = -1;
-            }
-            if (this.animationTimer >= 0) {
-                this.animationTimer++;
-            }
+                if (this.sealingTick == 0 && level instanceof ServerLevel sealingServerLevel) {
+                    BlockPos sealingFountainPos = this.getFountainPos();
+                    PacketHandlerRegistry.INSTANCE.send(
+                            PacketDistributor.DIMENSION.with(() -> sealingServerLevel.dimension()),
+                            new ClientBoundSoundPackets.FountainWind(sealingFountainPos, true)
+                    );
+                    PacketHandlerRegistry.INSTANCE.send(
+                            PacketDistributor.DIMENSION.with(() -> sealingServerLevel.dimension()),
+                            new ClientBoundSoundPackets.FountainMusic(sealingFountainPos, true)
+                    );
+                }
 
-            if (!DarkWorldUtil.isDarkWorld(level) && level instanceof ServerLevel serverLevel) {
-                tickRoomDarknessFill(serverLevel);
-                tickDarkWorldTransportTickers(serverLevel);
-                tickRoomDissipation(serverLevel);
-                tickDarkWorldTeleportContact(serverLevel);
+                if (this.sealingTick >= 0) {
+                    if (this.sealingFrameTick >= 0) {
+                        float delta = Mth.clamp((float) this.sealingTick / (float) SEAL_DURATION, 0.0F, 1.0F);
+                        float frameSpeed = Mth.lerp(delta, 1.0F, 0.0F);
+                        frameSpeed *= frameSpeed;
 
-                rescanTimer++;
-                if (rescanTimer >= Config.rescanInterval && (this.animationTimer == -1)) {
-                    rescanTimer = 0;
-                    tickRoomManagement(serverLevel);
+                        this.sealingFrameTickProgress += frameSpeed;
+
+                        while (this.sealingFrameTickProgress >= 1.0F) {
+                            this.sealingFrameTickProgress -= 1.0F;
+                            if (this.sealingFrameTick >= 27 * 3) {
+                                this.sealingFrameTick = 0;
+                            } else {
+                                this.sealingFrameTick++;
+                            }
+
+                            if (this.sealingFrameTick % 3 == 0) {
+                                if (this.frame >= 27) {
+                                    this.frame = 0;
+                                } else {
+                                    this.frame++;
+                                }
+                            }
+                            if (this.sealingFrameTick % 6 == 0) {
+                                if (this.frameOptimized >= 5) {
+                                    this.frameOptimized = 0;
+                                } else {
+                                    this.frameOptimized++;
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (this.frameTick % 3 == 0) {
+                        if (this.frame >= 27) {
+                            this.frame = 0;
+                        } else {
+                            this.frame++;
+                        }
+                    }
+                    if (this.frameTick % 6 == 0) {
+                        if (this.frameOptimized >= 5) {
+                            this.frameOptimized = 0;
+                        } else {
+                            this.frameOptimized++;
+                        }
+                    }
+
+                    if (this.frameTick >= 27 * 3) {
+                        this.frameTick = 0;
+                    } else {
+                        this.frameTick++;
+                    }
+                }
+
+                if (this.sealingTick >= 0) {
+                    if (sealingTick < SEAL_DURATION + SEAL_FLASH_DELAY + SEAL_FLASH_DURATION) {
+                        sealingTick++;
+                    }
                 }
             }
 
-            if (DarkWorldUtil.isDarkWorld(level) && level instanceof ServerLevel serverLevel) {
-                tickDarkWorldFountainPushing(serverLevel);
-                tickFadeInTickers(serverLevel);
+            if (this.openingTick == 1) {
+                level.playSound(null, fountainPos, SoundRegistry.FOUNTAIN_MAKE.get(), SoundSource.AMBIENT, 0.5f, 1f);
             }
 
-            if (this.animationTimer > 125 || this.animationTimer == -1) {
+            if (this.openingTick == 0) {
+                this.shockwaveTickers.add(0);
+            }
+            if (this.openingTick % 3 == 0 && this.openingTick < OPENING_FINISH - 10) {
+                this.shockwaveTickers.add(0);
+            }
+
+            List<Integer> toRemove = new ArrayList<>();
+            for (int i = 0; i < this.shockwaveTickers.size(); i++) {
+                int ticker = this.shockwaveTickers.get(i);
+
+                if (ticker < 5) {
+                    this.shockwaveTickers.set(i, ticker + 1);
+                } else {
+                    toRemove.add(i);
+                }
+            }
+            for (int ticker : toRemove) {
+                this.shockwaveTickers.remove(ticker);
+            }
+
+            if (this.openingTick >= FILL_START_TICK) {
+                this.openingTick = -1;
+            }
+            if (this.openingTick >= 0) {
+                this.openingTick++;
+            }
+
+            if ((this.openingTick > 125 || this.openingTick == -1) && this.sealingTick < 0) {
                 tickSoundPackets(level);
-            }
-        }
-
-        if (!DarkWorldUtil.isDarkWorld(level)) {
-            if (this.animationTimer > 125 || this.animationTimer == -1) {
-                if (level.getGameTime() % 2 == 0) {
-                    double x = fountainPos.getX() + 0.5;
-                    double y = fountainPos.getY();
-                    double z = fountainPos.getZ() + 0.5;
-                    double vx = ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f);
-                    double vy = ModUtil.getBoundRandomFloatStatic(level, 0f, 0.1f);
-                    double vz = ModUtil.getBoundRandomFloatStatic(level, -0.03f, 0.03f);
-
-                    level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
-                    level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
-                    level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), x, y, z, vx, vy, vz);
-
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
-                            new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
-                    );
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
-                            new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
-                    );
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, level.dimension())),
-                            new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get()), x, y, z, vx, vy, vz, 1)
-                    );
-                }
             }
         }
 
@@ -299,16 +305,19 @@ public class DarkFountain {
             boolean isInitialRoom = room.getSeedPos().equals(fountainPos);
             int fillRate;
 
-            if (isInitialRoom && this.animationTimer >= 0) {
-                if (this.animationTimer < FILL_START_TICK) continue;
+            if (isInitialRoom && this.openingTick >= 0) {
+                if (this.openingTick < FILL_START_TICK) continue;
             }
-            fillRate = Math.max(1, room.getPositions().size() / FILL_DURATION_TICKS);
+            fillRate = Math.max(1, room.getPositions().size() / TRANSPORT_TICKER_DURATION);
 
             for (int i = 0; i < fillRate && room.fillIndex < room.getPositions().size(); i++) {
                 BlockPos pos = room.getPositions().get(room.fillIndex);
                 BlockState current = level.getBlockState(pos);
                 if (current.is(Blocks.AIR) || current.is(Blocks.CAVE_AIR) || current.is(Blocks.VOID_AIR)) {
                     level.setBlock(pos, BlockRegistry.DARKNESS.get().defaultBlockState(), 3);
+                    if (level.getBlockEntity(pos) instanceof DarknessBlockEntity darkness) {
+                        darkness.fountainPos = this.fountainPos;
+                    }
                 }
                 room.fillIndex++;
             }
@@ -318,7 +327,7 @@ public class DarkFountain {
     }
 
     private void tickDarkWorldTransportTickers(ServerLevel level) {
-        if (this.animationTimer >= 0 && this.animationTimer < FILL_START_TICK) return;
+        if (this.openingTick >= 0 && this.openingTick < FILL_START_TICK) return;
 
         ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
         if (destinationLevel == null) return;
@@ -361,13 +370,10 @@ public class DarkFountain {
 
                                 if (entity instanceof ServerPlayer player) {
                                     destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
-                                    destinationFountain.fadeInTickers.put(player.getUUID(), TRANSPORT_TICKER_DURATION);
-                                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(1f));
                                 } else {
                                     Entity teleported = teleportEntity(entity, destinationLevel, target);
                                     if (teleported != null) {
                                         destinationFountain.teleportedEntities.add(teleported.getUUID());
-                                        destinationFountain.fadeInTickers.put(teleported.getUUID(), TRANSPORT_TICKER_DURATION);
                                     }
                                 }
                             }
@@ -398,35 +404,6 @@ public class DarkFountain {
             }
 
             room.checkActivation();
-        }
-    }
-
-    private void tickFadeInTickers(ServerLevel level) {
-        Iterator<Map.Entry<UUID, Integer>> iterator = fadeInTickers.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<UUID, Integer> entry = iterator.next();
-            UUID entityId = entry.getKey();
-            int ticker = entry.getValue();
-
-            Entity entity = level.getEntity(entityId);
-            if (entity == null) {
-                iterator.remove();
-                continue;
-            }
-
-            ticker = Math.max(ticker - 5, 0);
-            entry.setValue(ticker);
-
-            if (entity instanceof ServerPlayer serverPlayer) {
-                int finalTicker = ticker;
-                serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = finalTicker);
-                float progress = (float) ticker / TRANSPORT_TICKER_DURATION;
-                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundTransportTickerPacket(progress));
-            }
-
-            if (ticker == 0) {
-                iterator.remove();
-            }
         }
     }
 
@@ -489,12 +466,11 @@ public class DarkFountain {
             }
         }
 
-        checkConnectivityViaDoors(level);
-
-        expandThroughDoors(level);
+        tickConnectivityViaDoors(level);
+        tickExpansionThroughDoors(level);
     }
 
-    private void checkConnectivityViaDoors(ServerLevel level) {
+    private void tickConnectivityViaDoors(ServerLevel level) {
         if (rooms.isEmpty()) return;
 
         DarkRoom fountainRoom = null;
@@ -521,7 +497,7 @@ public class DarkFountain {
             DarkRoom current = queue.poll();
             for (DarkRoom other : rooms) {
                 if (reachableViaOpenDoors.contains(other) || other.isDissipating()) continue;
-                if (sharesAnOpenDoor(level, current, other)) {
+                if (DarkRoom.sharesAnOpenDoor(level, current, other)) {
                     reachableViaOpenDoors.add(other);
                     queue.add(other);
                 }
@@ -535,25 +511,10 @@ public class DarkFountain {
         }
     }
 
-    private boolean sharesAnOpenDoor(ServerLevel level, DarkRoom a, DarkRoom b) {
-        Set<BlockPos> aPositions = new HashSet<>(a.getPositions());
-        for (BlockPos doorPos : a.getDoorPositions()) {
-            if (!b.getDoorPositions().contains(doorPos)) continue;
-            BlockState state = level.getBlockState(doorPos);
-            for (Direction dir : Direction.values()) {
-                if (!aPositions.contains(doorPos.relative(dir))) continue;
-                if (DarknessBlock.isDoorVisuallyOpenFromSide(level, doorPos, state, dir)) {
-                    return true;
-                }
-                break;
-            }
-        }
-        return false;
-    }
-
-    private void expandThroughDoors(ServerLevel level) {
-        int remainingBudget = Config.maxRoomVolume - getTotalDarknessCount();
-        if (remainingBudget <= 0) return;
+    private void tickExpansionThroughDoors(ServerLevel level) {
+        //Subtract total used volume from max volume, if zero or below, don't expand
+        int remainingVolume = Config.maxRoomVolume - DarkRoom.getTotalDarknessCount(rooms);
+        if (remainingVolume <= 0) return;
 
         Set<BlockPos> allPositions = new HashSet<>();
         for (DarkRoom room : rooms) {
@@ -577,19 +538,19 @@ public class DarkFountain {
                     if (!adjState.is(Blocks.AIR) && !adjState.is(Blocks.CAVE_AIR) && !adjState.is(Blocks.VOID_AIR))
                         continue;
 
-                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingBudget, false);
+                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false);
                     if (result.isValid()) {
                         DarkRoom newRoom = new DarkRoom(adjacent, result.getPositions(), result.getDoorPositions());
                         addEntitiesInRoomToTickers(level, newRoom);
                         newRooms.add(newRoom);
                         allPositions.addAll(result.getPositions());
-                        remainingBudget -= result.getPositions().size();
-                        if (remainingBudget <= 0) break;
+                        remainingVolume -= result.getPositions().size();
+                        if (remainingVolume <= 0) break;
                     }
                 }
-                if (remainingBudget <= 0) break;
+                if (remainingVolume <= 0) break;
             }
-            if (remainingBudget <= 0) break;
+            if (remainingVolume <= 0) break;
         }
 
         rooms.addAll(newRooms);
@@ -743,9 +704,9 @@ public class DarkFountain {
         for (UUID entity : teleportedEntities) {
             if (teleportBoxEntities.contains(entity)) {
                 newTeleportedEntities.add(entity);
-                    }
-                }
-                this.teleportedEntities = newTeleportedEntities;
+            }
+        }
+        this.teleportedEntities = newTeleportedEntities;
     }
 
     private void tickSoundPackets(Level level) {
@@ -808,6 +769,128 @@ public class DarkFountain {
     }
 
     public void stopDarkness() { this.darknessSound.stopSound(); }
+
+    public void addRoom(DarkRoom room) {
+        rooms.add(room);
+    }
+
+    public CompoundTag save() {
+        CompoundTag tag = new CompoundTag();
+
+        tag.put(FOUNTAIN_POS, NbtUtils.writeBlockPos(fountainPos));
+        tag.putString(FOUNTAIN_DIMENSION, fountainDimension.location().toString());
+        tag.put(DESTINATION_POS, NbtUtils.writeBlockPos(destinationPos));
+        tag.putString(DESTINATION_DIMENSION, destinationDimension.location().toString());
+        tag.putInt(OPENING_TICK, openingTick);
+        tag.putInt(FRAME_TICK, frameTick);
+        tag.putInt(FRAME, frame);
+        tag.putInt(FRAME_OPTIMIZED, frameOptimized);
+        ListTag teleportedEntitiesList = new ListTag();
+        for (UUID uuid : teleportedEntities) {
+            teleportedEntitiesList.add(StringTag.valueOf(uuid.toString()));
+        }
+        tag.put(TELEPORTED_ENTITIES, teleportedEntitiesList);
+
+        ListTag roomsTag = new ListTag();
+        for (DarkRoom room : rooms) {
+            roomsTag.add(room.save());
+        }
+        tag.put(ROOMS, roomsTag);
+
+        ListTag shockwaveTickersTag = new ListTag();
+        for (int ticker : shockwaveTickers) {
+            shockwaveTickersTag.add(IntTag.valueOf(ticker));
+        }
+        tag.put(SHOCKWAVE_TICKERS, shockwaveTickersTag);
+
+        tag.putInt(SEALING_TICK, sealingTick);
+        tag.putInt(SEALING_FRAME_TICK, sealingFrameTick);
+        tag.putFloat(SEALING_FRAME_TICK_PROGRESS, sealingFrameTickProgress);
+
+        return tag;
+    }
+
+    public static DarkFountain load(CompoundTag tag) {
+        BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
+        ResourceKey<Level> fountainDimension = stringToDimension(tag.getString(FOUNTAIN_DIMENSION));
+        BlockPos destinationPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS));
+        ResourceKey<Level> destinationDimension = stringToDimension(tag.getString(DESTINATION_DIMENSION));
+        int openingTick = tag.getInt(OPENING_TICK);
+        int frameTick = tag.getInt(FRAME_TICK);
+        int frame = tag.getInt(FRAME);
+        int frameOptimized = tag.getInt(FRAME_OPTIMIZED);
+        HashSet<UUID> teleportedEntities = new HashSet<>();
+        ListTag teleportedEntitiesTag = tag.getList(TELEPORTED_ENTITIES, Tag.TAG_STRING);
+        for (Tag tg : teleportedEntitiesTag) {
+            teleportedEntities.add(UUID.fromString(tg.getAsString()));
+        }
+
+        List<Integer> shockwaveTickers = new ArrayList<>();
+        if (tag.contains(SHOCKWAVE_TICKERS)) {
+            ListTag shockwaveTickersTag = tag.getList(SHOCKWAVE_TICKERS, Tag.TAG_INT);
+            for (Tag ticker : shockwaveTickersTag) {
+                shockwaveTickers.add(((IntTag) ticker).getAsInt());
+            }
+        }
+
+        int sealingTick = tag.getInt(SEALING_TICK);
+        int sealingFrameTick = tag.getInt(SEALING_FRAME_TICK);
+        float sealingFrameTickProgress = tag.getFloat(SEALING_FRAME_TICK_PROGRESS);
+
+        DarkFountain fountain = new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick, sealingFrameTickProgress);
+
+        if (tag.contains(ROOMS)) {
+            ListTag roomsTag = tag.getList(ROOMS, Tag.TAG_COMPOUND);
+            for (Tag rt : roomsTag) {
+                fountain.rooms.add(DarkRoom.load((CompoundTag) rt));
+            }
+        }
+
+        return fountain;
+    }
+
+    public void sync(DarkFountain fountain) {
+        this.fountainPos = fountain.fountainPos;
+        this.destinationPos = fountain.destinationPos;
+        this.fountainDimension = fountain.fountainDimension;
+        this.destinationDimension = fountain.destinationDimension;
+
+        this.frame = fountain.frame;
+        this.openingTick = fountain.openingTick;
+        this.frameTick = fountain.frameTick;
+        this.frameOptimized = fountain.frameOptimized;
+
+        this.teleportedEntities = fountain.teleportedEntities;
+
+        this.shockwaveTickers = fountain.shockwaveTickers;
+
+        this.openingTickTarget = fountain.openingTick;
+        if (!this.openingTickClientInitialized) {
+            this.openingTickClientInitialized = true;
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+        }
+
+        this.sealingTick = fountain.sealingTick;
+        this.sealingFrameTick = fountain.sealingFrameTick;
+        this.sealingFrameTickProgress = fountain.sealingFrameTickProgress;
+    }
+
+    public BlockPos getFountainPos() { return fountainPos; }
+    public ResourceKey<Level> getFountainDimension() { return fountainDimension; }
+    public BlockPos getDestinationPos() { return destinationPos; }
+    public ResourceKey<Level> getDestinationDimension() { return destinationDimension; }
+    public int getOpeningTick() { return openingTick; }
+    public int getFrameTick() { return frameTick; }
+    public int getFrame() { return frame; }
+    public int getFrameOptimized() { return frameOptimized; }
+
+    public static ResourceKey<Level> stringToDimension(String dimensionString) {
+        String[] split = dimensionString.split(":");
+        if (split.length > 1)
+            return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("minecraft", "dimension")), new ResourceLocation(split[0], split[1]));
+        return null;
+    }
 
     public static class DarkFountainTeleporter implements ITeleporter {
         private final Vec3 pos;

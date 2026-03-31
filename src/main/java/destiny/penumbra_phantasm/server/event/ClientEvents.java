@@ -10,7 +10,6 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.client.sound.MusicManager;
-import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -21,18 +20,11 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
-import destiny.penumbra_phantasm.server.network.ClientboundPacketHandler;
-import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
-import net.minecraft.client.gui.screens.ProgressScreen;
-import net.minecraft.client.gui.screens.ReceivingLevelScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -44,13 +36,13 @@ import java.util.Map;
 public class ClientEvents {
 
 	private static final BufferBuilder FOUNTAIN_BUFFER = new BufferBuilder(65536);
-	private static boolean wasOnLoadingScreen = false;
-	private static int postLoadGraceTicks = 0;
 
 	@SubscribeEvent
 	public static void levelRender(RenderLevelStageEvent event)
 	{
-		if(event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY))
+		boolean renderSkyPass = event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY);
+		boolean renderShockwavePass = event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS);
+		if(renderSkyPass || renderShockwavePass)
 		{
 			ClientLevel level = Minecraft.getInstance().level;
 			if(level == null)
@@ -63,63 +55,72 @@ public class ClientEvents {
 			int length = level.getHeight() / 6;
 			ResourceLocation textureCrack = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_ground_crack.png");
 
-			PoseStack stack = event.getPoseStack();
+			PoseStack pose = event.getPoseStack();
 			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(FOUNTAIN_BUFFER);
 
 			GL11.glEnable(0x864F);
 
 			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
 				cap.darkFountains.forEach((key, fountain) ->
-					{
-						float animationTime = fountain.animationTimer;
+				{
+					float openingTick = fountain.getOpeningTick(partialTick);
 
-						if (!DarkWorldUtil.isDarkWorld(level)) {
-							stack.pushPose();
-							stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
-									fountain.getFountainPos().getZ());
+					if (!DarkWorldUtil.isDarkWorld(level)) {
+						pose.pushPose();
+						pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
+						pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
+								fountain.getFountainPos().getZ());
 
-							if (animationTime < 130 && animationTime >= 0) {
-								FountainRenderUtil.renderOpeningFoutain(partialTick, animationTime, length, textureCrack, stack, buffer,
-										OverlayTexture.NO_OVERLAY);
+						if (renderSkyPass) {
+							if (openingTick < 130 && openingTick >= 0) {
+								FountainRenderUtil.renderOpeningFoutain(openingTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 							} else {
 								double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
 								if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
-									FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, stack, buffer, OverlayTexture.NO_OVERLAY);
+									FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 								}
 							}
 						}
-						else
-						{
-							stack.pushPose();
-							stack.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-							stack.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
-									fountain.getFountainPos().getZ());
 
-							Vec2 fountain2dPos = new Vec2(fountain.getFountainPos().getX(), fountain.getFountainPos().getZ());
-							Vec2 camera2dPos = new Vec2((float) camera.getPosition().x, (float) camera.getPosition().z);
+						if (renderShockwavePass) {
+							FountainRenderUtil.renderShockwaves(fountain, pose, buffer, OverlayTexture.NO_OVERLAY, partialTick);
+						}
+						pose.popPose();
+					}
+					else if (renderSkyPass)
+					{
+						pose.pushPose();
+						pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
+						pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
+								fountain.getFountainPos().getZ());
 
-							double distance2d = Mth.sqrt(fountain2dPos.distanceToSqr(camera2dPos));
-							double referenceDistance = 64.0;
-							float distanceScale = (float)(distance2d / referenceDistance);
-							distanceScale = Math.max(distanceScale, 1.0f);
+						Vec2 fountain2dPos = new Vec2(fountain.getFountainPos().getX(), fountain.getFountainPos().getZ());
+						Vec2 camera2dPos = new Vec2((float) camera.getPosition().x, (float) camera.getPosition().z);
 
-							stack.scale(distanceScale, distanceScale, distanceScale);
+						double distance2d = Mth.sqrt(fountain2dPos.distanceToSqr(camera2dPos));
+						double referenceDistance = 64.0;
+						float distanceScale = (float)(distance2d / referenceDistance);
+						distanceScale = Math.max(distanceScale, 1.0f);
 
-							float fade = (float)((distance2d - referenceDistance) / referenceDistance);
-							fade = Math.max(0f, Math.min(1f, fade));
+						pose.scale(distanceScale, distanceScale, distanceScale);
 
-							if (fade < 1.0f) {
-								FountainRenderUtil.renderOpenFountain(fountain, level, animationTime, length, textureCrack, partialTick, stack, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
-							}
-							if (fade > 0.0f) {
-								FountainRenderUtil.renderOpenFountainOptimized(fountain, length, stack, buffer, OverlayTexture.NO_OVERLAY, fade);
+						float fade = (float)((distance2d - referenceDistance) / referenceDistance);
+						fade = Math.max(0f, Math.min(1f, fade));
+
+						if (fade < 1.0f) {
+							if (fountain.sealingTick >= 0) {
+								FountainRenderUtil.renderSealingFountain(fountain, level, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
+							} else {
+								FountainRenderUtil.renderOpenFountain(fountain, level, length, textureCrack, partialTick, pose, buffer, OverlayTexture.NO_OVERLAY, 1.0f - fade);
 							}
 						}
-
-						stack.popPose();
-					});
+						if (fade > 0.0f) {
+							FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, OverlayTexture.NO_OVERLAY, fade);
+						}
+						pose.popPose();
+					}
+				});
 			});
 
 			buffer.endBatch();
@@ -129,42 +130,20 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void clientTick(TickEvent.ClientTickEvent event)
-	{
-		if(event.phase == TickEvent.Phase.END)
-		{
-			if (ClientboundPacketHandler.fountainTransitioning) {
-				Screen screen = Minecraft.getInstance().screen;
-				boolean isLoadingScreen = screen instanceof ReceivingLevelScreen ||
-										  screen instanceof ProgressScreen ||
-										  screen instanceof GenericDirtMessageScreen;
-				if (isLoadingScreen) {
-					wasOnLoadingScreen = true;
-					postLoadGraceTicks = 0;
-				} else if (wasOnLoadingScreen && screen == null) {
-					wasOnLoadingScreen = false;
-					postLoadGraceTicks = 5;
-				}
-				if (!wasOnLoadingScreen && postLoadGraceTicks > 0) {
-					postLoadGraceTicks--;
-					LazyOptional<ScreenAnimationCapability> lazyAnim = Minecraft.getInstance().player != null
-							? Minecraft.getInstance().player.getCapability(CapabilityRegistry.SCREEN_ANIMATION)
-							: LazyOptional.empty();
-					boolean tickerStarted = lazyAnim.resolve().map(c -> c.darknessLandTicker >= 0).orElse(false);
-					if (postLoadGraceTicks == 0 || tickerStarted) {
-						ClientboundPacketHandler.fountainTransitioning = false;
-						postLoadGraceTicks = 0;
-					}
-				}
-			}
-
+	public static void clientTick(TickEvent.ClientTickEvent event) {
+		if(event.phase == TickEvent.Phase.END) {
 			LocalPlayer player = Minecraft.getInstance().player;
 			ClientLevel level = Minecraft.getInstance().level;
 			if (player == null) return;
-			if (level != null && DarkWorldUtil.isDarkWorld(level)) {
+			if (level == null) return;
+
+			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+				cap.darkFountains.forEach((pos, fountain) -> fountain.clientTickOpening());
+			});
+
+			if (DarkWorldUtil.isDarkWorld(level)) {
 				Minecraft.getInstance().getMusicManager().stopPlaying();
 			}
-
 			MusicManager.getInstance().tick();
 
 			DarkFountainCapability cap;
@@ -177,7 +156,7 @@ public class ClientEvents {
 
 			for(Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet())
 			{
-				if(entry.getValue().animationTimer == -1 && entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 64)
+				if(entry.getValue().openingTick == -1 && entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 64)
 				{
 					fountain = entry.getValue();
 					break;
@@ -218,17 +197,17 @@ public class ClientEvents {
 				return;
 
 			if(InputConstants.getKey(InputConstants.KEY_W, event.getScanCode())
-							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
 				introScreen.incrementChoice(-1);
 			}
 			if(InputConstants.getKey(InputConstants.KEY_S, event.getScanCode())
-							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
 				introScreen.incrementChoice(1);
 			}
 			if(InputConstants.getKey(InputConstants.KEY_RETURN, event.getScanCode())
-							 .equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
+					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
 				introScreen.pickChoice();
 			}
@@ -250,5 +229,4 @@ public class ClientEvents {
 			}
 		}
 	}
-
 }

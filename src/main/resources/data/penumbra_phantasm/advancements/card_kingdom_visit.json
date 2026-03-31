@@ -1,0 +1,35 @@
+{
+  "parent": "penumbra_phantasm:dark_fountain_make",
+  "display": {
+    "icon": {
+      "item": "penumbra_phantasm:scarlet_marble_rook"
+    },
+    "title": {
+      "translate": "advancement.penumbra_phantasm.card_kingdom_visit.title"
+    },
+    "description": {
+      "translate": "advancement.penumbra_phantasm.card_kingdom_visit.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "card_kingdom": {
+      "trigger": "penumbra_phantasm:changed_dimension_contains",
+      "conditions": {
+        "to_dimension_contains": "card_kingdom"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "card_kingdom"
+    ]
+  ],
+  "rewards": {
+    "experience": 0
+  },
+  "sends_telemetry_event": false
+}

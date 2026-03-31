@@ -12,10 +12,13 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
@@ -47,6 +50,8 @@ public class MusicManager {
     public SoundEvent pendingSoundEvent;
     public MusicPriority pendingPriority = MusicPriority.BIOME;
     public boolean pendingLooping = true;
+
+    private float lastMusicSlider = Float.NaN;
 
     public static MusicManager getInstance() {
         return INSTANCE;
@@ -81,8 +86,36 @@ public class MusicManager {
             return;
         }
 
+        LazyOptional<DarkFountainCapability> sealingLazyCap = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if (sealingLazyCap.isPresent() && sealingLazyCap.resolve().isPresent()) {
+            DarkFountainCapability sealingCap = sealingLazyCap.resolve().get();
+            for (Map.Entry<BlockPos, DarkFountain> entry : sealingCap.darkFountains.entrySet()) {
+                DarkFountain fountain = entry.getValue();
+                if (fountain.sealingTick >= 0) {
+                    if (state != State.SILENT && state != State.FADING_OUT) {
+                        beginFadeOut();
+                    }
+                    tickFade();
+                    return;
+                }
+            }
+        }
+
+        float musicSlider = minecraft.options.getSoundSourceVolume(SoundSource.MUSIC);
+        boolean musicUnmuted = !Float.isNaN(lastMusicSlider) && lastMusicSlider <= 1.0E-4F && musicSlider > 1.0E-4F;
+        lastMusicSlider = musicSlider;
+
+        if (currentSound == null && (state == State.PLAYING || state == State.FADING_IN || state == State.FADING_OUT)) {
+            state = State.SILENT;
+            fadeInTicks = 0;
+        }
+
         if (currentSound != null && (state == State.PLAYING || state == State.FADING_IN)
                 && !minecraft.getSoundManager().isActive(currentSound)) {
+            if (!currentSound.isStopped()) {
+                currentSound.stopSound();
+                minecraft.getSoundManager().stop(currentSound);
+            }
             currentSound = null;
             currentSoundEvent = null;
             state = State.SILENT;
@@ -97,7 +130,6 @@ public class MusicManager {
         if (fountainMusic != null) {
             desiredSound = fountainMusic;
             desiredPriority = MusicPriority.FOUNTAIN;
-            desiredLooping = true;
         }
 
         if (desiredPriority.ordinal() < MusicPriority.FOUNTAIN.ordinal()) {
@@ -105,7 +137,6 @@ public class MusicManager {
 
             if (biomeMusic != null) {
                 desiredSound = biomeMusic.sound();
-                desiredPriority = MusicPriority.BIOME;
                 desiredLooping = biomeMusic.looping();
             }
         }
@@ -115,6 +146,14 @@ public class MusicManager {
                 beginFadeOut();
             }
 
+            tickFade();
+            return;
+        }
+
+        if (musicUnmuted && desiredSound.equals(currentSoundEvent)
+                && desiredPriority == currentPriority
+                && (state == State.PLAYING || state == State.FADING_IN)) {
+            startTrack(desiredSound, desiredPriority, desiredLooping);
             tickFade();
             return;
         }
@@ -205,7 +244,8 @@ public class MusicManager {
                 startTrack(currentSoundEvent, currentPriority, currentLooping);
                 return;
             }
-            if (currentSound.getTargetVolume() > 0 && currentSound.getVolume() >= currentSound.getTargetVolume() - 0.005F) {
+            if (currentSound.getTargetVolume() > 0
+                    && currentSound.getLinearVolume() >= currentSound.getTargetVolume() - 0.005F) {
                 state = State.PLAYING;
             }
         }
@@ -254,7 +294,7 @@ public class MusicManager {
         }
     }
 
-    private void stopImmediately() {
+    public void stopImmediately() {
         if (currentSound != null && !currentSound.isStopped()) {
             currentSound.stopSound();
             minecraft.getSoundManager().stop(currentSound);
@@ -270,7 +310,7 @@ public class MusicManager {
     private BiomeMusic biomeMusic(LocalPlayer player, ClientLevel level) {
         Holder<Biome> biomeHolder = level.getBiome(player.blockPosition());
         ResourceLocation biomeId = biomeHolder.unwrapKey()
-                .map(key -> key.location())
+                .map(ResourceKey::location)
                 .orElse(null);
         if (biomeId == null) return null;
         return biomeMusicMap.get(biomeId);
@@ -288,9 +328,25 @@ public class MusicManager {
 
         for (Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet()) {
             DarkFountain fountain = entry.getValue();
-            if (fountain.animationTimer != -1) continue;
+            if (fountain.openingTick != -1) continue;
 
-            double distance = fountain.getFountainPos().getCenter().distanceTo(player.position());
+            Vec3 playerPos = player.position();
+            BlockPos fountainPos = fountain.getFountainPos();
+            double distance;
+
+            if (!DarkWorldUtil.isDarkWorld(minecraft.level)) {
+                distance = fountainPos.getCenter().distanceTo(playerPos);
+            } else {
+                if (playerPos.y < fountainPos.getY()) {
+                    distance = fountainPos.getCenter().distanceTo(playerPos);
+                } else {
+                    Vec3 playerPos2d = new Vec3(playerPos.x, 0f, playerPos.z);
+                    Vec3 fountainPos2d = new Vec3(fountainPos.getX(), 0, fountainPos.getZ());
+
+                    distance = fountainPos2d.distanceTo(playerPos2d);
+                }
+            }
+
             if (distance <= FOUNTAIN_MUSIC_RANGE) {
                 return SoundAccess.getFountainMusic();
             }

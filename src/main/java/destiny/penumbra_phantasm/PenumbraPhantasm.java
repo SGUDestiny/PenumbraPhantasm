@@ -1,12 +1,8 @@
 package destiny.penumbra_phantasm;
 
+import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.registry.*;
-import net.minecraftforge.registries.DataPackRegistryEvent;
-import org.slf4j.Logger;
-
-import com.mojang.logging.LogUtils;
-
 import destiny.penumbra_phantasm.client.model.item.DeltashieldModel;
 import destiny.penumbra_phantasm.client.render.dimension.DarkWorldDimensionEffects;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
@@ -24,13 +20,17 @@ import destiny.penumbra_phantasm.client.render.particle.FountainTargetParticle;
 import destiny.penumbra_phantasm.client.render.particle.LuminescentParticle;
 import destiny.penumbra_phantasm.client.render.particle.RealKnifeHitParticle;
 import destiny.penumbra_phantasm.client.render.particle.RealKnifeSlashParticle;
+import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
 import destiny.penumbra_phantasm.client.render.particle.ScarletLeafParticle;
+import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
-import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -50,6 +50,10 @@ import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.slf4j.Logger;
+import com.mojang.logging.LogUtils;
+
+import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
 
 @Mod(PenumbraPhantasm.MODID)
 public class PenumbraPhantasm {
@@ -60,7 +64,6 @@ public class PenumbraPhantasm {
 
     public PenumbraPhantasm() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-        modEventBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(new CommonEvents());
 
@@ -79,6 +82,7 @@ public class PenumbraPhantasm {
         FeatureRegistry.FEATURES.register(modEventBus);
         ChunkGeneratorRegistry.CHUNK_GENERATORS.register(modEventBus);
         PacketHandlerRegistry.register();
+        AdvancementRegistry.register();
 
         modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) ->
             {
@@ -89,8 +93,6 @@ public class PenumbraPhantasm {
 
         MinecraftForge.EVENT_BUS.register(this);
     }
-
-    private void commonSetup(final FMLCommonSetupEvent event) {}
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
     public static class ClientModEvents {
@@ -113,6 +115,7 @@ public class PenumbraPhantasm {
         @SubscribeEvent
         public static void registerClientReloadListeners(RegisterClientReloadListenersEvent event) {
             event.registerReloadListener(DeltaShieldRenderer.INSTANCE);
+            event.registerReloadListener(DarkWorldMusicReloadListener.INSTANCE);
         }
 
         @SubscribeEvent
@@ -132,6 +135,8 @@ public class PenumbraPhantasm {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
+                EntityRenderers.register(EntityRegistry.SEALING_SOUL.get(), SealingSoulEntityRenderer::new);
+
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());
                 ItemProperties.register(ItemRegistry.SOUL_HEARTH.get(), new ResourceLocation(MODID, SOUL_TYPE), new SoulHearthItemProperty());
                 ItemProperties.register(ItemRegistry.DELTA_SHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {

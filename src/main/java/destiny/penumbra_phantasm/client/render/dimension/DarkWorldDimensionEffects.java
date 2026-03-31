@@ -35,9 +35,9 @@ public class DarkWorldDimensionEffects extends DimensionSpecialEffects {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
 
-        BufferBuilder.RenderedBuffer bufferbuilder$renderedbuffer = buildSkyDisc(bufferbuilder, 16.0F);
+        BufferBuilder.RenderedBuffer renderedbuffer = buildSkyDisc(bufferbuilder, 16.0F);
         skyBuffer.bind();
-        skyBuffer.upload(bufferbuilder$renderedbuffer);
+        skyBuffer.upload(renderedbuffer);
         VertexBuffer.unbind();
 
         return skyBuffer;

@@ -1,0 +1,41 @@
+{
+  "display": {
+    "icon": {
+      "item": "penumbra_phantasm:hearth"
+    },
+    "title": {
+      "translate": "advancement.penumbra_phantasm.soul_hearth.title"
+    },
+    "description": {
+      "translate": "advancement.penumbra_phantasm.soul_hearth.description"
+    },
+    "background": "penumbra_phantasm:textures/block/night_dirt.png",
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "soul_hearth": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "penumbra_phantasm:soul_hearth"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "soul_hearth"
+    ]
+  ],
+  "rewards": {
+    "experience": 0
+  },
+  "sends_telemetry_event": false
+}

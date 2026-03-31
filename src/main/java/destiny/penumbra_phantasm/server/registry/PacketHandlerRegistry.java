@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.network.*;
 import destiny.penumbra_phantasm.server.network.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
@@ -95,6 +96,18 @@ public class PacketHandlerRegistry {
                 .encoder(ClientBoundParticlePacket::encode)
                 .decoder(ClientBoundParticlePacket::decode)
                 .consumerMainThread(ClientBoundParticlePacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ClientBoundPlayPlayerAnimationPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundPlayPlayerAnimationPacket::encode)
+                .decoder(ClientBoundPlayPlayerAnimationPacket::decode)
+                .consumerMainThread(ClientBoundPlayPlayerAnimationPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ClientBoundCancelPlayerAnimationPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundCancelPlayerAnimationPacket::encode)
+                .decoder(ClientBoundCancelPlayerAnimationPacket::decode)
+                .consumerMainThread(ClientBoundCancelPlayerAnimationPacket::handle)
                 .add();
     }
 }

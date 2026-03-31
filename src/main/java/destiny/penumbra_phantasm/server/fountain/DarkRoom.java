@@ -1,10 +1,14 @@
 package destiny.penumbra_phantasm.server.fountain;
 
+import destiny.penumbra_phantasm.server.block.DarknessBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
 
@@ -60,6 +64,32 @@ public class DarkRoom {
         dissipationQueue = new ArrayList<>(positions);
         Collections.shuffle(dissipationQueue);
         transportTickers.clear();
+    }
+
+    public static boolean sharesAnOpenDoor(ServerLevel level, DarkRoom a, DarkRoom b) {
+        Set<BlockPos> aPositions = new HashSet<>(a.getPositions());
+        for (BlockPos doorPos : a.getDoorPositions()) {
+            if (!b.getDoorPositions().contains(doorPos)) continue;
+            BlockState state = level.getBlockState(doorPos);
+            for (Direction dir : Direction.values()) {
+                if (!aPositions.contains(doorPos.relative(dir))) continue;
+                if (DarknessBlock.isDoorVisuallyOpenFromSide(level, doorPos, state, dir)) {
+                    return true;
+                }
+                break;
+            }
+        }
+        return false;
+    }
+
+    public static int getTotalDarknessCount(List<DarkRoom> rooms) {
+        int total = 0;
+        for (DarkRoom room : rooms) {
+            if (!room.isDissipating()) {
+                total += room.getPositions().size();
+            }
+        }
+        return total;
     }
 
     public boolean containsPosition(BlockPos pos) {

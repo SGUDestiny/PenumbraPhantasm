@@ -2,7 +2,7 @@ package destiny.penumbra_phantasm.server.capability;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
-import destiny.penumbra_phantasm.server.network.ClientBoundAnimationPacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundAnimationPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import net.minecraft.Util;
@@ -31,6 +31,8 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     public static final String CURRENT_LOCATION = "currentLocation";
     public static final String TITLE_ALPHA_TICKER = "titleAlphaTicker";
 
+    public static final String SEAL_SHINE_TICKER = "sealShineTicker";
+
     public int darknessLandTicker = -1;
     public int darknessOverlayTicker = -1;
 
@@ -38,6 +40,8 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     public String currentLocation = "";
     public int titleAlphaTicker = -1;
     public List<String> visitedLocations = new ArrayList<>();
+
+    public int sealShineTicker = -1;
 
     public void tick(Level level, Player player) {
         if (darknessLandTicker >= 40) {
@@ -47,10 +51,21 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
             darknessLandTicker++;
         }
 
+        if (darknessOverlayTicker > 0) {
+            darknessOverlayTicker--;
+        }
         if (darknessOverlayTicker <= 0) {
             darknessOverlayTicker = -1;
         }
 
+        if (sealShineTicker >= 7 * 20) {
+            sealShineTicker = -1;
+        }
+        if (sealShineTicker >= 0) {
+            sealShineTicker++;
+        }
+
+        //Location title stuff below this point
         currentLocation = Util.makeDescriptionId("biome", level.getBiome(player.getOnPos()).unwrapKey().get().location());
 
         LazyOptional<DarkFountainCapability> lazyCap = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
@@ -59,7 +74,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
 
             for (Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet()) {
                 DarkFountain fountain = entry.getValue();
-                if (fountain.animationTimer != -1) continue;
+                if (fountain.openingTick != -1) continue;
 
                 double distance = fountain.getFountainPos().getCenter().subtract(player.position()).horizontalDistance();
                 if (distance <= FOUNTAIN_MUSIC_RANGE) {
@@ -94,28 +109,22 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
-            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundAnimationPacket(darknessLandTicker, darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker));
+            syncToClient(serverPlayer);
         }
+    }
+
+    public void syncToClient(ServerPlayer serverPlayer) {
+        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundAnimationPacket(darknessLandTicker, darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker));
     }
 
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.putInt(DARKNESS_LAND_TICKER, darknessLandTicker);
-        tag.putInt(DARKNESS_OVERLAY_TICKER, darknessOverlayTicker);
-        tag.putString(PREVIOUS_LOCATION, previousLocation);
-        tag.putString(CURRENT_LOCATION, currentLocation);
-        tag.putInt(TITLE_ALPHA_TICKER, titleAlphaTicker);
         return tag;
     }
 
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        darknessLandTicker = tag.getInt(DARKNESS_LAND_TICKER);
-        darknessOverlayTicker = tag.getInt(DARKNESS_OVERLAY_TICKER);
-        previousLocation = tag.getString(PREVIOUS_LOCATION);
-        currentLocation = tag.getString(CURRENT_LOCATION);
-        titleAlphaTicker = tag.getInt(TITLE_ALPHA_TICKER);
     }
 
     public void sync(@NotNull ScreenAnimationCapability cap) {
@@ -124,5 +133,6 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         this.previousLocation = cap.previousLocation;
         this.currentLocation = cap.currentLocation;
         this.titleAlphaTicker = cap.titleAlphaTicker;
+        this.sealShineTicker = cap.sealShineTicker;
     }
 }

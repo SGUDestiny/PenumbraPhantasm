@@ -1,5 +1,7 @@
-package destiny.penumbra_phantasm.server.network;
+package destiny.penumbra_phantasm.client.network;
 
+import destiny.penumbra_phantasm.client.sound.MusicManager;
+import destiny.penumbra_phantasm.client.sound.MusicPriority;
 import destiny.penumbra_phantasm.client.sound.SoundAccess;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -44,6 +46,14 @@ public abstract class ClientBoundSoundPackets {
         @Override
         public boolean handle(Supplier<NetworkEvent.Context> ctx)
         {
+            ctx.get().enqueueWork(() ->
+            {
+                if (stop) {
+                    MusicManager.getInstance().stopMusic(MusicPriority.FOUNTAIN);
+                } else {
+                    MusicManager.getInstance().requestMusic(SoundAccess.getFountainMusic(), MusicPriority.FOUNTAIN, true);
+                }
+            });
             return true;
         }
     }

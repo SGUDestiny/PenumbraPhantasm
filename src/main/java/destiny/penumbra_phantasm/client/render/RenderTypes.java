@@ -2,7 +2,6 @@ package destiny.penumbra_phantasm.client.render;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import destiny.penumbra_phantasm.client.ModShaders;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -24,14 +23,15 @@ public class RenderTypes extends RenderType {
                         .createCompositeState(true));
     }
 
-    public static RenderType fountainDark(ResourceLocation rl)
+    public static RenderType fountainShockwave(ResourceLocation rl)
     {
-        return create("fountain_dark", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
+        return create("fountain_shockwave", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
                         .setTextureState(new TextureStateShard(rl, false, false))
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setWriteMaskState(COLOR_WRITE)
                         .setCullState(CULL)
                         .createCompositeState(true));
     }

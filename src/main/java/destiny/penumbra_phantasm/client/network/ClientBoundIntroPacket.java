@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.server.network;
+package destiny.penumbra_phantasm.client.network;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -36,7 +36,7 @@ public class ClientBoundIntroPacket
 	public boolean handle(Supplier<NetworkEvent.Context> ctx)
 	{
 		ctx.get().enqueueWork(() -> {
-			ClientboundPacketHandler.openIntroScreen(pos, level);
+			ClientBoundPacketHandler.openIntroScreen(pos, level);
 		});
 		return true;
 	}
