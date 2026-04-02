@@ -15,44 +15,37 @@
   "item.penumbra_phantasm.black_shard": "Black Shard",
   "item.penumbra_phantasm.item_music_medium_the_holy": "ITEM_MUSIC_MEDIUM",
   "item.penumbra_phantasm.item_music_medium_the_holy.desc": "Toby Fox - THE HOLY",
-
   "block.penumbra_phantasm.twilight_grass": "Twilight Grass",
   "block.penumbra_phantasm.twilight_grass_block": "Twilight Grass Block",
   "block.penumbra_phantasm.night_grass": "Night Grass",
   "block.penumbra_phantasm.night_grass_block": "Night Grass Block",
   "block.penumbra_phantasm.night_dirt": "Night Dirt",
-
   "block.penumbra_phantasm.umbrastone_pillar": "Umbrastone Pillar",
   "block.penumbra_phantasm.chiseled_umbrastone": "Chiseled Umbrastone",
-
   "block.penumbra_phantasm.polished_umbrastone": "Polished Umbrastone",
   "block.penumbra_phantasm.polished_umbrastone_stairs": "Polished Umbrastone Stairs",
   "block.penumbra_phantasm.polished_umbrastone_slab": "Polished Umbrastone Slab",
   "block.penumbra_phantasm.polished_umbrastone_wall": "Polished Umbrastone Wall",
   "block.penumbra_phantasm.polished_umbrastone_button": "Polished Umbrastone Button",
   "block.penumbra_phantasm.polished_umbrastone_pressure_plate": "Polished Umbrastone Pressure Plate",
-
   "block.penumbra_phantasm.umbrastone_bricks": "Umbrastone Bricks",
   "block.penumbra_phantasm.umbrastone_brick_stairs": "Umbrastone Brick Stairs",
   "block.penumbra_phantasm.umbrastone_brick_slab": "Umbrastone Brick Slab",
   "block.penumbra_phantasm.umbrastone_brick_wall": "Umbrastone Brick Wall",
   "block.penumbra_phantasm.umbrastone_brick_button": "Umbrastone Brick Button",
   "block.penumbra_phantasm.umbrastone_brick_pressure_plate": "Umbrastone Brick Pressure Plate",
-
   "block.penumbra_phantasm.umbrastone": "Umbrastone",
   "block.penumbra_phantasm.umbrastone_stairs": "Umbrastone Stairs",
   "block.penumbra_phantasm.umbrastone_slab": "Umbrastone Slab",
   "block.penumbra_phantasm.umbrastone_wall": "Umbrastone Wall",
   "block.penumbra_phantasm.umbrastone_button": "Umbrastone Button",
   "block.penumbra_phantasm.umbrastone_pressure_plate": "Umbrastone Pressure Plate",
-
   "block.penumbra_phantasm.cobbled_umbrastone": "Cobbled Umbrastone",
   "block.penumbra_phantasm.cobbled_umbrastone_stairs": "Cobbled Umbrastone Stairs",
   "block.penumbra_phantasm.cobbled_umbrastone_slab": "Cobbled Umbrastone Slab",
   "block.penumbra_phantasm.cobbled_umbrastone_wall": "Cobbled Umbrastone Wall",
   "block.penumbra_phantasm.cobbled_umbrastone_button": "Cobbled Umbrastone Button",
   "block.penumbra_phantasm.cobbled_umbrastone_pressure_plate": "Cobbled Umbrastone Pressure Plate",
-
   "block.penumbra_phantasm.scarlet_leaves": "Scarlet Leaves",
   "block.penumbra_phantasm.scarlet_bush": "Scarlet Bush",
   "block.penumbra_phantasm.scarlet_log": "Scarlet Log",
@@ -84,9 +77,7 @@
   "block.penumbra_phantasm.dark_marble_queen": "Dark Marble Queen",
   "block.penumbra_phantasm.dark_marble_king": "Dark Marble King",
   "block.penumbra_phantasm.hearth": "Hearth",
-
   "itemGroup.penumbra_phantasm.main": "PENUMBRA PHANTASM",
-
   "advancement.penumbra_phantasm.soul_hearth.title": "Your Power",
   "advancement.penumbra_phantasm.soul_hearth.description": "Awaken a SOUL Hearth",
   "advancement.penumbra_phantasm.dark_fountain_make.title": "Twilight Reverie",
@@ -119,7 +110,6 @@
   "advancement.penumbra_phantasm.depths.description": "Visit the DEPTHS",
   "advancement.penumbra_phantasm.erosion_death.title": "Overwhelming Darkness",
   "advancement.penumbra_phantasm.erosion_death.description": "Die from Erosion",
-
   "sound.penumbra_phantasm.fountain_make": "Ground cracks open with determination",
   "sound.penumbra_phantasm.fountain_target": "Determination sparkles",
   "sound.penumbra_phantasm.fountain_wind": "Darkness flows from the fountain",
@@ -136,7 +126,6 @@
   "sound.penumbra_phantasm.dark_world_fall": "Falling into darkness",
   "sound.penumbra_phantasm.dark_world_land": "Landing onto darkness",
   "sound.penumbra_phantasm.him_quick": "Entering a dark world",
-
   "tooltip.penumbra_phantasm.netherite_knife.lv": "LV: ",
   "tooltip.penumbra_phantasm.netherite_knife.exp": "EXP: ",
   "tooltip.penumbra_phantasm.soul_hearth.soul_type": "SOUL: ",
@@ -150,15 +139,12 @@
   "tooltip.penumbra_phantasm.soul_hearth.determination": "DETERMINATION: ",
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "TRUST: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "THE SOUL WITHIN REJECTS YOU.",
-
   "location.penumbra_phantasm.dark_fountain": "Dark Fountain",
   "location.penumbra_phantasm.dark_fountain.description": "'The geyser that gives this land form...'",
-
   "biome.penumbra_phantasm.field_of_hopes_and_dreams": "Field of Hopes and Dreams",
   "biome.penumbra_phantasm.field_of_hopes_and_dreams.description": "'Where dream and shadow meet...'",
   "biome.penumbra_phantasm.scarlet_forest": "Scarlet Forest",
   "biome.penumbra_phantasm.scarlet_forest.description": "'The forest of eternal autumn'",
-
   "message.penumbra_phantasm.making_fountain_invalid_position": "Must be standing on a full block",
   "message.penumbra_phantasm.making_fountain_not_enough_key_blocks": "Not enough blocks to power your imagination...",
   "message.penumbra_phantasm.making_fountain_inside_dark_world": "You feel like that's not a good idea...",
@@ -168,7 +154,6 @@
   "message.penumbra_phantasm.pushed_away_by_fountain": "The flow of darkness pushes you away...",
   "message.penumbra_phantasm.sealing_fountain_no_fountain_nearby": "But there was no fountain nearby...",
   "message.penumbra_phantasm.sealing_fountain_already_being_sealed": "But the fountain was already being sealed...",
-
   "screen.penumbra_phantasm.intro.line.1": "A R E    Y O U",
   "screen.penumbra_phantasm.intro.line.2": "T H E R E ?",
   "screen.penumbra_phantasm.intro.line.3": "A R E   W E",
@@ -182,7 +167,6 @@
   "screen.penumbra_phantasm.intro.line.11": "F I R S T .",
   "screen.penumbra_phantasm.intro.line.12": "Y O U   M U S T   C H O O S E",
   "screen.penumbra_phantasm.intro.line.13": "A   G I F T .",
-  
   "screen.penumbra_phantasm.intro.choice.1": "DETERMINATION",
   "screen.penumbra_phantasm.intro.choice.2": "PATIENCE",
   "screen.penumbra_phantasm.intro.choice.3": "BRAVERY",
@@ -190,7 +174,6 @@
   "screen.penumbra_phantasm.intro.choice.5": "PERSEVERANCE",
   "screen.penumbra_phantasm.intro.choice.6": "KINDNESS",
   "screen.penumbra_phantasm.intro.choice.7": "JUSTICE",
-
   "screen.penumbra_phantasm.intro.line.14": "A   W O N D E R F U L   C H O I C E .",
   "screen.penumbra_phantasm.intro.line.15.1": "' ",
   "screen.penumbra_phantasm.intro.line.15.2": " . '",
@@ -207,5 +190,10 @@
   "screen.penumbra_phantasm.intro.line.26": "W I T H   T H E   P O W E R",
   "screen.penumbra_phantasm.intro.line.27": "O F   < D E L T A R U N E . >",
   "screen.penumbra_phantasm.intro.line.28": "S T E P   F O R T H",
-  "screen.penumbra_phantasm.intro.line.29": "I N T O   T H I S   W O R L D !"
+  "screen.penumbra_phantasm.intro.line.29": "I N T O   T H I S   W O R L D !",
+  "block.penumbra_phantasm.scarlet_fence": "Scarlet Fence",
+  "block.penumbra_phantasm.scarlet_fence_gate": "Scarlet Fence Gate",
+  "block.penumbra_phantasm.scarlet_trapdoor": "Scarlet Trapdoor",
+  "block.penumbra_phantasm.scarlet_button": "Scarlet Button",
+  "block.penumbra_phantasm.scarlet_pressure_plate": "Scarlet Pressure Plate"
 }

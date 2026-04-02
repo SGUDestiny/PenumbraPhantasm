@@ -1,5 +1,5 @@
 {
-  "parent": "penumbra_phantasm:block/stairs_emissive",
+  "parent": "penumbra_phantasm:block/template_stairs_emissive",
   "textures": {
     "bottom": "penumbra_phantasm:block/dark_candy_planks",
     "side": "penumbra_phantasm:block/dark_candy_planks",

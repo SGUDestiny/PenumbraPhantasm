@@ -1,0 +1,14 @@
+{
+  "replace": false,
+  "values": [
+    "penumbra_phantasm:scarlet_planks",
+    "penumbra_phantasm:scarlet_stairs",
+    "penumbra_phantasm:scarlet_slab",
+    "penumbra_phantasm:scarlet_fence",
+    "penumbra_phantasm:scarlet_fence_gate",
+    "penumbra_phantasm:scarlet_door",
+    "penumbra_phantasm:scarlet_trapdoor",
+    "penumbra_phantasm:scarlet_button",
+    "penumbra_phantasm:scarlet_pressure_plate"
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "parent": "penumbra_phantasm:block/tinted_cross_emissive",
+  "parent": "penumbra_phantasm:block/template_tinted_cross_emissive",
   "textures": {
     "cross": "penumbra_phantasm:block/scarlet_sapling"
   }

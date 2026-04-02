@@ -1,5 +1,5 @@
 {
-  "parent": "penumbra_phantasm:block/slab_emissive",
+  "parent": "penumbra_phantasm:block/template_slab_emissive",
   "textures": {
     "bottom": "penumbra_phantasm:block/dark_candy_planks",
     "side": "penumbra_phantasm:block/dark_candy_planks",

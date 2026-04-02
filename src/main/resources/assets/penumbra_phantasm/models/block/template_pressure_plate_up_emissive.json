@@ -1,0 +1,98 @@
+{
+    "parent":  "block/block",
+    "display":  {
+                    "thirdperson_righthand":  {
+                                                  "rotation":  [75, 45, 0],
+                                                  "translation":  [0, 2.5, 2],
+                                                  "scale":  [0.375, 0.375, 0.375]
+                                              },
+                    "firstperson_righthand":  {
+                                                   "rotation":  [0, 45, 0],
+                                                   "translation":  [0, 4.2, 0],
+                                                   "scale":  [0.4, 0.4, 0.4]
+                                               },
+                    "firstperson_lefthand":  {
+                                                  "rotation":  [0, 225, 0],
+                                                  "translation":  [0, 4.2, 0],
+                                                  "scale":  [0.4, 0.4, 0.4]
+                                              }
+                },
+    "textures":  {
+                     "particle":  "#texture"
+                 },
+    "elements":  [
+                     {
+                         "from":  [
+                                      1,
+                                      0,
+                                      1
+                                  ],
+                         "to":  [
+                                    15,
+                                    1,
+                                    15
+                                ],
+                         "faces":  {
+                                       "down":  {
+                                                    "uv":  [
+                                                               1,
+                                                               1,
+                                                               15,
+                                                               15
+                                                           ],
+                                                    "texture":  "#texture",
+                                                    "cullface":  "down"
+                                                },
+                                       "up":  {
+                                                  "uv":  [
+                                                             1,
+                                                             1,
+                                                             15,
+                                                             15
+                                                         ],
+                                                  "texture":  "#texture"
+                                              },
+                                       "north":  {
+                                                     "uv":  [
+                                                                1,
+                                                                15,
+                                                                15,
+                                                                16
+                                                            ],
+                                                     "texture":  "#texture"
+                                                 },
+                                       "south":  {
+                                                     "uv":  [
+                                                                1,
+                                                                15,
+                                                                15,
+                                                                16
+                                                            ],
+                                                     "texture":  "#texture"
+                                                 },
+                                       "west":  {
+                                                    "uv":  [
+                                                               1,
+                                                               15,
+                                                               15,
+                                                               16
+                                                           ],
+                                                    "texture":  "#texture"
+                                                },
+                                       "east":  {
+                                                    "uv":  [
+                                                               1,
+                                                               15,
+                                                               15,
+                                                               16
+                                                           ],
+                                                    "texture":  "#texture"
+                                                }
+                                   },
+                         "forge_data":  {
+                                            "sky_light":  15,
+                                            "block_light":  15
+                                        }
+                     }
+                 ]
+}

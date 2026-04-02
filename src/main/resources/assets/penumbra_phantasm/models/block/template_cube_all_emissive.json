@@ -1,5 +1,5 @@
 {
-  "parent": "penumbra_phantasm:block/cube_emissive",
+  "parent": "penumbra_phantasm:block/template_cube_emissive",
   "textures": {
     "particle": "#all",
     "down": "#all",

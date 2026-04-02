@@ -80,7 +80,12 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.SCARLET_PLANKS.get());
                 output.accept(BlockRegistry.SCARLET_SLAB.get());
                 output.accept(BlockRegistry.SCARLET_STAIRS.get());
+                output.accept(BlockRegistry.SCARLET_FENCE.get());
+                output.accept(BlockRegistry.SCARLET_FENCE_GATE.get());
                 output.accept(BlockRegistry.SCARLET_DOOR.get());
+                output.accept(BlockRegistry.SCARLET_TRAPDOOR.get());
+                output.accept(BlockRegistry.SCARLET_BUTTON.get());
+                output.accept(BlockRegistry.SCARLET_PRESSURE_PLATE.get());
 
                 output.accept(ItemRegistry.DARK_CANDY.get());
                 output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());

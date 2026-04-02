@@ -1,0 +1,163 @@
+package destiny.penumbra_phantasm.server.datagen.blockset;
+
+final class WoodBlockstateTemplates2 {
+
+    static final String BUTTON = """
+            {
+              "variants": {
+                "face=ceiling,facing=east,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "x": 180,
+                  "y": 270
+                },
+                "face=ceiling,facing=east,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "x": 180,
+                  "y": 270
+                },
+                "face=ceiling,facing=north,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "x": 180,
+                  "y": 180
+                },
+                "face=ceiling,facing=north,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "x": 180,
+                  "y": 180
+                },
+                "face=ceiling,facing=south,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "x": 180
+                },
+                "face=ceiling,facing=south,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "x": 180
+                },
+                "face=ceiling,facing=west,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "x": 180,
+                  "y": 90
+                },
+                "face=ceiling,facing=west,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "x": 180,
+                  "y": 90
+                },
+                "face=floor,facing=east,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "y": 90
+                },
+                "face=floor,facing=east,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "y": 90
+                },
+                "face=floor,facing=north,powered=false": {
+                  "model": "minecraft:block/cherry_button"
+                },
+                "face=floor,facing=north,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed"
+                },
+                "face=floor,facing=south,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "y": 180
+                },
+                "face=floor,facing=south,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "y": 180
+                },
+                "face=floor,facing=west,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "y": 270
+                },
+                "face=floor,facing=west,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "y": 270
+                },
+                "face=wall,facing=east,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "uvlock": true,
+                  "x": 90,
+                  "y": 90
+                },
+                "face=wall,facing=east,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "uvlock": true,
+                  "x": 90,
+                  "y": 90
+                },
+                "face=wall,facing=north,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "uvlock": true,
+                  "x": 90
+                },
+                "face=wall,facing=north,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "uvlock": true,
+                  "x": 90
+                },
+                "face=wall,facing=south,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "uvlock": true,
+                  "x": 90,
+                  "y": 180
+                },
+                "face=wall,facing=south,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "uvlock": true,
+                  "x": 90,
+                  "y": 180
+                },
+                "face=wall,facing=west,powered=false": {
+                  "model": "minecraft:block/cherry_button",
+                  "uvlock": true,
+                  "x": 90,
+                  "y": 270
+                },
+                "face=wall,facing=west,powered=true": {
+                  "model": "minecraft:block/cherry_button_pressed",
+                  "uvlock": true,
+                  "x": 90,
+                  "y": 270
+                }
+              }
+            }""";
+
+    static final String PRESSURE_PLATE = """
+            {
+              "variants": {
+                "powered=false": {
+                  "model": "minecraft:block/cherry_pressure_plate"
+                },
+                "powered=true": {
+                  "model": "minecraft:block/cherry_pressure_plate_down"
+                }
+              }
+            }""";
+
+    static final String SLAB = """
+            {
+              "variants": {
+                "type=bottom": {
+                  "model": "minecraft:block/cherry_slab"
+                },
+                "type=double": {
+                  "model": "minecraft:block/cherry_planks"
+                },
+                "type=top": {
+                  "model": "minecraft:block/cherry_slab_top"
+                }
+              }
+            }""";
+
+    static final String PLANKS = """
+            {
+              "variants": {
+                "": {
+                  "model": "minecraft:block/cherry_planks"
+                }
+              }
+            }""";
+
+    private WoodBlockstateTemplates2() {
+    }
+}

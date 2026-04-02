@@ -1,5 +1,5 @@
 {
-  "parent": "penumbra_phantasm:block/tinted_flower_pot_cross_emissive",
+  "parent": "penumbra_phantasm:block/template_tinted_flower_pot_cross_emissive",
   "textures": {
     "plant": "penumbra_phantasm:block/scarlet_sapling"
   }

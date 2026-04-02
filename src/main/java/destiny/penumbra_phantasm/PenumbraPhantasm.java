@@ -27,6 +27,8 @@ import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -135,6 +137,9 @@ public class PenumbraPhantasm {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
+                ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCARLET_DOOR.get(), RenderType.cutout());
+                ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCARLET_TRAPDOOR.get(), RenderType.cutout());
+
                 EntityRenderers.register(EntityRegistry.SEALING_SOUL.get(), SealingSoulEntityRenderer::new);
 
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());

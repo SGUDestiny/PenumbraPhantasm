@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_orientable_trapdoor_open_emissive",
+  "textures": {
+    "texture": "penumbra_phantasm:block/scarlet_trapdoor"
+  }
+}

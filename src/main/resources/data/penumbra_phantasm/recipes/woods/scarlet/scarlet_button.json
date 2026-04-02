@@ -1,14 +1,13 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "category": "building",
-  "group": "planks",
+  "category": "redstone",
+  "group": "wooden_button",
   "ingredients": [
     {
       "item": "penumbra_phantasm:scarlet_planks"
     }
   ],
   "result": {
-    "count": 4,
-    "item": "penumbra_phantasm:scarlet_stairs"
+    "item": "penumbra_phantasm:scarlet_button"
   }
 }

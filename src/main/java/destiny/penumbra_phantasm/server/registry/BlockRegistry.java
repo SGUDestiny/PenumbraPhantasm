@@ -8,6 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
@@ -151,6 +152,18 @@ public class BlockRegistry {
     public static final RegistryObject<Block> SCARLET_TRAPDOOR = registerBlock("scarlet_trapdoor",
             () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD).noOcclusion(), BlockSetType.CHERRY));
+    public static final RegistryObject<Block> SCARLET_FENCE = registerBlock("scarlet_fence",
+            () -> new FenceBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_FENCE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> SCARLET_FENCE_GATE = registerBlock("scarlet_fence_gate",
+            () -> new FenceGateBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_FENCE_GATE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD), WoodType.CHERRY));
+    public static final RegistryObject<Block> SCARLET_BUTTON = registerBlock("scarlet_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_BUTTON)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD).noCollission(), BlockSetType.CHERRY, 30, true));
+    public static final RegistryObject<Block> SCARLET_PRESSURE_PLATE = registerBlock("scarlet_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CHERRY_PRESSURE_PLATE)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD), BlockSetType.CHERRY));
 
     public static final RegistryObject<Block> DARK_CANDY_BLOCK = registerBlock("dark_candy_block",
             () -> new DarkCandyBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
