@@ -38,8 +38,37 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());
                 output.accept(BlockRegistry.NIGHT_DIRT.get());
+
+                output.accept(BlockRegistry.UMBRASTONE_PILLAR.get());
+                output.accept(BlockRegistry.CHISELED_UMBRASTONE.get());
+
+                output.accept(BlockRegistry.POLISHED_UMBRASTONE.get());
+                output.accept(BlockRegistry.POLISHED_UMBRASTONE_STAIRS.get());
+                output.accept(BlockRegistry.POLISHED_UMBRASTONE_SLAB.get());
+                output.accept(BlockRegistry.POLISHED_UMBRASTONE_WALL.get());
+                output.accept(BlockRegistry.POLISHED_UMBRASTONE_BUTTON.get());
+                output.accept(BlockRegistry.POLISHED_UMBRASTONE_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.UMBRASTONE_BRICKS.get());
+                output.accept(BlockRegistry.UMBRASTONE_BRICK_STAIRS.get());
+                output.accept(BlockRegistry.UMBRASTONE_BRICK_SLAB.get());
+                output.accept(BlockRegistry.UMBRASTONE_BRICK_WALL.get());
+                output.accept(BlockRegistry.UMBRASTONE_BRICK_BUTTON.get());
+                output.accept(BlockRegistry.UMBRASTONE_BRICK_PRESSURE_PLATE.get());
+
                 output.accept(BlockRegistry.UMBRASTONE.get());
+                output.accept(BlockRegistry.UMBRASTONE_STAIRS.get());
+                output.accept(BlockRegistry.UMBRASTONE_SLAB.get());
+                output.accept(BlockRegistry.UMBRASTONE_WALL.get());
+                output.accept(BlockRegistry.UMBRASTONE_BUTTON.get());
+                output.accept(BlockRegistry.UMBRASTONE_PRESSURE_PLATE.get());
+
                 output.accept(BlockRegistry.COBBLED_UMBRASTONE.get());
+                output.accept(BlockRegistry.COBBLED_UMBRASTONE_STAIRS.get());
+                output.accept(BlockRegistry.COBBLED_UMBRASTONE_SLAB.get());
+                output.accept(BlockRegistry.COBBLED_UMBRASTONE_WALL.get());
+                output.accept(BlockRegistry.COBBLED_UMBRASTONE_BUTTON.get());
+                output.accept(BlockRegistry.COBBLED_UMBRASTONE_PRESSURE_PLATE.get());
 
                 output.accept(BlockRegistry.TWILIGHT_GRASS.get());
                 output.accept(BlockRegistry.TWILIGHT_GRASS_BLOCK.get());

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/umbrastone",
+    "side": "penumbra_phantasm:block/umbrastone",
+    "top": "penumbra_phantasm:block/umbrastone"
+  }
+}

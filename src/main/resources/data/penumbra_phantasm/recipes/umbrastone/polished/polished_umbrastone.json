@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "S": {
+      "item": "penumbra_phantasm:cobbled_umbrastone"
+    }
+  },
+  "pattern": [
+    "SS",
+    "SS"
+  ],
+  "result": {
+    "count": 4,
+    "item": "penumbra_phantasm:polished_umbrastone"
+  },
+  "show_notification": true
+}

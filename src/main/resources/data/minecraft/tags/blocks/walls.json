@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "penumbra_phantasm:polished_umbrastone_wall",
+    "penumbra_phantasm:umbrastone_brick_wall",
+    "penumbra_phantasm:umbrastone_wall",
+    "penumbra_phantasm:cobbled_umbrastone_wall"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "stone_slab",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:polished_umbrastone"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "count": 6,
+    "item": "penumbra_phantasm:polished_umbrastone_slab"
+  },
+  "show_notification": true
+}

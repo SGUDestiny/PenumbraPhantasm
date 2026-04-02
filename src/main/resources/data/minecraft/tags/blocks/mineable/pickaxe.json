@@ -3,8 +3,6 @@
   "values": [
     "penumbra_phantasm:scarlet_marble",
     "penumbra_phantasm:dark_marble",
-    "penumbra_phantasm:umbrastone",
-    "penumbra_phantasm:cobbled_umbrastone",
 
     "penumbra_phantasm:scarlet_marble_pawn",
     "penumbra_phantasm:scarlet_marble_rook",
@@ -18,6 +16,37 @@
     "penumbra_phantasm:dark_marble_knight",
     "penumbra_phantasm:dark_marble_bishop",
     "penumbra_phantasm:dark_marble_queen",
-    "penumbra_phantasm:dark_marble_king"
+    "penumbra_phantasm:dark_marble_king",
+
+    "penumbra_phantasm:umbrastone_pillar",
+    "penumbra_phantasm:chiseled_umbrastone",
+
+    "penumbra_phantasm:polished_umbrastone",
+    "penumbra_phantasm:polished_umbrastone_stairs",
+    "penumbra_phantasm:polished_umbrastone_slab",
+    "penumbra_phantasm:polished_umbrastone_wall",
+    "penumbra_phantasm:polished_umbrastone_button",
+    "penumbra_phantasm:polished_umbrastone_pressure_plate",
+
+    "penumbra_phantasm:umbrastone_bricks",
+    "penumbra_phantasm:umbrastone_brick_stairs",
+    "penumbra_phantasm:umbrastone_brick_slab",
+    "penumbra_phantasm:umbrastone_brick_wall",
+    "penumbra_phantasm:umbrastone_brick_button",
+    "penumbra_phantasm:umbrastone_brick_pressure_plate",
+
+    "penumbra_phantasm:umbrastone",
+    "penumbra_phantasm:umbrastone_stairs",
+    "penumbra_phantasm:umbrastone_slab",
+    "penumbra_phantasm:umbrastone_wall",
+    "penumbra_phantasm:umbrastone_button",
+    "penumbra_phantasm:umbrastone_pressure_plate",
+
+    "penumbra_phantasm:cobbled_umbrastone",
+    "penumbra_phantasm:cobbled_umbrastone_stairs",
+    "penumbra_phantasm:cobbled_umbrastone_slab",
+    "penumbra_phantasm:cobbled_umbrastone_wall",
+    "penumbra_phantasm:cobbled_umbrastone_button",
+    "penumbra_phantasm:cobbled_umbrastone_pressure_plate"
   ]
 }

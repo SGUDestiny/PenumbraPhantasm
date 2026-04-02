@@ -1,6 +1,16 @@
 {
   "replace": false,
   "values": [
+    "penumbra_phantasm:umbrastone_pillar",
+    "penumbra_phantasm:chiseled_umbrastone",
+
+    "penumbra_phantasm:polished_umbrastone",
+    "penumbra_phantasm:polished_umbrastone_stairs",
+    "penumbra_phantasm:polished_umbrastone_slab",
+    "penumbra_phantasm:polished_umbrastone_wall",
+    "penumbra_phantasm:polished_umbrastone_button",
+    "penumbra_phantasm:polished_umbrastone_pressure_plate",
+
     "penumbra_phantasm:umbrastone"
   ]
 }

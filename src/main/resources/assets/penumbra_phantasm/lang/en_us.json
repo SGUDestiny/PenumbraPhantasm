@@ -21,8 +21,38 @@
   "block.penumbra_phantasm.night_grass": "Night Grass",
   "block.penumbra_phantasm.night_grass_block": "Night Grass Block",
   "block.penumbra_phantasm.night_dirt": "Night Dirt",
+
+  "block.penumbra_phantasm.umbrastone_pillar": "Umbrastone Pillar",
+  "block.penumbra_phantasm.chiseled_umbrastone": "Chiseled Umbrastone",
+
+  "block.penumbra_phantasm.polished_umbrastone": "Polished Umbrastone",
+  "block.penumbra_phantasm.polished_umbrastone_stairs": "Polished Umbrastone Stairs",
+  "block.penumbra_phantasm.polished_umbrastone_slab": "Polished Umbrastone Slab",
+  "block.penumbra_phantasm.polished_umbrastone_wall": "Polished Umbrastone Wall",
+  "block.penumbra_phantasm.polished_umbrastone_button": "Polished Umbrastone Button",
+  "block.penumbra_phantasm.polished_umbrastone_pressure_plate": "Polished Umbrastone Pressure Plate",
+
+  "block.penumbra_phantasm.umbrastone_bricks": "Umbrastone Bricks",
+  "block.penumbra_phantasm.umbrastone_brick_stairs": "Umbrastone Brick Stairs",
+  "block.penumbra_phantasm.umbrastone_brick_slab": "Umbrastone Brick Slab",
+  "block.penumbra_phantasm.umbrastone_brick_wall": "Umbrastone Brick Wall",
+  "block.penumbra_phantasm.umbrastone_brick_button": "Umbrastone Brick Button",
+  "block.penumbra_phantasm.umbrastone_brick_pressure_plate": "Umbrastone Brick Pressure Plate",
+
   "block.penumbra_phantasm.umbrastone": "Umbrastone",
+  "block.penumbra_phantasm.umbrastone_stairs": "Umbrastone Stairs",
+  "block.penumbra_phantasm.umbrastone_slab": "Umbrastone Slab",
+  "block.penumbra_phantasm.umbrastone_wall": "Umbrastone Wall",
+  "block.penumbra_phantasm.umbrastone_button": "Umbrastone Button",
+  "block.penumbra_phantasm.umbrastone_pressure_plate": "Umbrastone Pressure Plate",
+
   "block.penumbra_phantasm.cobbled_umbrastone": "Cobbled Umbrastone",
+  "block.penumbra_phantasm.cobbled_umbrastone_stairs": "Cobbled Umbrastone Stairs",
+  "block.penumbra_phantasm.cobbled_umbrastone_slab": "Cobbled Umbrastone Slab",
+  "block.penumbra_phantasm.cobbled_umbrastone_wall": "Cobbled Umbrastone Wall",
+  "block.penumbra_phantasm.cobbled_umbrastone_button": "Cobbled Umbrastone Button",
+  "block.penumbra_phantasm.cobbled_umbrastone_pressure_plate": "Cobbled Umbrastone Pressure Plate",
+
   "block.penumbra_phantasm.scarlet_leaves": "Scarlet Leaves",
   "block.penumbra_phantasm.scarlet_bush": "Scarlet Bush",
   "block.penumbra_phantasm.scarlet_log": "Scarlet Log",

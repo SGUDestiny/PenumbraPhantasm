@@ -48,76 +48,76 @@ public class BlockRegistry {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> POLISHED_UMBRASTONE_STAIRS = registerBlock("polished_umbrastone_stairs",
-            () -> new StairBlock(BlockRegistry.POLISHED_UMBRASTONE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new StairBlock(BlockRegistry.POLISHED_UMBRASTONE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.STONE_STAIRS)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> POLISHED_UMBRASTONE_SLAB = registerBlock("polished_umbrastone_slab",
-            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.STONE_SLAB)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> POLISHED_UMBRASTONE_WALL = registerBlock("polished_umbrastone_wall",
-            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.STONE_BRICK_WALL)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> POLISHED_UMBRASTONE_BUTTON = registerBlock("polished_umbrastone_button",
-            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE_BUTTON)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE), BlockSetType.STONE, 30, false));
     public static final RegistryObject<Block> POLISHED_UMBRASTONE_PRESSURE_PLATE = registerBlock("polished_umbrastone_pressure_plate",
-            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE_PRESSURE_PLATE)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE), BlockSetType.STONE));
 
     public static final RegistryObject<Block> UMBRASTONE_BRICKS = registerBlock("umbrastone_bricks",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE_BRICKS)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> UMBRASTONE_BRICK_STAIRS = registerBlock("umbrastone_brick_stairs",
-            () -> new StairBlock(BlockRegistry.POLISHED_UMBRASTONE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new StairBlock(BlockRegistry.POLISHED_UMBRASTONE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.STONE_BRICK_STAIRS)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> UMBRASTONE_BRICK_SLAB = registerBlock("umbrastone_brick_slab",
-            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.STONE_BRICK_SLAB)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> UMBRASTONE_BRICK_WALL = registerBlock("umbrastone_brick_wall",
-            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.STONE_BRICK_WALL)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> UMBRASTONE_BRICK_BUTTON = registerBlock("umbrastone_brick_button",
-            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE_BUTTON)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE), BlockSetType.STONE, 30, false));
     public static final RegistryObject<Block> UMBRASTONE_BRICK_PRESSURE_PLATE = registerBlock("umbrastone_brick_pressure_plate",
-            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE_PRESSURE_PLATE)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE), BlockSetType.STONE));
 
     public static final RegistryObject<Block> UMBRASTONE = registerBlock("umbrastone",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.STONE)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> UMBRASTONE_STAIRS = registerBlock("umbrastone_stairs",
-            () -> new StairBlock(BlockRegistry.UMBRASTONE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new StairBlock(BlockRegistry.UMBRASTONE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.STONE_STAIRS)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> UMBRASTONE_SLAB = registerBlock("umbrastone_slab",
-            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.STONE_SLAB)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> UMBRASTONE_WALL = registerBlock("umbrastone_wall",
-            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.STONE_BRICK_WALL)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> UMBRASTONE_BUTTON = registerBlock("umbrastone_button",
-            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE_BUTTON)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE), BlockSetType.STONE, 30, false));
     public static final RegistryObject<Block> UMBRASTONE_PRESSURE_PLATE = registerBlock("umbrastone_pressure_plate",
-            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE)
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE_PRESSURE_PLATE)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE), BlockSetType.STONE));
 
     public static final RegistryObject<Block> COBBLED_UMBRASTONE = registerBlock("cobbled_umbrastone",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> COBBLED_UMBRASTONE_STAIRS = registerBlock("cobbled_umbrastone_stairs",
-            () -> new StairBlock(BlockRegistry.COBBLED_UMBRASTONE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)
+            () -> new StairBlock(BlockRegistry.COBBLED_UMBRASTONE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.COBBLESTONE_STAIRS)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> COBBLED_UMBRASTONE_SLAB = registerBlock("cobbled_umbrastone_slab",
-            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE_SLAB)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> COBBLED_UMBRASTONE_WALL = registerBlock("cobbled_umbrastone_wall",
-            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)
+            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE_WALL)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE)));
     public static final RegistryObject<Block> COBBLED_UMBRASTONE_BUTTON = registerBlock("cobbled_umbrastone_button",
-            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE_BUTTON)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE), BlockSetType.STONE, 30, false));
     public static final RegistryObject<Block> COBBLED_UMBRASTONE_PRESSURE_PLATE = registerBlock("cobbled_umbrastone_pressure_plate",
-            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.COBBLESTONE)
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE_PRESSURE_PLATE)
                     .mapColor(MapColor.COLOR_BLUE).sound(SoundType.STONE), BlockSetType.STONE));
 
     public static final RegistryObject<Block> SCARLET_BUSH = registerBlock("scarlet_bush",

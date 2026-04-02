@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:polished_umbrastone_slab"
+    }
+  },
+  "pattern": [
+    "#",
+    "#"
+  ],
+  "result": {
+    "item": "penumbra_phantasm:chiseled_umbrastone"
+  },
+  "show_notification": true
+}
