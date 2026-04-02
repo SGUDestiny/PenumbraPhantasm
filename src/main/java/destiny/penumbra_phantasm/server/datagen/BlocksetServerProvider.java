@@ -1,8 +1,9 @@
-package destiny.penumbra_phantasm.server.datagen.blockset;
+package destiny.penumbra_phantasm.server.datagen;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.registry.BlocksetDefinitions;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -494,21 +495,6 @@ public final class BlocksetServerProvider {
             BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/wooden_pressure_plates.json", List.of(mod + ":" + w.pressurePlate()));
             BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/pressure_plates.json", List.of(mod + ":" + w.pressurePlate()));
             BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/pressure_plates.json", List.of(mod + ":" + w.pressurePlate()));
-
-            if (w.includeToStone()) {
-                String one = mod + ":" + w.planks();
-                BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/stone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/stone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/forge/tags/blocks/stone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/forge/tags/items/stone.json", List.of(one));
-            }
-            if (w.includeToCobblestone()) {
-                String one = mod + ":" + w.planks();
-                BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/cobblestone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/cobblestone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/forge/tags/blocks/cobblestone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/forge/tags/items/cobblestone.json", List.of(one));
-            }
 
             String needsPath = switch (w.miningTier()) {
                 case 1 -> "data/minecraft/tags/blocks/needs_stone_tool.json";

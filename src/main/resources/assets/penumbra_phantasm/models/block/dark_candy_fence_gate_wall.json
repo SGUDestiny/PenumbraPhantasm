@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_fence_gate_wall_emissive",
+  "textures": {
+    "texture": "penumbra_phantasm:block/dark_candy"
+  }
+}

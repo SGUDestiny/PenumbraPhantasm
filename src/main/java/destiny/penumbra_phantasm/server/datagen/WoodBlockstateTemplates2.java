@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.server.datagen.blockset;
+package destiny.penumbra_phantasm.server.datagen;
 
 final class WoodBlockstateTemplates2 {
 

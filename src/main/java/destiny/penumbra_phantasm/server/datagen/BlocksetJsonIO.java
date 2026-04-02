@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.server.datagen.blockset;
+package destiny.penumbra_phantasm.server.datagen;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

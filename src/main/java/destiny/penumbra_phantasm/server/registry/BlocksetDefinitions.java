@@ -1,4 +1,7 @@
-package destiny.penumbra_phantasm.server.datagen.blockset;
+package destiny.penumbra_phantasm.server.registry;
+
+import destiny.penumbra_phantasm.server.datagen.StoneBlockset;
+import destiny.penumbra_phantasm.server.datagen.WoodBlockset;
 
 import java.util.List;
 
@@ -23,8 +26,14 @@ public final class BlocksetDefinitions {
                     "scarlet_planks",
                     "woods/scarlet",
                     "scarlet_log",
-                    false,
-                    false,
+                    0,
+                    true
+            ),
+            new WoodBlockset(
+                    "dark_candy",
+                    "dark_candy",
+                    "woods/dark_candy",
+                    "dark_candy_log",
                     0,
                     true
             )

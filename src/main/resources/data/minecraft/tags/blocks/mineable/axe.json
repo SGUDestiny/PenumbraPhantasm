@@ -15,6 +15,11 @@
     "penumbra_phantasm:scarlet_fence_gate",
     "penumbra_phantasm:scarlet_trapdoor",
     "penumbra_phantasm:scarlet_button",
-    "penumbra_phantasm:scarlet_pressure_plate"
+    "penumbra_phantasm:scarlet_pressure_plate",
+    "penumbra_phantasm:dark_candy_fence",
+    "penumbra_phantasm:dark_candy_fence_gate",
+    "penumbra_phantasm:dark_candy_trapdoor",
+    "penumbra_phantasm:dark_candy_button",
+    "penumbra_phantasm:dark_candy_pressure_plate"
   ]
 }

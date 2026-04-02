@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.server.datagen.blockset;
+package destiny.penumbra_phantasm.server.datagen;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 
@@ -9,8 +9,6 @@ public record WoodBlockset(
         String textureKey,
         String recipeSubPath,
         String fullBlockMaterialItem,
-        boolean includeToStone,
-        boolean includeToCobblestone,
         int miningTier,
         boolean isEmissive
 ) {
