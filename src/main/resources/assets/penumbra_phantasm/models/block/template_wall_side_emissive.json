@@ -1,0 +1,34 @@
+{
+  "textures": {
+    "particle": "#wall"
+  },
+  "elements": [
+    {
+      "from": [5, 0, 0],
+      "to": [11, 14, 8],
+      "forge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "faces": {
+        "down": {
+          "texture": "#wall",
+          "cullface": "down"
+        },
+        "up": {
+          "texture": "#wall"
+        },
+        "north": {
+          "texture": "#wall",
+          "cullface": "north"
+        },
+        "west": {
+          "texture": "#wall"
+        },
+        "east": {
+          "texture": "#wall"
+        }
+      }
+    }
+  ]
+}

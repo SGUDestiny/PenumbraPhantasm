@@ -7,6 +7,8 @@ import destiny.penumbra_phantasm.server.registry.BlocksetRegistry;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class BlocksetServerProvider {
     private BlocksetServerProvider() {
@@ -15,11 +17,84 @@ public final class BlocksetServerProvider {
     public static void run(Path mainResourcesRoot) throws IOException {
         String mod = PenumbraPhantasm.MODID;
         for (StoneBlockset s : BlocksetRegistry.STONE_BLOCKSETS) {
-            emitStoneRecipesAndLoot(mainResourcesRoot, mod, s);
+            emitStoneFamilyRecipesAndLoot(mainResourcesRoot, mod, s);
+        }
+        for (BricksBlockset b : BlocksetRegistry.BRICKS_BLOCKSETS) {
+            emitStoneFamilyRecipesAndLoot(mainResourcesRoot, mod, b);
         }
         for (WoodBlockset w : BlocksetRegistry.WOOD_BLOCKSETS) {
             emitWoodRecipesAndLoot(mainResourcesRoot, mod, w);
         }
+        mergeAllBlocksetTags(mainResourcesRoot, mod);
+    }
+
+    private static void mergeAllBlocksetTags(Path root, String mod) throws IOException {
+        for (StoneBlockset s : BlocksetRegistry.STONE_BLOCKSETS) {
+            mergeStoneFamilyTags(root, mod, s);
+        }
+        for (BricksBlockset b : BlocksetRegistry.BRICKS_BLOCKSETS) {
+            mergeStoneFamilyTags(root, mod, b);
+        }
+        for (WoodBlockset w : BlocksetRegistry.WOOD_BLOCKSETS) {
+            mergeWoodTags(root, mod, w);
+        }
+    }
+
+    private static List<String> blockIds(String mod, Iterable<String> names) {
+        List<String> out = new ArrayList<>();
+        for (String n : names) {
+            out.add(mod + ":" + n);
+        }
+        return out;
+    }
+
+    private static void mergeStoneFamilyTags(Path root, String mod, StoneFamilyBlockset s) throws IOException {
+        List<String> all = blockIds(mod, s.allPieces());
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/mineable/pickaxe.json", all);
+        String needsTier = switch (s.miningTier()) {
+            case 1 -> "data/minecraft/tags/blocks/needs_stone_tool.json";
+            case 2 -> "data/minecraft/tags/blocks/needs_iron_tool.json";
+            case 3 -> "data/minecraft/tags/blocks/needs_diamond_tool.json";
+            default -> null;
+        };
+        if (needsTier != null) {
+            BlocksetJsonIO.mergeTagBlockAndItem(root, needsTier, all);
+        }
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/stairs.json", List.of(mod + ":" + s.stairs()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/slabs.json", List.of(mod + ":" + s.slab()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/walls.json", List.of(mod + ":" + s.wall()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/stone_buttons.json", List.of(mod + ":" + s.button()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/stone_pressure_plates.json", List.of(mod + ":" + s.pressurePlate()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/buttons.json", List.of(mod + ":" + s.button()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/pressure_plates.json", List.of(mod + ":" + s.pressurePlate()));
+        String baseId = mod + ":" + s.baseName();
+        if (s.includeToStone()) {
+            BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/stone.json", List.of(baseId));
+            BlocksetJsonIO.mergeTagBlockAndItem(root, "data/forge/tags/blocks/stone.json", List.of(baseId));
+        }
+        if (s.includeToCobblestone()) {
+            BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/cobblestone.json", List.of(baseId));
+            BlocksetJsonIO.mergeTagBlockAndItem(root, "data/forge/tags/blocks/cobblestone.json", List.of(baseId));
+        }
+    }
+
+    private static void mergeWoodTags(Path root, String mod, WoodBlockset w) throws IOException {
+        List<String> all = blockIds(mod, w.allPieces());
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/mineable/axe.json", all);
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/planks.json", List.of(mod + ":" + w.planks()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/wooden_stairs.json", List.of(mod + ":" + w.stairs()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/wooden_slabs.json", List.of(mod + ":" + w.slab()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/wooden_fences.json", List.of(mod + ":" + w.fence()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/fences.json", List.of(mod + ":" + w.fence()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/fence_gates.json", List.of(mod + ":" + w.fenceGate()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/wooden_doors.json", List.of(mod + ":" + w.door()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/doors.json", List.of(mod + ":" + w.door()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/wooden_trapdoors.json", List.of(mod + ":" + w.trapdoor()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/trapdoors.json", List.of(mod + ":" + w.trapdoor()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/wooden_buttons.json", List.of(mod + ":" + w.button()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/buttons.json", List.of(mod + ":" + w.button()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/wooden_pressure_plates.json", List.of(mod + ":" + w.pressurePlate()));
+        BlocksetJsonIO.mergeTagBlockAndItem(root, "data/minecraft/tags/blocks/pressure_plates.json", List.of(mod + ":" + w.pressurePlate()));
     }
 
     private static String recipesFolder(String mod, String recipeSubPath) {
@@ -29,7 +104,7 @@ public final class BlocksetServerProvider {
         return "data/" + mod + "/recipes/" + recipeSubPath + "/";
     }
 
-    private static void emitStoneRecipesAndLoot(Path root, String mod, StoneBlockset s) throws IOException {
+    private static void emitStoneFamilyRecipesAndLoot(Path root, String mod, StoneFamilyBlockset s) throws IOException {
         String folder = recipesFolder(mod, s.recipeSubPath());
         String base = s.baseName();
         String mat = mod + ":" + s.fullBlockMaterialItem();

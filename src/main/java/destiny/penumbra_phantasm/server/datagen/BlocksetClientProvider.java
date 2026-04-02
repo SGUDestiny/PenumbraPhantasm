@@ -13,17 +13,21 @@ public final class BlocksetClientProvider {
 
     public static void run(Path mainResourcesRoot) throws IOException {
         for (StoneBlockset s : BlocksetRegistry.STONE_BLOCKSETS) {
-            emitStone(mainResourcesRoot, s);
+            emitStoneFamily(mainResourcesRoot, s);
+        }
+        for (BricksBlockset b : BlocksetRegistry.BRICKS_BLOCKSETS) {
+            emitStoneFamily(mainResourcesRoot, b);
         }
         for (WoodBlockset w : BlocksetRegistry.WOOD_BLOCKSETS) {
             emitWood(mainResourcesRoot, w);
         }
     }
 
-    private static void emitStone(Path root, StoneBlockset s) throws IOException {
+    private static void emitStoneFamily(Path root, StoneFamilyBlockset s) throws IOException {
         String mod = PenumbraPhantasm.MODID;
         String tx = s.textureKey();
         String b = s.baseName();
+        boolean em = s.isEmissive();
         BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + b + ".json", BlocksetStoneTemplates.fullBlockstate(s));
         BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + s.stairs() + ".json", BlocksetStoneTemplates.stairBlockstate(s));
         BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + s.slab() + ".json", BlocksetStoneTemplates.slabBlockstate(s));
@@ -31,20 +35,20 @@ public final class BlocksetClientProvider {
         BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + s.button() + ".json", BlocksetStoneTemplates.buttonBlockstate(s));
         BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + s.pressurePlate() + ".json", BlocksetStoneTemplates.pressurePlateBlockstate(s));
 
-        writeModel(root, mod, b, BlocksetStoneModels.cubeAll(tx));
-        writeModel(root, mod, s.stairs(), BlocksetStoneModels.stairs(tx));
-        writeModel(root, mod, s.stairs() + "_inner", BlocksetStoneModels.stairsInner(tx));
-        writeModel(root, mod, s.stairs() + "_outer", BlocksetStoneModels.stairsOuter(tx));
-        writeModel(root, mod, s.slab(), BlocksetStoneModels.slab(tx));
-        writeModel(root, mod, s.slab() + "_top", BlocksetStoneModels.slabTop(tx));
-        writeModel(root, mod, s.wall() + "_post", BlocksetStoneModels.wallPost(tx));
-        writeModel(root, mod, s.wall() + "_side", BlocksetStoneModels.wallSide(tx));
-        writeModel(root, mod, s.wall() + "_side_tall", BlocksetStoneModels.wallSideTall(tx));
-        writeModel(root, mod, s.wall() + "_inventory", BlocksetStoneModels.wallInventory(tx));
-        writeModel(root, mod, s.button(), BlocksetStoneModels.button(tx));
-        writeModel(root, mod, s.button() + "_pressed", BlocksetStoneModels.buttonPressed(tx));
-        writeModel(root, mod, s.pressurePlate(), BlocksetStoneModels.pressurePlateUp(tx));
-        writeModel(root, mod, s.pressurePlate() + "_down", BlocksetStoneModels.pressurePlateDown(tx));
+        writeModel(root, mod, b, BlocksetStoneModels.cubeAll(tx, em));
+        writeModel(root, mod, s.stairs(), BlocksetStoneModels.stairs(tx, em));
+        writeModel(root, mod, s.stairs() + "_inner", BlocksetStoneModels.stairsInner(tx, em));
+        writeModel(root, mod, s.stairs() + "_outer", BlocksetStoneModels.stairsOuter(tx, em));
+        writeModel(root, mod, s.slab(), BlocksetStoneModels.slab(tx, em));
+        writeModel(root, mod, s.slab() + "_top", BlocksetStoneModels.slabTop(tx, em));
+        writeModel(root, mod, s.wall() + "_post", BlocksetStoneModels.wallPost(tx, em));
+        writeModel(root, mod, s.wall() + "_side", BlocksetStoneModels.wallSide(tx, em));
+        writeModel(root, mod, s.wall() + "_side_tall", BlocksetStoneModels.wallSideTall(tx, em));
+        writeModel(root, mod, s.wall() + "_inventory", BlocksetStoneModels.wallInventory(tx, em));
+        writeModel(root, mod, s.button(), BlocksetStoneModels.button(tx, em));
+        writeModel(root, mod, s.button() + "_pressed", BlocksetStoneModels.buttonPressed(tx, em));
+        writeModel(root, mod, s.pressurePlate(), BlocksetStoneModels.pressurePlateUp(tx, em));
+        writeModel(root, mod, s.pressurePlate() + "_down", BlocksetStoneModels.pressurePlateDown(tx, em));
 
         for (String p : s.allPieces()) {
             itemParentBlock(root, mod, p);

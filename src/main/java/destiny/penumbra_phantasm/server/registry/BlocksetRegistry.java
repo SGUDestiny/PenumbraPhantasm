@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.server.registry;
 
+import destiny.penumbra_phantasm.server.datagen.BricksBlockset;
 import destiny.penumbra_phantasm.server.datagen.StoneBlockset;
 import destiny.penumbra_phantasm.server.datagen.WoodBlockset;
 
@@ -14,14 +15,8 @@ public final class BlocksetRegistry {
                     "umbrastone/polished",
                     "cobbled_umbrastone",
                     1,
-                    false
-            ),
-            new StoneBlockset(
-                    "umbrastone_bricks",
-                    "umbrastone_bricks",
-                    "umbrastone/bricks",
-                    "",
-                    1,
+                    false,
+                    false,
                     false
             ),
             new StoneBlockset(
@@ -30,6 +25,8 @@ public final class BlocksetRegistry {
                     "umbrastone",
                     "",
                     1,
+                    false,
+                    false,
                     false
             ),
             new StoneBlockset(
@@ -38,24 +35,42 @@ public final class BlocksetRegistry {
                     "umbrastone/cobbled",
                     "",
                     1,
-                    false
+                    false,
+                    false,
+                    true
             ),
-
             new StoneBlockset(
                     "polished_scarlet_marble",
                     "polished_scarlet_marble",
                     "marble/scarlet/polished",
                     "",
                     1,
-                    true
+                    true,
+                    false,
+                    false
+            )
+    );
+
+    public static final List<BricksBlockset> BRICKS_BLOCKSETS = List.of(
+            new BricksBlockset(
+                    "umbrastone_bricks",
+                    "umbrastone_bricks",
+                    "umbrastone/bricks",
+                    "",
+                    1,
+                    false,
+                    false,
+                    false
             ),
-            new StoneBlockset(
+            new BricksBlockset(
                     "scarlet_marble_bricks",
                     "scarlet_marble_bricks",
                     "marble/scarlet/bricks",
                     "",
                     1,
-                    true
+                    true,
+                    false,
+                    false
             )
     );
 

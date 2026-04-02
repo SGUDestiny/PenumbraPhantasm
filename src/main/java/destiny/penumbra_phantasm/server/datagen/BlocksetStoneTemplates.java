@@ -466,7 +466,7 @@ public final class BlocksetStoneTemplates {
     private BlocksetStoneTemplates() {
     }
 
-    public static JsonElement stairBlockstate(StoneBlockset s) {
+    public static JsonElement stairBlockstate(StoneFamilyBlockset s) {
         return stairBlockstateStem(s.stairs());
     }
 
@@ -474,28 +474,28 @@ public final class BlocksetStoneTemplates {
         return parse(STAIR_BLOCKSTATE.replace("polished_umbrastone_stairs", stairsStem));
     }
 
-    public static JsonElement wallBlockstate(StoneBlockset s) {
+    public static JsonElement wallBlockstate(StoneFamilyBlockset s) {
         return parse(subst(s, WALL_BLOCKSTATE));
     }
 
-    public static JsonElement buttonBlockstate(StoneBlockset s) {
+    public static JsonElement buttonBlockstate(StoneFamilyBlockset s) {
         return parse(subst(s, BUTTON_BLOCKSTATE));
     }
 
-    public static JsonElement pressurePlateBlockstate(StoneBlockset s) {
+    public static JsonElement pressurePlateBlockstate(StoneFamilyBlockset s) {
         return parse(subst(s, PRESSURE_PLATE_BLOCKSTATE));
     }
 
-    public static JsonElement slabBlockstate(StoneBlockset s) {
+    public static JsonElement slabBlockstate(StoneFamilyBlockset s) {
         return parse(subst(s, SLAB_BLOCKSTATE));
     }
 
-    public static JsonElement fullBlockstate(StoneBlockset s) {
+    public static JsonElement fullBlockstate(StoneFamilyBlockset s) {
         return parse(subst(s, FULL_BLOCKSTATE));
     }
 
-    private static String subst(StoneBlockset s, String t) {
-        return t.replace("polished_umbrastone", s.baseName());
+    private static String subst(StoneFamilyBlockset s, String t) {
+        return t.replace("polished_umbrastone_", s.variantStem() + "_").replace("polished_umbrastone", s.baseName());
     }
 
     private static JsonElement parse(String json) {
