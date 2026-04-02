@@ -1,21 +1,8 @@
 package destiny.penumbra_phantasm.server.datagen;
 
-import destiny.penumbra_phantasm.PenumbraPhantasm;
-
 import java.util.List;
 
-public record WoodBlockset(
-        String baseName,
-        String textureKey,
-        String recipeSubPath,
-        String fullBlockMaterialItem,
-        int miningTier,
-        boolean isEmissive
-) {
-    public String blockId(String path) {
-        return PenumbraPhantasm.MODID + ":" + path;
-    }
-
+public record WoodBlockset(String baseName, String textureKey, String recipeSubPath, String fullBlockMaterialItem, int miningTier, boolean isEmissive) {
     public String planks() {
         return baseName + "_planks";
     }

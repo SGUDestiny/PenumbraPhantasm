@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 public final class BlocksetVanillaWoodSubst {
-
     private static final String NS = "penumbra_phantasm:block/";
 
     private BlocksetVanillaWoodSubst() {

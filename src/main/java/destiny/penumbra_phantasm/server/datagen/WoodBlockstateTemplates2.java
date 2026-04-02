@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.datagen;
 
 final class WoodBlockstateTemplates2 {
-
     static final String BUTTON = """
             {
               "variants": {

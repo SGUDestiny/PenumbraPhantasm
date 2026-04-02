@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 
 public final class BlocksetStoneModels {
-
     private BlocksetStoneModels() {
     }
 

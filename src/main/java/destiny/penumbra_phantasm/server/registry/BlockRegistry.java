@@ -168,6 +168,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> DARK_CANDY_BLOCK = registerBlock("dark_candy_block",
             () -> new DarkCandyBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission().noOcclusion().instabreak().randomTicks()));
+
     public static final RegistryObject<Block> DARK_CANDY_LEAVES = registerBlock("dark_candy_leaves",
             () -> new DarkCandyLeaves(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()));
@@ -178,17 +179,29 @@ public class BlockRegistry {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block> DARK_CANDY_STAIRS = registerBlock("dark_candy_stairs",
-            () -> new StairBlock(DARK_CANDY_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+            () -> new StairBlock(DARK_CANDY_PLANKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.CHERRY_STAIRS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block> DARK_CANDY_SLAB = registerBlock("dark_candy_slab",
-            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_SLAB)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block> DARK_CANDY_DOOR = registerBlock("dark_candy_door",
-            () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+            () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_DOOR)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD).noOcclusion(), BlockSetType.CHERRY));
     public static final RegistryObject<Block> DARK_CANDY_TRAPDOOR = registerBlock("dark_candy_trapdoor",
-            () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_PLANKS)
+            () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_TRAPDOOR)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD).noOcclusion(), BlockSetType.CHERRY));
+    public static final RegistryObject<Block> DARK_CANDY_FENCE = registerBlock("dark_candy_fence",
+            () -> new FenceBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_FENCE)
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> DARK_CANDY_FENCE_GATE = registerBlock("dark_candy_fence_gate",
+            () -> new FenceGateBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_FENCE_GATE)
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD), WoodType.CHERRY));
+    public static final RegistryObject<Block> DARK_CANDY_BUTTON = registerBlock("dark_candy_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_BUTTON)
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD).noCollission(), BlockSetType.CHERRY, 30, true));
+    public static final RegistryObject<Block> DARK_CANDY_PRESSURE_PLATE = registerBlock("dark_candy_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CHERRY_PRESSURE_PLATE)
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_WOOD), BlockSetType.CHERRY));
 
     public static final RegistryObject<Block> SCARLET_MARBLE = registerBlock("scarlet_marble",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE)

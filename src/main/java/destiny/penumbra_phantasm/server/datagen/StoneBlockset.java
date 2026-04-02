@@ -1,23 +1,8 @@
 package destiny.penumbra_phantasm.server.datagen;
 
-import destiny.penumbra_phantasm.PenumbraPhantasm;
-
 import java.util.List;
 
-public record StoneBlockset(
-        String baseName,
-        String textureKey,
-        String recipeSubPath,
-        String fullBlockMaterialItem,
-        boolean includeToStone,
-        boolean includeToCobblestone,
-        int miningTier,
-        boolean isEmissive
-) {
-    public String blockId(String path) {
-        return PenumbraPhantasm.MODID + ":" + path;
-    }
-
+public record StoneBlockset(String baseName, String textureKey, String recipeSubPath, String fullBlockMaterialItem, int miningTier, boolean isEmissive) {
     public String stairs() {
         return baseName + "_stairs";
     }

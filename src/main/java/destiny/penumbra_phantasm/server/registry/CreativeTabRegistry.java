@@ -73,9 +73,11 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.TWILIGHT_GRASS.get());
                 output.accept(BlockRegistry.TWILIGHT_GRASS_BLOCK.get());
 
+                output.accept(BlockRegistry.SCARLET_BUSH.get());
+
                 output.accept(BlockRegistry.SCARLET_SAPLING.get());
                 output.accept(BlockRegistry.SCARLET_LEAVES.get());
-                output.accept(BlockRegistry.SCARLET_BUSH.get());
+
                 output.accept(BlockRegistry.SCARLET_LOG.get());
                 output.accept(BlockRegistry.SCARLET_PLANKS.get());
                 output.accept(BlockRegistry.SCARLET_SLAB.get());
@@ -89,12 +91,19 @@ public class CreativeTabRegistry {
 
                 output.accept(ItemRegistry.DARK_CANDY.get());
                 output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());
+
                 output.accept(BlockRegistry.DARK_CANDY_LEAVES.get());
+
                 output.accept(BlockRegistry.DARK_CANDY_LOG.get());
                 output.accept(BlockRegistry.DARK_CANDY_PLANKS.get());
                 output.accept(BlockRegistry.DARK_CANDY_SLAB.get());
                 output.accept(BlockRegistry.DARK_CANDY_STAIRS.get());
+                output.accept(BlockRegistry.DARK_CANDY_FENCE.get());
+                output.accept(BlockRegistry.DARK_CANDY_FENCE_GATE.get());
                 output.accept(BlockRegistry.DARK_CANDY_DOOR.get());
+                output.accept(BlockRegistry.DARK_CANDY_TRAPDOOR.get());
+                output.accept(BlockRegistry.DARK_CANDY_BUTTON.get());
+                output.accept(BlockRegistry.DARK_CANDY_PRESSURE_PLATE.get());
 
                 output.accept(BlockRegistry.SCARLET_MARBLE.get());
                 output.accept(BlockRegistry.DARK_MARBLE.get());

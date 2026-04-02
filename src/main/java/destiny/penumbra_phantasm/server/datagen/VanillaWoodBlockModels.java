@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 public final class VanillaWoodBlockModels {
-
     private static final String PLANKS = "{\"parent\":\"minecraft:block/cube_all\",\"textures\":{\"all\":\"minecraft:block/cherry_planks\"}}";
     private static final String PLANKS_EM = "{\"parent\":\"penumbra_phantasm:block/template_cube_all_emissive\",\"textures\":{\"all\":\"minecraft:block/cherry_planks\"}}";
     private static final String STAIRS = "{\"parent\":\"minecraft:block/stairs\",\"textures\":{\"bottom\":\"minecraft:block/cherry_planks\",\"side\":\"minecraft:block/cherry_planks\",\"top\":\"minecraft:block/cherry_planks\"}}";

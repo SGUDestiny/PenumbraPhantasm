@@ -1,10 +1,10 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "building",
-  "group": "wooden_slab",
+  "group": "stone_slab",
   "key": {
     "#": {
-      "item": "penumbra_phantasm:dark_candy_planks"
+      "item": "penumbra_phantasm:umbrastone_bricks"
     }
   },
   "pattern": [
@@ -12,7 +12,7 @@
   ],
   "result": {
     "count": 6,
-    "item": "penumbra_phantasm:dark_candy_slab"
+    "item": "penumbra_phantasm:umbrastone_bricks_slab"
   },
   "show_notification": true
 }

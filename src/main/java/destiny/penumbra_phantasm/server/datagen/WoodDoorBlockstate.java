@@ -4,7 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 final class WoodDoorBlockstate {
-
     private static final String RAW = """
             {
               "variants": {

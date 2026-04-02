@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "stone_button",
+  "ingredients": [
+    {
+      "item": "penumbra_phantasm:umbrastone_bricks"
+    }
+  ],
+  "result": {
+    "item": "penumbra_phantasm:umbrastone_bricks_button"
+  }
+}

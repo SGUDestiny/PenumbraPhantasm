@@ -10,7 +10,6 @@ import java.nio.file.Path;
 
 @Mod.EventBusSubscriber(modid = PenumbraPhantasm.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public final class BlocksetDatagen {
-
     private BlocksetDatagen() {
     }
 

@@ -3,28 +3,23 @@ package destiny.penumbra_phantasm.server.datagen;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.registry.BlocksetDefinitions;
+import destiny.penumbra_phantasm.server.registry.BlocksetRegistry;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 
 public final class BlocksetServerProvider {
-
     private BlocksetServerProvider() {
     }
 
     public static void run(Path mainResourcesRoot) throws IOException {
         String mod = PenumbraPhantasm.MODID;
-        for (StoneBlockset s : BlocksetDefinitions.STONE_BLOCKSETS) {
+        for (StoneBlockset s : BlocksetRegistry.STONE_BLOCKSETS) {
             emitStoneRecipesAndLoot(mainResourcesRoot, mod, s);
         }
-        for (WoodBlockset w : BlocksetDefinitions.WOOD_BLOCKSETS) {
+        for (WoodBlockset w : BlocksetRegistry.WOOD_BLOCKSETS) {
             emitWoodRecipesAndLoot(mainResourcesRoot, mod, w);
         }
-        mergeStoneTags(mainResourcesRoot, mod);
-        mergeWoodTags(mainResourcesRoot, mod);
     }
 
     private static String recipesFolder(String mod, String recipeSubPath) {
@@ -385,126 +380,5 @@ public final class BlocksetServerProvider {
                 .replace("%BLK%", block)
                 .replace("%ITEM%", doorItem);
         return JsonParser.parseString(j);
-    }
-
-    private static void mergeStoneTags(Path root, String mod) throws IOException {
-        for (StoneBlockset s : BlocksetDefinitions.STONE_BLOCKSETS) {
-            List<String> all = new ArrayList<>();
-            for (String p : s.allPieces()) {
-                all.add(mod + ":" + p);
-            }
-            String[] pickB = { "data/minecraft/tags/blocks/mineable/pickaxe.json", "data/minecraft/tags/items/mineable/pickaxe.json" };
-            for (String path : pickB) {
-                BlocksetJsonIO.mergeTag(root, path, all);
-            }
-            List<String> stairs = List.of(mod + ":" + s.stairs());
-            List<String> slabs = List.of(mod + ":" + s.slab());
-            List<String> walls = List.of(mod + ":" + s.wall());
-            List<String> buttons = List.of(mod + ":" + s.button());
-            List<String> plates = List.of(mod + ":" + s.pressurePlate());
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/stairs.json", stairs);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/stairs.json", stairs);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/slabs.json", slabs);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/slabs.json", slabs);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/walls.json", walls);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/walls.json", walls);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/buttons.json", buttons);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/buttons.json", buttons);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/pressure_plates.json", plates);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/pressure_plates.json", plates);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/stone_buttons.json", buttons);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/stone_buttons.json", buttons);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/stone_pressure_plates.json", plates);
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/stone_pressure_plates.json", plates);
-
-            if (s.includeToStone()) {
-                String one = mod + ":" + s.baseName();
-                BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/stone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/stone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/forge/tags/blocks/stone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/forge/tags/items/stone.json", List.of(one));
-            }
-            if (s.includeToCobblestone()) {
-                String one = mod + ":" + s.baseName();
-                BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/cobblestone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/cobblestone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/forge/tags/blocks/cobblestone.json", List.of(one));
-                BlocksetJsonIO.mergeTag(root, "data/forge/tags/items/cobblestone.json", List.of(one));
-            }
-
-            String needsPath = switch (s.miningTier()) {
-                case 1 -> "data/minecraft/tags/blocks/needs_stone_tool.json";
-                case 2 -> "data/minecraft/tags/blocks/needs_iron_tool.json";
-                case 3 -> "data/minecraft/tags/blocks/needs_diamond_tool.json";
-                default -> null;
-            };
-            if (needsPath != null) {
-                BlocksetJsonIO.mergeTag(root, needsPath, all);
-            }
-        }
-    }
-
-    private static void mergeWoodTags(Path root, String mod) throws IOException {
-        for (WoodBlockset w : BlocksetDefinitions.WOOD_BLOCKSETS) {
-            List<String> all = new ArrayList<>();
-            for (String p : w.allPieces()) {
-                all.add(mod + ":" + p);
-            }
-            String[] axeB = { "data/minecraft/tags/blocks/mineable/axe.json", "data/minecraft/tags/items/mineable/axe.json" };
-            for (String path : axeB) {
-                BlocksetJsonIO.mergeTag(root, path, all);
-            }
-
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/planks.json", List.of(mod + ":" + w.planks()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/planks.json", List.of(mod + ":" + w.planks()));
-
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/wooden_stairs.json", List.of(mod + ":" + w.stairs()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/wooden_stairs.json", List.of(mod + ":" + w.stairs()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/stairs.json", List.of(mod + ":" + w.stairs()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/stairs.json", List.of(mod + ":" + w.stairs()));
-
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/wooden_slabs.json", List.of(mod + ":" + w.slab()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/wooden_slabs.json", List.of(mod + ":" + w.slab()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/slabs.json", List.of(mod + ":" + w.slab()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/slabs.json", List.of(mod + ":" + w.slab()));
-
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/wooden_fences.json", List.of(mod + ":" + w.fence()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/wooden_fences.json", List.of(mod + ":" + w.fence()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/fences.json", List.of(mod + ":" + w.fence()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/fences.json", List.of(mod + ":" + w.fence()));
-
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/fence_gates.json", List.of(mod + ":" + w.fenceGate()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/fence_gates.json", List.of(mod + ":" + w.fenceGate()));
-
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/wooden_doors.json", List.of(mod + ":" + w.door()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/wooden_doors.json", List.of(mod + ":" + w.door()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/doors.json", List.of(mod + ":" + w.door()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/doors.json", List.of(mod + ":" + w.door()));
-
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/wooden_trapdoors.json", List.of(mod + ":" + w.trapdoor()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/wooden_trapdoors.json", List.of(mod + ":" + w.trapdoor()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/trapdoors.json", List.of(mod + ":" + w.trapdoor()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/trapdoors.json", List.of(mod + ":" + w.trapdoor()));
-
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/wooden_buttons.json", List.of(mod + ":" + w.button()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/wooden_buttons.json", List.of(mod + ":" + w.button()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/buttons.json", List.of(mod + ":" + w.button()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/buttons.json", List.of(mod + ":" + w.button()));
-
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/wooden_pressure_plates.json", List.of(mod + ":" + w.pressurePlate()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/wooden_pressure_plates.json", List.of(mod + ":" + w.pressurePlate()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/blocks/pressure_plates.json", List.of(mod + ":" + w.pressurePlate()));
-            BlocksetJsonIO.mergeTag(root, "data/minecraft/tags/items/pressure_plates.json", List.of(mod + ":" + w.pressurePlate()));
-
-            String needsPath = switch (w.miningTier()) {
-                case 1 -> "data/minecraft/tags/blocks/needs_stone_tool.json";
-                case 2 -> "data/minecraft/tags/blocks/needs_iron_tool.json";
-                case 3 -> "data/minecraft/tags/blocks/needs_diamond_tool.json";
-                default -> null;
-            };
-            if (needsPath != null) {
-                BlocksetJsonIO.mergeTag(root, needsPath, all);
-            }
-        }
     }
 }

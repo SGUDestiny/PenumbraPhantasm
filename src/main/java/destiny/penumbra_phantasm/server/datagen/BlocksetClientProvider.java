@@ -2,60 +2,22 @@ package destiny.penumbra_phantasm.server.datagen;
 
 import com.google.gson.JsonObject;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.registry.BlocksetDefinitions;
+import destiny.penumbra_phantasm.server.registry.BlocksetRegistry;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public final class BlocksetClientProvider {
-
     private BlocksetClientProvider() {
     }
 
     public static void run(Path mainResourcesRoot) throws IOException {
-        for (StoneBlockset s : BlocksetDefinitions.STONE_BLOCKSETS) {
+        for (StoneBlockset s : BlocksetRegistry.STONE_BLOCKSETS) {
             emitStone(mainResourcesRoot, s);
         }
-        for (WoodBlockset w : BlocksetDefinitions.WOOD_BLOCKSETS) {
+        for (WoodBlockset w : BlocksetRegistry.WOOD_BLOCKSETS) {
             emitWood(mainResourcesRoot, w);
         }
-        BlocksetJsonIO.mergeLang(mainResourcesRoot, "assets/" + PenumbraPhantasm.MODID + "/lang/en_us.json", buildLang());
-    }
-
-    private static Map<String, String> buildLang() {
-        Map<String, String> m = new LinkedHashMap<>();
-        String mod = PenumbraPhantasm.MODID;
-        for (StoneBlockset s : BlocksetDefinitions.STONE_BLOCKSETS) {
-            for (String p : s.allPieces()) {
-                m.put("block." + mod + "." + p, titleCase(p));
-            }
-        }
-        for (WoodBlockset w : BlocksetDefinitions.WOOD_BLOCKSETS) {
-            for (String p : w.allPieces()) {
-                m.put("block." + mod + "." + p, titleCase(p));
-            }
-        }
-        return m;
-    }
-
-    private static String titleCase(String snake) {
-        String[] parts = snake.split("_");
-        StringBuilder b = new StringBuilder();
-        for (String p : parts) {
-            if (b.length() > 0) {
-                b.append(' ');
-            }
-            if (p.isEmpty()) {
-                continue;
-            }
-            b.append(Character.toUpperCase(p.charAt(0)));
-            if (p.length() > 1) {
-                b.append(p.substring(1));
-            }
-        }
-        return b.toString();
     }
 
     private static void emitStone(Path root, StoneBlockset s) throws IOException {

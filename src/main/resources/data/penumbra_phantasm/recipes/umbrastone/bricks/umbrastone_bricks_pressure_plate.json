@@ -1,20 +1,17 @@
 {
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
-  "group": "wooden_door",
+  "group": "stone_pressure_plate",
   "key": {
     "#": {
-      "item": "penumbra_phantasm:dark_candy_planks"
+      "item": "penumbra_phantasm:umbrastone_bricks"
     }
   },
   "pattern": [
-    "##",
-    "##",
     "##"
   ],
   "result": {
-    "count": 3,
-    "item": "penumbra_phantasm:dark_candy_door"
+    "item": "penumbra_phantasm:umbrastone_bricks_pressure_plate"
   },
   "show_notification": true
 }

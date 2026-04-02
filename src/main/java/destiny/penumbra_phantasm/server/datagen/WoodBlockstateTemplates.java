@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.datagen;
 
 final class WoodBlockstateTemplates {
-
     static final String FENCE = """
             {
               "multipart": [

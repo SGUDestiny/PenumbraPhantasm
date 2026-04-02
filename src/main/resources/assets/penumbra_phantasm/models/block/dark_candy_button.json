@@ -1,6 +1,6 @@
 {
   "parent": "penumbra_phantasm:block/template_button_emissive",
   "textures": {
-    "texture": "penumbra_phantasm:block/dark_candy"
+    "texture": "penumbra_phantasm:block/dark_candy_planks"
   }
 }
