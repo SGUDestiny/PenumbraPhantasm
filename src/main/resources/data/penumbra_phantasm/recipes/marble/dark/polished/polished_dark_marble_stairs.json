@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "stone_stairs",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:polished_dark_marble"
+    }
+  },
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "result": {
+    "count": 4,
+    "item": "penumbra_phantasm:polished_dark_marble_stairs"
+  },
+  "show_notification": true
+}

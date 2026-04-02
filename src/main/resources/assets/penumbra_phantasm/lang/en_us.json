@@ -88,7 +88,13 @@
   "block.penumbra_phantasm.dark_candy_button": "Dark Candy Button",
   "block.penumbra_phantasm.dark_candy_pressure_plate": "Dark Candy Pressure Plate",
 
-  "block.penumbra_phantasm.scarlet_marble": "Scarlet Marble",
+  "block.penumbra_phantasm.polished_scarlet_marble": "Polished Scarlet Marble",
+  "block.penumbra_phantasm.polished_scarlet_marble_stairs": "Polished Scarlet Marble Stairs",
+  "block.penumbra_phantasm.polished_scarlet_marble_slab": "Polished Scarlet Marble Slab",
+  "block.penumbra_phantasm.polished_scarlet_marble_wall": "Polished Scarlet Marble Wall",
+  "block.penumbra_phantasm.polished_scarlet_marble_button": "Polished Scarlet Marble Button",
+  "block.penumbra_phantasm.polished_scarlet_marble_pressure_plate": "Polished Scarlet Marble Pressure Plate",
+
   "block.penumbra_phantasm.dark_marble": "Dark Marble",
 
   "block.penumbra_phantasm.scarlet_marble_pawn": "Scarlet Marble Pawn",

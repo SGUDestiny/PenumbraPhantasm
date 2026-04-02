@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/polished_scarlet_marble",
+    "side": "penumbra_phantasm:block/polished_scarlet_marble",
+    "top": "penumbra_phantasm:block/polished_scarlet_marble"
+  }
+}

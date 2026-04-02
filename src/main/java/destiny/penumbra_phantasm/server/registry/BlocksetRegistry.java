@@ -17,7 +17,7 @@ public final class BlocksetRegistry {
                     false
             ),
             new StoneBlockset(
-                    "umbrastone_brick",
+                    "umbrastone_bricks",
                     "umbrastone_bricks",
                     "umbrastone/bricks",
                     "",
@@ -50,26 +50,9 @@ public final class BlocksetRegistry {
                     true
             ),
             new StoneBlockset(
-                    "scarlet_marble_brick",
+                    "scarlet_marble_bricks",
                     "scarlet_marble_bricks",
                     "marble/scarlet/bricks",
-                    "",
-                    1,
-                    true
-            ),
-
-            new StoneBlockset(
-                    "polished_dark_marble",
-                    "polished_dark_marble",
-                    "marble/dark/polished",
-                    "",
-                    1,
-                    true
-            ),
-            new StoneBlockset(
-                    "dark_marble_brick",
-                    "dark_marble_bricks",
-                    "marble/dark/bricks",
                     "",
                     1,
                     true

@@ -80,8 +80,8 @@ public class CreativeTabRegistry {
 
                 output.accept(BlockRegistry.SCARLET_LOG.get());
                 output.accept(BlockRegistry.SCARLET_PLANKS.get());
-                output.accept(BlockRegistry.SCARLET_SLAB.get());
                 output.accept(BlockRegistry.SCARLET_STAIRS.get());
+                output.accept(BlockRegistry.SCARLET_SLAB.get());
                 output.accept(BlockRegistry.SCARLET_FENCE.get());
                 output.accept(BlockRegistry.SCARLET_FENCE_GATE.get());
                 output.accept(BlockRegistry.SCARLET_DOOR.get());
@@ -96,8 +96,8 @@ public class CreativeTabRegistry {
 
                 output.accept(BlockRegistry.DARK_CANDY_LOG.get());
                 output.accept(BlockRegistry.DARK_CANDY_PLANKS.get());
-                output.accept(BlockRegistry.DARK_CANDY_SLAB.get());
                 output.accept(BlockRegistry.DARK_CANDY_STAIRS.get());
+                output.accept(BlockRegistry.DARK_CANDY_SLAB.get());
                 output.accept(BlockRegistry.DARK_CANDY_FENCE.get());
                 output.accept(BlockRegistry.DARK_CANDY_FENCE_GATE.get());
                 output.accept(BlockRegistry.DARK_CANDY_DOOR.get());
@@ -105,7 +105,20 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.DARK_CANDY_BUTTON.get());
                 output.accept(BlockRegistry.DARK_CANDY_PRESSURE_PLATE.get());
 
-                output.accept(BlockRegistry.SCARLET_MARBLE.get());
+                output.accept(BlockRegistry.POLISHED_SCARLET_MARBLE.get());
+                output.accept(BlockRegistry.POLISHED_SCARLET_MARBLE_STAIRS.get());
+                output.accept(BlockRegistry.POLISHED_SCARLET_MARBLE_SLAB.get());
+                output.accept(BlockRegistry.POLISHED_SCARLET_MARBLE_WALL.get());
+                output.accept(BlockRegistry.POLISHED_SCARLET_MARBLE_BUTTON.get());
+                output.accept(BlockRegistry.POLISHED_SCARLET_MARBLE_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.SCARLET_MARBLE_BRICKS.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_BRICK_STAIRS.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_BRICK_SLAB.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_BRICK_WALL.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_BRICK_BUTTON.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_BRICK_PRESSURE_PLATE.get());
+
                 output.accept(BlockRegistry.DARK_MARBLE.get());
 
                 output.accept(BlockRegistry.SCARLET_MARBLE_PAWN.get());
