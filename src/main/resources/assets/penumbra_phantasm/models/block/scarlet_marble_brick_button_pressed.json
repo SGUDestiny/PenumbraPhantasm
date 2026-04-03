@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/button_pressed",
+  "parent": "penumbra_phantasm:block/template_button_pressed_emissive",
   "textures": {
     "texture": "penumbra_phantasm:block/scarlet_marble_bricks"
   }

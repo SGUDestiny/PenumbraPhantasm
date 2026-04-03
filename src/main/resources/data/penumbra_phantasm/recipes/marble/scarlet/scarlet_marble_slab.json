@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "stone_slab",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:scarlet_marble"
+    }
+  },
+  "pattern": [
+    "###"
+  ],
+  "result": {
+    "count": 6,
+    "item": "penumbra_phantasm:scarlet_marble_slab"
+  },
+  "show_notification": true
+}

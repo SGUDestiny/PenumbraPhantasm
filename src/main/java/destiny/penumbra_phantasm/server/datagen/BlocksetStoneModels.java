@@ -111,6 +111,15 @@ public final class BlocksetStoneModels {
         return o;
     }
 
+    public static JsonObject buttonInventory(String textureKey, boolean emissive) {
+        JsonObject o = new JsonObject();
+        o.addProperty("parent", emissive ? MOD + ":block/template_button_inventory_emissive" : "minecraft:block/button_inventory");
+        JsonObject t = new JsonObject();
+        t.addProperty("texture", tex(textureKey));
+        o.add("textures", t);
+        return o;
+    }
+
     public static JsonObject buttonPressed(String textureKey, boolean emissive) {
         JsonObject o = new JsonObject();
         o.addProperty("parent", emissive ? MOD + ":block/template_button_pressed_emissive" : "minecraft:block/button_pressed");

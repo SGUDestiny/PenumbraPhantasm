@@ -3,7 +3,7 @@
   "category": "building",
   "key": {
     "S": {
-      "item": "penumbra_phantasm:"
+      "item": "penumbra_phantasm:scarlet_marble"
     }
   },
   "pattern": [
@@ -12,7 +12,7 @@
   ],
   "result": {
     "count": 4,
-    "item": "penumbra_phantasm:scarlet_marble_brick"
+    "item": "penumbra_phantasm:scarlet_marble_bricks"
   },
   "show_notification": true
 }

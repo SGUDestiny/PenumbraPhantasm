@@ -46,12 +46,23 @@ public final class BlocksetClientProvider {
         writeModel(root, mod, s.wall() + "_side_tall", BlocksetStoneModels.wallSideTall(tx, em));
         writeModel(root, mod, s.wall() + "_inventory", BlocksetStoneModels.wallInventory(tx, em));
         writeModel(root, mod, s.button(), BlocksetStoneModels.button(tx, em));
+        writeModel(root, mod, s.button() + "_inventory", BlocksetStoneModels.buttonInventory(tx, em));
         writeModel(root, mod, s.button() + "_pressed", BlocksetStoneModels.buttonPressed(tx, em));
         writeModel(root, mod, s.pressurePlate(), BlocksetStoneModels.pressurePlateUp(tx, em));
         writeModel(root, mod, s.pressurePlate() + "_down", BlocksetStoneModels.pressurePlateDown(tx, em));
 
         for (String p : s.allPieces()) {
-            itemParentBlock(root, mod, p);
+            if (p.equals(s.wall())) {
+                JsonObject o = new JsonObject();
+                o.addProperty("parent", mod + ":block/" + s.wall() + "_inventory");
+                BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/item/" + p + ".json", o);
+            } else if (p.equals(s.button())) {
+                JsonObject o = new JsonObject();
+                o.addProperty("parent", mod + ":block/" + s.button() + "_inventory");
+                BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/item/" + p + ".json", o);
+            } else {
+                itemParentBlock(root, mod, p);
+            }
         }
     }
 

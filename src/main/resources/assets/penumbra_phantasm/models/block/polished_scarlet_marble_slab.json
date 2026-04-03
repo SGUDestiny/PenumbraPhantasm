@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/slab",
+  "parent": "penumbra_phantasm:block/template_slab_emissive",
   "textures": {
     "bottom": "penumbra_phantasm:block/polished_scarlet_marble",
     "side": "penumbra_phantasm:block/polished_scarlet_marble",

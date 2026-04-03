@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/template_wall_post",
+  "parent": "penumbra_phantasm:block/template_wall_post_emissive",
   "textures": {
     "wall": "penumbra_phantasm:block/polished_scarlet_marble"
   }

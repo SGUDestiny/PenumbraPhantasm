@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/pressure_plate_up",
+  "parent": "penumbra_phantasm:block/template_pressure_plate_up_emissive",
   "textures": {
     "texture": "penumbra_phantasm:block/polished_scarlet_marble"
   }

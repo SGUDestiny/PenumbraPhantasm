@@ -119,6 +119,20 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.SCARLET_MARBLE_BRICK_BUTTON.get());
                 output.accept(BlockRegistry.SCARLET_MARBLE_BRICK_PRESSURE_PLATE.get());
 
+                output.accept(BlockRegistry.SCARLET_MARBLE.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_STAIRS.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_SLAB.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_WALL.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_BUTTON.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE.get());
+                output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_STAIRS.get());
+                output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_SLAB.get());
+                output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_WALL.get());
+                output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_BUTTON.get());
+                output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_PRESSURE_PLATE.get());
+
                 output.accept(BlockRegistry.DARK_MARBLE.get());
 
                 output.accept(BlockRegistry.SCARLET_MARBLE_PAWN.get());

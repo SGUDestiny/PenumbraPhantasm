@@ -6,6 +6,8 @@
     "penumbra_phantasm:umbrastone_wall",
     "penumbra_phantasm:cobbled_umbrastone_wall",
     "penumbra_phantasm:polished_scarlet_marble_wall",
-    "penumbra_phantasm:scarlet_marble_brick_wall"
+    "penumbra_phantasm:scarlet_marble_brick_wall",
+    "penumbra_phantasm:scarlet_marble_wall",
+    "penumbra_phantasm:cobbled_scarlet_marble_wall"
   ]
 }

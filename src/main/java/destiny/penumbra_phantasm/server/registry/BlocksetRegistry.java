@@ -26,7 +26,7 @@ public final class BlocksetRegistry {
                     "",
                     1,
                     false,
-                    false,
+                    true,
                     false
             ),
             new StoneBlockset(
@@ -39,15 +39,36 @@ public final class BlocksetRegistry {
                     false,
                     true
             ),
+
             new StoneBlockset(
                     "polished_scarlet_marble",
                     "polished_scarlet_marble",
                     "marble/scarlet/polished",
-                    "",
+                    "cobbled_scarlet_marble",
                     1,
                     true,
                     false,
                     false
+            ),
+            new StoneBlockset(
+                    "scarlet_marble",
+                    "scarlet_marble",
+                    "marble/scarlet",
+                    "",
+                    1,
+                    true,
+                    true,
+                    false
+            ),
+            new StoneBlockset(
+                    "cobbled_scarlet_marble",
+                    "cobbled_scarlet_marble",
+                    "marble/scarlet/cobbled",
+                    "",
+                    1,
+                    true,
+                    false,
+                    true
             )
     );
 

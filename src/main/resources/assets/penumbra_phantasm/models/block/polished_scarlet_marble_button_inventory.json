@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/button_inventory",
+  "parent": "penumbra_phantasm:block/template_button_inventory_emissive",
   "textures": {
     "texture": "penumbra_phantasm:block/polished_scarlet_marble"
   }
