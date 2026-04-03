@@ -88,6 +88,9 @@
   "block.penumbra_phantasm.dark_candy_button": "Dark Candy Button",
   "block.penumbra_phantasm.dark_candy_pressure_plate": "Dark Candy Pressure Plate",
 
+  "block.penumbra_phantasm.scarlet_marble_pillar": "Scarlet Marble Pillar",
+  "block.penumbra_phantasm.chiseled_scarlet_marble": "Chiseled Scarlet Marble",
+
   "block.penumbra_phantasm.polished_scarlet_marble": "Polished Scarlet Marble",
   "block.penumbra_phantasm.polished_scarlet_marble_stairs": "Polished Scarlet Marble Stairs",
   "block.penumbra_phantasm.polished_scarlet_marble_slab": "Polished Scarlet Marble Slab",
@@ -115,6 +118,16 @@
   "block.penumbra_phantasm.cobbled_scarlet_marble_wall": "Cobbled Scarlet Marble Wall",
   "block.penumbra_phantasm.cobbled_scarlet_marble_button": "Cobbled Scarlet Marble Button",
   "block.penumbra_phantasm.cobbled_scarlet_marble_pressure_plate": "Cobbled Scarlet Marble Pressure Plate",
+
+  "block.penumbra_phantasm.dark_marble_pillar": "Dark Marble Pillar",
+  "block.penumbra_phantasm.chiseled_dark_marble": "Chiseled Dark Marble",
+
+  "block.penumbra_phantasm.polished_dark_marble": "Polished Dark Marble",
+  "block.penumbra_phantasm.polished_dark_marble_stairs": "Polished Dark Marble Stairs",
+  "block.penumbra_phantasm.polished_dark_marble_slab": "Polished Dark Marble Slab",
+  "block.penumbra_phantasm.polished_dark_marble_wall": "Polished Dark Marble Wall",
+  "block.penumbra_phantasm.polished_dark_marble_button": "Polished Dark Marble Button",
+  "block.penumbra_phantasm.polished_dark_marble_pressure_plate": "Polished Dark Marble Pressure Plate",
 
   "block.penumbra_phantasm.dark_marble": "Dark Marble",
 

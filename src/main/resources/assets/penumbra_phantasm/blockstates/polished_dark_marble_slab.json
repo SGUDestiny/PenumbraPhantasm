@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "penumbra_phantasm:block/polished_dark_marble_slab"
+    },
+    "type=double": {
+      "model": "penumbra_phantasm:block/polished_dark_marble"
+    },
+    "type=top": {
+      "model": "penumbra_phantasm:block/polished_dark_marble_slab_top"
+    }
+  }
+}

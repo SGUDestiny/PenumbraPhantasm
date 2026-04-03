@@ -69,6 +69,17 @@ public final class BlocksetRegistry {
                     true,
                     false,
                     true
+            ),
+
+            new StoneBlockset(
+                    "polished_dark_marble",
+                    "polished_dark_marble",
+                    "marble/dark/polished",
+                    "cobbled_dark_marble",
+                    1,
+                    true,
+                    false,
+                    false
             )
     );
 

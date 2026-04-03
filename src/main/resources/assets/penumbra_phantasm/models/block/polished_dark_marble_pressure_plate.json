@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_pressure_plate_up_emissive",
+  "textures": {
+    "texture": "penumbra_phantasm:block/polished_dark_marble"
+  }
+}

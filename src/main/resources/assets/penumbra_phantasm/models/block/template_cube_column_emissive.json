@@ -1,0 +1,12 @@
+{
+  "parent": "penumbra_phantasm:block/template_cube_emissive",
+  "textures": {
+    "particle": "#side",
+    "down": "#end",
+    "up": "#end",
+    "north": "#side",
+    "east": "#side",
+    "south": "#side",
+    "west": "#side"
+  }
+}

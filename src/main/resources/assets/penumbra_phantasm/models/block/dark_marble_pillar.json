@@ -1,0 +1,7 @@
+{
+  "parent": "penumbra_phantasm:block/template_cube_column_emissive",
+  "textures": {
+    "end": "penumbra_phantasm:block/dark_marble_pillar_top",
+    "side": "penumbra_phantasm:block/dark_marble_pillar"
+  }
+}

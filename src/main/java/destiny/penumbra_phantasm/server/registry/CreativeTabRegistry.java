@@ -105,6 +105,9 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.DARK_CANDY_BUTTON.get());
                 output.accept(BlockRegistry.DARK_CANDY_PRESSURE_PLATE.get());
 
+                output.accept(BlockRegistry.SCARLET_MARBLE_PILLAR.get());
+                output.accept(BlockRegistry.CHISELED_SCARLET_MARBLE.get());
+
                 output.accept(BlockRegistry.POLISHED_SCARLET_MARBLE.get());
                 output.accept(BlockRegistry.POLISHED_SCARLET_MARBLE_STAIRS.get());
                 output.accept(BlockRegistry.POLISHED_SCARLET_MARBLE_SLAB.get());
@@ -132,6 +135,16 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_WALL.get());
                 output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_BUTTON.get());
                 output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.DARK_MARBLE_PILLAR.get());
+                output.accept(BlockRegistry.CHISELED_DARK_MARBLE.get());
+
+                output.accept(BlockRegistry.POLISHED_DARK_MARBLE.get());
+                output.accept(BlockRegistry.POLISHED_DARK_MARBLE_STAIRS.get());
+                output.accept(BlockRegistry.POLISHED_DARK_MARBLE_SLAB.get());
+                output.accept(BlockRegistry.POLISHED_DARK_MARBLE_WALL.get());
+                output.accept(BlockRegistry.POLISHED_DARK_MARBLE_BUTTON.get());
+                output.accept(BlockRegistry.POLISHED_DARK_MARBLE_PRESSURE_PLATE.get());
 
                 output.accept(BlockRegistry.DARK_MARBLE.get());
 
