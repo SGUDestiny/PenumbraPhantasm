@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/button",
   "textures": {
-    "texture": "penumbra_phantasm:block/cliffrock"
+    "texture": "penumbra_phantasm:block/cliffrock_1"
   }
 }

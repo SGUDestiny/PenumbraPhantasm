@@ -1,7 +1,18 @@
 {
   "variants": {
-    "": {
-      "model": "penumbra_phantasm:block/cliffrock"
-    }
+    "": [
+      {
+        "model": "penumbra_phantasm:block/cliffrock_1",
+        "weight": 90
+      },
+      {
+        "model": "penumbra_phantasm:block/cliffrock_2",
+        "weight": 5
+      },
+      {
+        "model": "penumbra_phantasm:block/cliffrock_3",
+        "weight": 5
+      }
+    ]
   }
 }

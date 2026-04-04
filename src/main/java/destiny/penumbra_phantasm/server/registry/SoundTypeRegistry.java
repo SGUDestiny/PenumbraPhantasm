@@ -9,5 +9,6 @@ public class SoundTypeRegistry {
             () -> SoundRegistry.CLIFF_STEP.get(),
             () -> SoundRegistry.CLIFF_BREAK.get(),
             () -> SoundRegistry.CLIFF_BREAK.get(),
-            () -> SoundRegistry.CLIFF_FALL.get());
+            () -> SoundRegistry.CLIFF_FALL.get()
+    );
 }

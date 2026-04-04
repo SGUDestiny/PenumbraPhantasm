@@ -3,8 +3,8 @@
   "loader": "fusion:model",
   "type": "connecting",
   "textures": {
-    "top": "penumbra_phantasm:block/cliffrock_path_top",
-    "bottom": "penumbra_phantasm:block/cliffrock_rock",
+    "top": "penumbra_phantasm:block/cliffrock_path_top_5",
+    "bottom": "penumbra_phantasm:block/cliffrock_1",
     "side": "penumbra_phantasm:block/cliffrock_path_side"
   },
   "connections": {
