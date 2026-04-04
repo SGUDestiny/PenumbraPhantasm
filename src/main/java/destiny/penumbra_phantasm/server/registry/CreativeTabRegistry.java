@@ -188,6 +188,37 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.COBBLED_DARK_MARBLE_WALL.get());
                 output.accept(BlockRegistry.COBBLED_DARK_MARBLE_BUTTON.get());
                 output.accept(BlockRegistry.COBBLED_DARK_MARBLE_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.CLIFFROCK_PILLAR.get());
+                output.accept(BlockRegistry.CHISELED_CLIFFROCK.get());
+
+                output.accept(BlockRegistry.POLISHED_CLIFFROCK.get());
+                output.accept(BlockRegistry.POLISHED_CLIFFROCK_STAIRS.get());
+                output.accept(BlockRegistry.POLISHED_CLIFFROCK_SLAB.get());
+                output.accept(BlockRegistry.POLISHED_CLIFFROCK_WALL.get());
+                output.accept(BlockRegistry.POLISHED_CLIFFROCK_BUTTON.get());
+                output.accept(BlockRegistry.POLISHED_CLIFFROCK_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.CLIFFROCK_BRICKS.get());
+                output.accept(BlockRegistry.CLIFFROCK_BRICK_STAIRS.get());
+                output.accept(BlockRegistry.CLIFFROCK_BRICK_SLAB.get());
+                output.accept(BlockRegistry.CLIFFROCK_BRICK_WALL.get());
+                output.accept(BlockRegistry.CLIFFROCK_BRICK_BUTTON.get());
+                output.accept(BlockRegistry.CLIFFROCK_BRICK_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.CLIFFROCK.get());
+                output.accept(BlockRegistry.CLIFFROCK_STAIRS.get());
+                output.accept(BlockRegistry.CLIFFROCK_SLAB.get());
+                output.accept(BlockRegistry.CLIFFROCK_WALL.get());
+                output.accept(BlockRegistry.CLIFFROCK_BUTTON.get());
+                output.accept(BlockRegistry.CLIFFROCK_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.COBBLED_CLIFFROCK.get());
+                output.accept(BlockRegistry.COBBLED_CLIFFROCK_STAIRS.get());
+                output.accept(BlockRegistry.COBBLED_CLIFFROCK_SLAB.get());
+                output.accept(BlockRegistry.COBBLED_CLIFFROCK_WALL.get());
+                output.accept(BlockRegistry.COBBLED_CLIFFROCK_BUTTON.get());
+                output.accept(BlockRegistry.COBBLED_CLIFFROCK_PRESSURE_PLATE.get());
             })
             .build()
     );

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "penumbra_phantasm:block/cobbled_cliffrock_slab"
+    },
+    "type=double": {
+      "model": "penumbra_phantasm:block/cobbled_cliffrock"
+    },
+    "type=top": {
+      "model": "penumbra_phantasm:block/cobbled_cliffrock_slab_top"
+    }
+  }
+}

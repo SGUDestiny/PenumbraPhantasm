@@ -40,6 +40,8 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> CLIFF_FALL = registerSoundEvent("cliff_fall");
     public static RegistryObject<SoundEvent> CLIFF_STEP = registerSoundEvent("cliff_step");
     public static RegistryObject<SoundEvent> CLIFF_BREAK = registerSoundEvent("cliff_break");
+    public static RegistryObject<SoundEvent> CLIFFROCK_PRESS = registerSoundEvent("cliffrock_press");
+    public static RegistryObject<SoundEvent> CLIFFROCK_UNPRESS = registerSoundEvent("cliffrock_unpress");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {

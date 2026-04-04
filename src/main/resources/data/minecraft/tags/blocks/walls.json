@@ -12,6 +12,10 @@
     "penumbra_phantasm:polished_dark_marble_wall",
     "penumbra_phantasm:dark_marble_wall",
     "penumbra_phantasm:cobbled_dark_marble_wall",
-    "penumbra_phantasm:dark_marble_brick_wall"
+    "penumbra_phantasm:dark_marble_brick_wall",
+    "penumbra_phantasm:polished_cliffrock_wall",
+    "penumbra_phantasm:cliffrock_wall",
+    "penumbra_phantasm:cobbled_cliffrock_wall",
+    "penumbra_phantasm:cliffrock_brick_wall"
   ]
 }

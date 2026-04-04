@@ -14,6 +14,10 @@
     "penumbra_phantasm:polished_dark_marble_stairs",
     "penumbra_phantasm:dark_marble_stairs",
     "penumbra_phantasm:cobbled_dark_marble_stairs",
-    "penumbra_phantasm:dark_marble_brick_stairs"
+    "penumbra_phantasm:dark_marble_brick_stairs",
+    "penumbra_phantasm:polished_cliffrock_stairs",
+    "penumbra_phantasm:cliffrock_stairs",
+    "penumbra_phantasm:cobbled_cliffrock_stairs",
+    "penumbra_phantasm:cliffrock_brick_stairs"
   ]
 }

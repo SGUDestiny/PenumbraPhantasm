@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/cliffrock",
+    "side": "penumbra_phantasm:block/cliffrock",
+    "top": "penumbra_phantasm:block/cliffrock"
+  }
+}

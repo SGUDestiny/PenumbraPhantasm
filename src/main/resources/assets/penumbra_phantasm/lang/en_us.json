@@ -119,6 +119,37 @@
   "block.penumbra_phantasm.cobbled_scarlet_marble_button": "Cobbled Scarlet Marble Button",
   "block.penumbra_phantasm.cobbled_scarlet_marble_pressure_plate": "Cobbled Scarlet Marble Pressure Plate",
 
+  "block.penumbra_phantasm.cliffrock_pillar": "Cliffrock Pillar",
+  "block.penumbra_phantasm.chiseled_cliffrock": "Chiseled Cliffrock",
+
+  "block.penumbra_phantasm.polished_cliffrock": "Polished Cliffrock",
+  "block.penumbra_phantasm.polished_cliffrock_stairs": "Polished Cliffrock Stairs",
+  "block.penumbra_phantasm.polished_cliffrock_slab": "Polished Cliffrock Slab",
+  "block.penumbra_phantasm.polished_cliffrock_wall": "Polished Cliffrock Wall",
+  "block.penumbra_phantasm.polished_cliffrock_button": "Polished Cliffrock Button",
+  "block.penumbra_phantasm.polished_cliffrock_pressure_plate": "Polished Cliffrock Pressure Plate",
+
+  "block.penumbra_phantasm.cliffrock_bricks": "Cliffrock Bricks",
+  "block.penumbra_phantasm.cliffrock_brick_stairs": "Cliffrock Brick Stairs",
+  "block.penumbra_phantasm.cliffrock_brick_slab": "Cliffrock Brick Slab",
+  "block.penumbra_phantasm.cliffrock_brick_wall": "Cliffrock Brick Wall",
+  "block.penumbra_phantasm.cliffrock_brick_button": "Cliffrock Brick Button",
+  "block.penumbra_phantasm.cliffrock_brick_pressure_plate": "Cliffrock Brick Pressure Plate",
+
+  "block.penumbra_phantasm.cliffrock": "Cliffrock",
+  "block.penumbra_phantasm.cliffrock_stairs": "Cliffrock Stairs",
+  "block.penumbra_phantasm.cliffrock_slab": "Cliffrock Slab",
+  "block.penumbra_phantasm.cliffrock_wall": "Cliffrock Wall",
+  "block.penumbra_phantasm.cliffrock_button": "Cliffrock Button",
+  "block.penumbra_phantasm.cliffrock_pressure_plate": "Cliffrock Pressure Plate",
+
+  "block.penumbra_phantasm.cobbled_cliffrock": "Cobbled Cliffrock",
+  "block.penumbra_phantasm.cobbled_cliffrock_stairs": "Cobbled Cliffrock Stairs",
+  "block.penumbra_phantasm.cobbled_cliffrock_slab": "Cobbled Cliffrock Slab",
+  "block.penumbra_phantasm.cobbled_cliffrock_wall": "Cobbled Cliffrock Wall",
+  "block.penumbra_phantasm.cobbled_cliffrock_button": "Cobbled Cliffrock Button",
+  "block.penumbra_phantasm.cobbled_cliffrock_pressure_plate": "Cobbled Cliffrock Pressure Plate",
+
   "block.penumbra_phantasm.dark_marble_pillar": "Dark Marble Pillar",
   "block.penumbra_phantasm.chiseled_dark_marble": "Chiseled Dark Marble",
 
@@ -129,7 +160,26 @@
   "block.penumbra_phantasm.polished_dark_marble_button": "Polished Dark Marble Button",
   "block.penumbra_phantasm.polished_dark_marble_pressure_plate": "Polished Dark Marble Pressure Plate",
 
+  "block.penumbra_phantasm.dark_marble_bricks": "Dark Marble Bricks",
+  "block.penumbra_phantasm.dark_marble_brick_stairs": "Dark Marble Brick Stairs",
+  "block.penumbra_phantasm.dark_marble_brick_slab": "Dark Marble Brick Slab",
+  "block.penumbra_phantasm.dark_marble_brick_wall": "Dark Marble Brick Wall",
+  "block.penumbra_phantasm.dark_marble_brick_button": "Dark Marble Brick Button",
+  "block.penumbra_phantasm.dark_marble_brick_pressure_plate": "Dark Marble Brick Pressure Plate",
+
   "block.penumbra_phantasm.dark_marble": "Dark Marble",
+  "block.penumbra_phantasm.dark_marble_stairs": "Dark Marble Stairs",
+  "block.penumbra_phantasm.dark_marble_slab": "Dark Marble Slab",
+  "block.penumbra_phantasm.dark_marble_wall": "Dark Marble Wall",
+  "block.penumbra_phantasm.dark_marble_button": "Dark Marble Button",
+  "block.penumbra_phantasm.dark_marble_pressure_plate": "Dark Marble Pressure Plate",
+
+  "block.penumbra_phantasm.cobbled_dark_marble": "Cobbled Dark Marble",
+  "block.penumbra_phantasm.cobbled_dark_marble_stairs": "Cobbled Dark Marble Stairs",
+  "block.penumbra_phantasm.cobbled_dark_marble_slab": "Cobbled Dark Marble Slab",
+  "block.penumbra_phantasm.cobbled_dark_marble_wall": "Cobbled Dark Marble Wall",
+  "block.penumbra_phantasm.cobbled_dark_marble_button": "Cobbled Dark Marble Button",
+  "block.penumbra_phantasm.cobbled_dark_marble_pressure_plate": "Cobbled Dark Marble Pressure Plate",
 
   "block.penumbra_phantasm.scarlet_marble_pawn": "Scarlet Marble Pawn",
   "block.penumbra_phantasm.scarlet_marble_rook": "Scarlet Marble Rook",

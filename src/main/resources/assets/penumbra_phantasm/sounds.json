@@ -190,5 +190,17 @@
       "penumbra_phantasm:cliff_step_3",
       "penumbra_phantasm:cliff_step_4"
     ]
+  },
+  "cliffrock_press": {
+    "sounds":
+    [
+      "penumbra_phantasm:cliffrock_press"
+    ]
+  },
+  "cliffrock_unpress": {
+    "sounds":
+    [
+      "penumbra_phantasm:cliffrock_unpress"
+    ]
   }
 }

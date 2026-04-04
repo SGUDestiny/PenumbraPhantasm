@@ -12,6 +12,10 @@
     "penumbra_phantasm:polished_dark_marble_button",
     "penumbra_phantasm:dark_marble_button",
     "penumbra_phantasm:cobbled_dark_marble_button",
-    "penumbra_phantasm:dark_marble_brick_button"
+    "penumbra_phantasm:dark_marble_brick_button",
+    "penumbra_phantasm:polished_cliffrock_button",
+    "penumbra_phantasm:cliffrock_button",
+    "penumbra_phantasm:cobbled_cliffrock_button",
+    "penumbra_phantasm:cliffrock_brick_button"
   ]
 }
