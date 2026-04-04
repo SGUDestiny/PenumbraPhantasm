@@ -16,6 +16,10 @@
     "penumbra_phantasm:polished_cliffrock_wall",
     "penumbra_phantasm:cliffrock_wall",
     "penumbra_phantasm:cobbled_cliffrock_wall",
-    "penumbra_phantasm:cliffrock_brick_wall"
+    "penumbra_phantasm:cliffrock_brick_wall",
+    "penumbra_phantasm:polished_tenebralith_wall",
+    "penumbra_phantasm:tenebralith_wall",
+    "penumbra_phantasm:cobbled_tenebralith_wall",
+    "penumbra_phantasm:tenebralith_brick_wall"
   ]
 }

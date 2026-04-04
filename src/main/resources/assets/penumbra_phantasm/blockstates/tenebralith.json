@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "penumbra_phantasm:block/tenebralith_1",
+        "weight": 50
+      },
+      {
+        "model": "penumbra_phantasm:block/tenebralith_2",
+        "weight": 10
+      },
+      {
+        "model": "penumbra_phantasm:block/tenebralith_3",
+        "weight": 10
+      },
+      {
+        "model": "penumbra_phantasm:block/tenebralith_4",
+        "weight": 10
+      },
+      {
+        "model": "penumbra_phantasm:block/tenebralith_5",
+        "weight": 10
+      },
+      {
+        "model": "penumbra_phantasm:block/tenebralith_6",
+        "weight": 10
+      }
+    ]
+  }
+}

@@ -16,6 +16,10 @@
     "penumbra_phantasm:polished_cliffrock_pressure_plate",
     "penumbra_phantasm:cliffrock_pressure_plate",
     "penumbra_phantasm:cobbled_cliffrock_pressure_plate",
-    "penumbra_phantasm:cliffrock_brick_pressure_plate"
+    "penumbra_phantasm:cliffrock_brick_pressure_plate",
+    "penumbra_phantasm:polished_tenebralith_pressure_plate",
+    "penumbra_phantasm:tenebralith_pressure_plate",
+    "penumbra_phantasm:cobbled_tenebralith_pressure_plate",
+    "penumbra_phantasm:tenebralith_brick_pressure_plate"
   ]
 }

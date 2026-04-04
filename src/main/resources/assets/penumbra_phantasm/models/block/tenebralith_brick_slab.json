@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/tenebralith_bricks",
+    "side": "penumbra_phantasm:block/tenebralith_bricks",
+    "top": "penumbra_phantasm:block/tenebralith_bricks"
+  }
+}

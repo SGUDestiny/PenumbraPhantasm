@@ -18,6 +18,10 @@
     "penumbra_phantasm:polished_cliffrock_button",
     "penumbra_phantasm:cliffrock_button",
     "penumbra_phantasm:cobbled_cliffrock_button",
-    "penumbra_phantasm:cliffrock_brick_button"
+    "penumbra_phantasm:cliffrock_brick_button",
+    "penumbra_phantasm:polished_tenebralith_button",
+    "penumbra_phantasm:tenebralith_button",
+    "penumbra_phantasm:cobbled_tenebralith_button",
+    "penumbra_phantasm:tenebralith_brick_button"
   ]
 }

@@ -28,10 +28,12 @@ public class BlockRegistry {
     public static final BlockBehaviour.Properties DARK_MARBLE_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops();
     public static final BlockBehaviour.Properties UMBRASTONE_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops();
     public static final BlockBehaviour.Properties CLIFFROCK_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF);
+    public static final BlockBehaviour.Properties TENEBRALITH_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE);
 
     public static final BlockSetType SCARLET_MARBLE_BLOCKSET = new BlockSetType("scarlet_marble", true, SoundType.CALCITE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
     public static final BlockSetType DARK_MARBLE_BLOCKSET = new BlockSetType("dark_marble", true, SoundType.CALCITE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
     public static final BlockSetType UMBRASTONE_BLOCKSET = new BlockSetType("umbrastone", true, SoundType.CALCITE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
+    public static final BlockSetType TENEBRALITH_BLOCKSET = new BlockSetType("dark_marble", true, SoundType.DEEPSLATE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
 
     public static final RegistryObject<Block> TWILIGHT_GRASS_BLOCK = registerBlock("twilight_grass_block",
             () -> new TwilightGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
@@ -272,6 +274,45 @@ public class BlockRegistry {
     public static final RegistryObject<Block> COBBLED_CLIFFROCK_WALL = registerBlock("cobbled_cliffrock_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_CLIFFROCK_BUTTON = registerBlock("cobbled_cliffrock_button", () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
     public static final RegistryObject<Block> COBBLED_CLIFFROCK_PRESSURE_PLATE = registerBlock("cobbled_cliffrock_pressure_plate", () -> new CliffrockPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission()));
+
+
+
+    //Tenebralith misc
+    public static final RegistryObject<Block> TENEBRALITH_SPIKE = registerBlock("tenebralith_spike", () -> new PointedDripstoneBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_PILLAR = registerBlock("tenebralith_pillar", () -> new RotatedPillarBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> CHISELED_TENEBRALITH = registerBlock("chiseled_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
+
+    //Polished tenebralith
+    public static final RegistryObject<Block> POLISHED_TENEBRALITH = registerBlock("polished_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_TENEBRALITH_STAIRS = registerBlock("polished_tenebralith_stairs", () -> new StairBlock(BlockRegistry.POLISHED_TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_TENEBRALITH_SLAB = registerBlock("polished_tenebralith_slab", () -> new SlabBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_TENEBRALITH_WALL = registerBlock("polished_tenebralith_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_TENEBRALITH_BUTTON = registerBlock("polished_tenebralith_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> POLISHED_TENEBRALITH_PRESSURE_PLATE = registerBlock("polished_tenebralith_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET));
+
+    //Tenebralith bricks
+    public static final RegistryObject<Block> TENEBRALITH_BRICKS = registerBlock("tenebralith_bricks", () -> new Block(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_BRICK_STAIRS = registerBlock("tenebralith_brick_stairs", () -> new StairBlock(BlockRegistry.TENEBRALITH_BRICKS.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_BRICK_SLAB = registerBlock("tenebralith_brick_slab", () -> new SlabBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_BRICK_WALL = registerBlock("tenebralith_brick_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_BRICK_BUTTON = registerBlock("tenebralith_brick_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> TENEBRALITH_BRICK_PRESSURE_PLATE = registerBlock("tenebralith_brick_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET));
+
+    //Tenebralith
+    public static final RegistryObject<Block> TENEBRALITH = registerBlock("tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_STAIRS = registerBlock("tenebralith_stairs", () -> new StairBlock(BlockRegistry.TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_SLAB = registerBlock("tenebralith_slab", () -> new SlabBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_WALL = registerBlock("tenebralith_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_BUTTON = registerBlock("tenebralith_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> TENEBRALITH_PRESSURE_PLATE = registerBlock("tenebralith_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET));
+
+    //Cobbled tenebralith
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH = registerBlock("cobbled_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_STAIRS = registerBlock("cobbled_tenebralith_stairs", () -> new StairBlock(BlockRegistry.COBBLED_TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_SLAB = registerBlock("cobbled_tenebralith_slab", () -> new SlabBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_WALL = registerBlock("cobbled_tenebralith_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_BUTTON = registerBlock("cobbled_tenebralith_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_PRESSURE_PLATE = registerBlock("cobbled_tenebralith_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET));
 
 
 

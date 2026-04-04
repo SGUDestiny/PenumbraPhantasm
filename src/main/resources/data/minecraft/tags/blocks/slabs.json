@@ -18,6 +18,10 @@
     "penumbra_phantasm:polished_cliffrock_slab",
     "penumbra_phantasm:cliffrock_slab",
     "penumbra_phantasm:cobbled_cliffrock_slab",
-    "penumbra_phantasm:cliffrock_brick_slab"
+    "penumbra_phantasm:cliffrock_brick_slab",
+    "penumbra_phantasm:polished_tenebralith_slab",
+    "penumbra_phantasm:tenebralith_slab",
+    "penumbra_phantasm:cobbled_tenebralith_slab",
+    "penumbra_phantasm:tenebralith_brick_slab"
   ]
 }

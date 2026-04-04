@@ -18,6 +18,10 @@
     "penumbra_phantasm:polished_cliffrock_stairs",
     "penumbra_phantasm:cliffrock_stairs",
     "penumbra_phantasm:cobbled_cliffrock_stairs",
-    "penumbra_phantasm:cliffrock_brick_stairs"
+    "penumbra_phantasm:cliffrock_brick_stairs",
+    "penumbra_phantasm:polished_tenebralith_stairs",
+    "penumbra_phantasm:tenebralith_stairs",
+    "penumbra_phantasm:cobbled_tenebralith_stairs",
+    "penumbra_phantasm:tenebralith_brick_stairs"
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/cobbled_tenebralith",
+    "side": "penumbra_phantasm:block/cobbled_tenebralith",
+    "top": "penumbra_phantasm:block/cobbled_tenebralith"
+  }
+}

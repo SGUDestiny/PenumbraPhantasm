@@ -225,10 +225,41 @@ public class CreativeTabRegistry {
     );
 
     public static final RegistryObject<CreativeModeTab> THE_DEPTHS = DEF_REG.register("the_depths", () -> CreativeModeTab.builder()
-            .icon(() -> ItemRegistry.SHADOW_CRYSTAL.get().getDefaultInstance())
+            .icon(() -> BlockRegistry.CHISELED_TENEBRALITH.get().asItem().getDefaultInstance())
             .title(Component.translatable("itemGroup.penumbra_phantasm.the_depths"))
             .withTabsBefore(CARD_KINGDOM.getKey())
             .displayItems((parameters, output) -> {
+                output.accept(BlockRegistry.TENEBRALITH_SPIKE.get());
+                output.accept(BlockRegistry.TENEBRALITH_PILLAR.get());
+                output.accept(BlockRegistry.CHISELED_TENEBRALITH.get());
+
+                output.accept(BlockRegistry.POLISHED_TENEBRALITH.get());
+                output.accept(BlockRegistry.POLISHED_TENEBRALITH_STAIRS.get());
+                output.accept(BlockRegistry.POLISHED_TENEBRALITH_SLAB.get());
+                output.accept(BlockRegistry.POLISHED_TENEBRALITH_WALL.get());
+                output.accept(BlockRegistry.POLISHED_TENEBRALITH_BUTTON.get());
+                output.accept(BlockRegistry.POLISHED_TENEBRALITH_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.TENEBRALITH_BRICKS.get());
+                output.accept(BlockRegistry.TENEBRALITH_BRICK_STAIRS.get());
+                output.accept(BlockRegistry.TENEBRALITH_BRICK_SLAB.get());
+                output.accept(BlockRegistry.TENEBRALITH_BRICK_WALL.get());
+                output.accept(BlockRegistry.TENEBRALITH_BRICK_BUTTON.get());
+                output.accept(BlockRegistry.TENEBRALITH_BRICK_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.TENEBRALITH.get());
+                output.accept(BlockRegistry.TENEBRALITH_STAIRS.get());
+                output.accept(BlockRegistry.TENEBRALITH_SLAB.get());
+                output.accept(BlockRegistry.TENEBRALITH_WALL.get());
+                output.accept(BlockRegistry.TENEBRALITH_BUTTON.get());
+                output.accept(BlockRegistry.TENEBRALITH_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.COBBLED_TENEBRALITH.get());
+                output.accept(BlockRegistry.COBBLED_TENEBRALITH_STAIRS.get());
+                output.accept(BlockRegistry.COBBLED_TENEBRALITH_SLAB.get());
+                output.accept(BlockRegistry.COBBLED_TENEBRALITH_WALL.get());
+                output.accept(BlockRegistry.COBBLED_TENEBRALITH_BUTTON.get());
+                output.accept(BlockRegistry.COBBLED_TENEBRALITH_PRESSURE_PLATE.get());
             })
             .build()
     );

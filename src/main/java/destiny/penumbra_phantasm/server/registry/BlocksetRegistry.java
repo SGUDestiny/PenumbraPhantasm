@@ -131,6 +131,37 @@ public final class BlocksetRegistry {
                     false,
                     false,
                     true
+            ),
+
+            new StoneBlockset(
+                    "polished_tenebralith",
+                    "polished_tenebralith",
+                    "tenebralith/polished",
+                    "cobbled_tenebralith",
+                    1,
+                    false,
+                    false,
+                    false
+            ),
+            new StoneBlockset(
+                    "tenebralith",
+                    "tenebralith_1",
+                    "tenebralith",
+                    "",
+                    1,
+                    false,
+                    true,
+                    false
+            ),
+            new StoneBlockset(
+                    "cobbled_tenebralith",
+                    "cobbled_tenebralith",
+                    "tenebralith/cobbled",
+                    "",
+                    1,
+                    false,
+                    false,
+                    true
             )
     );
 
@@ -169,7 +200,17 @@ public final class BlocksetRegistry {
                     "cliffrock_bricks",
                     "cliffrock_bricks",
                     "cliffrock/bricks",
-                    "cliff_rock",
+                    "cliffrock",
+                    1,
+                    false,
+                    false,
+                    false
+            ),
+            new BricksBlockset(
+                    "tenebralith_bricks",
+                    "tenebralith_bricks",
+                    "tenebralith/bricks",
+                    "tenebralith",
                     1,
                     false,
                     false,

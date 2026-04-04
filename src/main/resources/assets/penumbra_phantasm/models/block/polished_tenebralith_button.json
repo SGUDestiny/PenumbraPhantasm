@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/button",
+  "textures": {
+    "texture": "penumbra_phantasm:block/polished_tenebralith"
+  }
+}

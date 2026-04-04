@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "stone_stairs",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:tenebralith"
+    }
+  },
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "result": {
+    "count": 4,
+    "item": "penumbra_phantasm:tenebralith_stairs"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "stone_button",
+  "ingredients": [
+    {
+      "item": "penumbra_phantasm:tenebralith"
+    }
+  ],
+  "result": {
+    "item": "penumbra_phantasm:tenebralith_button"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "stone_pressure_plate",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:tenebralith_bricks"
+    }
+  },
+  "pattern": [
+    "##"
+  ],
+  "result": {
+    "item": "penumbra_phantasm:tenebralith_brick_pressure_plate"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "penumbra_phantasm:block/tenebralith_slab"
+    },
+    "type=double": {
+      "model": "penumbra_phantasm:block/tenebralith"
+    },
+    "type=top": {
+      "model": "penumbra_phantasm:block/tenebralith_slab_top"
+    }
+  }
+}
