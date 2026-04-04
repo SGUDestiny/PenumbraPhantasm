@@ -100,6 +100,37 @@ public final class BlocksetRegistry {
                     true,
                     false,
                     true
+            ),
+
+            new StoneBlockset(
+                    "polished_cliffrock",
+                    "polished_cliffrock",
+                    "cliffrock/polished",
+                    "cobbled_cliffrock",
+                    1,
+                    false,
+                    false,
+                    false
+            ),
+            new StoneBlockset(
+                    "cliffrock",
+                    "cliffrock",
+                    "cliffrock",
+                    "",
+                    1,
+                    false,
+                    true,
+                    false
+            ),
+            new StoneBlockset(
+                    "cobbled_cliffrock",
+                    "cobbled_cliffrock",
+                    "cliffrock/cobbled",
+                    "",
+                    1,
+                    false,
+                    false,
+                    true
             )
     );
 
@@ -131,6 +162,16 @@ public final class BlocksetRegistry {
                     "",
                     1,
                     true,
+                    false,
+                    false
+            ),
+            new BricksBlockset(
+                    "cliffrock_bricks",
+                    "cliffrock_bricks",
+                    "cliffrock/bricks",
+                    "",
+                    1,
+                    false,
                     false,
                     false
             )

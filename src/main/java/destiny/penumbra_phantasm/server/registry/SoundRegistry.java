@@ -37,6 +37,10 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> DARK_WORLD_LAND = registerSoundEvent("dark_world_land");
     public static RegistryObject<SoundEvent> HIM_QUICK = registerSoundEvent("him_quick");
 
+    public static RegistryObject<SoundEvent> CLIFF_FALL = registerSoundEvent("cliff_fall");
+    public static RegistryObject<SoundEvent> CLIFF_STEP = registerSoundEvent("cliff_step");
+    public static RegistryObject<SoundEvent> CLIFF_BREAK = registerSoundEvent("cliff_break");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));

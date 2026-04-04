@@ -165,5 +165,30 @@
     [
       "penumbra_phantasm:everlasting_autumn"
     ]
+  },
+  "cliff_fall": {
+    "sounds":
+    [
+      "penumbra_phantasm:cliff_fall_1",
+      "penumbra_phantasm:cliff_fall_2"
+    ]
+  },
+  "cliff_break": {
+    "sounds":
+    [
+      "penumbra_phantasm:cliff_break_1",
+      "penumbra_phantasm:cliff_break_2",
+      "penumbra_phantasm:cliff_break_3",
+      "penumbra_phantasm:cliff_break_4"
+    ]
+  },
+  "cliff_step": {
+    "sounds":
+    [
+      "penumbra_phantasm:cliff_step_1",
+      "penumbra_phantasm:cliff_step_2",
+      "penumbra_phantasm:cliff_step_3",
+      "penumbra_phantasm:cliff_step_4"
+    ]
   }
 }
