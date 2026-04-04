@@ -328,9 +328,65 @@ public class BlockRegistry {
             () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE)
                     .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE), BlockSetType.STONE));
 
+    //Dark marble bricks
+    public static final RegistryObject<Block> DARK_MARBLE_BRICKS = registerBlock("dark_marble_bricks",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE).noOcclusion()));
+    public static final RegistryObject<Block> DARK_MARBLE_BRICK_STAIRS = registerBlock("dark_marble_brick_stairs",
+            () -> new StairBlock(BlockRegistry.DARK_MARBLE_BRICKS.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Block> DARK_MARBLE_BRICK_SLAB = registerBlock("dark_marble_brick_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Block> DARK_MARBLE_BRICK_WALL = registerBlock("dark_marble_brick_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Block> DARK_MARBLE_BRICK_BUTTON = registerBlock("dark_marble_brick_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE), BlockSetType.STONE, 30, false));
+    public static final RegistryObject<Block> DARK_MARBLE_BRICK_PRESSURE_PLATE = registerBlock("dark_marble_brick_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE), BlockSetType.STONE));
+
+    //Dark marble
     public static final RegistryObject<Block> DARK_MARBLE = registerBlock("dark_marble",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE)
-                    .mapColor(MapColor.COLOR_BLACK).sound(SoundType.CALCITE).noOcclusion()));
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE).noOcclusion()));
+    public static final RegistryObject<Block> DARK_MARBLE_STAIRS = registerBlock("dark_marble_stairs",
+            () -> new StairBlock(BlockRegistry.DARK_MARBLE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Block> DARK_MARBLE_SLAB = registerBlock("dark_marble_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Block> DARK_MARBLE_WALL = registerBlock("dark_marble_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Block> DARK_MARBLE_BUTTON = registerBlock("dark_marble_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE), BlockSetType.STONE, 30, false));
+    public static final RegistryObject<Block> DARK_MARBLE_PRESSURE_PLATE = registerBlock("dark_marble_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE), BlockSetType.STONE));
+
+    //Cobbled dark marble
+    public static final RegistryObject<Block> COBBLED_DARK_MARBLE = registerBlock("cobbled_dark_marble",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE).noOcclusion()));
+    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_STAIRS = registerBlock("cobbled_dark_marble_stairs",
+            () -> new StairBlock(BlockRegistry.COBBLED_DARK_MARBLE.get().defaultBlockState(), BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_SLAB = registerBlock("cobbled_dark_marble_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_WALL = registerBlock("cobbled_dark_marble_wall",
+            () -> new WallBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE)));
+    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_BUTTON = registerBlock("cobbled_dark_marble_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE), BlockSetType.STONE, 30, false));
+    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_PRESSURE_PLATE = registerBlock("cobbled_dark_marble_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE)
+                    .mapColor(MapColor.COLOR_GRAY).sound(SoundType.CALCITE), BlockSetType.STONE));
 
     public static final RegistryObject<Block> SCARLET_MARBLE_PAWN = registerBlock("scarlet_marble_pawn",
             () -> new ChessPawnBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE)

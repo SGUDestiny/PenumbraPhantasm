@@ -13,8 +13,6 @@ import static destiny.penumbra_phantasm.PenumbraPhantasm.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PlayerAnimator {
-
-
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event)
     {

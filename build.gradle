@@ -191,6 +191,9 @@ dependencies {
 
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
 
+    // Fusion
+    implementation fg.deobf("maven.modrinth:fusion-connected-textures:1.2.12-forge-mc1.20.1")
+
     implementation fg.deobf("curse.maven:playeranimator-658587:4587214")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
@@ -209,7 +212,7 @@ dependencies {
     implementation fg.deobf("maven.modrinth:playeranimatorapi:9E2JcodV")
     //implementation fg.deobf("curse.maven:epic-fight-mod-405076:4922094")
 
-    implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:1.0.2-rc1+1.20")
+    //implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:1.0.2-rc1+1.20")
 
     //implementation fg.deobf('maven.modrinth:better-combat:1.8.5+1.20.1-forge')
 

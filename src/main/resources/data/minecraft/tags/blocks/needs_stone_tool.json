@@ -72,6 +72,24 @@
     "penumbra_phantasm:polished_dark_marble_slab",
     "penumbra_phantasm:polished_dark_marble_wall",
     "penumbra_phantasm:polished_dark_marble_button",
-    "penumbra_phantasm:polished_dark_marble_pressure_plate"
+    "penumbra_phantasm:polished_dark_marble_pressure_plate",
+    "penumbra_phantasm:dark_marble",
+    "penumbra_phantasm:dark_marble_stairs",
+    "penumbra_phantasm:dark_marble_slab",
+    "penumbra_phantasm:dark_marble_wall",
+    "penumbra_phantasm:dark_marble_button",
+    "penumbra_phantasm:dark_marble_pressure_plate",
+    "penumbra_phantasm:cobbled_dark_marble",
+    "penumbra_phantasm:cobbled_dark_marble_stairs",
+    "penumbra_phantasm:cobbled_dark_marble_slab",
+    "penumbra_phantasm:cobbled_dark_marble_wall",
+    "penumbra_phantasm:cobbled_dark_marble_button",
+    "penumbra_phantasm:cobbled_dark_marble_pressure_plate",
+    "penumbra_phantasm:dark_marble_bricks",
+    "penumbra_phantasm:dark_marble_brick_stairs",
+    "penumbra_phantasm:dark_marble_brick_slab",
+    "penumbra_phantasm:dark_marble_brick_wall",
+    "penumbra_phantasm:dark_marble_brick_button",
+    "penumbra_phantasm:dark_marble_brick_pressure_plate"
   ]
 }

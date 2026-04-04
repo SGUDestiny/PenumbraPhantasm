@@ -80,6 +80,26 @@ public final class BlocksetRegistry {
                     true,
                     false,
                     false
+            ),
+            new StoneBlockset(
+                    "dark_marble",
+                    "dark_marble",
+                    "marble/dark",
+                    "",
+                    1,
+                    true,
+                    true,
+                    false
+            ),
+            new StoneBlockset(
+                    "cobbled_dark_marble",
+                    "cobbled_dark_marble",
+                    "marble/dark/cobbled",
+                    "",
+                    1,
+                    true,
+                    false,
+                    true
             )
     );
 
@@ -98,6 +118,16 @@ public final class BlocksetRegistry {
                     "scarlet_marble_bricks",
                     "scarlet_marble_bricks",
                     "marble/scarlet/bricks",
+                    "",
+                    1,
+                    true,
+                    false,
+                    false
+            ),
+            new BricksBlockset(
+                    "dark_marble_bricks",
+                    "dark_marble_bricks",
+                    "marble/dark/bricks",
                     "",
                     1,
                     true,

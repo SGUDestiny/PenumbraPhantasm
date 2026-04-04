@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_button_emissive",
+  "textures": {
+    "texture": "penumbra_phantasm:block/cobbled_dark_marble"
+  }
+}

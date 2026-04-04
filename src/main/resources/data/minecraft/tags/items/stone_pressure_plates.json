@@ -9,6 +9,9 @@
     "penumbra_phantasm:scarlet_marble_brick_pressure_plate",
     "penumbra_phantasm:scarlet_marble_pressure_plate",
     "penumbra_phantasm:cobbled_scarlet_marble_pressure_plate",
-    "penumbra_phantasm:polished_dark_marble_pressure_plate"
+    "penumbra_phantasm:polished_dark_marble_pressure_plate",
+    "penumbra_phantasm:dark_marble_pressure_plate",
+    "penumbra_phantasm:cobbled_dark_marble_pressure_plate",
+    "penumbra_phantasm:dark_marble_brick_pressure_plate"
   ]
 }

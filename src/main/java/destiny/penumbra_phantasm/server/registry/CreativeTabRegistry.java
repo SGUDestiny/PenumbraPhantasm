@@ -34,7 +34,15 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.FRIEND.get());
 
                 output.accept(ItemRegistry.ITEM_MUSIC_MEDIUM_THE_HOLY.get());
+            })
+            .build()
+    );
 
+    public static final RegistryObject<CreativeModeTab> CARD_KINGDOM = DEF_REG.register("card_kingdom", () -> CreativeModeTab.builder()
+            .icon(() -> BlockRegistry.SCARLET_LEAVES.get().asItem().getDefaultInstance())
+            .title(Component.translatable("itemGroup.penumbra_phantasm.card_kingdom"))
+            .withTabsBefore(MAIN.getKey())
+            .displayItems((parameters, output) -> {
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());
                 output.accept(BlockRegistry.NIGHT_DIRT.get());
@@ -105,6 +113,13 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.DARK_CANDY_BUTTON.get());
                 output.accept(BlockRegistry.DARK_CANDY_PRESSURE_PLATE.get());
 
+                output.accept(BlockRegistry.SCARLET_MARBLE_PAWN.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_ROOK.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_KNIGHT.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_BISHOP.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_QUEEN.get());
+                output.accept(BlockRegistry.SCARLET_MARBLE_KING.get());
+
                 output.accept(BlockRegistry.SCARLET_MARBLE_PILLAR.get());
                 output.accept(BlockRegistry.CHISELED_SCARLET_MARBLE.get());
 
@@ -136,6 +151,13 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_BUTTON.get());
                 output.accept(BlockRegistry.COBBLED_SCARLET_MARBLE_PRESSURE_PLATE.get());
 
+                output.accept(BlockRegistry.DARK_MARBLE_PAWN.get());
+                output.accept(BlockRegistry.DARK_MARBLE_ROOK.get());
+                output.accept(BlockRegistry.DARK_MARBLE_KNIGHT.get());
+                output.accept(BlockRegistry.DARK_MARBLE_BISHOP.get());
+                output.accept(BlockRegistry.DARK_MARBLE_QUEEN.get());
+                output.accept(BlockRegistry.DARK_MARBLE_KING.get());
+
                 output.accept(BlockRegistry.DARK_MARBLE_PILLAR.get());
                 output.accept(BlockRegistry.CHISELED_DARK_MARBLE.get());
 
@@ -146,21 +168,35 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.POLISHED_DARK_MARBLE_BUTTON.get());
                 output.accept(BlockRegistry.POLISHED_DARK_MARBLE_PRESSURE_PLATE.get());
 
+                output.accept(BlockRegistry.DARK_MARBLE_BRICKS.get());
+                output.accept(BlockRegistry.DARK_MARBLE_BRICK_STAIRS.get());
+                output.accept(BlockRegistry.DARK_MARBLE_BRICK_SLAB.get());
+                output.accept(BlockRegistry.DARK_MARBLE_BRICK_WALL.get());
+                output.accept(BlockRegistry.DARK_MARBLE_BRICK_BUTTON.get());
+                output.accept(BlockRegistry.DARK_MARBLE_BRICK_PRESSURE_PLATE.get());
+
                 output.accept(BlockRegistry.DARK_MARBLE.get());
+                output.accept(BlockRegistry.DARK_MARBLE_STAIRS.get());
+                output.accept(BlockRegistry.DARK_MARBLE_SLAB.get());
+                output.accept(BlockRegistry.DARK_MARBLE_WALL.get());
+                output.accept(BlockRegistry.DARK_MARBLE_BUTTON.get());
+                output.accept(BlockRegistry.DARK_MARBLE_PRESSURE_PLATE.get());
 
-                output.accept(BlockRegistry.SCARLET_MARBLE_PAWN.get());
-                output.accept(BlockRegistry.SCARLET_MARBLE_ROOK.get());
-                output.accept(BlockRegistry.SCARLET_MARBLE_KNIGHT.get());
-                output.accept(BlockRegistry.SCARLET_MARBLE_BISHOP.get());
-                output.accept(BlockRegistry.SCARLET_MARBLE_QUEEN.get());
-                output.accept(BlockRegistry.SCARLET_MARBLE_KING.get());
+                output.accept(BlockRegistry.COBBLED_DARK_MARBLE.get());
+                output.accept(BlockRegistry.COBBLED_DARK_MARBLE_STAIRS.get());
+                output.accept(BlockRegistry.COBBLED_DARK_MARBLE_SLAB.get());
+                output.accept(BlockRegistry.COBBLED_DARK_MARBLE_WALL.get());
+                output.accept(BlockRegistry.COBBLED_DARK_MARBLE_BUTTON.get());
+                output.accept(BlockRegistry.COBBLED_DARK_MARBLE_PRESSURE_PLATE.get());
+            })
+            .build()
+    );
 
-                output.accept(BlockRegistry.DARK_MARBLE_PAWN.get());
-                output.accept(BlockRegistry.DARK_MARBLE_ROOK.get());
-                output.accept(BlockRegistry.DARK_MARBLE_KNIGHT.get());
-                output.accept(BlockRegistry.DARK_MARBLE_BISHOP.get());
-                output.accept(BlockRegistry.DARK_MARBLE_QUEEN.get());
-                output.accept(BlockRegistry.DARK_MARBLE_KING.get());
+    public static final RegistryObject<CreativeModeTab> THE_DEPTHS = DEF_REG.register("the_depths", () -> CreativeModeTab.builder()
+            .icon(() -> ItemRegistry.SHADOW_CRYSTAL.get().getDefaultInstance())
+            .title(Component.translatable("itemGroup.penumbra_phantasm.the_depths"))
+            .withTabsBefore(CARD_KINGDOM.getKey())
+            .displayItems((parameters, output) -> {
             })
             .build()
     );

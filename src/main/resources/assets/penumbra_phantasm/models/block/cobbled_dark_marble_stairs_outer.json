@@ -1,0 +1,8 @@
+{
+  "parent": "penumbra_phantasm:block/template_outer_stairs_emissive",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/cobbled_dark_marble",
+    "side": "penumbra_phantasm:block/cobbled_dark_marble",
+    "top": "penumbra_phantasm:block/cobbled_dark_marble"
+  }
+}

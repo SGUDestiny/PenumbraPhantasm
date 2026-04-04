@@ -9,6 +9,9 @@
     "penumbra_phantasm:scarlet_marble_brick_button",
     "penumbra_phantasm:scarlet_marble_button",
     "penumbra_phantasm:cobbled_scarlet_marble_button",
-    "penumbra_phantasm:polished_dark_marble_button"
+    "penumbra_phantasm:polished_dark_marble_button",
+    "penumbra_phantasm:dark_marble_button",
+    "penumbra_phantasm:cobbled_dark_marble_button",
+    "penumbra_phantasm:dark_marble_brick_button"
   ]
 }

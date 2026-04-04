@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_wall_inventory_emissive",
+  "textures": {
+    "wall": "penumbra_phantasm:block/cobbled_dark_marble"
+  }
+}

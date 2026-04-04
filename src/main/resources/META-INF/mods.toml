@@ -51,3 +51,10 @@ description='''AT 'SHADOW'S EDGE,' SHATTER THE TWILIGHT REVERIE.'''
     versionRange="[1.0.0.5, )"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.penumbra_phantasm]]
+    modId="fusion"
+    mandatory=true
+    versionRange="[1.2.12, )"
+    ordering="NONE"
+    side="BOTH"
