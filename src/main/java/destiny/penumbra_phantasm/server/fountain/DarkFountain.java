@@ -435,9 +435,24 @@ public class DarkFountain {
         }
     }
 
+    @Nullable
+    private Set<BlockPos> collectOtherFountainAnchors(ServerLevel level) {
+        HashSet<BlockPos> anchors = new HashSet<>();
+        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+            for (Map.Entry<BlockPos, DarkFountain> e : cap.darkFountains.entrySet()) {
+                if (!e.getKey().equals(this.fountainPos)) {
+                    anchors.add(e.getValue().getFountainPos());
+                }
+            }
+        });
+        return anchors.isEmpty() ? null : anchors;
+    }
+
     private void tickRoomManagement(ServerLevel level) {
+        Set<BlockPos> otherAnchors = collectOtherFountainAnchors(level);
+
         if (rooms.isEmpty()) {
-            RoomScanner.RoomScanResult result = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false);
+            RoomScanner.RoomScanResult result = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors);
             if (result.isValid()) {
                 DarkRoom newRoom = new DarkRoom(fountainPos, result.getPositions(), result.getDoorPositions());
                 addEntitiesInRoomToTickers(level, newRoom);
@@ -454,7 +469,7 @@ public class DarkFountain {
         for (DarkRoom room : rooms) {
             if (room.isDissipating()) continue;
 
-            RoomScanner.RoomScanResult result = RoomScanner.scan(level, room.getSeedPos(), ServerConfig.maxRoomVolume, true, true);
+            RoomScanner.RoomScanResult result = RoomScanner.scan(level, room.getSeedPos(), ServerConfig.maxRoomVolume, true, true, otherAnchors);
             if (result.isValid()) {
                 room.positions = result.getPositions();
                 room.doorPositions = result.getDoorPositions();
@@ -467,7 +482,7 @@ public class DarkFountain {
         }
 
         tickConnectivityViaDoors(level);
-        tickExpansionThroughDoors(level);
+        tickExpansionThroughDoors(level, otherAnchors);
     }
 
     private void tickConnectivityViaDoors(ServerLevel level) {
@@ -511,7 +526,7 @@ public class DarkFountain {
         }
     }
 
-    private void tickExpansionThroughDoors(ServerLevel level) {
+    private void tickExpansionThroughDoors(ServerLevel level, @Nullable Set<BlockPos> otherFountainAnchors) {
         //Subtract total used volume from max volume, if zero or below, don't expand
         int remainingVolume = ServerConfig.maxRoomVolume - DarkRoom.getTotalDarknessCount(rooms);
         if (remainingVolume <= 0) return;
@@ -534,11 +549,13 @@ public class DarkFountain {
                     BlockPos adjacent = doorPos.relative(dir);
                     if (allPositions.contains(adjacent)) continue;
 
+                    if (otherFountainAnchors != null && otherFountainAnchors.contains(adjacent)) continue;
+
                     BlockState adjState = level.getBlockState(adjacent);
                     if (!adjState.is(Blocks.AIR) && !adjState.is(Blocks.CAVE_AIR) && !adjState.is(Blocks.VOID_AIR))
                         continue;
 
-                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false);
+                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false, false, otherFountainAnchors);
                     if (result.isValid()) {
                         DarkRoom newRoom = new DarkRoom(adjacent, result.getPositions(), result.getDoorPositions());
                         addEntitiesInRoomToTickers(level, newRoom);
