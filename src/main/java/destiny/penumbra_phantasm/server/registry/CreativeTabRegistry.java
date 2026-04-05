@@ -230,6 +230,8 @@ public class CreativeTabRegistry {
             .withTabsBefore(CARD_KINGDOM.getKey())
             .displayItems((parameters, output) -> {
                 output.accept(BlockRegistry.TENEBRALITH_SPIKE.get());
+                output.accept(BlockRegistry.TENEBRALITH_PATH.get());
+                output.accept(BlockRegistry.DARK_SAND.get());
                 output.accept(BlockRegistry.TENEBRALITH_PILLAR.get());
                 output.accept(BlockRegistry.CHISELED_TENEBRALITH.get());
 

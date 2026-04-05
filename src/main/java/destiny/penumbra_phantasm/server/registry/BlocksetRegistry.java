@@ -14,7 +14,7 @@ public final class BlocksetRegistry {
                     "polished_umbrastone",
                     "umbrastone/polished",
                     "cobbled_umbrastone",
-                    1,
+                    0,
                     false,
                     false,
                     false
@@ -24,7 +24,7 @@ public final class BlocksetRegistry {
                     "umbrastone",
                     "umbrastone",
                     "",
-                    1,
+                    0,
                     false,
                     true,
                     false
@@ -34,7 +34,7 @@ public final class BlocksetRegistry {
                     "cobbled_umbrastone",
                     "umbrastone/cobbled",
                     "",
-                    1,
+                    0,
                     false,
                     false,
                     true
@@ -45,7 +45,7 @@ public final class BlocksetRegistry {
                     "polished_scarlet_marble",
                     "marble/scarlet/polished",
                     "cobbled_scarlet_marble",
-                    1,
+                    0,
                     true,
                     false,
                     false
@@ -55,7 +55,7 @@ public final class BlocksetRegistry {
                     "scarlet_marble",
                     "marble/scarlet",
                     "",
-                    1,
+                    0,
                     true,
                     true,
                     false
@@ -65,7 +65,7 @@ public final class BlocksetRegistry {
                     "cobbled_scarlet_marble",
                     "marble/scarlet/cobbled",
                     "",
-                    1,
+                    0,
                     true,
                     false,
                     true
@@ -76,7 +76,7 @@ public final class BlocksetRegistry {
                     "polished_dark_marble",
                     "marble/dark/polished",
                     "cobbled_dark_marble",
-                    1,
+                    0,
                     true,
                     false,
                     false
@@ -86,7 +86,7 @@ public final class BlocksetRegistry {
                     "dark_marble",
                     "marble/dark",
                     "",
-                    1,
+                    0,
                     true,
                     true,
                     false
@@ -96,7 +96,7 @@ public final class BlocksetRegistry {
                     "cobbled_dark_marble",
                     "marble/dark/cobbled",
                     "",
-                    1,
+                    0,
                     true,
                     false,
                     true
@@ -138,7 +138,7 @@ public final class BlocksetRegistry {
                     "polished_tenebralith",
                     "tenebralith/polished",
                     "cobbled_tenebralith",
-                    1,
+                    2,
                     false,
                     false,
                     false
@@ -148,7 +148,7 @@ public final class BlocksetRegistry {
                     "tenebralith_1",
                     "tenebralith",
                     "",
-                    1,
+                    2,
                     false,
                     true,
                     false
@@ -158,7 +158,7 @@ public final class BlocksetRegistry {
                     "cobbled_tenebralith",
                     "tenebralith/cobbled",
                     "",
-                    1,
+                    2,
                     false,
                     false,
                     true
@@ -171,7 +171,7 @@ public final class BlocksetRegistry {
                     "umbrastone_bricks",
                     "umbrastone/bricks",
                     "umbrastone",
-                    1,
+                    0,
                     false,
                     false,
                     false
@@ -181,7 +181,7 @@ public final class BlocksetRegistry {
                     "scarlet_marble_bricks",
                     "marble/scarlet/bricks",
                     "scarlet_marble",
-                    1,
+                    0,
                     true,
                     false,
                     false
@@ -191,7 +191,7 @@ public final class BlocksetRegistry {
                     "dark_marble_bricks",
                     "marble/dark/bricks",
                     "dark_marble",
-                    1,
+                    0,
                     true,
                     false,
                     false
@@ -211,7 +211,7 @@ public final class BlocksetRegistry {
                     "tenebralith_bricks",
                     "tenebralith/bricks",
                     "tenebralith",
-                    1,
+                    2,
                     false,
                     false,
                     false

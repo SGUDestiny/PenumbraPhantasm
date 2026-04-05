@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/block",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "outer": "#outer",
+    "inner": "#inner",
+    "particle": "#particle"
+  },
+  "elements": [
+    {
+      "name": "inner",
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#inner"},
+        "east": {"uv": [0, 0, 16, 16], "texture": "#inner"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#inner"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#inner"},
+        "up": {"uv": [0, 0, 16, 16], "texture": "#inner"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#inner"}
+      }
+    },
+    {
+      "name": "outer",
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "forge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#outer"},
+        "east": {"uv": [0, 0, 16, 16], "texture": "#outer"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#outer"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#outer"},
+        "up": {"uv": [0, 0, 16, 16], "texture": "#outer"},
+        "down": {"uv": [0, 0, 16, 16], "texture": "#outer"}
+      }
+    }
+  ]
+}

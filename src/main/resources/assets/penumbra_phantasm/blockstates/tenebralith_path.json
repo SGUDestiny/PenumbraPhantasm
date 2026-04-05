@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "penumbra_phantasm:block/tenebralith_path_1",
+        "weight": 70
+      },
+      {
+        "model": "penumbra_phantasm:block/tenebralith_path_2",
+        "weight": 30
+      }
+    ]
+  }
+}

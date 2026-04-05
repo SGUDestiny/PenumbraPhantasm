@@ -3,14 +3,15 @@ package destiny.penumbra_phantasm.server.registry;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.block.*;
 import destiny.penumbra_phantasm.server.worldgen.ScarletGrower;
+import destiny.penumbra_phantasm.server.block.TenebralithSpikeBlock;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.registries.DeferredRegister;
@@ -278,7 +279,9 @@ public class BlockRegistry {
 
 
     //Tenebralith misc
-    public static final RegistryObject<Block> TENEBRALITH_SPIKE = registerBlock("tenebralith_spike", () -> new PointedDripstoneBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_SPIKE = registerBlock("tenebralith_spike", () -> new TenebralithSpikeBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_PATH = registerBlock("tenebralith_path", () -> new Block(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> DARK_SAND = registerBlock("dark_sand", () -> new FallingBlock(BlockBehaviour.Properties.of().mapColor(DyeColor.BLACK).sound(SoundType.SOUL_SAND)));
     public static final RegistryObject<Block> TENEBRALITH_PILLAR = registerBlock("tenebralith_pillar", () -> new RotatedPillarBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> CHISELED_TENEBRALITH = registerBlock("chiseled_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
 
@@ -320,7 +323,7 @@ public class BlockRegistry {
             () -> new LuminescentWaterFluidBlock(FluidRegistry.SOURCE_LUMINESCENT_WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()
                     .lightLevel(state -> 15).randomTicks()));
     public static final RegistryObject<LiquidBlock> PURE_DARKNESS = BLOCKS.register("pure_darkness",
-            () -> new LiquidBlock(FluidRegistry.SOURCE_PURE_DARKNESS, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable().lightLevel(state -> 15)));
+            () -> new LiquidBlock(FluidRegistry.SOURCE_PURE_DARKNESS, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
 
     public static final RegistryObject<Block> HEARTH = registerBlock("hearth",
             () -> new HearthBlock(BlockBehaviour.Properties.copy(Blocks.LANTERN)
