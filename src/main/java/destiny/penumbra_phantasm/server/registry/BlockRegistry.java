@@ -261,7 +261,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> CLIFFROCK_BRICK_PRESSURE_PLATE = registerBlock("cliffrock_brick_pressure_plate", () -> new CliffrockPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission()));
 
     //Cliffrock
-    public static final RegistryObject<Block> CLIFFROCK = registerBlock("cliffrock", () -> new Block(CLIFFROCK_PROPERTIES));
+    public static final RegistryObject<Block> CLIFFROCK = registerBlock("cliffrock", () -> new PathableBlock(CLIFFROCK_PROPERTIES, BlockRegistry.CLIFFROCK_PATH.get()));
     public static final RegistryObject<Block> CLIFFROCK_STAIRS = registerBlock("cliffrock_stairs", () -> new StairBlock(BlockRegistry.CLIFFROCK.get().defaultBlockState(), CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_SLAB = registerBlock("cliffrock_slab", () -> new SlabBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_WALL = registerBlock("cliffrock_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
@@ -281,7 +281,7 @@ public class BlockRegistry {
     //Tenebralith misc
     public static final RegistryObject<Block> TENEBRALITH_SPIKE = registerBlock("tenebralith_spike", () -> new TenebralithSpikeBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> TENEBRALITH_PATH = registerBlock("tenebralith_path", () -> new Block(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> DARK_SAND = registerBlock("dark_sand", () -> new FallingBlock(BlockBehaviour.Properties.of().mapColor(DyeColor.BLACK).sound(SoundType.SOUL_SAND)));
+    public static final RegistryObject<Block> DARK_SAND = registerBlock("dark_sand", () -> new FallingBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_SAND).mapColor(DyeColor.BLACK).sound(SoundType.SOUL_SAND).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TENEBRALITH_PILLAR = registerBlock("tenebralith_pillar", () -> new RotatedPillarBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> CHISELED_TENEBRALITH = registerBlock("chiseled_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
 
@@ -302,7 +302,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> TENEBRALITH_BRICK_PRESSURE_PLATE = registerBlock("tenebralith_brick_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET));
 
     //Tenebralith
-    public static final RegistryObject<Block> TENEBRALITH = registerBlock("tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH = registerBlock("tenebralith", () -> new PathableBlock(TENEBRALITH_PROPERTIES, BlockRegistry.TENEBRALITH_PATH.get()));
     public static final RegistryObject<Block> TENEBRALITH_STAIRS = registerBlock("tenebralith_stairs", () -> new StairBlock(BlockRegistry.TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> TENEBRALITH_SLAB = registerBlock("tenebralith_slab", () -> new SlabBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> TENEBRALITH_WALL = registerBlock("tenebralith_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));

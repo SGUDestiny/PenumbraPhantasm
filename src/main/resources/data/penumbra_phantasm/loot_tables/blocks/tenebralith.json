@@ -5,21 +5,37 @@
       "bonus_rolls": 0,
       "entries": [
         {
-          "type": "minecraft:item",
-          "functions": [
+          "type": "minecraft:alternatives",
+          "children": [
             {
-              "add": false,
-              "count": {
-                "type": "minecraft:constant",
-                "value": 1
-              },
-              "function": "minecraft:set_count"
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:match_tool",
+                  "predicate": {
+                    "enchantments": [
+                      {
+                        "enchantment": "minecraft:silk_touch",
+                        "levels": {
+                          "min": 1
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "name": "penumbra_phantasm:tenebralith"
             },
             {
-              "function": "minecraft:explosion_decay"
+              "type": "minecraft:item",
+              "conditions": [
+                {
+                  "condition": "minecraft:survives_explosion"
+                }
+              ],
+              "name": "penumbra_phantasm:cobbled_tenebralith"
             }
-          ],
-          "name": "penumbra_phantasm:tenebralith"
+          ]
         }
       ],
       "rolls": 1
