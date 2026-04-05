@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.block.*;
+import destiny.penumbra_phantasm.server.worldgen.DarkCandyGrower;
 import destiny.penumbra_phantasm.server.worldgen.ScarletGrower;
 import destiny.penumbra_phantasm.server.block.TenebralithSpikeBlock;
 import net.minecraft.sounds.SoundEvents;
@@ -108,7 +109,7 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_SAPLING)));
     public static final RegistryObject<Block> POTTED_SCARLET_SAPLING = BLOCKS.register("potted_scarlet_sapling",
             () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.SCARLET_SAPLING,
-                    BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING).noOcclusion()));
+                    BlockBehaviour.Properties.copy(Blocks.POTTED_ACACIA_SAPLING).noOcclusion()));
 
     //Scarlet planks
     public static final RegistryObject<Block> SCARLET_PLANKS = registerBlock("scarlet_planks", () -> new Block(SCARLET_PROPERTIES));
@@ -134,11 +135,11 @@ public class BlockRegistry {
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block>DARK_CANDY_SAPLING = registerBlock("dark_candy_sapling",
-            () -> new SaplingBlock(new ScarletGrower(), BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING)
+            () -> new SaplingBlock(new DarkCandyGrower(), BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_SAPLING)));
     public static final RegistryObject<Block> POTTED_DARK_CANDY_SAPLING = BLOCKS.register("potted_dark_candy_sapling",
-            () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.SCARLET_SAPLING,
-                    BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING).noOcclusion()));
+            () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.DARK_CANDY_SAPLING,
+                    BlockBehaviour.Properties.copy(Blocks.POTTED_ACACIA_SAPLING).noOcclusion()));
 
     //Dark candy planks
     public static final RegistryObject<Block> DARK_CANDY_PLANKS = registerBlock("dark_candy_planks", () -> new Block(DARK_CANDY_PROPERTIES));

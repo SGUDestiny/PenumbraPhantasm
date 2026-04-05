@@ -4,7 +4,7 @@
       "model": "penumbra_phantasm:block/tenebralith_slab"
     },
     "type=double": {
-      "model": "penumbra_phantasm:block/tenebralith"
+      "model": "penumbra_phantasm:block/tenebralith_1"
     },
     "type=top": {
       "model": "penumbra_phantasm:block/tenebralith_slab_top"

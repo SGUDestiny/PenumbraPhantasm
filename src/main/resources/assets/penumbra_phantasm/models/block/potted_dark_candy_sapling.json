@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_tinted_flower_pot_cross_emissive",
+  "textures": {
+    "plant": "penumbra_phantasm:block/dark_candy_sapling"
+  }
+}

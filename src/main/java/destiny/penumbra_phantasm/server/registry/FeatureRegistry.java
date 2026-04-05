@@ -1,9 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.worldgen.ScarletBushFeature;
-import destiny.penumbra_phantasm.server.worldgen.ScarletFoliagePlacer;
-import destiny.penumbra_phantasm.server.worldgen.ScarletTrunkPlacer;
+import destiny.penumbra_phantasm.server.worldgen.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -21,12 +19,16 @@ public class FeatureRegistry {
     public static final DeferredRegister<FoliagePlacerType<?>> FOLIAGES = DeferredRegister.create(Registries.FOLIAGE_PLACER_TYPE, PenumbraPhantasm.MODID);
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, PenumbraPhantasm.MODID);
 
-    public static final RegistryObject<TrunkPlacerType<ScarletTrunkPlacer>> SCARLET_TRUNK = TRUNKS.register("scarlet_trunk_placer", () -> new TrunkPlacerType<>(ScarletTrunkPlacer.CODEC));
-    public static final RegistryObject<FoliagePlacerType<?>> SCARLET_FOLIAGE = FOLIAGES.register("scarlet_foliage_placer", () -> new FoliagePlacerType<>(ScarletFoliagePlacer.CODEC));
-
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> SCARLET_BUSH = FEATURES.register("scarlet_bush", () -> new ScarletBushFeature(NoneFeatureConfiguration.CODEC));
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCARLET_TREE = registerKey("tree/scarlet_tree");
+    public static final RegistryObject<TrunkPlacerType<ScarletTrunkPlacer>> SCARLET_TRUNK = TRUNKS.register("scarlet_trunk_placer", () -> new TrunkPlacerType<>(ScarletTrunkPlacer.CODEC));
+    public static final RegistryObject<FoliagePlacerType<ScarletFoliagePlacer>> SCARLET_FOLIAGE = FOLIAGES.register("scarlet_foliage_placer", () -> new FoliagePlacerType<>(ScarletFoliagePlacer.CODEC));
+
+    public static final ResourceKey<ConfiguredFeature<?, ?>> DARK_CANDY_TREE_GENERATED = registerKey("tree/dark_candy_tree_generated");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> DARK_CANDY_TREE_GROWN = registerKey("tree/dark_candy_tree_grown");
+    public static final RegistryObject<TrunkPlacerType<DarkCandyTrunkPlacer>> DARK_CANDY_TRUNK = TRUNKS.register("dark_candy_trunk_placer", () -> new TrunkPlacerType<>(DarkCandyTrunkPlacer.CODEC));
+    public static final RegistryObject<FoliagePlacerType<DarkCandyFoliagePlacer>> DARK_CANDY_FOLIAGE = FOLIAGES.register("dark_candy_foliage_placer", () -> new FoliagePlacerType<>(DarkCandyFoliagePlacer.CODEC));
 
     public static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(PenumbraPhantasm.MODID, name));
