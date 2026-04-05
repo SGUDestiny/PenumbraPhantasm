@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import destiny.penumbra_phantasm.ServerConfig;
@@ -174,6 +175,11 @@ public class KnifeItem extends SwordItem {
                 player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_another_fountain_nearby"), true);
                 return InteractionResultHolder.fail(stack); // If fountain within 16 blocks of this(16 squared is 256)
             }
+        }
+
+        if (DarkFountainCapability.roomIntersectsActiveFountain(cap, roomResult.getPositions())) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
+            return InteractionResultHolder.fail(stack);
         }
 
         //Cancel checks passed, try fountain making
@@ -358,6 +364,12 @@ public class KnifeItem extends SwordItem {
 
         //Scan if the room is still valid, get result with all blocks
         RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false);
+        if (!roomResult.isValid()) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_unsealed_or_too_big"), true);
+            resetMakingState(tag);
+            return;
+        }
+
         Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
         DarkWorldType finalDarkWorldType = null;
 
@@ -385,15 +397,45 @@ public class KnifeItem extends SwordItem {
             return;
         }
 
-        //Create dark world level based on position, dimension and dark world type
-        ServerLevel targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
+        ResourceLocation typeId = darkWorldTypeRegistry.getKey(finalDarkWorldType);
+        if (typeId == null) {
+            sendErrorMessage(player);
+            resetMakingState(tag);
+            return;
+        }
+
+        if (DarkFountainCapability.roomIntersectsActiveFountain(lightCap, roomResult.getPositions())) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
+            resetMakingState(tag);
+            return;
+        }
+
+        Optional<DarkFountainCapability.PersistentDarkWorldSite> matchedSite =
+                lightCap.findMatchingPersistentSite(roomResult.getPositions(), typeId);
+
+        ServerLevel targetLevel = null;
+        if (matchedSite.isPresent()) {
+            DarkFountainCapability.PersistentDarkWorldSite site = matchedSite.get();
+            targetLevel = level.getServer().getLevel(site.dimensionKey);
+            if (targetLevel == null) {
+                targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
+                if (targetLevel != null) {
+                    site.dimensionKey = targetLevel.dimension();
+                }
+            }
+        } else {
+            targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
+            if (targetLevel != null) {
+                lightCap.registerPersistentSite(roomResult.getPositions(), typeId, targetLevel.dimension());
+            }
+        }
+
         if (targetLevel == null) {
             sendErrorMessage(player);
             resetMakingState(tag);
             return;
         }
 
-        //Get light fountain capability
         DarkFountainCapability darkCap;
         LazyOptional<DarkFountainCapability> darkLazyCapability = targetLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
         if(darkLazyCapability.isPresent() && darkLazyCapability.resolve().isPresent())
