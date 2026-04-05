@@ -334,11 +334,12 @@ public class FountainRenderUtil
 		ResourceLocation textureBottomEdges = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_edges.png");
 		ResourceLocation imageDepth = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/image_depth.png");
 		float pixel = 1f / 16f;
-		float time = (level.getGameTime() + partialTick) * 0.1f;
+		float smoothGameTime = level.getGameTime() + partialTick;
+		float time = smoothGameTime * 0.1f;
 		float sealingTicks = fountain.sealingTick + partialTick;
 		float clampedSealingTicks = Mth.clamp(sealingTicks, 0f, DarkFountain.SEAL_DURATION);
 		float basePulseSpeed = 1.2f;
-		float phaseAtSealStart = (time - sealingTicks * 0.1f) * basePulseSpeed;
+		float phaseAtSealStart = (smoothGameTime - fountain.sealingTick) * 0.1f * basePulseSpeed;
 		float decelPhase = basePulseSpeed * 0.1f * (clampedSealingTicks - (clampedSealingTicks * clampedSealingTicks) / (2f * DarkFountain.SEAL_DURATION));
 		float pulseMotion = (float) Math.sin(phaseAtSealStart + decelPhase);
 		long fountainKey = fountain.getFountainPos().asLong();
@@ -365,8 +366,7 @@ public class FountainRenderUtil
 		ShaderInstance shaderInstance = ModShaders.FOUNTAIN_MASKED;
 		if (shaderInstance != null) {
 			float baseShaderSpeed = 0.05f;
-			float rawTime = level.getGameTime() + partialTick;
-			float shadertime = rawTime * baseShaderSpeed - baseShaderSpeed * (clampedSealingTicks * clampedSealingTicks) / (2f * DarkFountain.SEAL_DURATION);
+			float shadertime = (smoothGameTime - fountain.sealingTick) * baseShaderSpeed - baseShaderSpeed * (clampedSealingTicks * clampedSealingTicks) / (2f * DarkFountain.SEAL_DURATION);
 			if (sealDelta >= 1f) {
 				float currentShaderTime = shadertime;
 				shadertime = sealedShaderTimeByFountain.computeIfAbsent(fountainKey, k -> currentShaderTime);
@@ -462,6 +462,9 @@ public class FountainRenderUtil
 			ResourceLocation textureBottomSealing = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_bottom/fountain_bottom_sealing.png");
 			float sealingFlashTick = fountain.sealingTick - (DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY);
 			float flashDelta = Mth.clamp((sealingFlashTick + partialTick) / DarkFountain.SEAL_FLASH_DURATION, 0f, 1f);
+			float edgePulseDelta = Mth.clamp((sealingFlashTick + partialTick) / (DarkFountain.SEAL_FLASH_DURATION / 2f), 0f, 1f);
+			float edgePulse = Mth.lerp(edgePulseDelta, pulse, 1f);
+			float edgePulseFront = Mth.lerp(edgePulseDelta, pulseFront, 1f);
 
 			//Fountain bottom edges
 			poseStack.pushPose();
@@ -515,7 +518,7 @@ public class FountainRenderUtil
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			poseStack.scale(pulse, 1.0f, pulse);
+			poseStack.scale(edgePulse, 1.0f, edgePulse);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleSealing)),
 					1f, 1f, 1f, flashDelta,
 					48f, 140f, length, 0.01f);
@@ -531,7 +534,7 @@ public class FountainRenderUtil
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			poseStack.scale(pulseFront, 1.0f, pulseFront);
+			poseStack.scale(edgePulseFront, 1.0f, edgePulseFront);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleSealing)),
 					1f, 1f, 1f, flashDelta,
 					48f, 140f, length, 0.03f);
@@ -548,7 +551,7 @@ public class FountainRenderUtil
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			poseStack.scale(pulse, 1.0f, pulse);
+			poseStack.scale(edgePulse, 1.0f, edgePulse);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
 					1f, 1f, 1f, 1f,
 					48f, 140f, length, 0.0f);
@@ -556,7 +559,7 @@ public class FountainRenderUtil
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			poseStack.scale(pulseFront, 1.0f, pulseFront);
+			poseStack.scale(edgePulseFront, 1.0f, edgePulseFront);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
 					1f, 1f, 1f, 1f,
 					48f, 140f, length, 0.2f);
@@ -568,8 +571,8 @@ public class FountainRenderUtil
 		poseStack.scale(1.0f, 1.0f, 1.0f);
 		if (fountain.sealingTick < DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY) {
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureMiddle, imageDepth, depthWrite)),
-				middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, alpha,
-				48f, 140f, length, 0.1f);
+					middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, alpha,
+					48f, 140f, length, 0.1f);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
 					middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, alpha,
 					48f, 140f, length, 0.1f);
@@ -596,8 +599,8 @@ public class FountainRenderUtil
 		poseStack.scale(pulseFront, 1.0f, pulseFront);
 		if (fountain.sealingTick < DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY) {
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureMiddle, imageDepth, depthWrite)),
-				frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha,
-				48f, 140f, length, 0.2f);
+					frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha,
+					48f, 140f, length, 0.2f);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
 					frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha,
 					48f, 140f, length, 0.2f);
