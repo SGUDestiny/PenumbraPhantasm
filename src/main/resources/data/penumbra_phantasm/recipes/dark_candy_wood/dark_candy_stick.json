@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "tag": "penumbra_phantasm:card_kingdom_planks"
+    }
+  },
+  "pattern": [
+    " # ",
+    " # "
+  ],
+  "result": {
+    "item": "penumbra_phantasm:dark_candy_stick",
+    "count": 4
+  },
+  "show_notification": true
+}

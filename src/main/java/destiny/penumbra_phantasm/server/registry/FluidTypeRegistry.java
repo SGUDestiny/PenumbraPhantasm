@@ -3,6 +3,8 @@ package destiny.penumbra_phantasm.server.registry;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.fluid.LuminescentWaterFluidType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -25,12 +27,16 @@ public class FluidTypeRegistry {
     public static final RegistryObject<FluidType> LUMINESCENT_WATER = registerFluidType("luminescent_water",
             new LuminescentWaterFluidType(LUMINESCENT_WATER_STILL, LUMINESCENT_WATER_FLOW, LUMINESCENT_WATER_OVERLAY, 0xFFFFFFFF,
                     new Vector3f(21f / 255f, 18f / 255f, 38f / 255f),
-                    FluidType.Properties.create().lightLevel(15).viscosity(4).density(7).canExtinguish(true)));
+                    FluidType.Properties.create().lightLevel(15).viscosity(4).density(7).canExtinguish(true)
+                            .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
+                            .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)));
 
     public static final RegistryObject<FluidType> PURE_DARKNESS = registerFluidType("pure_darkness",
             new LuminescentWaterFluidType(PURE_DARKNESS_STILL, PURE_DARKNESS_FLOW, PURE_DARKNESS_OVERLAY, 0xFFFFFFFF,
                     new Vector3f(21f / 255f, 18f / 255f, 38f / 255f),
-                    FluidType.Properties.create().lightLevel(15).viscosity(7).density(14).canExtinguish(true)));
+                    FluidType.Properties.create().lightLevel(15).viscosity(7).density(14).canExtinguish(true)
+                            .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
+                            .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)));
 
     private static RegistryObject<FluidType> registerFluidType(String name, FluidType fluidType) {
         return FLUID_TYPES.register(name, () -> fluidType);

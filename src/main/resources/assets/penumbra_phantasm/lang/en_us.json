@@ -16,10 +16,21 @@
   "item.penumbra_phantasm.item_music_medium_the_holy": "ITEM_MUSIC_MEDIUM",
   "item.penumbra_phantasm.item_music_medium_the_holy.desc": "Toby Fox - THE HOLY",
 
-  "item.penumbra_phantasm.scarlet_stick": "Scarlet Stick",
-  "item.penumbra_phantasm.umbrastone_pickaxe": "Umbrastone Pickaxe",
+  "item.penumbra_phantasm.dark_candy_stick": "Dark Candy Stick",
 
-  "item.penumbra_phantasm.scarlet_bucket": "Scarlet Bucket",
+  "item.penumbra_phantasm.dark_candy_sword": "Dark Candy Sword",
+  "item.penumbra_phantasm.dark_candy_pickaxe": "Dark Candy Pickaxe",
+  "item.penumbra_phantasm.dark_candy_axe": "Dark Candy Axe",
+  "item.penumbra_phantasm.dark_candy_shovel": "Dark Candy Shovel",
+  "item.penumbra_phantasm.dark_candy_hoe": "Dark Candy Hoe",
+
+  "item.penumbra_phantasm.umbrastone_sword": "Umbrastone Sword",
+  "item.penumbra_phantasm.umbrastone_pickaxe": "Umbrastone Pickaxe",
+  "item.penumbra_phantasm.umbrastone_axe": "Umbrastone Axe",
+  "item.penumbra_phantasm.umbrastone_shovel": "Umbrastone Shovel",
+  "item.penumbra_phantasm.umbrastone_hoe": "Umbrastone Hoe",
+
+  "item.penumbra_phantasm.dark_candy_bucket": "Dark Candy Bucket",
   "item.penumbra_phantasm.luminescent_water_bucket": "Luminescent Water Bucket",
   "item.penumbra_phantasm.pure_darkness_bucket": "Pure Darkness Bucket",
 
@@ -87,6 +98,8 @@
 
   "block.penumbra_phantasm.dark_candy_leaves": "Dark Candy Leaves",
   "block.penumbra_phantasm.dark_candy_log": "Dark Candy Log",
+
+  "block.penumbra_phantasm.dark_candy_crafting_table": "Dark Candy Crafting Table",
 
   "block.penumbra_phantasm.dark_candy_planks": "Dark Candy Planks",
   "block.penumbra_phantasm.dark_candy_stairs": "Dark Candy Stairs",

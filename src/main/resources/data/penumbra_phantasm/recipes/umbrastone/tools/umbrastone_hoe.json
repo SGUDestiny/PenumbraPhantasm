@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:dark_candy_stick"
+    },
+    "X": {
+      "tag": "penumbra_phantasm:card_kingdom_materials_tier_two"
+    }
+  },
+  "pattern": [
+    "XX ",
+    " # ",
+    " # "
+  ],
+  "result": {
+    "item": "penumbra_phantasm:umbrastone_hoe"
+  },
+  "show_notification": true
+}

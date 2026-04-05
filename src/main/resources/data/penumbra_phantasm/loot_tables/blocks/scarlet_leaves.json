@@ -126,7 +126,7 @@
               "function": "minecraft:explosion_decay"
             }
           ],
-          "name": "minecraft:stick"
+          "name": "penumbra_phantasm:dark_candy_stick"
         }
       ],
       "rolls": 1

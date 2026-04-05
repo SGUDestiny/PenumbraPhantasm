@@ -43,12 +43,62 @@ public class CreativeTabRegistry {
             .title(Component.translatable("itemGroup.penumbra_phantasm.card_kingdom"))
             .withTabsBefore(MAIN.getKey())
             .displayItems((parameters, output) -> {
-                output.accept(ItemRegistry.SCARLET_STICK.get());
-                output.accept(ItemRegistry.UMBRASTONE_PICKAXE.get());
+                output.accept(ItemRegistry.DARk_CANDY_SWORD.get());
+                output.accept(ItemRegistry.DARk_CANDY_AXE.get());
+                output.accept(ItemRegistry.DARk_CANDY_PICKAXE.get());
+                output.accept(ItemRegistry.DARk_CANDY_SHOVEL.get());
+                output.accept(ItemRegistry.DARk_CANDY_HOE.get());
 
-                output.accept(ItemRegistry.SCARLET_BUCKET.get());
+                output.accept(ItemRegistry.UMBRASTONE_SWORD.get());
+                output.accept(ItemRegistry.UMBRASTONE_AXE.get());
+                output.accept(ItemRegistry.UMBRASTONE_PICKAXE.get());
+                output.accept(ItemRegistry.UMBRASTONE_SHOVEL.get());
+                output.accept(ItemRegistry.UMBRASTONE_HOE.get());
+
+                output.accept(ItemRegistry.DARK_CANDY_STICK.get());
+
+                output.accept(ItemRegistry.DARK_CANDY_BUCKET.get());
                 output.accept(ItemRegistry.LUMINESCENT_WATER_BUCKET.get());
                 output.accept(ItemRegistry.PURE_DARKNESS_BUCKET.get());
+
+                output.accept(BlockRegistry.TWILIGHT_GRASS.get());
+                output.accept(BlockRegistry.TWILIGHT_GRASS_BLOCK.get());
+
+                output.accept(BlockRegistry.SCARLET_BUSH.get());
+
+                output.accept(BlockRegistry.SCARLET_SAPLING.get());
+                output.accept(BlockRegistry.SCARLET_LEAVES.get());
+
+                output.accept(BlockRegistry.SCARLET_LOG.get());
+                output.accept(BlockRegistry.SCARLET_PLANKS.get());
+                output.accept(BlockRegistry.SCARLET_STAIRS.get());
+                output.accept(BlockRegistry.SCARLET_SLAB.get());
+                output.accept(BlockRegistry.SCARLET_FENCE.get());
+                output.accept(BlockRegistry.SCARLET_FENCE_GATE.get());
+                output.accept(BlockRegistry.SCARLET_DOOR.get());
+                output.accept(BlockRegistry.SCARLET_TRAPDOOR.get());
+                output.accept(BlockRegistry.SCARLET_BUTTON.get());
+                output.accept(BlockRegistry.SCARLET_PRESSURE_PLATE.get());
+
+                output.accept(ItemRegistry.DARK_CANDY.get());
+                output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());
+
+                output.accept(BlockRegistry.DARK_CANDY_SAPLING.get());
+                output.accept(BlockRegistry.DARK_CANDY_LEAVES.get());
+
+                output.accept(BlockRegistry.DARK_CANDY_LOG.get());
+
+                output.accept(BlockRegistry.DARK_CANDY_CRAFTING_TABLE.get());
+
+                output.accept(BlockRegistry.DARK_CANDY_PLANKS.get());
+                output.accept(BlockRegistry.DARK_CANDY_STAIRS.get());
+                output.accept(BlockRegistry.DARK_CANDY_SLAB.get());
+                output.accept(BlockRegistry.DARK_CANDY_FENCE.get());
+                output.accept(BlockRegistry.DARK_CANDY_FENCE_GATE.get());
+                output.accept(BlockRegistry.DARK_CANDY_DOOR.get());
+                output.accept(BlockRegistry.DARK_CANDY_TRAPDOOR.get());
+                output.accept(BlockRegistry.DARK_CANDY_BUTTON.get());
+                output.accept(BlockRegistry.DARK_CANDY_PRESSURE_PLATE.get());
 
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());
@@ -84,42 +134,6 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.COBBLED_UMBRASTONE_WALL.get());
                 output.accept(BlockRegistry.COBBLED_UMBRASTONE_BUTTON.get());
                 output.accept(BlockRegistry.COBBLED_UMBRASTONE_PRESSURE_PLATE.get());
-
-                output.accept(BlockRegistry.TWILIGHT_GRASS.get());
-                output.accept(BlockRegistry.TWILIGHT_GRASS_BLOCK.get());
-
-                output.accept(BlockRegistry.SCARLET_BUSH.get());
-
-                output.accept(BlockRegistry.SCARLET_SAPLING.get());
-                output.accept(BlockRegistry.SCARLET_LEAVES.get());
-
-                output.accept(BlockRegistry.SCARLET_LOG.get());
-                output.accept(BlockRegistry.SCARLET_PLANKS.get());
-                output.accept(BlockRegistry.SCARLET_STAIRS.get());
-                output.accept(BlockRegistry.SCARLET_SLAB.get());
-                output.accept(BlockRegistry.SCARLET_FENCE.get());
-                output.accept(BlockRegistry.SCARLET_FENCE_GATE.get());
-                output.accept(BlockRegistry.SCARLET_DOOR.get());
-                output.accept(BlockRegistry.SCARLET_TRAPDOOR.get());
-                output.accept(BlockRegistry.SCARLET_BUTTON.get());
-                output.accept(BlockRegistry.SCARLET_PRESSURE_PLATE.get());
-
-                output.accept(ItemRegistry.DARK_CANDY.get());
-                output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());
-
-                output.accept(BlockRegistry.DARK_CANDY_SAPLING.get());
-                output.accept(BlockRegistry.DARK_CANDY_LEAVES.get());
-
-                output.accept(BlockRegistry.DARK_CANDY_LOG.get());
-                output.accept(BlockRegistry.DARK_CANDY_PLANKS.get());
-                output.accept(BlockRegistry.DARK_CANDY_STAIRS.get());
-                output.accept(BlockRegistry.DARK_CANDY_SLAB.get());
-                output.accept(BlockRegistry.DARK_CANDY_FENCE.get());
-                output.accept(BlockRegistry.DARK_CANDY_FENCE_GATE.get());
-                output.accept(BlockRegistry.DARK_CANDY_DOOR.get());
-                output.accept(BlockRegistry.DARK_CANDY_TRAPDOOR.get());
-                output.accept(BlockRegistry.DARK_CANDY_BUTTON.get());
-                output.accept(BlockRegistry.DARK_CANDY_PRESSURE_PLATE.get());
 
                 output.accept(BlockRegistry.SCARLET_MARBLE_PAWN.get());
                 output.accept(BlockRegistry.SCARLET_MARBLE_ROOK.get());

@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "penumbra_phantasm:item/scarlet_stick"
+    "layer0": "penumbra_phantasm:item/umbrastone_sword"
   }
 }

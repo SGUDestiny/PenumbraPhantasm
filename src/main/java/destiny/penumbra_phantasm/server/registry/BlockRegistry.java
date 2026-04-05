@@ -141,6 +141,9 @@ public class BlockRegistry {
             () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.DARK_CANDY_SAPLING,
                     BlockBehaviour.Properties.copy(Blocks.POTTED_ACACIA_SAPLING).noOcclusion()));
 
+    public static final RegistryObject<Block> DARK_CANDY_CRAFTING_TABLE = registerBlock("dark_candy_crafting_table",
+            () -> new GenericCraftingTableBlock(DARK_CANDY_PROPERTIES));
+
     //Dark candy planks
     public static final RegistryObject<Block> DARK_CANDY_PLANKS = registerBlock("dark_candy_planks", () -> new Block(DARK_CANDY_PROPERTIES));
     public static final RegistryObject<Block> DARK_CANDY_STAIRS = registerBlock("dark_candy_stairs", () -> new StairBlock(DARK_CANDY_PLANKS.get().defaultBlockState(), DARK_CANDY_PROPERTIES));

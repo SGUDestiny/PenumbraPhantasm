@@ -1,0 +1,12 @@
+{
+  "parent": "penumbra_phantasm:block/template_cube_emissive",
+  "textures": {
+    "down": "penumbra_phantasm:block/dark_candy_planks",
+    "east": "penumbra_phantasm:block/dark_candy_crafting_table_side",
+    "north": "penumbra_phantasm:block/dark_candy_crafting_table_front",
+    "particle": "penumbra_phantasm:block/dark_candy_crafting_table_front",
+    "south": "penumbra_phantasm:block/dark_candy_crafting_table_side",
+    "up": "penumbra_phantasm:block/dark_candy_crafting_table_top",
+    "west": "penumbra_phantasm:block/dark_candy_crafting_table_front"
+  }
+}

@@ -27,13 +27,13 @@ public class FluidRegistry {
 
     public static final ForgeFlowingFluid.Properties LUMINESCENT_WATER_PROPERTIES = new ForgeFlowingFluid.Properties(
             FluidTypeRegistry.LUMINESCENT_WATER, SOURCE_LUMINESCENT_WATER, FLOWING_LUMINESCENT_WATER)
-            .slopeFindDistance(2).levelDecreasePerBlock(1).block(BlockRegistry.LUMINESCENT_WATER).bucket(ItemRegistry.LUMINESCENT_WATER_BUCKET);
-            //.bucket(ItemInit.CELESTIAL_OIL_BUCKET);
+            .slopeFindDistance(2).levelDecreasePerBlock(1).block(BlockRegistry.LUMINESCENT_WATER)
+            .bucket(ItemRegistry.LUMINESCENT_WATER_BUCKET);
 
     public static final ForgeFlowingFluid.Properties PURE_DARKNESS_PROPERTIES = new ForgeFlowingFluid.Properties(
             FluidTypeRegistry.PURE_DARKNESS, SOURCE_PURE_DARKNESS, FLOWING_PURE_DARKNESS)
-            .slopeFindDistance(2).levelDecreasePerBlock(2).block(BlockRegistry.PURE_DARKNESS).bucket(ItemRegistry.PURE_DARKNESS_BUCKET);
-    //.bucket(ItemInit.CELESTIAL_OIL_BUCKET);
+            .slopeFindDistance(2).levelDecreasePerBlock(2).block(BlockRegistry.PURE_DARKNESS)
+            .bucket(ItemRegistry.PURE_DARKNESS_BUCKET);
 
 
     public static void register(IEventBus eventBus) {
