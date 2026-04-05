@@ -15,19 +15,33 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+
+import javax.annotation.Nullable;
+
 public class RoomScanner {
 
     public static RoomScanResult scan(Level level, BlockPos fountainPos, int maxVolume, boolean includeDarkness) {
-        return scan(level, fountainPos, maxVolume, includeDarkness, false);
+        return scan(level, fountainPos, maxVolume, includeDarkness, false, null);
     }
 
     public static RoomScanResult scan(Level level, BlockPos fountainPos, int maxVolume, boolean includeDarkness, boolean openDoorsAsWalls) {
+        return scan(level, fountainPos, maxVolume, includeDarkness, openDoorsAsWalls, null);
+    }
+
+    /**
+     * @param blockingPositions if non-null, these cells are never entered (other fountains' anchors), so scans stay partitioned.
+     */
+    public static RoomScanResult scan(Level level, BlockPos fountainPos, int maxVolume, boolean includeDarkness, boolean openDoorsAsWalls, @Nullable Set<BlockPos> blockingPositions) {
         List<BlockPos> positions = new ArrayList<>();
         List<BlockPos> keyBlockPositions = new ArrayList<>();
         Set<BlockPos> visitedPositions = new HashSet<>();
         Set<BlockPos> doorPositions = new HashSet<>();
         Queue<BlockPos> queue = new LinkedList<>();
         Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
+
+        if (blockingPositions != null && blockingPositions.contains(fountainPos)) {
+            return RoomScanResult.failure();
+        }
 
         queue.add(fountainPos);
         visitedPositions.add(fountainPos);
@@ -44,6 +58,8 @@ public class RoomScanner {
                 BlockPos neighborPos = currentPos.relative(direction);
 
                 if (visitedPositions.contains(neighborPos)) continue;
+
+                if (blockingPositions != null && blockingPositions.contains(neighborPos)) continue;
 
                 BlockState state = level.getBlockState(neighborPos);
 
