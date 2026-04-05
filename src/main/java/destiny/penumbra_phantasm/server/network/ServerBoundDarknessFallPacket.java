@@ -46,6 +46,10 @@ public record ServerBoundDarknessFallPacket(BlockPos destinationPos, double spaw
             player.teleportTo(level, spawnX, spawnY, spawnZ, spawnYaw, 0f);
             player.connection.send(new ClientboundSetEntityMotionPacket(player));
 
+            player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
+                cap.darknessLandTicker = 0;
+            });
+
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                 DarkFountain fountain = cap.darkFountains.get(destinationPos);
                 if (fountain != null) {

@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import net.minecraftforge.common.capabilities.Capability;
@@ -16,11 +17,14 @@ public class CapabilityRegistry {
     });
     public static final Capability<SoulCapability> SOUL = CapabilityManager.get(new CapabilityToken<>() {
     });
+    public static final Capability<ScreenAnimationCapability> SCREEN_ANIMATION = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event)
     {
         event.register(DarkFountainCapability.class);
         event.register(SoulCapability.class);
+        event.register(ScreenAnimationCapability.class);
     }
 }

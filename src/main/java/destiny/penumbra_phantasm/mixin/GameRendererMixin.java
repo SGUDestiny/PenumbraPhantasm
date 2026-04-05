@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.VertexSorting;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
-import destiny.penumbra_phantasm.client.registry.ScreenAnimationCapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
@@ -33,17 +33,17 @@ public class GameRendererMixin {
 		int sealShineTick = -1;
 
 		if (minecraft.player != null) {
-			int darknessLandTicker = minecraft.player.getCapability(ScreenAnimationCapabilityRegistry.SCREEN_ANIMATION).resolve().map(c -> c.darknessLandTicker).orElse(-1);
+			int darknessLandTicker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve().map(c -> c.darknessLandTicker).orElse(-1);
 			if (darknessLandTicker >= 0 && darknessLandTicker < 40) {
 				landAlpha = darknessLandTicker < 20 ? 1f : Mth.lerp(darknessLandTicker / 40f, 1f, 0f);
 			}
 
-			int darknessOverlayTicker = minecraft.player.getCapability(ScreenAnimationCapabilityRegistry.SCREEN_ANIMATION).resolve().map(c -> c.darknessOverlayTicker).orElse(0);
+			int darknessOverlayTicker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve().map(c -> c.darknessOverlayTicker).orElse(0);
 			if (darknessOverlayTicker > 0) {
 				fountainAlpha = Math.min(Mth.lerp(darknessOverlayTicker / 100f, 0f, 3f), 2.5f);
 			}
 
-			sealShineTick = minecraft.player.getCapability(ScreenAnimationCapabilityRegistry.SCREEN_ANIMATION).resolve().map(c -> c.sealShineTicker).orElse(-1);
+			sealShineTick = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve().map(c -> c.sealShineTicker).orElse(-1);
 		}
 
 		if (landAlpha == 0f && fountainAlpha == 0f && sealShineTick < 0) return;

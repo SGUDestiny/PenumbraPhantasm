@@ -1,35 +1,26 @@
 package destiny.penumbra_phantasm.client.network;
 
-import destiny.penumbra_phantasm.client.registry.ScreenAnimationCapabilityRegistry;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
 public class ClientBoundTransportTickerPacket {
-    private final int darknessOverlayTicker;
+    private final float progress;
 
-    public ClientBoundTransportTickerPacket(int darknessOverlayTicker) {
-        this.darknessOverlayTicker = darknessOverlayTicker;
+    public ClientBoundTransportTickerPacket(float progress) {
+        this.progress = progress;
     }
 
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeInt(darknessOverlayTicker);
+        buffer.writeFloat(progress);
     }
 
     public static ClientBoundTransportTickerPacket decode(FriendlyByteBuf buffer) {
-        return new ClientBoundTransportTickerPacket(buffer.readInt());
+        return new ClientBoundTransportTickerPacket(buffer.readFloat());
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            LocalPlayer player = Minecraft.getInstance().player;
-            if (player != null) {
-                player.getCapability(ScreenAnimationCapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = darknessOverlayTicker);
-            }
-        });
         return true;
     }
 }

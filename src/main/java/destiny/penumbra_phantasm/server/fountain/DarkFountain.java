@@ -355,6 +355,12 @@ public class DarkFountain {
                     ticker = Math.min(ticker + 1, TRANSPORT_TICKER_DURATION);
                     entry.setValue(ticker);
 
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        int finalTicker = ticker;
+
+                        serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = finalTicker);
+                    }
+
                     if (ticker == TRANSPORT_TICKER_DURATION) {
                         destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                             DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
@@ -379,6 +385,12 @@ public class DarkFountain {
                     ticker = Math.max(ticker - 1, 0);
                     entry.setValue(ticker);
 
+                    if (entity instanceof ServerPlayer serverPlayer) {
+                        int finalTicker = ticker;
+
+                        serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = finalTicker);
+                    }
+
                     if (ticker == 0) {
                         iterator.remove();
                         continue;
@@ -386,7 +398,8 @@ public class DarkFountain {
                 }
 
                 if (entity instanceof ServerPlayer player) {
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(ticker));
+                    float progress = (float) ticker / TRANSPORT_TICKER_DURATION;
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(progress));
                 }
             }
 
@@ -411,7 +424,7 @@ public class DarkFountain {
             for (Map.Entry<UUID, Integer> entry : room.getTransportTickers().entrySet()) {
                 Entity entity = level.getEntity(entry.getKey());
                 if (entity instanceof ServerPlayer player) {
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(-1));
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
                 }
             }
             room.getTransportTickers().clear();
@@ -601,7 +614,7 @@ public class DarkFountain {
 
                             level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
 
-                            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(-1));
+                            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
                             PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension));
                         } else {
                             Entity teleported = teleportEntity(entity, destinationLevel, target);
@@ -731,7 +744,7 @@ public class DarkFountain {
         player.teleportTo(destinationLevel, targetPos.x, targetPos.y, targetPos.z, yaw, 0f);
         player.connection.send(new ClientboundSetEntityMotionPacket(player));
 
-        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(-1));
+        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
         return player;
     }
 
