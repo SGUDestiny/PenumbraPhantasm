@@ -102,7 +102,7 @@ public class DarknessBlock extends BaseEntityBlock {
 
     @Override
     public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
-        return 15;
+        return 0;
     }
 
     @Override

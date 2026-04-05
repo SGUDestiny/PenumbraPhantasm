@@ -136,7 +136,7 @@ public class SealingSoulEntity extends Entity {
             for (DarkRoom room : lightFountain.rooms) {
                 for (BlockPos pos : room.getPositions()) {
                     if (lightLevel.getBlockState(pos).getBlock() instanceof DarknessBlock) {
-                        lightLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                        lightLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                     }
                 }
             }
