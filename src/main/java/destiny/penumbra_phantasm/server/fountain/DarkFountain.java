@@ -390,11 +390,12 @@ public class DarkFountain {
             //Get light fountain from destination pos
             DarkFountain lightFountain = lightFountainCapability.darkFountains.get(destinationPos);
 
-            //Clear darkness blocks in light fountain
-            for (DarkRoom room : lightFountain.rooms) {
-                for (BlockPos pos : room.getPositions()) {
-                    if (lightLevel.getBlockState(pos).getBlock() instanceof DarknessBlock) {
-                        lightLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            if (lightFountain != null) {
+                for (DarkRoom room : lightFountain.rooms) {
+                    for (BlockPos pos : room.getPositions()) {
+                        if (lightLevel.getBlockState(pos).getBlock() instanceof DarknessBlock) {
+                            lightLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                        }
                     }
                 }
             }

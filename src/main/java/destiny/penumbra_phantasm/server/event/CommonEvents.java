@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +21,8 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
+
+import java.util.ArrayList;
 
 public class CommonEvents {
     @SubscribeEvent
@@ -100,9 +103,9 @@ public class CommonEvents {
             if (level.isClientSide) return;
 
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                cap.darkFountains.forEach((uid, fountain) -> {
+                for (DarkFountain fountain : new ArrayList<>(cap.darkFountains.values())) {
                     fountain.tick(level);
-                });
+                }
             });
         }
     }

@@ -107,9 +107,8 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
 
     public void removeDarkFountain(Level level, BlockPos fountainPos) {
         if (level instanceof ServerLevel serverLevel) {
-            serverLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                this.darkFountains.remove(fountainPos);
-            });
+            serverLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap ->
+                    cap.darkFountains.remove(fountainPos));
         }
     }
 
