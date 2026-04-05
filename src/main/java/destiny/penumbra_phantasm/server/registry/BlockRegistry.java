@@ -96,7 +96,7 @@ public class BlockRegistry {
     //Scarlet misc
     public static final RegistryObject<Block> SCARLET_BUSH = registerBlock("scarlet_bush",
             () -> new ScarletBushBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES)));
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission()));
     public static final RegistryObject<Block> SCARLET_LEAVES = registerBlock("scarlet_leaves",
             () -> new ScarletLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES)));
@@ -133,6 +133,12 @@ public class BlockRegistry {
     public static final RegistryObject<Block> DARK_CANDY_LOG = registerBlock("dark_candy_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block>DARK_CANDY_SAPLING = registerBlock("dark_candy_sapling",
+            () -> new SaplingBlock(new ScarletGrower(), BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING)
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_SAPLING)));
+    public static final RegistryObject<Block> POTTED_DARK_CANDY_SAPLING = BLOCKS.register("potted_dark_candy_sapling",
+            () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.SCARLET_SAPLING,
+                    BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING).noOcclusion()));
 
     //Dark candy planks
     public static final RegistryObject<Block> DARK_CANDY_PLANKS = registerBlock("dark_candy_planks", () -> new Block(DARK_CANDY_PROPERTIES));

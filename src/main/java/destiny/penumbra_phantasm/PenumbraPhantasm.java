@@ -151,6 +151,7 @@ public class PenumbraPhantasm {
         public static void onCommonSetup(FMLCommonSetupEvent event) {
             event.enqueueWork(() -> {
                 ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.SCARLET_SAPLING.getId(), BlockRegistry.POTTED_SCARLET_SAPLING);
+                ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.DARK_CANDY_SAPLING.getId(), BlockRegistry.POTTED_DARK_CANDY_SAPLING);
             });
         }
 

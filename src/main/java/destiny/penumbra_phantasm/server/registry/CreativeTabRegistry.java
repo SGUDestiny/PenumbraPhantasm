@@ -100,6 +100,7 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.DARK_CANDY.get());
                 output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());
 
+                output.accept(BlockRegistry.DARK_CANDY_SAPLING.get());
                 output.accept(BlockRegistry.DARK_CANDY_LEAVES.get());
 
                 output.accept(BlockRegistry.DARK_CANDY_LOG.get());

@@ -26,25 +26,24 @@ public class CliffrockPressurePlateBlock extends PressurePlateBlock {
         if (!pLevel.isClientSide) {
             int $$4 = this.getSignalForState(pState);
             if ($$4 == 0) {
-                checkPressed(pEntity, pLevel, pPos, pState, $$4);
+                checkPress(pEntity, pLevel, pPos, pState, $$4);
             }
-
         }
     }
 
-    private void checkPressed(@Nullable Entity pEntity, Level pLevel, BlockPos pPos, BlockState pState, int pCurrentSignal) {
-        int $$5 = this.getSignalStrength(pLevel, pPos);
+    private void checkPress(@Nullable Entity pEntity, Level pLevel, BlockPos pPos, BlockState pState, int pCurrentSignal) {
+        int signalStrength = this.getSignalStrength(pLevel, pPos);
         boolean $$6 = pCurrentSignal > 0;
-        boolean $$7 = $$5 > 0;
-        if (pCurrentSignal != $$5) {
-            BlockState $$8 = this.setSignalForState(pState, $$5);
+        boolean $$7 = signalStrength > 0;
+        if (pCurrentSignal != signalStrength) {
+            BlockState $$8 = this.setSignalForState(pState, signalStrength);
             pLevel.setBlock(pPos, $$8, 2);
             this.updateNeighbours(pLevel, pPos);
             pLevel.setBlocksDirty(pPos, pState, $$8);
         }
 
         if (!$$7 && $$6) {
-            pLevel.playSound(null, pPos, SoundRegistry.CLIFFROCK_UNPRESS.get(), SoundSource.BLOCKS);
+            pLevel.playSound(null, pPos, SoundRegistry.CLIFFROCK_PRESS.get(), SoundSource.BLOCKS);
             pLevel.gameEvent(pEntity, GameEvent.BLOCK_DEACTIVATE, pPos);
         } else if ($$7 && !$$6) {
             pLevel.playSound(null, pPos, SoundRegistry.CLIFFROCK_PRESS.get(), SoundSource.BLOCKS);
@@ -54,6 +53,5 @@ public class CliffrockPressurePlateBlock extends PressurePlateBlock {
         if ($$7) {
             pLevel.scheduleTick(new BlockPos(pPos), this, this.getPressedTime());
         }
-
     }
 }
