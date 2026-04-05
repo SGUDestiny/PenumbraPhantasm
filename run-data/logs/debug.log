@@ -599,7 +599,7 @@ java.lang.IllegalAccessException: class io.netty.util.internal.PlatformDependent
 [05Apr2026 03:31:33.924] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Attempting to inject @EventBusSubscriber classes into the eventbus for penumbra_phantasm
 [05Apr2026 03:31:33.924] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.client.render.ModShaders to MOD
 [05Apr2026 03:31:33.926] [modloading-worker-0/DEBUG] [mezz.jei.common.config.file.ConfigSerializer/]: Loading config file: D:\PenumbraPhantasm\run-data\config\jei\jei-client.ini
-[05Apr2026 03:31:33.926] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.Config to MOD
+[05Apr2026 03:31:33.926] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.ServerConfig to MOD
 [05Apr2026 03:31:33.927] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.PenumbraPhantasm$ClientModEvents to MOD
 [05Apr2026 03:31:33.928] [modloading-worker-0/DEBUG] [mezz.jei.common.config.file.ConfigSerializer/]: Saving config file: D:\PenumbraPhantasm\run-data\config\jei\jei-client.ini
 [05Apr2026 03:31:33.932] [modloading-worker-0/INFO] [mezz.jei.library.load.PluginCaller/]: Sending ConfigManager...

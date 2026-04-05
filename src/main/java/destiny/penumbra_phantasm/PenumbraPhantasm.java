@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm;
 
+import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.registry.*;
@@ -22,7 +23,6 @@ import destiny.penumbra_phantasm.client.render.particle.RealKnifeHitParticle;
 import destiny.penumbra_phantasm.client.render.particle.RealKnifeSlashParticle;
 import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
 import destiny.penumbra_phantasm.client.render.particle.ScarletLeafParticle;
-import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
@@ -32,7 +32,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FlowerPotBlock;
@@ -86,12 +85,10 @@ public class PenumbraPhantasm {
         PacketHandlerRegistry.register();
         AdvancementRegistry.register();
 
-        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) ->
-            {
-                event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null);
-            });
+        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) -> event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null));
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
     }

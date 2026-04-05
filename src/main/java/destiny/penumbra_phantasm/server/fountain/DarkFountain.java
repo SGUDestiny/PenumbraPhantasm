@@ -1,6 +1,6 @@
 package destiny.penumbra_phantasm.server.fountain;
 
-import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.client.network.*;
 import destiny.penumbra_phantasm.client.sound.SoundWrapper;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
@@ -146,7 +146,7 @@ public class DarkFountain {
                     tickDarkWorldTeleportContact(serverLevel);
 
                     rescanTimer++;
-                    if (rescanTimer >= Config.rescanInterval && (this.openingTick == -1)) {
+                    if (rescanTimer >= ServerConfig.rescanInterval && (this.openingTick == -1)) {
                         rescanTimer = 0;
                         tickRoomManagement(serverLevel);
                     }
@@ -413,7 +413,7 @@ public class DarkFountain {
             DarkRoom room = roomIt.next();
             if (!room.isDissipating()) continue;
 
-            for (int i = 0; i < Config.dissipationRate && !room.dissipationQueue.isEmpty(); i++) {
+            for (int i = 0; i < ServerConfig.dissipationRate && !room.dissipationQueue.isEmpty(); i++) {
                 BlockPos pos = room.dissipationQueue.remove(0);
                 if (level.getBlockState(pos).getBlock() instanceof DarknessBlock) {
                     level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
@@ -437,7 +437,7 @@ public class DarkFountain {
 
     private void tickRoomManagement(ServerLevel level) {
         if (rooms.isEmpty()) {
-            RoomScanner.RoomScanResult result = RoomScanner.scan(level, fountainPos, Config.maxRoomVolume, false);
+            RoomScanner.RoomScanResult result = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false);
             if (result.isValid()) {
                 DarkRoom newRoom = new DarkRoom(fountainPos, result.getPositions(), result.getDoorPositions());
                 addEntitiesInRoomToTickers(level, newRoom);
@@ -454,7 +454,7 @@ public class DarkFountain {
         for (DarkRoom room : rooms) {
             if (room.isDissipating()) continue;
 
-            RoomScanner.RoomScanResult result = RoomScanner.scan(level, room.getSeedPos(), Config.maxRoomVolume, true, true);
+            RoomScanner.RoomScanResult result = RoomScanner.scan(level, room.getSeedPos(), ServerConfig.maxRoomVolume, true, true);
             if (result.isValid()) {
                 room.positions = result.getPositions();
                 room.doorPositions = result.getDoorPositions();
@@ -513,7 +513,7 @@ public class DarkFountain {
 
     private void tickExpansionThroughDoors(ServerLevel level) {
         //Subtract total used volume from max volume, if zero or below, don't expand
-        int remainingVolume = Config.maxRoomVolume - DarkRoom.getTotalDarknessCount(rooms);
+        int remainingVolume = ServerConfig.maxRoomVolume - DarkRoom.getTotalDarknessCount(rooms);
         if (remainingVolume <= 0) return;
 
         Set<BlockPos> allPositions = new HashSet<>();

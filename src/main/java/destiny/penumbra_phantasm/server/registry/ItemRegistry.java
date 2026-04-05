@@ -24,9 +24,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NETHERITE_KNIFE = ITEMS.register("netherite_knife",
             () -> new NetheriteKnifeItem(Tiers.NETHERITE, 5, -2, true, basicItem()));
     public static final RegistryObject<Item> REAL_KNIFE = ITEMS.register("real_knife",
-            () -> new RealKnifeItem(Tiers.NETHERITE, 4,-2, true, basicItem()));
+            () -> new RealKnifeItem(Tiers.NETHERITE, 4,8, true, basicItem()));
     public static final RegistryObject<Item> BLACK_KNIFE = ITEMS.register("black_knife",
-            () -> new BlackKnifeItem(Tiers.NETHERITE, 0, -2, false, basicItem()));
+            () -> new BlackKnifeItem(Tiers.NETHERITE, 11, -2, false, basicItem()));
 
     public static final RegistryObject<Item> FAMILIAR_SWORD = ITEMS.register("familiar_sword",
             () -> new FamiliarSwordItem(Tiers.NETHERITE, 9, -3, basicItem()));
@@ -39,7 +39,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> SHADOW_CRYSTAL = ITEMS.register("shadow_crystal",
             () -> new Item(basicItem()));
     public static final RegistryObject<Item> BLACK_SHARD = ITEMS.register("black_shard",
-            () -> new SwordItem(Tiers.NETHERITE, 9, -3, basicItem()));
+            () -> new SwordItem(Tiers.NETHERITE, 7, -3, basicItem()));
 
     public static final RegistryObject<Item> DARK_CANDY = ITEMS.register("dark_candy",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(6).saturationMod(8).fast().alwaysEat().build())));

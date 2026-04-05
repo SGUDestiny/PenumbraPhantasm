@@ -2,7 +2,7 @@ package destiny.penumbra_phantasm.server.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.ServerConfig;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -24,7 +24,7 @@ public class RealKnifeItem extends KnifeItem {
         if (slot == EquipmentSlot.MAINHAND) {
             ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
 
-            if (Config.realKnifeOP) {
+            if (ServerConfig.realKnifeOP) {
                 builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", Integer.MAX_VALUE, Operation.ADDITION));
             } else {
                 builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Weapon modifier", this.damage, Operation.ADDITION));

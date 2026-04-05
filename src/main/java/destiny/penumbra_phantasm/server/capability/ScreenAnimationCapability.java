@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.capability;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.client.network.ClientBoundAnimationPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -88,16 +89,20 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
             boolean fountainTransitionFinished = darknessOverlayTicker <= 0;
             boolean notVisited = true;
 
-            for (String visitedLocation : visitedLocations) {
-                if (visitedLocation.equals(currentLocation)) {
-                    notVisited = false;
-                    break;
+            if (!ClientConfig.always_show_location_titles) {
+                for (String visitedLocation : visitedLocations) {
+                    if (visitedLocation.equals(currentLocation)) {
+                        notVisited = false;
+                        break;
+                    }
                 }
             }
 
             if (darkWorldLandFinished && fountainTransitionFinished && notVisited) {
                 previousLocation = currentLocation;
-                visitedLocations.add(currentLocation);
+                if (!ClientConfig.always_show_location_titles) {
+                    visitedLocations.add(currentLocation);
+                }
                 titleAlphaTicker = 0;
             }
         }

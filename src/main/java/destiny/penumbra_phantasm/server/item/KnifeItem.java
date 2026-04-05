@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import destiny.penumbra_phantasm.ServerConfig;
 import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 
-import destiny.penumbra_phantasm.Config;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.network.ClientBoundCancelPlayerAnimationPacket;
 import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
@@ -125,7 +125,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //Cancel if player isn't inside a valid room
-        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, player.getOnPos().above(), Config.maxRoomVolume, false);
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, player.getOnPos().above(), ServerConfig.maxRoomVolume, false);
         if (!roomResult.isValid()) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_unsealed_or_too_big"), true);
             return InteractionResultHolder.fail(stack);
@@ -357,7 +357,7 @@ public class KnifeItem extends SwordItem {
         }
 
         //Scan if the room is still valid, get result with all blocks
-        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, Config.maxRoomVolume, false);
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false);
         Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
         DarkWorldType finalDarkWorldType = null;
 

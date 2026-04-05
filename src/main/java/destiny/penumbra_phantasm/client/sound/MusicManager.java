@@ -1,6 +1,6 @@
 package destiny.penumbra_phantasm.client.sound;
 
-import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
@@ -318,8 +318,6 @@ public class MusicManager {
 
     @Nullable
     private SoundEvent fountainMusic(LocalPlayer player, ClientLevel level) {
-        if (!Config.darkFountainMusic) return null;
-
         LazyOptional<DarkFountainCapability> lazyCap = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
         if (!lazyCap.isPresent()) return null;
 

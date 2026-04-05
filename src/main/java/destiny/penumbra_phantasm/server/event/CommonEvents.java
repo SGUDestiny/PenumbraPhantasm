@@ -1,6 +1,6 @@
 package destiny.penumbra_phantasm.server.event;
 
-import destiny.penumbra_phantasm.Config;
+import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.registry.*;
@@ -37,7 +37,7 @@ public class CommonEvents {
             level.addParticle(ParticleTypeRegistry.REAL_KNIFE_SLASH.get(), vec.x, vec.y, vec.z, 0, 0, 0);
             level.playSound(null, player.getOnPos().above(), SoundRegistry.REAL_KNIFE_HIT.get(), SoundSource.PLAYERS, 0.7f, 1f);
 
-            int addition = Config.realKnifeOP ? 5 : 0;
+            int addition = ServerConfig.realKnifeOP ? 5 : 0;
 
             for (int i = 0; i < level.random.nextInt(3, 6) + addition; i++) {
                 level.addParticle(ParticleTypeRegistry.REAL_KNIFE_HIT.get(), target.getX(), target.getY() + 1, target.getZ(), -0.15 + level.random.nextDouble() * 0.3, 0.3, -0.15 + level.random.nextDouble() * 0.3);
