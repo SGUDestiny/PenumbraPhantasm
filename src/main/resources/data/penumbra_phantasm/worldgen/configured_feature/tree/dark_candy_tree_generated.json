@@ -4,7 +4,7 @@
     "decorators": [
       {
         "type": "penumbra_phantasm:dark_candy_on_leaves",
-        "probability": 0.22
+        "probability": 0.5
       }
     ],
     "dirt_provider": {
