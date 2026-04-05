@@ -86,95 +86,29 @@ public class SealingSoulEntity extends Entity {
             return;
         }
 
-        if (tick >= 7 * 20) {
-            tick = 0;
-            this.entityData.set(TICK_ENTITY_DATA, tick);
-
-            if (!(level instanceof ServerLevel soulLevel)) {
-                return;
-            }
-
-            ServerLevel lightLevel = soulLevel.getServer().getLevel(darkFountain.destinationDimension);
-
-            if (lightLevel == null) {
-                this.discard();
-                return;
-            }
-
-            //Teleport all players to light fountain
-            for (Player player : new ArrayList<>(soulLevel.players())) {
-                if (player instanceof ServerPlayer serverPlayer) {
-
-                    Vec3 lightPos = darkFountain.destinationPos.getCenter();
-
-                    serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
-                        cap.sealShineTicker = -1;
-                        cap.syncToClient(serverPlayer);
-                    });
-
-                    serverPlayer.teleportTo(lightLevel, lightPos.x, lightPos.y,
-                            lightPos.z, player.getYHeadRot(), player.getXRot());
-                    serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(player));
-                }
-            }
-
-            //Get light fountain capability
-            DarkFountainCapability lightFountainCapability = null;
-            LazyOptional<DarkFountainCapability> lightLazyCapability = lightLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
-            if(lightLazyCapability.isPresent() && lightLazyCapability.resolve().isPresent())
-                lightFountainCapability = lightLazyCapability.resolve().get();
-
-            if (lightFountainCapability == null){
-                this.discard();
-                return;
-            }
-
-            //Get light fountain from destination pos
-            DarkFountain lightFountain = lightFountainCapability.darkFountains.get(darkFountain.destinationPos);
-
-            //Clear darkness blocks in light fountain
-            for (DarkRoom room : lightFountain.rooms) {
-                for (BlockPos pos : room.getPositions()) {
-                    if (lightLevel.getBlockState(pos).getBlock() instanceof DarknessBlock) {
-                        lightLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-                    }
-                }
-            }
-
-            darkFountainCapability.removeDarkFountain(level, darkFountain.fountainPos);
-            lightFountainCapability.removeDarkFountain(lightLevel, darkFountain.destinationPos);
-
+        if (tick == 0) {
             if (level instanceof ServerLevel serverLevel) {
                 ChunkPos soulChunk = new ChunkPos(getOnPos());
-                serverLevel.setChunkForced(soulChunk.x, soulChunk.z, false);
+                serverLevel.setChunkForced(soulChunk.x, soulChunk.z, true);
             }
-
-            this.discard();
-        } else {
-            if (tick == 0) {
-                if (level instanceof ServerLevel serverLevel) {
-                    ChunkPos soulChunk = new ChunkPos(getOnPos());
-                    serverLevel.setChunkForced(soulChunk.x, soulChunk.z, true);
-                }
-                darkFountain.sealingTick = 0;
-                darkFountain.sealingFrameTick = darkFountain.getFrameTick();
-                level.playSound(null, this.blockPosition(), SoundRegistry.GREAT_SHINE.get(), SoundSource.AMBIENT, 0.5f, 1f);
-            }
-            if (tick == 4 * 20 && !level.isClientSide) {
-                level.players().forEach(player -> {
-                    player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
-                        cap.sealShineTicker = 0;
-                        if (player instanceof ServerPlayer serverPlayer) {
-                            cap.syncToClient(serverPlayer);
-                        }
-                    });
-                    level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_SEAL.get(), SoundSource.AMBIENT, 0.5f, 1f);
-                });
-            }
-
-            tick++;
-            this.entityData.set(TICK_ENTITY_DATA, tick);
+            darkFountain.sealingTick = 0;
+            darkFountain.sealingFrameTick = darkFountain.getFrameTick();
+            level.playSound(null, this.blockPosition(), SoundRegistry.GREAT_SHINE.get(), SoundSource.AMBIENT, 0.5f, 1f);
         }
+        if (tick == 4 * 20 && !level.isClientSide) {
+            level.players().forEach(player -> {
+                player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
+                    cap.sealShineTicker = 0;
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        cap.syncToClient(serverPlayer);
+                    }
+                });
+                level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_SEAL.get(), SoundSource.AMBIENT, 0.5f, 1f);
+            });
+        }
+
+        tick++;
+        this.entityData.set(TICK_ENTITY_DATA, tick);
     }
 
     public void setSoulType(int soulType) {

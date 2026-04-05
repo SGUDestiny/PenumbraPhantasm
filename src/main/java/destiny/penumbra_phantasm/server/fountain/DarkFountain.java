@@ -5,6 +5,7 @@ import destiny.penumbra_phantasm.client.network.*;
 import destiny.penumbra_phantasm.client.sound.SoundWrapper;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
 import destiny.penumbra_phantasm.server.block.entity.DarknessBlockEntity;
+import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.ITeleporter;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -103,37 +105,6 @@ public class DarkFountain {
         this.sealingTick = sealingTick;
         this.sealingFrameTick = sealingFrameTick;
         this.sealingFrameTickProgress = sealingFrameTickProgress;
-    }
-
-    public void clientTickOpening() {
-        this.openingTickClientO = this.openingTickClient;
-
-        if (!this.openingTickClientInitialized) {
-            this.openingTickClientInitialized = true;
-            this.openingTickClientO = this.openingTickTarget;
-            this.openingTickClient = this.openingTickTarget;
-            return;
-        }
-
-        if (this.openingTickTarget < 0f) {
-            this.openingTickClientO = this.openingTickTarget;
-            this.openingTickClient = this.openingTickTarget;
-            return;
-        }
-
-        float diff = this.openingTickTarget - this.openingTickClient;
-        if (diff > 0f) {
-            this.openingTickClient += Math.min(diff, 1f);
-        } else if (diff < 0f) {
-            this.openingTickClient -= Math.min(-diff, 1f);
-        }
-    }
-
-    public float getOpeningTick(float partialTick) {
-        if (!this.openingTickClientInitialized) {
-            return this.openingTickTarget + partialTick;
-        }
-        return Mth.lerp(partialTick, this.openingTickClientO, this.openingTickClient);
     }
 
     public void tick(Level level) {
@@ -252,6 +223,7 @@ public class DarkFountain {
                 }
 
                 if (this.sealingTick >= 0) {
+                    tickFountainSealing(level);
                     if (sealingTick < SEAL_DURATION + SEAL_FLASH_DELAY + SEAL_FLASH_DURATION) {
                         sealingTick++;
                     }
@@ -298,6 +270,37 @@ public class DarkFountain {
         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(level::dimension), new ClientBoundSingleFountainData(this));
     }
 
+    public void clientTickOpening() {
+        this.openingTickClientO = this.openingTickClient;
+
+        if (!this.openingTickClientInitialized) {
+            this.openingTickClientInitialized = true;
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+            return;
+        }
+
+        if (this.openingTickTarget < 0f) {
+            this.openingTickClientO = this.openingTickTarget;
+            this.openingTickClient = this.openingTickTarget;
+            return;
+        }
+
+        float diff = this.openingTickTarget - this.openingTickClient;
+        if (diff > 0f) {
+            this.openingTickClient += Math.min(diff, 1f);
+        } else if (diff < 0f) {
+            this.openingTickClient -= Math.min(-diff, 1f);
+        }
+    }
+
+    public float getOpeningTick(float partialTick) {
+        if (!this.openingTickClientInitialized) {
+            return this.openingTickTarget + partialTick;
+        }
+        return Mth.lerp(partialTick, this.openingTickClientO, this.openingTickClient);
+    }
+
     private void tickRoomDarknessFill(ServerLevel level) {
         for (DarkRoom room : rooms) {
             if (!room.isFilling()) continue;
@@ -323,6 +326,93 @@ public class DarkFountain {
             }
 
             room.checkActivation();
+        }
+    }
+
+    public void tickFountainSealing(Level level) {
+        if (this.sealingTick >= SEAL_DURATION + SEAL_FLASH_DELAY + SEAL_FLASH_DURATION) {
+            if (!(level instanceof ServerLevel soulLevel)) {
+                return;
+            }
+
+            if (!DarkWorldUtil.isDarkWorld(level)) {
+                return;
+            }
+
+            DarkFountainCapability darkFountainCapability = null;
+            LazyOptional<DarkFountainCapability> darkLazyCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+            if(darkLazyCapability.isPresent() && darkLazyCapability.resolve().isPresent())
+                darkFountainCapability = darkLazyCapability.resolve().get();
+
+            if (darkFountainCapability == null){
+                return;
+            }
+
+            DarkFountain darkFountain = darkFountainCapability.darkFountains.get(fountainPos);
+
+            if (darkFountain == null){
+                return;
+            }
+
+            ServerLevel lightLevel = soulLevel.getServer().getLevel(destinationDimension);
+
+            if (lightLevel == null) {
+                return;
+            }
+
+            //Teleport all players to light fountain
+            for (Player player : new ArrayList<>(soulLevel.players())) {
+                if (player instanceof ServerPlayer serverPlayer) {
+
+                    Vec3 lightPos = destinationPos.getCenter();
+
+                    serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
+                        cap.sealShineTicker = -1;
+                        cap.syncToClient(serverPlayer);
+                    });
+
+                    serverPlayer.teleportTo(lightLevel, lightPos.x, lightPos.y,
+                            lightPos.z, player.getYHeadRot(), player.getXRot());
+                    serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(player));
+                }
+            }
+
+            //Get light fountain capability
+            DarkFountainCapability lightFountainCapability = null;
+            LazyOptional<DarkFountainCapability> lightLazyCapability = lightLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+            if(lightLazyCapability.isPresent() && lightLazyCapability.resolve().isPresent())
+                lightFountainCapability = lightLazyCapability.resolve().get();
+
+            if (lightFountainCapability == null){
+                return;
+            }
+
+            //Get light fountain from destination pos
+            DarkFountain lightFountain = lightFountainCapability.darkFountains.get(destinationPos);
+
+            //Clear darkness blocks in light fountain
+            for (DarkRoom room : lightFountain.rooms) {
+                for (BlockPos pos : room.getPositions()) {
+                    if (lightLevel.getBlockState(pos).getBlock() instanceof DarknessBlock) {
+                        lightLevel.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                    }
+                }
+            }
+
+            darkFountainCapability.removeDarkFountain(level, fountainPos);
+            lightFountainCapability.removeDarkFountain(lightLevel, destinationPos);
+
+            if (level instanceof ServerLevel serverLevel) {
+                ChunkPos soulChunk = new ChunkPos(this.fountainPos);
+                serverLevel.setChunkForced(soulChunk.x, soulChunk.z, false);
+            }
+        } else {
+            if (this.sealingTick == 0) {
+                if (level instanceof ServerLevel serverLevel) {
+                    ChunkPos soulChunk = new ChunkPos(this.fountainPos);
+                    serverLevel.setChunkForced(soulChunk.x, soulChunk.z, true);
+                }
+            }
         }
     }
 
