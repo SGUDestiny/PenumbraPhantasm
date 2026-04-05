@@ -9,6 +9,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
+import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecoratorType;
 import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,6 +18,7 @@ import net.minecraftforge.registries.RegistryObject;
 public class FeatureRegistry {
     public static final DeferredRegister<TrunkPlacerType<?>> TRUNKS = DeferredRegister.create(Registries.TRUNK_PLACER_TYPE, PenumbraPhantasm.MODID);
     public static final DeferredRegister<FoliagePlacerType<?>> FOLIAGES = DeferredRegister.create(Registries.FOLIAGE_PLACER_TYPE, PenumbraPhantasm.MODID);
+    public static final DeferredRegister<TreeDecoratorType<?>> TREE_DECORATORS = DeferredRegister.create(Registries.TREE_DECORATOR_TYPE, PenumbraPhantasm.MODID);
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, PenumbraPhantasm.MODID);
 
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> SCARLET_BUSH = FEATURES.register("scarlet_bush", () -> new ScarletBushFeature(NoneFeatureConfiguration.CODEC));
@@ -29,6 +31,7 @@ public class FeatureRegistry {
     public static final ResourceKey<ConfiguredFeature<?, ?>> DARK_CANDY_TREE_GROWN = registerKey("tree/dark_candy_tree_grown");
     public static final RegistryObject<TrunkPlacerType<DarkCandyTrunkPlacer>> DARK_CANDY_TRUNK = TRUNKS.register("dark_candy_trunk_placer", () -> new TrunkPlacerType<>(DarkCandyTrunkPlacer.CODEC));
     public static final RegistryObject<FoliagePlacerType<DarkCandyFoliagePlacer>> DARK_CANDY_FOLIAGE = FOLIAGES.register("dark_candy_foliage_placer", () -> new FoliagePlacerType<>(DarkCandyFoliagePlacer.CODEC));
+    public static final RegistryObject<TreeDecoratorType<DarkCandyOnLeavesTreeDecorator>> DARK_CANDY_ON_LEAVES = TREE_DECORATORS.register("dark_candy_on_leaves", () -> new TreeDecoratorType<>(DarkCandyOnLeavesTreeDecorator.CODEC));
 
     public static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(PenumbraPhantasm.MODID, name));

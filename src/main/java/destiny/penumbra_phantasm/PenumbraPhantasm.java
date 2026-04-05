@@ -80,6 +80,7 @@ public class PenumbraPhantasm {
         ParticleTypeRegistry.PARTICLE_TYPES.register(modEventBus);
         FeatureRegistry.FOLIAGES.register(modEventBus);
         FeatureRegistry.TRUNKS.register(modEventBus);
+        FeatureRegistry.TREE_DECORATORS.register(modEventBus);
         FeatureRegistry.FEATURES.register(modEventBus);
         ChunkGeneratorRegistry.CHUNK_GENERATORS.register(modEventBus);
         PacketHandlerRegistry.register();
