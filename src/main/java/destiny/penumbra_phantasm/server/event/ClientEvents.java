@@ -99,14 +99,16 @@ public class ClientEvents {
 						Vec2 fountain2dPos = new Vec2(fountain.getFountainPos().getX(), fountain.getFountainPos().getZ());
 						Vec2 camera2dPos = new Vec2((float) camera.getPosition().x, (float) camera.getPosition().z);
 
+						double distance3d =fountain.getFountainPos().getCenter().distanceTo(camera.getPosition());
 						double distance2d = Mth.sqrt(fountain2dPos.distanceToSqr(camera2dPos));
-						double referenceDistance = ClientConfig.fountainLodDistance;
+						double referenceDistance = 64;
 						float distanceScale = (float)(distance2d / referenceDistance);
 						distanceScale = Math.max(distanceScale, 1.0f);
 
 						pose.scale(distanceScale, distanceScale, distanceScale);
 
-						float fade = (float)((distance2d - referenceDistance) / referenceDistance);
+						double fadeDistance = ClientConfig.fountainLodDistance;
+						float fade = (float)((distance3d - fadeDistance) / fadeDistance);
 						fade = Math.max(0f, Math.min(1f, fade));
 
 						if (fade < 1.0f) {

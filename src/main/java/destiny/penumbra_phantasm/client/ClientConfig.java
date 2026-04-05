@@ -23,7 +23,7 @@ public class ClientConfig {
     private static final ForgeConfigSpec.DoubleValue FOUNTAIN_LOD_DISTANCE = BUILDER
             .comment("Distance at which the dark world fountain beings to turn into the low detail purple version")
             .comment("Default: 64")
-            .defineInRange("always_show_location_titles", 64d, 8d, 256d);
+            .defineInRange("fountain_lod_distance", 64d, 8d, 256d);
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
