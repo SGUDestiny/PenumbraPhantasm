@@ -43,6 +43,13 @@ public class CreativeTabRegistry {
             .title(Component.translatable("itemGroup.penumbra_phantasm.card_kingdom"))
             .withTabsBefore(MAIN.getKey())
             .displayItems((parameters, output) -> {
+                output.accept(ItemRegistry.SCARLET_STICK.get());
+                output.accept(ItemRegistry.UMBRASTONE_PICKAXE.get());
+
+                output.accept(ItemRegistry.SCARLET_BUCKET.get());
+                output.accept(ItemRegistry.LUMINESCENT_WATER_BUCKET.get());
+                output.accept(ItemRegistry.PURE_DARKNESS_BUCKET.get());
+
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());
                 output.accept(BlockRegistry.NIGHT_DIRT.get());

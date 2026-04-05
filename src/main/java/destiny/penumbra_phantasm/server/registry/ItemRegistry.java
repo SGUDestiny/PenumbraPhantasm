@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.item.*;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -52,4 +53,17 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> ITEM_MUSIC_MEDIUM_THE_HOLY = ITEMS.register("item_music_medium_the_holy",
             () -> new MusicMediumItem(6, SoundRegistry.FOUNTAIN_MUSIC_DISC, basicItem(), (int) (53.333 * 20)));
+
+    public static final RegistryObject<Item> SCARLET_STICK = ITEMS.register("scarlet_stick",
+            () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> UMBRASTONE_PICKAXE = ITEMS.register("umbrastone_pickaxe",
+            () -> new PickaxeItem(Tiers.STONE, 0, 0, new Item.Properties()));
+
+    public static final RegistryObject<Item> SCARLET_BUCKET = ITEMS.register("scarlet_bucket",
+            () -> new BucketItem(Fluids.EMPTY, new Item.Properties()));
+    public static final RegistryObject<Item> LUMINESCENT_WATER_BUCKET = ITEMS.register("luminescent_water_bucket",
+            () -> new BucketItem(FluidRegistry.SOURCE_LUMINESCENT_WATER, new Item.Properties()));
+    public static final RegistryObject<Item> PURE_DARKNESS_BUCKET = ITEMS.register("pure_darkness_bucket",
+            () -> new BucketItem(FluidRegistry.SOURCE_PURE_DARKNESS, new Item.Properties()));
 }

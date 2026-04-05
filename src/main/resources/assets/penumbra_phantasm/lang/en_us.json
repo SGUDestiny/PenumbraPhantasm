@@ -16,6 +16,13 @@
   "item.penumbra_phantasm.item_music_medium_the_holy": "ITEM_MUSIC_MEDIUM",
   "item.penumbra_phantasm.item_music_medium_the_holy.desc": "Toby Fox - THE HOLY",
 
+  "item.penumbra_phantasm.scarlet_stick": "Scarlet Stick",
+  "item.penumbra_phantasm.umbrastone_pickaxe": "Umbrastone Pickaxe",
+
+  "item.penumbra_phantasm.scarlet_bucket": "Scarlet Bucket",
+  "item.penumbra_phantasm.luminescent_water_bucket": "Luminescent Water Bucket",
+  "item.penumbra_phantasm.pure_darkness_bucket": "Pure Darkness Bucket",
+
   "block.penumbra_phantasm.twilight_grass": "Twilight Grass",
   "block.penumbra_phantasm.twilight_grass_block": "Twilight Grass Block",
   "block.penumbra_phantasm.night_grass": "Night Grass",
