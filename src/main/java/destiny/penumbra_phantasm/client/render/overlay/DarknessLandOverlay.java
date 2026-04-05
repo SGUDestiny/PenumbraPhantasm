@@ -1,8 +1,8 @@
 package destiny.penumbra_phantasm.client.render.overlay;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
-import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.client.capability.ScreenAnimationCapability;
+import destiny.penumbra_phantasm.client.registry.ScreenAnimationCapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -20,7 +20,7 @@ public class DarknessLandOverlay {
         if (player == null) return;
 
         ScreenAnimationCapability cap;
-        LazyOptional<ScreenAnimationCapability> lazyCapability = player.getCapability(CapabilityRegistry.SCREEN_ANIMATION);
+        LazyOptional<ScreenAnimationCapability> lazyCapability = player.getCapability(ScreenAnimationCapabilityRegistry.SCREEN_ANIMATION);
         if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
             cap = lazyCapability.resolve().get();
         else return;

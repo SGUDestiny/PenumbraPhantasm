@@ -27,6 +27,9 @@ public class ClientConfig {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
+        if (event.getConfig().getSpec() != SPEC) {
+            return;
+        }
         alternateDarkFountainMusic = ALTERNATE_DARK_FOUNTAIN_MUSIC.get();
         always_show_location_titles = ALWAYS_SHOW_LOCATION_TITLES.get();
     }

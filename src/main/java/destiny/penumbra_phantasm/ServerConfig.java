@@ -38,6 +38,9 @@ public class ServerConfig {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
+        if (event.getConfig().getSpec() != SPEC) {
+            return;
+        }
         realKnifeOP = REAL_KNIFE_OP.get();
         maxRoomVolume = MAX_ROOM_VOLUME.get();
         rescanInterval = RESCAN_INTERVAL.get();

@@ -86,10 +86,10 @@ public class PacketHandlerRegistry {
                 .consumerMainThread(ServerBoundDarknessFallPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(ClientBoundAnimationPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(ClientBoundAnimationPacket::encode)
-                .decoder(ClientBoundAnimationPacket::decode)
-                .consumerMainThread(ClientBoundAnimationPacket::handle)
+        INSTANCE.messageBuilder(ClientBoundSealShinePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundSealShinePacket::encode)
+                .decoder(ClientBoundSealShinePacket::decode)
+                .consumerMainThread(ClientBoundSealShinePacket::handle)
                 .add();
 
         INSTANCE.messageBuilder(ClientBoundParticlePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)

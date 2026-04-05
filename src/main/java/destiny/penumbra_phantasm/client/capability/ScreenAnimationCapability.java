@@ -1,21 +1,18 @@
-package destiny.penumbra_phantasm.server.capability;
+package destiny.penumbra_phantasm.client.capability;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.ClientConfig;
+import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
-import destiny.penumbra_phantasm.client.network.ClientBoundAnimationPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
-import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -112,14 +109,6 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         if (titleAlphaTicker >= 0) {
             titleAlphaTicker++;
         }
-
-        if (player instanceof ServerPlayer serverPlayer) {
-            syncToClient(serverPlayer);
-        }
-    }
-
-    public void syncToClient(ServerPlayer serverPlayer) {
-        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundAnimationPacket(darknessLandTicker, darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker));
     }
 
     @Override

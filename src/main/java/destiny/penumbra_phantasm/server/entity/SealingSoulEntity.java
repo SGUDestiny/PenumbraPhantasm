@@ -2,10 +2,11 @@ package destiny.penumbra_phantasm.server.entity;
 
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
-import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
+import destiny.penumbra_phantasm.client.network.ClientBoundSealShinePacket;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -108,10 +110,7 @@ public class SealingSoulEntity extends Entity {
 
                     Vec3 lightPos = darkFountain.destinationPos.getCenter();
 
-                    serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
-                        cap.sealShineTicker = -1;
-                        cap.syncToClient(serverPlayer);
-                    });
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSealShinePacket(-1));
 
                     serverPlayer.teleportTo(lightLevel, lightPos.x, lightPos.y,
                             lightPos.z, player.getYHeadRot(), player.getXRot());
@@ -163,12 +162,9 @@ public class SealingSoulEntity extends Entity {
             }
             if (tick == 4 * 20 && !level.isClientSide) {
                 level.players().forEach(player -> {
-                    player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
-                        cap.sealShineTicker = 0;
-                        if (player instanceof ServerPlayer serverPlayer) {
-                            cap.syncToClient(serverPlayer);
-                        }
-                    });
+                    if (player instanceof ServerPlayer serverPlayer) {
+                        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSealShinePacket(0));
+                    }
                     level.playSound(null, player.getOnPos().above(), SoundRegistry.FOUNTAIN_SEAL.get(), SoundSource.AMBIENT, 0.5f, 1f);
                 });
             }

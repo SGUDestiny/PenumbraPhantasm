@@ -5,7 +5,7 @@ import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.network.ServerBoundDarknessFallPacket;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
-import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.client.registry.ScreenAnimationCapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.GameNarrator;
@@ -115,7 +115,7 @@ public class DarknessFallScreen extends Screen {
         onFinished.run();
         Minecraft.getInstance().getSoundManager().stop();
         PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
-        Minecraft.getInstance().player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(anim -> anim.darknessLandTicker = 0);
+        Minecraft.getInstance().player.getCapability(ScreenAnimationCapabilityRegistry.SCREEN_ANIMATION).ifPresent(anim -> anim.darknessLandTicker = 0);
     }
 
     @Override

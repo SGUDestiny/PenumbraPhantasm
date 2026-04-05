@@ -8,26 +8,20 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ClientBoundTransportTickerPacket {
-    private final int darknessOverlayTicker;
-
-    public ClientBoundTransportTickerPacket(int darknessOverlayTicker) {
-        this.darknessOverlayTicker = darknessOverlayTicker;
-    }
-
+public record ClientBoundSealShinePacket(int sealShineTicker) {
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeInt(darknessOverlayTicker);
+        buffer.writeInt(sealShineTicker);
     }
 
-    public static ClientBoundTransportTickerPacket decode(FriendlyByteBuf buffer) {
-        return new ClientBoundTransportTickerPacket(buffer.readInt());
+    public static ClientBoundSealShinePacket decode(FriendlyByteBuf buffer) {
+        return new ClientBoundSealShinePacket(buffer.readInt());
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             LocalPlayer player = Minecraft.getInstance().player;
             if (player != null) {
-                player.getCapability(ScreenAnimationCapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = darknessOverlayTicker);
+                player.getCapability(ScreenAnimationCapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.sealShineTicker = sealShineTicker);
             }
         });
         return true;

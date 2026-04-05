@@ -3,8 +3,8 @@ package destiny.penumbra_phantasm.client.render.overlay;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
-import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.client.capability.ScreenAnimationCapability;
+import destiny.penumbra_phantasm.client.registry.ScreenAnimationCapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.Util;
@@ -31,7 +31,7 @@ public class LocationTitleOverlay {
 
         //Getting capability
         ScreenAnimationCapability cap;
-        LazyOptional<ScreenAnimationCapability> lazyCapability = player.getCapability(CapabilityRegistry.SCREEN_ANIMATION);
+        LazyOptional<ScreenAnimationCapability> lazyCapability = player.getCapability(ScreenAnimationCapabilityRegistry.SCREEN_ANIMATION);
         if(lazyCapability.isPresent() && lazyCapability.resolve().isPresent())
             cap = lazyCapability.resolve().get();
         else return; // If capability isn't present
