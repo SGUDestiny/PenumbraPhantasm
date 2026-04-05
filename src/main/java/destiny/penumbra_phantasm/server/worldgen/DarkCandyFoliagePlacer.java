@@ -28,9 +28,9 @@ public class DarkCandyFoliagePlacer extends FoliagePlacer {
 
     @Override
     protected void createFoliage(LevelSimulatedReader level, FoliageSetter foliageSetter, RandomSource randomSource, TreeConfiguration treeConfiguration, int i, FoliageAttachment foliageAttachment, int foliageHeight, int foliageRadius, int offset) {
-        this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos().above(), 1, offset, false);
+        this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos(), 1, offset + 1, false);
         this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos(), 1, offset, false);
-        this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos().below(), 1, offset, false);
+        this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos(), 1, offset - 1, false);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DarkCandyFoliagePlacer extends FoliagePlacer {
     }
 
     @Override
-    protected boolean shouldSkipLocation(RandomSource randomSource, int i, int i1, int i2, int i3, boolean b) {
-        return false;
+    protected boolean shouldSkipLocation(RandomSource random, int localX, int localY, int localZ, int radius, boolean large) {
+        return Math.abs(localX) == 1 && Math.abs(localY) == 1 && Math.abs(localZ) == 1;
     }
 }
