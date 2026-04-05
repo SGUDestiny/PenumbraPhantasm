@@ -20,10 +20,16 @@ public class ClientConfig {
             .comment("Default: false")
             .define("always_show_location_titles", false);
 
+    private static final ForgeConfigSpec.DoubleValue FOUNTAIN_LOD_DISTANCE = BUILDER
+            .comment("Distance at which the dark world fountain beings to turn into the low detail purple version")
+            .comment("Default: 64")
+            .defineInRange("always_show_location_titles", 64d, 8d, 256d);
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean alternateDarkFountainMusic;
     public static boolean always_show_location_titles;
+    public static double fountainLodDistance;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -32,5 +38,6 @@ public class ClientConfig {
         }
         alternateDarkFountainMusic = ALTERNATE_DARK_FOUNTAIN_MUSIC.get();
         always_show_location_titles = ALWAYS_SHOW_LOCATION_TITLES.get();
+        fountainLodDistance = FOUNTAIN_LOD_DISTANCE.get();
     }
 }

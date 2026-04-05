@@ -107,7 +107,11 @@ public class SealingSoulEntity extends Entity {
             });
         }
 
-        tick++;
+        if (tick >= 7 * 20) {
+            this.discard();
+        } else {
+            tick++;
+        }
         this.entityData.set(TICK_ENTITY_DATA, tick);
     }
 

@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.event;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.util.Mth;
 import org.lwjgl.opengl.GL11;
@@ -99,7 +100,7 @@ public class ClientEvents {
 						Vec2 camera2dPos = new Vec2((float) camera.getPosition().x, (float) camera.getPosition().z);
 
 						double distance2d = Mth.sqrt(fountain2dPos.distanceToSqr(camera2dPos));
-						double referenceDistance = 64.0;
+						double referenceDistance = ClientConfig.fountainLodDistance;
 						float distanceScale = (float)(distance2d / referenceDistance);
 						distanceScale = Math.max(distanceScale, 1.0f);
 
