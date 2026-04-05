@@ -224,7 +224,7 @@ public class DarkFountain {
 
                 if (this.sealingTick >= 0) {
                     tickFountainSealing(level);
-                    if (sealingTick < SEAL_DURATION + SEAL_FLASH_DELAY + SEAL_FLASH_DURATION) {
+                    if (sealingTick < SEAL_DURATION + SEAL_FLASH_DELAY + SEAL_FLASH_DURATION + 20) {
                         sealingTick++;
                     }
                 }
@@ -330,7 +330,7 @@ public class DarkFountain {
     }
 
     public void tickFountainSealing(Level level) {
-        if (this.sealingTick >= SEAL_DURATION + SEAL_FLASH_DELAY + SEAL_FLASH_DURATION) {
+        if (this.sealingTick >= SEAL_DURATION + SEAL_FLASH_DELAY + SEAL_FLASH_DURATION + 20) {
             if (!(level instanceof ServerLevel soulLevel)) {
                 return;
             }
