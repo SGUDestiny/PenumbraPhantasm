@@ -256,7 +256,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> POLISHED_CLIFFROCK_SLAB = registerBlock("polished_cliffrock_slab", () -> new SlabBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_CLIFFROCK_WALL = registerBlock("polished_cliffrock_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_CLIFFROCK_BUTTON = registerBlock("polished_cliffrock_button", () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
-    public static final RegistryObject<Block> POLISHED_CLIFFROCK_PRESSURE_PLATE = registerBlock("polished_cliffrock_pressure_plate", () -> new CliffrockPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission()));
+    public static final RegistryObject<Block> POLISHED_CLIFFROCK_PRESSURE_PLATE = registerBlock("polished_cliffrock_pressure_plate", () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(), SoundRegistry.CLIFFROCK_UNPRESS.get()));
 
     //Cliffrock bricks
     public static final RegistryObject<Block> CLIFFROCK_BRICKS = registerBlock("cliffrock_bricks", () -> new Block(CLIFFROCK_PROPERTIES));
@@ -264,7 +264,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> CLIFFROCK_BRICK_SLAB = registerBlock("cliffrock_brick_slab", () -> new SlabBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_BRICK_WALL = registerBlock("cliffrock_brick_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_BRICK_BUTTON = registerBlock("cliffrock_brick_button", () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
-    public static final RegistryObject<Block> CLIFFROCK_BRICK_PRESSURE_PLATE = registerBlock("cliffrock_brick_pressure_plate", () -> new CliffrockPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission()));
+    public static final RegistryObject<Block> CLIFFROCK_BRICK_PRESSURE_PLATE = registerBlock("cliffrock_brick_pressure_plate", () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(), SoundRegistry.CLIFFROCK_UNPRESS.get()));
 
     //Cliffrock
     public static final RegistryObject<Block> CLIFFROCK = registerBlock("cliffrock", () -> new PathableBlock(CLIFFROCK_PROPERTIES, BlockRegistry.CLIFFROCK_PATH.get()));
@@ -272,7 +272,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> CLIFFROCK_SLAB = registerBlock("cliffrock_slab", () -> new SlabBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_WALL = registerBlock("cliffrock_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_BUTTON = registerBlock("cliffrock_button", () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
-    public static final RegistryObject<Block> CLIFFROCK_PRESSURE_PLATE = registerBlock("cliffrock_pressure_plate", () -> new CliffrockPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission()));
+    public static final RegistryObject<Block> CLIFFROCK_PRESSURE_PLATE = registerBlock("cliffrock_pressure_plate", () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(), SoundRegistry.CLIFFROCK_UNPRESS.get()));
 
     //Cobbled cliffrock
     public static final RegistryObject<Block> COBBLED_CLIFFROCK = registerBlock("cobbled_cliffrock", () -> new Block(CLIFFROCK_PROPERTIES));
@@ -280,7 +280,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> COBBLED_CLIFFROCK_SLAB = registerBlock("cobbled_cliffrock_slab", () -> new SlabBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_CLIFFROCK_WALL = registerBlock("cobbled_cliffrock_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_CLIFFROCK_BUTTON = registerBlock("cobbled_cliffrock_button", () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
-    public static final RegistryObject<Block> COBBLED_CLIFFROCK_PRESSURE_PLATE = registerBlock("cobbled_cliffrock_pressure_plate", () -> new CliffrockPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission()));
+    public static final RegistryObject<Block> COBBLED_CLIFFROCK_PRESSURE_PLATE = registerBlock("cobbled_cliffrock_pressure_plate", () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(), SoundRegistry.CLIFFROCK_UNPRESS.get()));
 
 
 
