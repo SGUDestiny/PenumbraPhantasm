@@ -29,7 +29,7 @@ public class DarknessBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos, BlockState state, DarknessBlockEntity darkness) {
         if (darkness.fountainPos == null) {
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         }
 
         if (!darkness.worldLoginCheck) {
@@ -48,7 +48,7 @@ public class DarknessBlockEntity extends BlockEntity {
             DarkFountain darkFountain = fountainCapability.darkFountains.get(darkness.fountainPos);
 
             if (darkFountain == null) {
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
+                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
             }
         }
     }
