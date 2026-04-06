@@ -334,7 +334,7 @@ public class BlockRegistry {
 
     //Rosegold misc
     public static final RegistryObject<Block> GREAT_DOOR_SPAWNER = registerBlock("great_door_spawner",
-            () -> new Block(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)));
+            () -> new GreatDoorSpawnerBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)));
     public static final RegistryObject<Block> ROSEGOLD_PILLAR = registerBlock("rosegold_pillar", () -> new RotatedPillarBlock(ROSEGOLD_PROPERTIES));
 
     //Polished rosegold

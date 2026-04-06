@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=east": {
+      "model": "penumbra_phantasm:block/great_door_spawner",
+      "y": 90
+    },
+    "facing=north": {
       "model": "penumbra_phantasm:block/great_door_spawner"
+    },
+    "facing=south": {
+      "model": "penumbra_phantasm:block/great_door_spawner",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "penumbra_phantasm:block/great_door_spawner",
+      "y": 270
     }
   }
 }
