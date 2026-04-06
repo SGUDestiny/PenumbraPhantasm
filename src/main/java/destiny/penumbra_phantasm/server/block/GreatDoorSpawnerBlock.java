@@ -18,7 +18,7 @@ import javax.annotation.Nullable;
 public class GreatDoorSpawnerBlock extends HorizontalDirectionalBlock {
     public GreatDoorSpawnerBlock(Properties pProperties) {
         super(pProperties);
-        this.defaultBlockState().setValue(FACING, Direction.NORTH);
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
     }
 
     @Override
