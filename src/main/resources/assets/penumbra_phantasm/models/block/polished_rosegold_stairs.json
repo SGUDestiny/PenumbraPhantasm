@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/polished_rosegold",
+    "side": "penumbra_phantasm:block/polished_rosegold",
+    "top": "penumbra_phantasm:block/polished_rosegold"
+  }
+}

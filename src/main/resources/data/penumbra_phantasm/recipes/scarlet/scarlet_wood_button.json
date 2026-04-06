@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "group": "wooden_button",
+  "ingredients": [
+    {
+      "item": "penumbra_phantasm:scarlet_wood_planks"
+    }
+  ],
+  "result": {
+    "item": "penumbra_phantasm:scarlet_wood_button"
+  }
+}

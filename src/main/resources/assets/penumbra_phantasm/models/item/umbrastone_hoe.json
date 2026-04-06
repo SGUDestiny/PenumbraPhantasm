@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/handheld",
   "textures": {
-    "layer0": "penumbra_phantasm:item/umbrastone_sword"
+    "layer0": "penumbra_phantasm:item/umbrastone_hoe"
   }
 }

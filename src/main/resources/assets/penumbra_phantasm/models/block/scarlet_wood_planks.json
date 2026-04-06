@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_cube_all_emissive",
+  "textures": {
+    "all": "penumbra_phantasm:block/scarlet_planks"
+  }
+}

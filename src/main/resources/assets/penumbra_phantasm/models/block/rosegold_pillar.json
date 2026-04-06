@@ -1,0 +1,14 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "loader": "fusion:model",
+  "type": "connecting",
+  "textures": {
+    "end": "penumbra_phantasm:block/rosegold_pillar_top",
+    "side": "penumbra_phantasm:block/rosegold_pillar"
+  },
+  "connections": {
+    "default": {
+      "type": "is_same_state"
+    }
+  }
+}

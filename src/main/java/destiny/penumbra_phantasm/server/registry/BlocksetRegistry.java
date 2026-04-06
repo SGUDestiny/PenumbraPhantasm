@@ -162,6 +162,17 @@ public final class BlocksetRegistry {
                     false,
                     false,
                     true
+            ),
+
+            new StoneBlockset(
+                    "polished_rosegold",
+                    "polished_rosegold",
+                    "rosegold/polished",
+                    "",
+                    1,
+                    false,
+                    false,
+                    false
             )
     );
 
@@ -212,6 +223,16 @@ public final class BlocksetRegistry {
                     "tenebralith/bricks",
                     "tenebralith",
                     2,
+                    false,
+                    false,
+                    false
+            ),
+            new BricksBlockset(
+                    "rosegold_bricks",
+                    "rosegold_bricks",
+                    "rosegold/bricks",
+                    "",
+                    1,
                     false,
                     false,
                     false

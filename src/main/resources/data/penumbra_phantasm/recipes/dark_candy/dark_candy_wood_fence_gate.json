@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "group": "wooden_fence_gate",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:dark_candy_wood_planks"
+    },
+    "W": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    " W ",
+    "W#W",
+    " W "
+  ],
+  "result": {
+    "item": "penumbra_phantasm:dark_candy_wood_fence_gate"
+  },
+  "show_notification": true
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_fence_gate_open_emissive",
+  "textures": {
+    "texture": "penumbra_phantasm:block/scarlet_planks"
+  }
+}

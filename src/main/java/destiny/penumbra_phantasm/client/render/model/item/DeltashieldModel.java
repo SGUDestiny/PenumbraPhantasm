@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.model.item;// Made with Blockbench 4.12.6
+package destiny.penumbra_phantasm.client.render.model.item;// Made with Blockbench 4.12.6
 // Exported for Minecraft version 1.17 or later with Mojang mappings
 // Paste this class into your mod and generate all required imports
 

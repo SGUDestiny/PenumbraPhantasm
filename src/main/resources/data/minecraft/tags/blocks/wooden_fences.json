@@ -2,6 +2,8 @@
   "replace": false,
   "values": [
     "penumbra_phantasm:scarlet_fence",
-    "penumbra_phantasm:dark_candy_fence"
+    "penumbra_phantasm:dark_candy_fence",
+    "penumbra_phantasm:scarlet_wood_fence",
+    "penumbra_phantasm:dark_candy_wood_fence"
   ]
 }

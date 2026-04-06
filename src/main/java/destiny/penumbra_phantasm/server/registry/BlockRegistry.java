@@ -31,11 +31,14 @@ public class BlockRegistry {
     public static final BlockBehaviour.Properties UMBRASTONE_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops();
     public static final BlockBehaviour.Properties CLIFFROCK_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF);
     public static final BlockBehaviour.Properties TENEBRALITH_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE);
+    public static final BlockBehaviour.Properties ROSEGOLD_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().sound(SoundType.METAL);
 
     public static final BlockSetType SCARLET_MARBLE_BLOCKSET = new BlockSetType("scarlet_marble", true, SoundType.CALCITE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
     public static final BlockSetType DARK_MARBLE_BLOCKSET = new BlockSetType("dark_marble", true, SoundType.CALCITE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
     public static final BlockSetType UMBRASTONE_BLOCKSET = new BlockSetType("umbrastone", true, SoundType.CALCITE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
-    public static final BlockSetType TENEBRALITH_BLOCKSET = new BlockSetType("dark_marble", true, SoundType.DEEPSLATE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
+    public static final BlockSetType TENEBRALITH_BLOCKSET = new BlockSetType("tenebralith", true, SoundType.DEEPSLATE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
+    public static final BlockSetType ROSEGOLD_BLOCKSET = new BlockSetType("rosegold", true, SoundType.METAL, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
+
 
     public static final RegistryObject<Block> TWILIGHT_GRASS_BLOCK = registerBlock("twilight_grass_block",
             () -> new TwilightGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
@@ -326,6 +329,29 @@ public class BlockRegistry {
     public static final RegistryObject<Block> COBBLED_TENEBRALITH_WALL = registerBlock("cobbled_tenebralith_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_TENEBRALITH_BUTTON = registerBlock("cobbled_tenebralith_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET, 30, false));
     public static final RegistryObject<Block> COBBLED_TENEBRALITH_PRESSURE_PLATE = registerBlock("cobbled_tenebralith_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET));
+
+
+
+    //Rosegold misc
+    public static final RegistryObject<Block> GREAT_DOOR_SPAWNER = registerBlock("great_door_spawner",
+            () -> new Block(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)));
+    public static final RegistryObject<Block> ROSEGOLD_PILLAR = registerBlock("rosegold_pillar", () -> new RotatedPillarBlock(ROSEGOLD_PROPERTIES));
+
+    //Polished rosegold
+    public static final RegistryObject<Block> POLISHED_ROSEGOLD = registerBlock("polished_rosegold", () -> new Block(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_ROSEGOLD_STAIRS = registerBlock("polished_rosegold_stairs", () -> new StairBlock(BlockRegistry.POLISHED_ROSEGOLD.get().defaultBlockState(), ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_ROSEGOLD_SLAB = registerBlock("polished_rosegold_slab", () -> new SlabBlock(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_ROSEGOLD_WALL = registerBlock("polished_rosegold_wall", () -> new WallBlock(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_ROSEGOLD_BUTTON = registerBlock("polished_rosegold_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> POLISHED_ROSEGOLD_PRESSURE_PLATE = registerBlock("polished_rosegold_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET));
+
+    //Rosegold bricks
+    public static final RegistryObject<Block> ROSEGOLD_BRICKS = registerBlock("rosegold_bricks", () -> new Block(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_BRICK_STAIRS = registerBlock("rosegold_brick_stairs", () -> new StairBlock(BlockRegistry.ROSEGOLD_BRICKS.get().defaultBlockState(), ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_BRICK_SLAB = registerBlock("rosegold_brick_slab", () -> new SlabBlock(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_BRICK_WALL = registerBlock("rosegold_brick_wall", () -> new WallBlock(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_BRICK_BUTTON = registerBlock("rosegold_brick_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> ROSEGOLD_BRICK_PRESSURE_PLATE = registerBlock("rosegold_brick_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET));
 
 
 

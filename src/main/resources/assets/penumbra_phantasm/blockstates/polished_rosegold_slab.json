@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "penumbra_phantasm:block/polished_rosegold_slab"
+    },
+    "type=double": {
+      "model": "penumbra_phantasm:block/polished_rosegold"
+    },
+    "type=top": {
+      "model": "penumbra_phantasm:block/polished_rosegold_slab_top"
+    }
+  }
+}

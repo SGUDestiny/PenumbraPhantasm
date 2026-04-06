@@ -2,9 +2,11 @@ package destiny.penumbra_phantasm;
 
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
+import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorClosedModel;
+import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenModel;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.registry.*;
-import destiny.penumbra_phantasm.client.model.item.DeltashieldModel;
+import destiny.penumbra_phantasm.client.render.model.item.DeltashieldModel;
 import destiny.penumbra_phantasm.client.render.dimension.DarkWorldDimensionEffects;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
 import destiny.penumbra_phantasm.client.render.model.DarkFountainBackModel;
@@ -110,6 +112,8 @@ public class PenumbraPhantasm {
             event.registerLayerDefinition(DarkFountainMiddleOptimizedModel.LAYER_LOCATION, DarkFountainMiddleOptimizedModel::createBodyLayer);
             event.registerLayerDefinition(DarkFountainFrontModel.LAYER_LOCATION, DarkFountainFrontModel::createBodyLayer);
             event.registerLayerDefinition(DeltashieldModel.LAYER_LOCATION, DeltashieldModel::createBodyLayer);
+            event.registerLayerDefinition(GreatDoorClosedModel.LAYER_LOCATION, GreatDoorClosedModel::createBodyLayer);
+            event.registerLayerDefinition(GreatDoorOpenModel.LAYER_LOCATION, GreatDoorOpenModel::createBodyLayer);
         }
 
         @SubscribeEvent

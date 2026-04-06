@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "penumbra_phantasm:block/scarlet_wood_slab"
+    },
+    "type=double": {
+      "model": "penumbra_phantasm:block/scarlet_planks"
+    },
+    "type=top": {
+      "model": "penumbra_phantasm:block/scarlet_wood_slab_top"
+    }
+  }
+}

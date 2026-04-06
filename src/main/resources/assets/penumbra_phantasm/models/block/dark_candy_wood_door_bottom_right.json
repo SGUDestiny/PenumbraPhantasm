@@ -1,0 +1,7 @@
+{
+  "parent": "penumbra_phantasm:block/template_door_bottom_right_emissive",
+  "textures": {
+    "bottom": "penumbra_phantasm:block/dark_candy_wood_door_bottom",
+    "top": "penumbra_phantasm:block/dark_candy_wood_door_top"
+  }
+}
