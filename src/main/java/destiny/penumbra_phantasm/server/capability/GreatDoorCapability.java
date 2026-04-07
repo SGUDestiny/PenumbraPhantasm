@@ -63,6 +63,6 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag compoundTag) {
-        deserializeGreatDoors(compoundTag);
+        deserializeGreatDoors(compoundTag.getCompound(GREAT_DOORS));
     }
 }

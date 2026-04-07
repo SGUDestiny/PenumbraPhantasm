@@ -36,8 +36,12 @@ public class GreatDoorRenderUtil {
         pose.pushPose();
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
+
+        pose.translate(-1, 0, -1);
+        pose.rotateAround(Axis.YP.rotationDegrees(90), 0f, 0f, 0f);
+        pose.translate(1, 0, 1);
+
         pose.translate(-3, -1.5, 0.5);
-        pose.rotateAround(Axis.YP.rotationDegrees(90), 0, 0, 0);
         if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
                     packedLight, overlay, 1F, 1F, 1F, 1f);
@@ -52,8 +56,12 @@ public class GreatDoorRenderUtil {
         pose.pushPose();
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
-        pose.translate(3, 0, 0.5);
-        pose.rotateAround(Axis.YP.rotationDegrees(90), 0, 0, 0);
+
+        pose.translate(-1, 0, -1);
+        pose.rotateAround(Axis.YP.rotationDegrees(90), 0f, 0f, 0f);
+        pose.translate(1, 0, 1);
+
+        pose.translate(-3, -1.5, 0.5);
         if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
                     packedLight, overlay, 1F, 1F, 1F, 1f);
