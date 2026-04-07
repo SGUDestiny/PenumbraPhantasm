@@ -1,6 +1,5 @@
 package destiny.penumbra_phantasm.server.fountain;
 
-import destiny.penumbra_phantasm.client.network.ClientBoundSingleFountainData;
 import destiny.penumbra_phantasm.client.network.ClientBoundSingleGreatDoorPacket;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -22,20 +21,20 @@ public class GreatDoor {
     public static final String DIRECTION = "direction";
     public static final String IS_OPEN = "isOpen";
     public static final String DESTINATION_DOOR_POS = "destinationDoorPos";
-    public static final String DESTINATION_FOUNTAIN_DIMENSION = "destinationFountainDimension";
+    public static final String DESTINATION_DOOR_DIMENSION = "destinationDoorDimension";
 
     public BlockPos greatDoorPos;
     public Direction direction;
     public boolean isOpen;
     public BlockPos destinationDoorPos;
-    public ResourceKey<Level> destinationFountainDimension;
+    public ResourceKey<Level> destinationDoorDimension;
 
-    public GreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, BlockPos destinationDoorPos, ResourceKey<Level> destinationFountainDimension) {
+    public GreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, BlockPos destinationDoorPos, ResourceKey<Level> destinationDoorDimension) {
         this.greatDoorPos = greatDoorPos;
         this.direction = direction;
         this.isOpen = isOpen;
         this.destinationDoorPos = destinationDoorPos;
-        this.destinationFountainDimension = destinationFountainDimension;
+        this.destinationDoorDimension = destinationDoorDimension;
     }
 
     public void tick(Level level) {
@@ -73,7 +72,7 @@ public class GreatDoor {
         tag.putString(DIRECTION, direction.getName());
         tag.putBoolean(IS_OPEN, isOpen);
         tag.put(DESTINATION_DOOR_POS, NbtUtils.writeBlockPos(destinationDoorPos));
-        tag.putString(DESTINATION_FOUNTAIN_DIMENSION, destinationFountainDimension.location().toString());
+        tag.putString(DESTINATION_DOOR_DIMENSION, destinationDoorDimension.location().toString());
 
         return tag;
     }
@@ -83,7 +82,7 @@ public class GreatDoor {
         Direction direction = Direction.byName(tag.getString(DIRECTION));
         boolean isOpen = tag.getBoolean(IS_OPEN);
         BlockPos destinationDoorPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_DOOR_POS));
-        ResourceKey<Level> destinationFountainDimension = ModUtil.stringToDimension(tag.getString(DESTINATION_FOUNTAIN_DIMENSION));
+        ResourceKey<Level> destinationFountainDimension = ModUtil.stringToDimension(tag.getString(DESTINATION_DOOR_DIMENSION));
 
         return new GreatDoor(greatDoorPos, direction, isOpen, destinationDoorPos, destinationFountainDimension);
     }
@@ -93,6 +92,6 @@ public class GreatDoor {
         this.direction = greatDoor.direction;
         this.isOpen = greatDoor.isOpen;
         this.destinationDoorPos = greatDoor.destinationDoorPos;
-        this.destinationFountainDimension = greatDoor.destinationFountainDimension;
+        this.destinationDoorDimension = greatDoor.destinationDoorDimension;
     }
 }

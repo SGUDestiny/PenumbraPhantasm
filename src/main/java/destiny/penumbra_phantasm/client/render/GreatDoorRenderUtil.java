@@ -1,14 +1,17 @@
 package destiny.penumbra_phantasm.client.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorClosedModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenModel;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import org.joml.Quaternionf;
 
 public class GreatDoorRenderUtil {
     public static GreatDoorOpenModel greatDoorOpenModel;
@@ -30,30 +33,32 @@ public class GreatDoorRenderUtil {
     }
 
     public static void renderOpenGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
-        if (greatDoor.destinationFountainDimension != null) {
-            pose.pushPose();
+        pose.pushPose();
+        pose.mulPose(Axis.XP.rotationDegrees(180));
+        pose.mulPose(Axis.YP.rotationDegrees(180));
+        pose.translate(-3, -1.5, 0.5);
+        if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
                     LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
-            pose.popPose();
         } else {
-            pose.pushPose();
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorLightWorldTexture)),
                     LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
-            pose.popPose();
         }
+        pose.popPose();
     }
 
     public static void renderClosedGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
-        if (greatDoor.destinationFountainDimension != null) {
-            pose.pushPose();
+        pose.pushPose();
+        pose.mulPose(Axis.XP.rotationDegrees(180));
+        pose.mulPose(Axis.YP.rotationDegrees(180));
+        pose.translate(3, 0, 0.5);
+        if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
                     LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
-            pose.popPose();
         } else {
-            pose.pushPose();
             getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorLightWorldTexture)),
                     LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
-            pose.popPose();
         }
+        pose.popPose();
     }
 }

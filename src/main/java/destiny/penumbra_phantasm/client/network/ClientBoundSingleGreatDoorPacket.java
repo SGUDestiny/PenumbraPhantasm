@@ -26,7 +26,7 @@ public class ClientBoundSingleGreatDoorPacket {
         buffer.writeUtf(greatDoor.direction.getName());
         buffer.writeBoolean(greatDoor.isOpen);
         buffer.writeBlockPos(greatDoor.destinationDoorPos);
-        buffer.writeResourceKey(greatDoor.destinationFountainDimension);
+        buffer.writeResourceKey(greatDoor.destinationDoorDimension);
     }
 
     public static ClientBoundSingleGreatDoorPacket decode(FriendlyByteBuf buffer) {

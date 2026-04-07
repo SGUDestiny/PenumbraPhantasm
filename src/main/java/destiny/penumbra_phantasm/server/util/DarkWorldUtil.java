@@ -108,6 +108,11 @@ public class DarkWorldUtil
 		return level.dimension().location().getPath().contains("dark_world");
 	}
 
+	public static boolean isDarkWorldKey(ResourceKey<Level> levelResourceKey)
+	{
+		return levelResourceKey.location().getPath().contains("dark_world");
+	}
+
 	public static List<ServerLevel> getAllDarkWorlds(MinecraftServer server)
 	{
 		List<ServerLevel> darkWorlds = new ArrayList<>();
