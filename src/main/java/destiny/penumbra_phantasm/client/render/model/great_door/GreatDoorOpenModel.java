@@ -34,7 +34,7 @@ public class GreatDoorOpenModel extends EntityModel<Entity> {
 		MeshDefinition meshdefinition = new MeshDefinition();
 		PartDefinition partdefinition = meshdefinition.getRoot();
 
-		PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(-43.0F, 24.0F, -8.0F));
+		PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(-91.0F, 0.0F, 0.0F));
 
 		PartDefinition door_right = main.addOrReplaceChild("door_right", CubeListBuilder.create().texOffs(256, 0).mirror().addBox(0.0F, -144.0F, 0.0F, 43.0F, 144.0F, 0.0F, new CubeDeformation(0.0F)).mirror(false), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 
@@ -42,7 +42,7 @@ public class GreatDoorOpenModel extends EntityModel<Entity> {
 
 		PartDefinition frame = main.addOrReplaceChild("frame", CubeListBuilder.create().texOffs(0, 0).addBox(-48.0F, -144.0F, -8.0F, 96.0F, 144.0F, 32.0F, new CubeDeformation(0.0F)), PartPose.offset(43.0F, 0.0F, 8.0F));
 
-		PartDefinition inside = frame.addOrReplaceChild("inside", CubeListBuilder.create().texOffs(0, 176).addBox(-48.0F, -144.0F, -8.0F, 96.0F, 144.0F, 32.0F, new CubeDeformation(-0.05F)), PartPose.offset(0.0F, 0.0F, 0.0F));
+		PartDefinition inside = frame.addOrReplaceChild("inside", CubeListBuilder.create().texOffs(0, 176).addBox(-48.0F, -144.0F, -8.0F, 96.0F, 144.0F, 32.0F, new CubeDeformation(-0.1F)), PartPose.offset(0.0F, 0.0F, 0.0F));
 
 		return LayerDefinition.create(meshdefinition, 512, 512);
 	}

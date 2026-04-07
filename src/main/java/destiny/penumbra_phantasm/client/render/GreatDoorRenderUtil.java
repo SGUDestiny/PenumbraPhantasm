@@ -34,11 +34,19 @@ public class GreatDoorRenderUtil {
     }
 
     public static void renderOpenGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
+        Direction direction = greatDoor.direction;
+
         pose.pushPose();
-        pose.mulPose(Axis.YP.rotationDegrees(180f - greatDoor.direction.toYRot()));
+        pose.mulPose(Axis.YP.rotationDegrees(180f - direction.toYRot()));
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
-        pose.translate(-3, -1.5, 0.5);
+        if (direction == Direction.EAST) {
+            pose.translate(0, 0, -1);
+        } else if (direction == Direction.SOUTH) {
+            pose.translate(1, 0, -1);
+        } else if (direction == Direction.WEST) {
+            pose.translate(1, 0, 0);
+        }
         if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
                     packedLight, overlay, 1F, 1F, 1F, 1f);
@@ -50,11 +58,19 @@ public class GreatDoorRenderUtil {
     }
 
     public static void renderClosedGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
+        Direction direction = greatDoor.direction;
+
         pose.pushPose();
-        pose.mulPose(Axis.YP.rotationDegrees(180f - greatDoor.direction.toYRot()));
+        pose.mulPose(Axis.YP.rotationDegrees(180f - direction.toYRot()));
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
-        pose.translate(3, 0, 0.5);
+        if (direction == Direction.EAST) {
+            pose.translate(0, 0, -1);
+        } else if (direction == Direction.SOUTH) {
+            pose.translate(1, 0, -1);
+        } else if (direction == Direction.WEST) {
+            pose.translate(1, 0, 0);
+        }
         if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
                     packedLight, overlay, 1F, 1F, 1F, 1f);

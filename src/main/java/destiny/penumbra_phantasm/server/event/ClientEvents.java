@@ -143,7 +143,7 @@ public class ClientEvents {
 
 					int packedLight = LevelRenderer.getLightColor(level, greatDoor.greatDoorPos);
 
-					if (renderSkyPass) {
+					if (renderShockwavePass) {
 						if (greatDoor.isOpen) {
 							GreatDoorRenderUtil.renderOpenGreatDoor(greatDoor, pose, buffer, packedLight, OverlayTexture.NO_OVERLAY);
 						} else {
