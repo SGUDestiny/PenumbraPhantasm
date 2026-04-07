@@ -1,6 +1,5 @@
 package destiny.penumbra_phantasm.server.block.entity;
 
-import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
