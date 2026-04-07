@@ -37,6 +37,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -135,7 +136,7 @@ public class ClientEvents {
 			GL11.glDisable(0x864F);
 
 			level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
-				cap.greatDoors.forEach((key, greatDoor) -> {
+				for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
 					pose.pushPose();
 					pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
 					pose.translate(greatDoor.greatDoorPos.getX(), greatDoor.greatDoorPos.getY(),
@@ -151,7 +152,7 @@ public class ClientEvents {
 						}
 					}
 					pose.popPose();
-				});
+				}
 			});
 
 			buffer.endBatch();

@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
@@ -30,13 +31,13 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
         }
     }
 
-    private CompoundTag serializeDarkFountains() {
+    private CompoundTag serializeGreatDoors() {
         CompoundTag objectsTag = new CompoundTag();
         ListTag greatDoorTag = new ListTag();
 
-        this.greatDoors.forEach((pos, greatDoor) -> {
+        for (GreatDoor greatDoor : new ArrayList<>(this.greatDoors.values())) {
             greatDoorTag.add(greatDoor.save());
-        });
+        }
         objectsTag.put(GREAT_DOORS, greatDoorTag);
 
         return objectsTag;
@@ -46,7 +47,7 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
 
-        tag.put(GREAT_DOORS, serializeDarkFountains());
+        tag.put(GREAT_DOORS, serializeGreatDoors());
 
         return tag;
     }

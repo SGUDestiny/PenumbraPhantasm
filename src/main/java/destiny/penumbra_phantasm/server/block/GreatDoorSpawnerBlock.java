@@ -1,6 +1,5 @@
 package destiny.penumbra_phantasm.server.block;
 
-import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -13,7 +12,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
