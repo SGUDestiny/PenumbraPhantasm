@@ -79,7 +79,7 @@ public class GreatDoor {
         BlockPos destinationDoorPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_DOOR_POS));
         ResourceKey<Level> destinationFountainDimension = ModUtil.stringToDimension(tag.getString(DESTINATION_FOUNTAIN_DIMENSION));
 
-        return new GreatDoor(greatDoorPos, greatDoorDimension, direction, isOpen, destinationDoorPos, destinationFountainDimension);
+        return new GreatDoor(greatDoorPos, direction, isOpen, destinationDoorPos, destinationFountainDimension);
     }
 
     public void sync(GreatDoor greatDoor) {
