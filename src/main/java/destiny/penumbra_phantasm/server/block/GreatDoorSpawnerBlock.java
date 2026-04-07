@@ -1,11 +1,13 @@
 package destiny.penumbra_phantasm.server.block;
 
+import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
 import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -44,7 +46,14 @@ public class GreatDoorSpawnerBlock extends HorizontalDirectionalBlock {
         }
 
         Direction facing = pState.getValue(FACING);
-        greatDoorCapability.addGreatDoor(pPos, facing, true, pPos, pLevel.dimension());
+        ResourceKey<Level> dimension;
+        if (pPlayer.isCrouching()) {
+            dimension = Level.OVERWORLD;
+        } else {
+            dimension = pLevel.dimension();
+        }
+
+        greatDoorCapability.addGreatDoor(pPos, facing, true, pPos, dimension);
 
         Direction widthDir = facing.getClockWise();
         Direction depthDir = facing.getOpposite();
@@ -54,6 +63,9 @@ public class GreatDoorSpawnerBlock extends HorizontalDirectionalBlock {
                 for (int z = 0; z < 2; z++) {
                     BlockPos target = pPos.relative(widthDir, x).relative(depthDir, z).above(y);
                     pLevel.setBlock(target, block, 3);
+                    if (pLevel.getBlockEntity(target) instanceof GreatDoorShapeBlockEntity greatDoorShape) {
+                        greatDoorShape.greatDoorPos = pPos;
+                    }
                 }
             }
         }
