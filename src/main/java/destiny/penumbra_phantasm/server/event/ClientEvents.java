@@ -4,8 +4,13 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.client.ClientConfig;
+import destiny.penumbra_phantasm.client.render.GreatDoorRenderUtil;
+import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.LightLayer;
 import org.lwjgl.opengl.GL11;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
@@ -122,6 +127,26 @@ public class ClientEvents {
 							FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, OverlayTexture.NO_OVERLAY, fade);
 						}
 						pose.popPose();
+					}
+				});
+			});
+
+			level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
+				cap.greatDoors.forEach((key, greatDoor) -> {
+					pose.pushPose();
+					pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
+					pose.translate(greatDoor.greatDoorPos.getX(), greatDoor.greatDoorPos.getY(),
+							greatDoor.greatDoorPos.getZ());
+
+					int lightColor = LevelRenderer.getLightColor(level, greatDoor.greatDoorPos);
+					int packedLight = LightTexture.pack(lightColor, level.getBrightness(LightLayer.SKY, greatDoor.greatDoorPos));
+
+					if (renderSkyPass) {
+						if (greatDoor.isOpen) {
+							GreatDoorRenderUtil.renderOpenGreatDoor(greatDoor, pose, buffer, packedLight, OverlayTexture.NO_OVERLAY);
+						} else {
+							GreatDoorRenderUtil.renderClosedGreatDoor(greatDoor, pose, buffer, packedLight, OverlayTexture.NO_OVERLAY);
+						}
 					}
 				});
 			});

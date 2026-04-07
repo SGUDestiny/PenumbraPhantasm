@@ -29,16 +29,16 @@ public class GreatDoorRenderUtil {
         return greatDoorClosedModel;
     }
 
-    public static void renderOpenGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int overlay) {
+    public static void renderOpenGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
         if (greatDoor.destinationFountainDimension != null) {
             pose.pushPose();
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorDarkWorldTexture)),
-                    LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1f);
+                    LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
             pose.popPose();
         } else {
             pose.pushPose();
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorLightWorldTexture)),
-                    LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1f);
+                    LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
             pose.popPose();
         }
     }

@@ -1,7 +1,10 @@
 package destiny.penumbra_phantasm.server.fountain;
 
+import destiny.penumbra_phantasm.client.network.ClientBoundSingleFountainData;
+import destiny.penumbra_phantasm.client.network.ClientBoundSingleGreatDoorPacket;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
@@ -10,6 +13,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.Map;
 
@@ -58,6 +62,8 @@ public class GreatDoor {
         if (darkFountain != null) {
 
         }
+
+        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(greatDoorPos)), new ClientBoundSingleGreatDoorPacket(this));
     }
 
     public CompoundTag save() {
