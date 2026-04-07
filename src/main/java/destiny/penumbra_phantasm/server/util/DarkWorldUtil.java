@@ -2,9 +2,14 @@ package destiny.penumbra_phantasm.server.util;
 
 import commoble.infiniverse.api.InfiniverseAPI;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
+import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
+import destiny.penumbra_phantasm.server.registry.BlockRegistry;
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.worldgen.SeededNoiseBasedChunkGenerator;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -14,11 +19,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -29,6 +36,39 @@ import java.util.UUID;
 
 public class DarkWorldUtil
 {
+	public static void createGreatDoor(Level pLevel, BlockPos greatDoorPos, Direction direction, boolean isOpen, BlockPos lightDoorPos,
+									   ResourceKey<Level> lightDoorLevel, BlockPos destinationGreatDoorPos,
+									   ResourceKey<Level> destinationGreatDoorLevel) {
+		GreatDoorCapability greatDoorCapability = null;
+		LazyOptional<GreatDoorCapability> lightLazyCapability = pLevel.getCapability(CapabilityRegistry.GREAT_DOOR);
+		if(lightLazyCapability.isPresent() && lightLazyCapability.resolve().isPresent())
+			greatDoorCapability = lightLazyCapability.resolve().get();
+
+		if (greatDoorCapability == null) {
+			return;
+		}
+
+		List<BlockPos> volumePositions = new ArrayList<>();
+
+		Direction widthDir = direction.getClockWise();
+		Direction depthDir = direction.getOpposite();
+		BlockState block = BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState();
+		for (int y = 0; y < 9; y++) {
+			for (int x = 0; x < 6; x++) {
+				for (int z = 0; z < 2; z++) {
+					BlockPos target = greatDoorPos.relative(widthDir, x).relative(depthDir, z).above(y);
+					pLevel.setBlock(target, block, 3);
+					if (pLevel.getBlockEntity(target) instanceof GreatDoorShapeBlockEntity greatDoorShape) {
+						greatDoorShape.greatDoorPos = greatDoorPos;
+					}
+					volumePositions.add(target);
+				}
+			}
+		}
+
+		greatDoorCapability.addGreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorLevel, destinationGreatDoorPos, destinationGreatDoorLevel);
+	}
+
 	public static TagKey<Block> getBlockTag(ResourceLocation location)
 	{
 		return TagKey.create(Registries.BLOCK, location);

@@ -1,13 +1,8 @@
 package destiny.penumbra_phantasm.server.block;
 
-import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
-import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
-import destiny.penumbra_phantasm.server.registry.BlockRegistry;
-import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -18,11 +13,8 @@ import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GreatDoorSpawnerBlock extends HorizontalDirectionalBlock {
     public GreatDoorSpawnerBlock(Properties pProperties) {
@@ -37,43 +29,6 @@ public class GreatDoorSpawnerBlock extends HorizontalDirectionalBlock {
         }
 
         pPlayer.displayClientMessage(Component.literal("Trying to do the thing"), true);
-
-        GreatDoorCapability greatDoorCapability = null;
-        LazyOptional<GreatDoorCapability> lightLazyCapability = pLevel.getCapability(CapabilityRegistry.GREAT_DOOR);
-        if(lightLazyCapability.isPresent() && lightLazyCapability.resolve().isPresent())
-            greatDoorCapability = lightLazyCapability.resolve().get();
-
-        if (greatDoorCapability == null) {
-            return InteractionResult.FAIL;
-        }
-
-        Direction facing = pState.getValue(FACING);
-        ResourceKey<Level> dimension;
-        if (pPlayer.isCrouching()) {
-            dimension = Level.OVERWORLD;
-        } else {
-            dimension = pLevel.dimension();
-        }
-
-        List<BlockPos> volumePositions = new ArrayList<>();
-
-        Direction widthDir = facing.getClockWise();
-        Direction depthDir = facing.getOpposite();
-        BlockState block = BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState();
-        for (int y = 0; y < 9; y++) {
-            for (int x = 0; x < 6; x++) {
-                for (int z = 0; z < 2; z++) {
-                    BlockPos target = pPos.relative(widthDir, x).relative(depthDir, z).above(y);
-                    pLevel.setBlock(target, block, 3);
-                    if (pLevel.getBlockEntity(target) instanceof GreatDoorShapeBlockEntity greatDoorShape) {
-                        greatDoorShape.greatDoorPos = pPos;
-                    }
-                    volumePositions.add(target);
-                }
-            }
-        }
-
-        greatDoorCapability.addGreatDoor(pPos, facing, true, volumePositions, pPos.relative(facing.getCounterClockWise()), dimension, pPos, dimension);
 
         return InteractionResult.SUCCESS;
     }
