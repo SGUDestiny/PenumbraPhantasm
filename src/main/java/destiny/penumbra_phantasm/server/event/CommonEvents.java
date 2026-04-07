@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
+import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -105,6 +106,12 @@ public class CommonEvents {
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                 for (DarkFountain fountain : new ArrayList<>(cap.darkFountains.values())) {
                     fountain.tick(level);
+                }
+            });
+
+            level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
+                for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
+                    greatDoor.tick(level);
                 }
             });
         }

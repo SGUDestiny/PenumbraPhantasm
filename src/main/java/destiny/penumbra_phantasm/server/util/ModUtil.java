@@ -1,5 +1,7 @@
 package destiny.penumbra_phantasm.server.util;
 
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -8,6 +10,13 @@ import net.minecraft.world.level.Level;
 import java.util.stream.Stream;
 
 public class ModUtil {
+    public static ResourceKey<Level> stringToDimension(String dimensionString) {
+        String[] split = dimensionString.split(":");
+        if (split.length > 1)
+            return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("minecraft", "dimension")), new ResourceLocation(split[0], split[1]));
+        return null;
+    }
+
     public static VoxelShape buildShape(VoxelShape... from) {
         return Stream.of(from).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     }

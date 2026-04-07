@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.client.render.model.great_door;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import destiny.penumbra_phantasm.PenumbraPhantasm;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -12,9 +13,9 @@ import net.minecraft.world.entity.Entity;
 
 
 
-public class GreatDoorOpenModel<T extends Entity> extends EntityModel<T> {
+public class GreatDoorOpenModel extends EntityModel<Entity> {
 	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "great_door"), "main");
+	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "great_door_open_mode"), "main");
 	private final ModelPart main;
 	private final ModelPart door_right;
 	private final ModelPart door_left;

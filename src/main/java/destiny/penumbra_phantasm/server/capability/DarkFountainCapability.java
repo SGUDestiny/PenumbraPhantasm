@@ -17,12 +17,10 @@ import net.minecraftforge.common.util.INBTSerializable;
 import java.util.*;
 
 public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
-
     private static final String DARK_FOUNTAINS = "dark_fountains";
     private static final String PERSISTENT_DARK_WORLD_SITES = "persistent_dark_world_sites";
 
     public HashMap<BlockPos, DarkFountain> darkFountains = new HashMap<>();
-
     private final List<PersistentDarkWorldSite> persistentDarkWorldSites = new ArrayList<>();
 
     public static boolean roomIntersectsActiveFountain(DarkFountainCapability cap, Iterable<BlockPos> candidateRoom) {

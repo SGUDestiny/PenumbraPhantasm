@@ -920,9 +920,9 @@ public class DarkFountain {
 
     public static DarkFountain load(CompoundTag tag) {
         BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
-        ResourceKey<Level> fountainDimension = stringToDimension(tag.getString(FOUNTAIN_DIMENSION));
+        ResourceKey<Level> fountainDimension = ModUtil.stringToDimension(tag.getString(FOUNTAIN_DIMENSION));
         BlockPos destinationPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_POS));
-        ResourceKey<Level> destinationDimension = stringToDimension(tag.getString(DESTINATION_DIMENSION));
+        ResourceKey<Level> destinationDimension = ModUtil.stringToDimension(tag.getString(DESTINATION_DIMENSION));
         int openingTick = tag.getInt(OPENING_TICK);
         int frameTick = tag.getInt(FRAME_TICK);
         int frame = tag.getInt(FRAME);
@@ -992,13 +992,6 @@ public class DarkFountain {
     public int getFrameTick() { return frameTick; }
     public int getFrame() { return frame; }
     public int getFrameOptimized() { return frameOptimized; }
-
-    public static ResourceKey<Level> stringToDimension(String dimensionString) {
-        String[] split = dimensionString.split(":");
-        if (split.length > 1)
-            return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("minecraft", "dimension")), new ResourceLocation(split[0], split[1]));
-        return null;
-    }
 
     public static class DarkFountainTeleporter implements ITeleporter {
         private final Vec3 pos;

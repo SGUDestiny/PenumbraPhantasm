@@ -109,5 +109,11 @@ public class PacketHandlerRegistry {
                 .decoder(ClientBoundCancelPlayerAnimationPacket::decode)
                 .consumerMainThread(ClientBoundCancelPlayerAnimationPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(ClientBoundSingleGreatDoorPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundSingleGreatDoorPacket::encode)
+                .decoder(ClientBoundSingleGreatDoorPacket::decode)
+                .consumerMainThread(ClientBoundSingleGreatDoorPacket::handle)
+                .add();
     }
 }

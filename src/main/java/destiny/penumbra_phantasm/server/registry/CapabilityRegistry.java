@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
 import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
@@ -19,6 +20,8 @@ public class CapabilityRegistry {
     });
     public static final Capability<ScreenAnimationCapability> SCREEN_ANIMATION = CapabilityManager.get(new CapabilityToken<>() {
     });
+    public static final Capability<GreatDoorCapability> GREAT_DOOR = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event)
@@ -26,5 +29,6 @@ public class CapabilityRegistry {
         event.register(DarkFountainCapability.class);
         event.register(SoulCapability.class);
         event.register(ScreenAnimationCapability.class);
+        event.register(GreatDoorCapability.class);
     }
 }
