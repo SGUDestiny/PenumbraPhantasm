@@ -8,10 +8,11 @@ import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenMod
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import org.joml.Quaternionf;
+import net.minecraft.world.phys.Vec3;
 
 public class GreatDoorRenderUtil {
     public static GreatDoorOpenModel greatDoorOpenModel;
@@ -34,13 +35,9 @@ public class GreatDoorRenderUtil {
 
     public static void renderOpenGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
         pose.pushPose();
+        pose.mulPose(Axis.YP.rotationDegrees(180f - greatDoor.direction.toYRot()));
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
-
-        pose.translate(-1, 0, -1);
-        pose.rotateAround(Axis.YP.rotationDegrees(90), 0f, 0f, 0f);
-        pose.translate(1, 0, 1);
-
         pose.translate(-3, -1.5, 0.5);
         if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
@@ -54,14 +51,10 @@ public class GreatDoorRenderUtil {
 
     public static void renderClosedGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
         pose.pushPose();
+        pose.mulPose(Axis.YP.rotationDegrees(180f - greatDoor.direction.toYRot()));
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
-
-        pose.translate(-1, 0, -1);
-        pose.rotateAround(Axis.YP.rotationDegrees(90), 0f, 0f, 0f);
-        pose.translate(1, 0, 1);
-
-        pose.translate(-3, -1.5, 0.5);
+        pose.translate(3, 0, 0.5);
         if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
                     packedLight, overlay, 1F, 1F, 1F, 1f);
