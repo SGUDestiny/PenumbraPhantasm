@@ -37,12 +37,13 @@ public class GreatDoorRenderUtil {
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.translate(-3, -1.5, 0.5);
+        pose.rotateAround(Axis.YP.rotationDegrees(90), 0, 0, 0);
         if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
-                    LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
+                    packedLight, overlay, 1F, 1F, 1F, 1f);
         } else {
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorLightWorldTexture)),
-                    LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
+                    packedLight, overlay, 1F, 1F, 1F, 1f);
         }
         pose.popPose();
     }
@@ -52,12 +53,13 @@ public class GreatDoorRenderUtil {
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
         pose.translate(3, 0, 0.5);
+        pose.rotateAround(Axis.YP.rotationDegrees(90), 0, 0, 0);
         if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
             getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
-                    LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
+                    packedLight, overlay, 1F, 1F, 1F, 1f);
         } else {
             getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorLightWorldTexture)),
-                    LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
+                    packedLight, overlay, 1F, 1F, 1F, 1f);
         }
         pose.popPose();
     }

@@ -138,8 +138,7 @@ public class ClientEvents {
 					pose.translate(greatDoor.greatDoorPos.getX(), greatDoor.greatDoorPos.getY(),
 							greatDoor.greatDoorPos.getZ());
 
-					int lightColor = LevelRenderer.getLightColor(level, greatDoor.greatDoorPos);
-					int packedLight = LightTexture.pack(lightColor, level.getBrightness(LightLayer.SKY, greatDoor.greatDoorPos));
+					int packedLight = LevelRenderer.getLightColor(level, greatDoor.greatDoorPos);
 
 					if (renderSkyPass) {
 						if (greatDoor.isOpen) {
