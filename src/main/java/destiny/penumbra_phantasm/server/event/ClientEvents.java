@@ -148,6 +148,7 @@ public class ClientEvents {
 							GreatDoorRenderUtil.renderClosedGreatDoor(greatDoor, pose, buffer, packedLight, OverlayTexture.NO_OVERLAY);
 						}
 					}
+					pose.popPose();
 				});
 			});
 

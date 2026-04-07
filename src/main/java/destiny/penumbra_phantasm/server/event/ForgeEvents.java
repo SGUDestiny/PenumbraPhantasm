@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.block.LuminescentWaterFluidBlock;
+import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
 import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
@@ -32,6 +33,7 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event) {
         event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountains"), new GenericProvider<>(CapabilityRegistry.DARK_FOUNTAIN, new DarkFountainCapability()));
+        event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "great_doors"), new GenericProvider<>(CapabilityRegistry.GREAT_DOOR, new GreatDoorCapability()));
     }
 
     @SubscribeEvent

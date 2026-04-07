@@ -32,12 +32,12 @@ public class GreatDoorRenderUtil {
     public static void renderOpenGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
         if (greatDoor.destinationFountainDimension != null) {
             pose.pushPose();
-            getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorDarkWorldTexture)),
+            getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
                     LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
             pose.popPose();
         } else {
             pose.pushPose();
-            getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorLightWorldTexture)),
+            getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorLightWorldTexture)),
                     LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
             pose.popPose();
         }
@@ -46,12 +46,12 @@ public class GreatDoorRenderUtil {
     public static void renderClosedGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
         if (greatDoor.destinationFountainDimension != null) {
             pose.pushPose();
-            getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorDarkWorldTexture)),
+            getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorDarkWorldTexture)),
                     LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
             pose.popPose();
         } else {
             pose.pushPose();
-            getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorLightWorldTexture)),
+            getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutoutNoCull(greatDoorLightWorldTexture)),
                     LightTexture.block(packedLight), overlay, 1F, 1F, 1F, 1f);
             pose.popPose();
         }
