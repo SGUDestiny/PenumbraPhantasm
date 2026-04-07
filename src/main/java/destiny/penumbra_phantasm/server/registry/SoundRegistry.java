@@ -43,6 +43,8 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> CLIFFROCK_PRESS = registerSoundEvent("cliffrock_press");
     public static RegistryObject<SoundEvent> CLIFFROCK_UNPRESS = registerSoundEvent("cliffrock_unpress");
 
+    public static RegistryObject<SoundEvent> GREAT_DOOR = registerSoundEvent("great_door");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));

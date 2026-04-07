@@ -12,6 +12,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class ClientBoundSingleGreatDoorPacket {
@@ -25,18 +27,24 @@ public class ClientBoundSingleGreatDoorPacket {
         buffer.writeBlockPos(greatDoor.greatDoorPos);
         buffer.writeUtf(greatDoor.direction.getName());
         buffer.writeBoolean(greatDoor.isOpen);
-        buffer.writeBlockPos(greatDoor.destinationDoorPos);
-        buffer.writeResourceKey(greatDoor.destinationDoorDimension);
+        buffer.writeCollection(greatDoor.volumePositions, FriendlyByteBuf::writeBlockPos);
+        buffer.writeBlockPos(greatDoor.lightDoorPos);
+        buffer.writeResourceKey(greatDoor.lightDoorDimension);
+        buffer.writeBlockPos(greatDoor.destinationGreatDoorPos);
+        buffer.writeResourceKey(greatDoor.destinationGreatDoorDimension);
     }
 
     public static ClientBoundSingleGreatDoorPacket decode(FriendlyByteBuf buffer) {
         BlockPos greatDoorPos = buffer.readBlockPos();
         Direction direction = Direction.byName(buffer.readUtf());
         boolean isOpen = buffer.readBoolean();
-        BlockPos destinationDoorPos = buffer.readBlockPos();
-        ResourceKey<Level> destinationFountainDimension = buffer.readResourceKey(Registries.DIMENSION);
+        List<BlockPos> volumePositions = buffer.readCollection(ii -> new ArrayList<>(), FriendlyByteBuf::readBlockPos);
+        BlockPos lightDoorPos = buffer.readBlockPos();
+        ResourceKey<Level> lightDoorDimension = buffer.readResourceKey(Registries.DIMENSION);
+        BlockPos destinationGreatDoorPos = buffer.readBlockPos();
+        ResourceKey<Level> destinationGreatDoorDimension = buffer.readResourceKey(Registries.DIMENSION);
 
-        GreatDoor greatDoor = new GreatDoor(greatDoorPos, direction, isOpen, destinationDoorPos, destinationFountainDimension);
+        GreatDoor greatDoor = new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorDimension, destinationGreatDoorPos, destinationGreatDoorDimension);
 
         return new ClientBoundSingleGreatDoorPacket(greatDoor);
     }

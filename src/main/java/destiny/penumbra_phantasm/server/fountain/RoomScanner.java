@@ -36,6 +36,8 @@ public class RoomScanner {
         List<BlockPos> keyBlockPositions = new ArrayList<>();
         Set<BlockPos> visitedPositions = new HashSet<>();
         Set<BlockPos> doorPositions = new HashSet<>();
+        Set<BlockPos> outsideDoorPositions = new HashSet<>();
+        Set<BlockPos> sharedDoorPositions = new HashSet<>();
         Queue<BlockPos> queue = new LinkedList<>();
         Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
 
@@ -121,21 +123,25 @@ public class RoomScanner {
         private final List<BlockPos> positions;
         private final List<BlockPos> keyBlockPositions;
         private final Set<BlockPos> doorPositions;
+        private final Set<BlockPos> outsideDoorPositions;
+        private final Set<BlockPos> sharedDoorPositions;
         private final boolean valid;
 
-        private RoomScanResult(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, boolean valid) {
+        private RoomScanResult(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Set<BlockPos> outsideDoorPositions, Set<BlockPos> sharedDoorPositions, boolean valid) {
             this.positions = positions;
             this.keyBlockPositions = keyBlockPositions;
             this.doorPositions = doorPositions;
+            this.outsideDoorPositions = outsideDoorPositions;
+            this.sharedDoorPositions = sharedDoorPositions;
             this.valid = valid;
         }
 
-        public static RoomScanResult success(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions) {
-            return new RoomScanResult(positions, keyBlockPositions, doorPositions, true);
+        public static RoomScanResult success(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Set<BlockPos> outsideDoorPositions, Set<BlockPos> sharedDoorPositions) {
+            return new RoomScanResult(positions, keyBlockPositions, doorPositions, outsideDoorPositions, sharedDoorPositions, true);
         }
 
         public static RoomScanResult failure() {
-            return new RoomScanResult(Collections.emptyList(), Collections.emptyList(), Collections.emptySet(), false);
+            return new RoomScanResult(Collections.emptyList(), Collections.emptyList(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), false);
         }
 
         public List<BlockPos> getPositions() {
@@ -146,6 +152,12 @@ public class RoomScanner {
         }
         public Set<BlockPos> getDoorPositions() {
             return doorPositions;
+        }
+        public Set<BlockPos> getOutsideDoorPositions() {
+            return outsideDoorPositions;
+        }
+        public Set<BlockPos> getSharedDoorPositions() {
+            return sharedDoorPositions;
         }
         public boolean isValid() {
             return valid;

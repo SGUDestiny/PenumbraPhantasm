@@ -14,14 +14,15 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
     private static final String GREAT_DOORS = "great_doors";
 
     public HashMap<BlockPos, GreatDoor> greatDoors = new HashMap<>();
 
-    public void addGreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, BlockPos destinationDoorPos, ResourceKey<Level> destinationFountainDimension) {
-        this.greatDoors.put(greatDoorPos, new GreatDoor(greatDoorPos, direction, isOpen, destinationDoorPos, destinationFountainDimension));
+    public void addGreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, List<BlockPos> volumePositions, BlockPos lightDoorPos, ResourceKey<Level> lightDoorDimension, BlockPos destinationGreatDoorPos, ResourceKey<Level> destinationGreatDoorDimension) {
+        this.greatDoors.put(greatDoorPos, new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorDimension, destinationGreatDoorPos, destinationGreatDoorDimension));
     }
 
     public void removeGreatDoor(Level level, BlockPos greatDoorPos) {

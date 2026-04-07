@@ -462,7 +462,7 @@ public class DarkFountain {
                                 if (entity instanceof ServerPlayer player) {
                                     destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
                                 } else {
-                                    Entity teleported = teleportEntity(entity, destinationLevel, target);
+                                    Entity teleported = ModUtil.teleportEntity(entity, destinationLevel, target);
                                     if (teleported != null) {
                                         destinationFountain.teleportedEntities.add(teleported.getUUID());
                                     }
@@ -545,7 +545,7 @@ public class DarkFountain {
         if (rooms.isEmpty()) {
             RoomScanner.RoomScanResult result = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors);
             if (result.isValid()) {
-                DarkRoom newRoom = new DarkRoom(fountainPos, result.getPositions(), result.getDoorPositions());
+                DarkRoom newRoom = new DarkRoom(fountainPos, result.getPositions(), result.getDoorPositions(), result.getOutsideDoorPositions(), result.getSharedDoorPositions());
                 addEntitiesInRoomToTickers(level, newRoom);
                 rooms.add(newRoom);
             }
@@ -648,7 +648,7 @@ public class DarkFountain {
 
                     RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false, false, otherFountainAnchors);
                     if (result.isValid()) {
-                        DarkRoom newRoom = new DarkRoom(adjacent, result.getPositions(), result.getDoorPositions());
+                        DarkRoom newRoom = new DarkRoom(adjacent, result.getPositions(), result.getDoorPositions(), result.getOutsideDoorPositions(), result.getSharedDoorPositions());
                         addEntitiesInRoomToTickers(level, newRoom);
                         newRooms.add(newRoom);
                         allPositions.addAll(result.getPositions());
@@ -725,7 +725,7 @@ public class DarkFountain {
                             PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
                             PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension));
                         } else {
-                            Entity teleported = teleportEntity(entity, destinationLevel, target);
+                            Entity teleported = ModUtil.teleportEntity(entity, destinationLevel, target);
                             if (teleported != null) destinationFountain.teleportedEntities.add(teleported.getUUID());
                         }
                     }
@@ -799,7 +799,7 @@ public class DarkFountain {
                         if (entity instanceof ServerPlayer player) {
                             destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, fountainCenter).getUUID());
                         } else {
-                            Entity teleported = teleportEntity(entity, destinationLevel, fountainCenter);
+                            Entity teleported = ModUtil.teleportEntity(entity, destinationLevel, fountainCenter);
                             if (teleported != null) destinationFountain.teleportedEntities.add(teleported.getUUID());
                         }
                     }
@@ -854,10 +854,6 @@ public class DarkFountain {
 
         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
         return player;
-    }
-
-    public Entity teleportEntity(Entity entity, ServerLevel destinationLevel, Vec3 targetPos) {
-        return entity.changeDimension(destinationLevel, new DarkFountainTeleporter(targetPos, entity.getDeltaMovement(), entity.getYRot(), entity.getXRot()));
     }
 
     public void playWind() {

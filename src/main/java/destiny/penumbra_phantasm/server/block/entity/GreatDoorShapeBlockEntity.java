@@ -4,11 +4,13 @@ import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -33,7 +35,7 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
         }
     }
 
-    public InteractionResult cycleGreatDoorState(Level level, GreatDoorShapeBlockEntity greatDoorShape) {
+    public InteractionResult cycleGreatDoorState(Level level, BlockPos pos, GreatDoorShapeBlockEntity greatDoorShape) {
         GreatDoor greatDoor = getGreatDoor(level, greatDoorShape);
 
         if (greatDoor == null) {
@@ -41,6 +43,8 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
         }
 
         greatDoor.isOpen = !greatDoor.isOpen;
+
+        level.playSound(null, pos, SoundRegistry.GREAT_DOOR.get(), SoundSource.BLOCKS, 1f, 1f);
 
         markUpdated();
 

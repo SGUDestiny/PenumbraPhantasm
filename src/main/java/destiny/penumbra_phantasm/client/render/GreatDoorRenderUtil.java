@@ -9,10 +9,8 @@ import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
 
 public class GreatDoorRenderUtil {
     public static GreatDoorOpenModel greatDoorOpenModel;
@@ -47,7 +45,7 @@ public class GreatDoorRenderUtil {
         } else if (direction == Direction.WEST) {
             pose.translate(1, 0, 0);
         }
-        if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
+        if (DarkWorldUtil.isDarkWorldKey(greatDoor.lightDoorDimension)) {
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorDarkWorldTexture)),
                     packedLight, overlay, 1F, 1F, 1F, 1f);
         } else {
@@ -71,7 +69,7 @@ public class GreatDoorRenderUtil {
         } else if (direction == Direction.WEST) {
             pose.translate(1, 0, 0);
         }
-        if (DarkWorldUtil.isDarkWorldKey(greatDoor.destinationDoorDimension)) {
+        if (DarkWorldUtil.isDarkWorldKey(greatDoor.lightDoorDimension)) {
             getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorDarkWorldTexture)),
                     packedLight, overlay, 1F, 1F, 1F, 1f);
         } else {

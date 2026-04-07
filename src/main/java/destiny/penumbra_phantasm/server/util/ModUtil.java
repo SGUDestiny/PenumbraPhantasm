@@ -1,7 +1,11 @@
 package destiny.penumbra_phantasm.server.util;
 
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -10,6 +14,10 @@ import net.minecraft.world.level.Level;
 import java.util.stream.Stream;
 
 public class ModUtil {
+    public static Entity teleportEntity(Entity entity, ServerLevel destinationLevel, Vec3 targetPos) {
+        return entity.changeDimension(destinationLevel, new DarkFountain.DarkFountainTeleporter(targetPos, entity.getDeltaMovement(), entity.getYRot(), entity.getXRot()));
+    }
+
     public static ResourceKey<Level> stringToDimension(String dimensionString) {
         String[] split = dimensionString.split(":");
         if (split.length > 1)

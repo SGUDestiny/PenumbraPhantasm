@@ -21,6 +21,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.util.LazyOptional;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GreatDoorSpawnerBlock extends HorizontalDirectionalBlock {
     public GreatDoorSpawnerBlock(Properties pProperties) {
@@ -53,7 +55,7 @@ public class GreatDoorSpawnerBlock extends HorizontalDirectionalBlock {
             dimension = pLevel.dimension();
         }
 
-        greatDoorCapability.addGreatDoor(pPos, facing, true, pPos, dimension);
+        List<BlockPos> volumePositions = new ArrayList<>();
 
         Direction widthDir = facing.getClockWise();
         Direction depthDir = facing.getOpposite();
@@ -66,9 +68,12 @@ public class GreatDoorSpawnerBlock extends HorizontalDirectionalBlock {
                     if (pLevel.getBlockEntity(target) instanceof GreatDoorShapeBlockEntity greatDoorShape) {
                         greatDoorShape.greatDoorPos = pPos;
                     }
+                    volumePositions.add(target);
                 }
             }
         }
+
+        greatDoorCapability.addGreatDoor(pPos, facing, true, volumePositions, pPos.relative(facing.getCounterClockWise()), dimension, pPos, dimension);
 
         return InteractionResult.SUCCESS;
     }

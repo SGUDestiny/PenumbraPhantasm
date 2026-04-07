@@ -16,21 +16,27 @@ public class DarkRoom {
     public static final String SEED_POS = "seedPos";
     public static final String POSITIONS = "positions";
     public static final String DOOR_POSITIONS = "doorPositions";
+    public static final String OUTSIDE_DOOR_POSITIONS = "outsideDoorPositions";
+    public static final String SHARED_DOOR_POSITIONS = "sharedDoorPositions";
     public static final String ACTIVE = "active";
     public static final String FILL_INDEX = "fillIndex";
 
     BlockPos seedPos;
     List<BlockPos> positions;
     Set<BlockPos> doorPositions;
+    Set<BlockPos> outsideDoorPositions;
+    Set<BlockPos> sharedDoorPositions;
     Map<UUID, Integer> transportTickers;
     int fillIndex;
     boolean active;
     List<BlockPos> dissipationQueue;
 
-    public DarkRoom(BlockPos seedPos, List<BlockPos> positions, Set<BlockPos> doorPositions) {
+    public DarkRoom(BlockPos seedPos, List<BlockPos> positions, Set<BlockPos> doorPositions, Set<BlockPos> outsideDoorPositions, Set<BlockPos> sharedDoorPositions) {
         this.seedPos = seedPos;
         this.positions = positions;
         this.doorPositions = doorPositions;
+        this.outsideDoorPositions = outsideDoorPositions;
+        this.sharedDoorPositions = sharedDoorPositions;
         this.transportTickers = new HashMap<>();
         this.fillIndex = 0;
         this.active = false;
@@ -112,6 +118,18 @@ public class DarkRoom {
         }
         tag.put(DOOR_POSITIONS, doorsTag);
 
+        ListTag outsideDoorsTag = new ListTag();
+        for (BlockPos pos : outsideDoorPositions) {
+            outsideDoorsTag.add(NbtUtils.writeBlockPos(pos));
+        }
+        tag.put(OUTSIDE_DOOR_POSITIONS, outsideDoorsTag);
+
+        ListTag sharedDoorsTag = new ListTag();
+        for (BlockPos pos : sharedDoorPositions) {
+            sharedDoorsTag.add(NbtUtils.writeBlockPos(pos));
+        }
+        tag.put(SHARED_DOOR_POSITIONS, sharedDoorsTag);
+
         tag.putBoolean(ACTIVE, active);
         tag.putInt(FILL_INDEX, fillIndex);
 
@@ -133,7 +151,19 @@ public class DarkRoom {
             doorPositions.add(NbtUtils.readBlockPos((CompoundTag) t));
         }
 
-        DarkRoom room = new DarkRoom(seedPos, positions, doorPositions);
+        Set<BlockPos> outsideDoorPositions = new HashSet<>();
+        ListTag outsideDoorsTag = tag.getList(DOOR_POSITIONS, Tag.TAG_COMPOUND);
+        for (Tag t : outsideDoorsTag) {
+            outsideDoorPositions.add(NbtUtils.readBlockPos((CompoundTag) t));
+        }
+
+        Set<BlockPos> sharedDoorPositions = new HashSet<>();
+        ListTag sharedDoorsTag = tag.getList(DOOR_POSITIONS, Tag.TAG_COMPOUND);
+        for (Tag t : sharedDoorsTag) {
+            sharedDoorPositions.add(NbtUtils.readBlockPos((CompoundTag) t));
+        }
+
+        DarkRoom room = new DarkRoom(seedPos, positions, doorPositions, outsideDoorPositions, sharedDoorPositions);
         room.active = tag.getBoolean(ACTIVE);
         room.fillIndex = tag.getInt(FILL_INDEX);
         return room;

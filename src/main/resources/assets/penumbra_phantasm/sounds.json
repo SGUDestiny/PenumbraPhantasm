@@ -202,5 +202,11 @@
     [
       "penumbra_phantasm:cliffrock_unpress"
     ]
+  },
+  "great_door": {
+    "sounds":
+    [
+      "penumbra_phantasm:great_door"
+    ]
   }
 }
