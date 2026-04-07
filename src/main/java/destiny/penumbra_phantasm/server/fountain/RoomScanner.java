@@ -101,7 +101,7 @@ public class RoomScanner {
 
         positions.sort(Comparator.comparingInt((BlockPos pos) -> pos.getY()).reversed());
 
-        return RoomScanResult.success(positions, keyBlockPositions, doorPositions);
+        return RoomScanResult.success(positions, keyBlockPositions, doorPositions, outsideDoorPositions, sharedDoorPositions);
     }
 
     public static boolean hasBreach(Level level, Set<BlockPos> roomPositions, Set<BlockPos> allRoomPositions) {

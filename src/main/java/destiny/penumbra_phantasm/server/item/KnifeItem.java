@@ -461,7 +461,7 @@ public class KnifeItem extends SwordItem {
         lightCap.addDarkFountain(fountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //Create new dark room instance for the fountain room
-        DarkRoom fountainRoom = new DarkRoom(fountainPos, roomResult.getPositions(), roomResult.getDoorPositions());
+        DarkRoom fountainRoom = new DarkRoom(fountainPos, roomResult.getPositions(), roomResult.getDoorPositions(), roomResult.getOutsideDoorPositions(), roomResult.getSharedDoorPositions());
         AABB roomBox = getRoomAABBFromPositions(roomResult.getPositions());
         Set<BlockPos> positionSet = new HashSet<>(roomResult.getPositions());
 
