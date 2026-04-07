@@ -24,7 +24,7 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
     public BlockPos greatDoorPos = null;
 
     public GreatDoorShapeBlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(BlockEntityRegistry.DARKNESS_BLOCK_ENTITY.get(), pPos, pBlockState);
+        super(BlockEntityRegistry.GREAT_DOOR_SHAPE_BLOCK_ENTITY.get(), pPos, pBlockState);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, GreatDoorShapeBlockEntity greatDoorShape) {

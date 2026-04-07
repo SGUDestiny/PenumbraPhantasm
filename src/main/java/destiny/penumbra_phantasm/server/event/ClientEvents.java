@@ -133,8 +133,6 @@ public class ClientEvents {
 				});
 			});
 
-			GL11.glDisable(0x864F);
-
 			level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
 				for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
 					pose.pushPose();
@@ -156,6 +154,8 @@ public class ClientEvents {
 			});
 
 			buffer.endBatch();
+
+			GL11.glDisable(0x864F);
 		}
 	}
 
