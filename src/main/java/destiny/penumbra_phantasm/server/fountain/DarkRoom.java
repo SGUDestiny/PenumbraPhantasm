@@ -1,13 +1,16 @@
 package destiny.penumbra_phantasm.server.fountain;
 
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
+import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.*;
@@ -16,27 +19,30 @@ public class DarkRoom {
     public static final String SEED_POS = "seedPos";
     public static final String POSITIONS = "positions";
     public static final String DOOR_POSITIONS = "doorPositions";
-    public static final String OUTSIDE_DOOR_POSITIONS = "outsideDoorPositions";
-    public static final String SHARED_DOOR_POSITIONS = "sharedDoorPositions";
+    public static final String OUTSIDE_DOORS = "outsideDoors";
+    public static final String SHARED_DOORS = "sharedDoors";
+    public static final String ENTRY_POS = "pos";
+    public static final String ENTRY_DIR = "dir";
+    public static final String ENTRY_DIM = "dim";
     public static final String ACTIVE = "active";
     public static final String FILL_INDEX = "fillIndex";
 
     BlockPos seedPos;
     List<BlockPos> positions;
     Set<BlockPos> doorPositions;
-    Set<BlockPos> outsideDoorPositions;
-    Set<BlockPos> sharedDoorPositions;
+    Map<BlockPos, Direction> outsideDoors;
+    Map<BlockPos, ResourceKey<Level>> sharedDoors;
     Map<UUID, Integer> transportTickers;
     int fillIndex;
     boolean active;
     List<BlockPos> dissipationQueue;
 
-    public DarkRoom(BlockPos seedPos, List<BlockPos> positions, Set<BlockPos> doorPositions, Set<BlockPos> outsideDoorPositions, Set<BlockPos> sharedDoorPositions) {
+    public DarkRoom(BlockPos seedPos, List<BlockPos> positions, Set<BlockPos> doorPositions, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors) {
         this.seedPos = seedPos;
         this.positions = positions;
         this.doorPositions = doorPositions;
-        this.outsideDoorPositions = outsideDoorPositions;
-        this.sharedDoorPositions = sharedDoorPositions;
+        this.outsideDoors = new HashMap<>(outsideDoors);
+        this.sharedDoors = new HashMap<>(sharedDoors);
         this.transportTickers = new HashMap<>();
         this.fillIndex = 0;
         this.active = false;
@@ -118,17 +124,23 @@ public class DarkRoom {
         }
         tag.put(DOOR_POSITIONS, doorsTag);
 
-        ListTag outsideDoorsTag = new ListTag();
-        for (BlockPos pos : outsideDoorPositions) {
-            outsideDoorsTag.add(NbtUtils.writeBlockPos(pos));
+        ListTag outsideList = new ListTag();
+        for (Map.Entry<BlockPos, Direction> e : outsideDoors.entrySet()) {
+            CompoundTag entry = new CompoundTag();
+            entry.put(ENTRY_POS, NbtUtils.writeBlockPos(e.getKey()));
+            entry.putString(ENTRY_DIR, e.getValue().getName());
+            outsideList.add(entry);
         }
-        tag.put(OUTSIDE_DOOR_POSITIONS, outsideDoorsTag);
+        tag.put(OUTSIDE_DOORS, outsideList);
 
-        ListTag sharedDoorsTag = new ListTag();
-        for (BlockPos pos : sharedDoorPositions) {
-            sharedDoorsTag.add(NbtUtils.writeBlockPos(pos));
+        ListTag sharedList = new ListTag();
+        for (Map.Entry<BlockPos, ResourceKey<Level>> e : sharedDoors.entrySet()) {
+            CompoundTag entry = new CompoundTag();
+            entry.put(ENTRY_POS, NbtUtils.writeBlockPos(e.getKey()));
+            entry.putString(ENTRY_DIM, e.getValue().location().toString());
+            sharedList.add(entry);
         }
-        tag.put(SHARED_DOOR_POSITIONS, sharedDoorsTag);
+        tag.put(SHARED_DOORS, sharedList);
 
         tag.putBoolean(ACTIVE, active);
         tag.putInt(FILL_INDEX, fillIndex);
@@ -151,19 +163,33 @@ public class DarkRoom {
             doorPositions.add(NbtUtils.readBlockPos((CompoundTag) t));
         }
 
-        Set<BlockPos> outsideDoorPositions = new HashSet<>();
-        ListTag outsideDoorsTag = tag.getList(DOOR_POSITIONS, Tag.TAG_COMPOUND);
-        for (Tag t : outsideDoorsTag) {
-            outsideDoorPositions.add(NbtUtils.readBlockPos((CompoundTag) t));
+        Map<BlockPos, Direction> outsideDoors = new HashMap<>();
+        if (tag.contains(OUTSIDE_DOORS)) {
+            ListTag outsideList = tag.getList(OUTSIDE_DOORS, Tag.TAG_COMPOUND);
+            for (Tag t : outsideList) {
+                CompoundTag entry = (CompoundTag) t;
+                BlockPos pos = NbtUtils.readBlockPos(entry.getCompound(ENTRY_POS));
+                Direction dir = Direction.byName(entry.getString(ENTRY_DIR));
+                if (dir != null) {
+                    outsideDoors.put(pos, dir);
+                }
+            }
         }
 
-        Set<BlockPos> sharedDoorPositions = new HashSet<>();
-        ListTag sharedDoorsTag = tag.getList(DOOR_POSITIONS, Tag.TAG_COMPOUND);
-        for (Tag t : sharedDoorsTag) {
-            sharedDoorPositions.add(NbtUtils.readBlockPos((CompoundTag) t));
+        Map<BlockPos, ResourceKey<Level>> sharedDoors = new HashMap<>();
+        if (tag.contains(SHARED_DOORS)) {
+            ListTag sharedList = tag.getList(SHARED_DOORS, Tag.TAG_COMPOUND);
+            for (Tag t : sharedList) {
+                CompoundTag entry = (CompoundTag) t;
+                BlockPos pos = NbtUtils.readBlockPos(entry.getCompound(ENTRY_POS));
+                ResourceKey<Level> dim = ModUtil.stringToDimension(entry.getString(ENTRY_DIM));
+                if (dim != null) {
+                    sharedDoors.put(pos, dim);
+                }
+            }
         }
 
-        DarkRoom room = new DarkRoom(seedPos, positions, doorPositions, outsideDoorPositions, sharedDoorPositions);
+        DarkRoom room = new DarkRoom(seedPos, positions, doorPositions, outsideDoors, sharedDoors);
         room.active = tag.getBoolean(ACTIVE);
         room.fillIndex = tag.getInt(FILL_INDEX);
         return room;
@@ -172,6 +198,8 @@ public class DarkRoom {
     public BlockPos getSeedPos() { return seedPos; }
     public List<BlockPos> getPositions() { return positions; }
     public Set<BlockPos> getDoorPositions() { return doorPositions; }
+    public Map<BlockPos, Direction> getOutsideDoors() { return Collections.unmodifiableMap(outsideDoors); }
+    public Map<BlockPos, ResourceKey<Level>> getSharedDoors() { return Collections.unmodifiableMap(sharedDoors); }
     public Map<UUID, Integer> getTransportTickers() { return transportTickers; }
     public int getFillIndex() { return fillIndex; }
 }

@@ -526,26 +526,48 @@ public class DarkFountain {
         }
     }
 
-    @Nullable
-    private Set<BlockPos> collectOtherFountainAnchors(ServerLevel level) {
+    public static @Nullable Set<BlockPos> otherFountainAnchors(ServerLevel level, @Nullable BlockPos excludeFountainAnchor) {
         HashSet<BlockPos> anchors = new HashSet<>();
         level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
             for (Map.Entry<BlockPos, DarkFountain> e : cap.darkFountains.entrySet()) {
-                if (!e.getKey().equals(this.fountainPos)) {
-                    anchors.add(e.getValue().getFountainPos());
-                }
+                if (excludeFountainAnchor != null && e.getKey().equals(excludeFountainAnchor)) continue;
+                anchors.add(e.getValue().getFountainPos());
             }
         });
         return anchors.isEmpty() ? null : anchors;
     }
 
+    public static Map<BlockPos, ResourceKey<Level>> otherFountainRoomCellsToDarkWorld(ServerLevel level, @Nullable BlockPos excludeFountainAnchor) {
+        Map<BlockPos, ResourceKey<Level>> map = new HashMap<>();
+        level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+            for (Map.Entry<BlockPos, DarkFountain> e : cap.darkFountains.entrySet()) {
+                if (excludeFountainAnchor != null && e.getKey().equals(excludeFountainAnchor)) continue;
+                ResourceKey<Level> destDim = e.getValue().getDestinationDimension();
+                for (DarkRoom room : e.getValue().rooms) {
+                    if (!room.isDissipating()) {
+                        for (BlockPos p : room.getPositions()) {
+                            map.put(p, destDim);
+                        }
+                    }
+                }
+            }
+        });
+        return map;
+    }
+
+    @Nullable
+    private Set<BlockPos> collectOtherFountainAnchors(ServerLevel level) {
+        return otherFountainAnchors(level, this.fountainPos);
+    }
+
     private void tickRoomManagement(ServerLevel level) {
         Set<BlockPos> otherAnchors = collectOtherFountainAnchors(level);
+        Map<BlockPos, ResourceKey<Level>> otherRoomCells = otherFountainRoomCellsToDarkWorld(level, this.fountainPos);
 
         if (rooms.isEmpty()) {
-            RoomScanner.RoomScanResult result = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors);
+            RoomScanner.RoomScanResult result = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
             if (result.isValid()) {
-                DarkRoom newRoom = new DarkRoom(fountainPos, result.getPositions(), result.getDoorPositions(), result.getOutsideDoorPositions(), result.getSharedDoorPositions());
+                DarkRoom newRoom = new DarkRoom(fountainPos, result.getPositions(), result.getDoorPositions(), result.getOutsideDoors(), result.getSharedDoors());
                 addEntitiesInRoomToTickers(level, newRoom);
                 rooms.add(newRoom);
             }
@@ -560,10 +582,12 @@ public class DarkFountain {
         for (DarkRoom room : rooms) {
             if (room.isDissipating()) continue;
 
-            RoomScanner.RoomScanResult result = RoomScanner.scan(level, room.getSeedPos(), ServerConfig.maxRoomVolume, true, true, otherAnchors);
+            RoomScanner.RoomScanResult result = RoomScanner.scan(level, room.getSeedPos(), ServerConfig.maxRoomVolume, true, true, otherAnchors, otherRoomCells);
             if (result.isValid()) {
                 room.positions = result.getPositions();
                 room.doorPositions = result.getDoorPositions();
+                room.outsideDoors = new HashMap<>(result.getOutsideDoors());
+                room.sharedDoors = new HashMap<>(result.getSharedDoors());
                 int alreadyFilled = 0;
                 for (BlockPos pos : room.positions) {
                     if (level.getBlockState(pos).getBlock() instanceof DarknessBlock) alreadyFilled++;
@@ -573,7 +597,7 @@ public class DarkFountain {
         }
 
         tickConnectivityViaDoors(level);
-        tickExpansionThroughDoors(level, otherAnchors);
+        tickExpansionThroughDoors(level, otherAnchors, otherRoomCells);
     }
 
     private void tickConnectivityViaDoors(ServerLevel level) {
@@ -617,7 +641,7 @@ public class DarkFountain {
         }
     }
 
-    private void tickExpansionThroughDoors(ServerLevel level, @Nullable Set<BlockPos> otherFountainAnchors) {
+    private void tickExpansionThroughDoors(ServerLevel level, @Nullable Set<BlockPos> otherFountainAnchors, Map<BlockPos, ResourceKey<Level>> otherRoomCells) {
         //Subtract total used volume from max volume, if zero or below, don't expand
         int remainingVolume = ServerConfig.maxRoomVolume - DarkRoom.getTotalDarknessCount(rooms);
         if (remainingVolume <= 0) return;
@@ -646,9 +670,9 @@ public class DarkFountain {
                     if (!adjState.is(Blocks.AIR) && !adjState.is(Blocks.CAVE_AIR) && !adjState.is(Blocks.VOID_AIR))
                         continue;
 
-                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false, false, otherFountainAnchors);
+                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false, false, otherFountainAnchors, otherRoomCells);
                     if (result.isValid()) {
-                        DarkRoom newRoom = new DarkRoom(adjacent, result.getPositions(), result.getDoorPositions(), result.getOutsideDoorPositions(), result.getSharedDoorPositions());
+                        DarkRoom newRoom = new DarkRoom(adjacent, result.getPositions(), result.getDoorPositions(), result.getOutsideDoors(), result.getSharedDoors());
                         addEntitiesInRoomToTickers(level, newRoom);
                         newRooms.add(newRoom);
                         allPositions.addAll(result.getPositions());

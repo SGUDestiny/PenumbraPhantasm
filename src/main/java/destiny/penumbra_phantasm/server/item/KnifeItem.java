@@ -126,7 +126,10 @@ public class KnifeItem extends SwordItem {
         }
 
         //Cancel if player isn't inside a valid room
-        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, player.getOnPos().above(), ServerConfig.maxRoomVolume, false);
+        ServerLevel serverLevel = (ServerLevel) level;
+        Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
+        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, player.getOnPos().above(), ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_unsealed_or_too_big"), true);
             return InteractionResultHolder.fail(stack);
@@ -362,8 +365,13 @@ public class KnifeItem extends SwordItem {
             return;
         }
 
-        //Scan if the room is still valid, get result with all blocks
-        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false);
+        if (!(level instanceof ServerLevel serverLevel)) {
+            resetMakingState(tag);
+            return;
+        }
+        Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
+        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_unsealed_or_too_big"), true);
             resetMakingState(tag);
@@ -461,7 +469,7 @@ public class KnifeItem extends SwordItem {
         lightCap.addDarkFountain(fountainPos, level.dimension(), darkFountainPos, targetLevel.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //Create new dark room instance for the fountain room
-        DarkRoom fountainRoom = new DarkRoom(fountainPos, roomResult.getPositions(), roomResult.getDoorPositions(), roomResult.getOutsideDoorPositions(), roomResult.getSharedDoorPositions());
+        DarkRoom fountainRoom = new DarkRoom(fountainPos, roomResult.getPositions(), roomResult.getDoorPositions(), roomResult.getOutsideDoors(), roomResult.getSharedDoors());
         AABB roomBox = getRoomAABBFromPositions(roomResult.getPositions());
         Set<BlockPos> positionSet = new HashSet<>(roomResult.getPositions());
 

@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.fountain;
 
 import java.util.*;
+import java.util.function.BiConsumer;
 
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
@@ -15,29 +16,29 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 
 import javax.annotation.Nullable;
 
 public class RoomScanner {
 
     public static RoomScanResult scan(Level level, BlockPos fountainPos, int maxVolume, boolean includeDarkness) {
-        return scan(level, fountainPos, maxVolume, includeDarkness, false, null);
+        return scan(level, fountainPos, maxVolume, includeDarkness, false, null, null);
     }
 
     public static RoomScanResult scan(Level level, BlockPos fountainPos, int maxVolume, boolean includeDarkness, boolean openDoorsAsWalls) {
-        return scan(level, fountainPos, maxVolume, includeDarkness, openDoorsAsWalls, null);
+        return scan(level, fountainPos, maxVolume, includeDarkness, openDoorsAsWalls, null, null);
     }
 
-    /**
-     * @param blockingPositions if non-null, these cells are never entered (other fountains' anchors), so scans stay partitioned.
-     */
     public static RoomScanResult scan(Level level, BlockPos fountainPos, int maxVolume, boolean includeDarkness, boolean openDoorsAsWalls, @Nullable Set<BlockPos> blockingPositions) {
+        return scan(level, fountainPos, maxVolume, includeDarkness, openDoorsAsWalls, blockingPositions, null);
+    }
+
+    public static RoomScanResult scan(Level level, BlockPos fountainPos, int maxVolume, boolean includeDarkness, boolean openDoorsAsWalls, @Nullable Set<BlockPos> blockingPositions, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld) {
         List<BlockPos> positions = new ArrayList<>();
         List<BlockPos> keyBlockPositions = new ArrayList<>();
         Set<BlockPos> visitedPositions = new HashSet<>();
         Set<BlockPos> doorPositions = new HashSet<>();
-        Set<BlockPos> outsideDoorPositions = new HashSet<>();
-        Set<BlockPos> sharedDoorPositions = new HashSet<>();
         Queue<BlockPos> queue = new LinkedList<>();
         Registry<DarkWorldType> darkWorldTypeRegistry = level.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY);
 
@@ -101,7 +102,78 @@ public class RoomScanner {
 
         positions.sort(Comparator.comparingInt((BlockPos pos) -> pos.getY()).reversed());
 
-        return RoomScanResult.success(positions, keyBlockPositions, doorPositions, outsideDoorPositions, sharedDoorPositions);
+        Map<BlockPos, Direction> outsideDoors = new HashMap<>();
+        Map<BlockPos, ResourceKey<Level>> sharedDoors = new HashMap<>();
+        classifyShellDoors(level, positions, doorPositions, otherFountainRoomToDarkWorld, outsideDoors, sharedDoors);
+
+        return RoomScanResult.success(positions, keyBlockPositions, doorPositions, outsideDoors, sharedDoors);
+    }
+
+    private static BlockPos doorLowerHalf(Level level, BlockPos pos) {
+        BlockState s = level.getBlockState(pos);
+        if (!(s.getBlock() instanceof DoorBlock)) {
+            return pos;
+        }
+        return s.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
+    }
+
+    private static boolean isOpenAir(BlockState state) {
+        return state.isAir() || state.is(Blocks.CAVE_AIR) || state.is(Blocks.VOID_AIR);
+    }
+
+    private static void classifyShellDoors(Level level, List<BlockPos> positions, Set<BlockPos> doorPositions, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors) {
+        Set<BlockPos> posSet = new HashSet<>(positions);
+        Map<BlockPos, ResourceKey<Level>> ownerMap = otherFountainRoomToDarkWorld != null ? otherFountainRoomToDarkWorld : Collections.emptyMap();
+
+        BiConsumer<BlockPos, Direction> tryClassify = (doorPartPos, dirFromInterior) -> {
+            BlockState doorState = level.getBlockState(doorPartPos);
+            if (!(doorState.getBlock() instanceof DoorBlock)) {
+                return;
+            }
+            BlockPos lower = doorLowerHalf(level, doorPartPos);
+            if (outsideDoors.containsKey(lower) || sharedDoors.containsKey(lower)) {
+                return;
+            }
+            BlockPos beyond = lower.relative(dirFromInterior);
+            BlockPos beyondUp = lower.above().relative(dirFromInterior);
+            ResourceKey<Level> shr = ownerMap.get(beyond);
+            if (shr == null) {
+                shr = ownerMap.get(beyondUp);
+            }
+            if (shr != null) {
+                sharedDoors.put(lower, shr);
+                return;
+            }
+            BlockState b0 = level.getBlockState(beyond);
+            BlockState b1 = level.getBlockState(beyondUp);
+            if (isOpenAir(b0) || isOpenAir(b1)) {
+                outsideDoors.put(lower, dirFromInterior);
+            }
+        };
+
+        for (BlockPos pos : positions) {
+            for (Direction dir : Direction.values()) {
+                BlockPos n = pos.relative(dir);
+                if (posSet.contains(n)) {
+                    continue;
+                }
+                if (level.getBlockState(n).getBlock() instanceof DoorBlock) {
+                    tryClassify.accept(n, dir);
+                }
+            }
+        }
+
+        for (BlockPos doorPart : doorPositions) {
+            BlockPos lower = doorLowerHalf(level, doorPart);
+            for (Direction dir : Direction.values()) {
+                BlockPos in0 = lower.relative(dir.getOpposite());
+                BlockPos in1 = lower.above().relative(dir.getOpposite());
+                if (posSet.contains(in0) || posSet.contains(in1)) {
+                    tryClassify.accept(doorPart, dir);
+                    break;
+                }
+            }
+        }
     }
 
     public static boolean hasBreach(Level level, Set<BlockPos> roomPositions, Set<BlockPos> allRoomPositions) {
@@ -123,25 +195,25 @@ public class RoomScanner {
         private final List<BlockPos> positions;
         private final List<BlockPos> keyBlockPositions;
         private final Set<BlockPos> doorPositions;
-        private final Set<BlockPos> outsideDoorPositions;
-        private final Set<BlockPos> sharedDoorPositions;
+        private final Map<BlockPos, Direction> outsideDoors;
+        private final Map<BlockPos, ResourceKey<Level>> sharedDoors;
         private final boolean valid;
 
-        private RoomScanResult(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Set<BlockPos> outsideDoorPositions, Set<BlockPos> sharedDoorPositions, boolean valid) {
+        private RoomScanResult(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors, boolean valid) {
             this.positions = positions;
             this.keyBlockPositions = keyBlockPositions;
             this.doorPositions = doorPositions;
-            this.outsideDoorPositions = outsideDoorPositions;
-            this.sharedDoorPositions = sharedDoorPositions;
+            this.outsideDoors = outsideDoors;
+            this.sharedDoors = sharedDoors;
             this.valid = valid;
         }
 
-        public static RoomScanResult success(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Set<BlockPos> outsideDoorPositions, Set<BlockPos> sharedDoorPositions) {
-            return new RoomScanResult(positions, keyBlockPositions, doorPositions, outsideDoorPositions, sharedDoorPositions, true);
+        public static RoomScanResult success(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors) {
+            return new RoomScanResult(positions, keyBlockPositions, doorPositions, outsideDoors, sharedDoors, true);
         }
 
         public static RoomScanResult failure() {
-            return new RoomScanResult(Collections.emptyList(), Collections.emptyList(), Collections.emptySet(), Collections.emptySet(), Collections.emptySet(), false);
+            return new RoomScanResult(Collections.emptyList(), Collections.emptyList(), Collections.emptySet(), Collections.emptyMap(), Collections.emptyMap(), false);
         }
 
         public List<BlockPos> getPositions() {
@@ -153,11 +225,11 @@ public class RoomScanner {
         public Set<BlockPos> getDoorPositions() {
             return doorPositions;
         }
-        public Set<BlockPos> getOutsideDoorPositions() {
-            return outsideDoorPositions;
+        public Map<BlockPos, Direction> getOutsideDoors() {
+            return outsideDoors;
         }
-        public Set<BlockPos> getSharedDoorPositions() {
-            return sharedDoorPositions;
+        public Map<BlockPos, ResourceKey<Level>> getSharedDoors() {
+            return sharedDoors;
         }
         public boolean isValid() {
             return valid;
