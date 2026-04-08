@@ -21,36 +21,42 @@ public class DarknessBlockEntity extends BlockEntity {
     public static final String FOUNTAIN_POS = "fountainPos";
 
     public BlockPos fountainPos = null;
-    public boolean worldLoginCheck = false;
+    private long removalEarliestGameTime = -1L;
 
     public DarknessBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(BlockEntityRegistry.DARKNESS_BLOCK_ENTITY.get(), pPos, pBlockState);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, DarknessBlockEntity darkness) {
+        if (level.isClientSide()) {
+            return;
+        }
         if (darkness.fountainPos == null) {
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+            return;
+        }
+        if (darkness.removalEarliestGameTime < 0L) {
+            darkness.removalEarliestGameTime = level.getGameTime() + 200L;
+        }
+        //Get light fountain capability
+        DarkFountainCapability fountainCapability = null;
+        LazyOptional<DarkFountainCapability> lazyOptional = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if(lazyOptional.isPresent() && lazyOptional.resolve().isPresent())
+            fountainCapability = lazyOptional.resolve().get();
+
+        if (fountainCapability == null){
+            return;
         }
 
-        if (!darkness.worldLoginCheck) {
-            darkness.worldLoginCheck = true;
-
-            //Get light fountain capability
-            DarkFountainCapability fountainCapability = null;
-            LazyOptional<DarkFountainCapability> lazyOptional = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
-            if(lazyOptional.isPresent() && lazyOptional.resolve().isPresent())
-                fountainCapability = lazyOptional.resolve().get();
-
-            if (fountainCapability == null){
-                return;
-            }
-
-            DarkFountain darkFountain = fountainCapability.darkFountains.get(darkness.fountainPos);
-
-            if (darkFountain == null) {
-                level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
-            }
+        if (fountainCapability.darkFountains.get(darkness.fountainPos) != null) {
+            return;
         }
+
+        if (level.getGameTime() < darkness.removalEarliestGameTime) {
+            return;
+        }
+
+        level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
     }
 
     @Override

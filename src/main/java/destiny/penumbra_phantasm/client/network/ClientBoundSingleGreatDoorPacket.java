@@ -30,21 +30,38 @@ public class ClientBoundSingleGreatDoorPacket {
         buffer.writeCollection(greatDoor.volumePositions, FriendlyByteBuf::writeBlockPos);
         buffer.writeBlockPos(greatDoor.lightDoorPos);
         buffer.writeResourceKey(greatDoor.lightDoorDimension);
-        buffer.writeBlockPos(greatDoor.destinationGreatDoorPos);
-        buffer.writeResourceKey(greatDoor.destinationGreatDoorDimension);
+        buffer.writeUtf(greatDoor.lightDoorExitDirection.getName());
+        buffer.writeBoolean(greatDoor.isDestinationDarkWorld);
+        if (greatDoor.isDestinationDarkWorld && greatDoor.destinationGreatDoorPos != null && greatDoor.destinationGreatDoorDimension != null) {
+            buffer.writeBoolean(true);
+            buffer.writeBlockPos(greatDoor.destinationGreatDoorPos);
+            buffer.writeResourceKey(greatDoor.destinationGreatDoorDimension);
+        } else {
+            buffer.writeBoolean(false);
+        }
     }
 
     public static ClientBoundSingleGreatDoorPacket decode(FriendlyByteBuf buffer) {
         BlockPos greatDoorPos = buffer.readBlockPos();
         Direction direction = Direction.byName(buffer.readUtf());
         boolean isOpen = buffer.readBoolean();
-        List<BlockPos> volumePositions = buffer.readCollection(ii -> new ArrayList<>(), FriendlyByteBuf::readBlockPos);
+        List<BlockPos> volumePositions = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readBlockPos);
         BlockPos lightDoorPos = buffer.readBlockPos();
         ResourceKey<Level> lightDoorDimension = buffer.readResourceKey(Registries.DIMENSION);
-        BlockPos destinationGreatDoorPos = buffer.readBlockPos();
-        ResourceKey<Level> destinationGreatDoorDimension = buffer.readResourceKey(Registries.DIMENSION);
+        Direction lightDoorExitDirection = Direction.byName(buffer.readUtf());
+        if (lightDoorExitDirection == null) {
+            lightDoorExitDirection = Direction.NORTH;
+        }
+        boolean isDestinationDarkWorld = buffer.readBoolean();
+        BlockPos destinationGreatDoorPos = null;
+        ResourceKey<Level> destinationGreatDoorDimension = null;
+        if (buffer.readBoolean()) {
+            destinationGreatDoorPos = buffer.readBlockPos();
+            destinationGreatDoorDimension = buffer.readResourceKey(Registries.DIMENSION);
+        }
 
-        GreatDoor greatDoor = new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorDimension, destinationGreatDoorPos, destinationGreatDoorDimension);
+        GreatDoor greatDoor = new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorDimension,
+                lightDoorExitDirection, isDestinationDarkWorld, destinationGreatDoorPos, destinationGreatDoorDimension);
 
         return new ClientBoundSingleGreatDoorPacket(greatDoor);
     }

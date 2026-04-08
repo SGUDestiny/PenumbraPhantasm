@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
@@ -112,6 +113,7 @@ public class DarkFountain {
             if (!DarkWorldUtil.isDarkWorld(level)) {
                 if (level instanceof ServerLevel serverLevel) {
                     tickRoomDarknessFill(serverLevel);
+                    tickOutsideDoorGreatDoor(serverLevel);
                     tickDarkWorldTransportTickers(serverLevel);
                     tickRoomDissipation(serverLevel);
                     tickDarkWorldTeleportContact(serverLevel);
@@ -756,16 +758,116 @@ public class DarkFountain {
                 });
                 this.teleportedEntities.add(entity.getUUID());
             }
+        }
+        pruneLightFountainTeleportedEntities(level);
+    }
 
-            HashSet<UUID> stillInRoom = new HashSet<>();
-            for (UUID id : this.teleportedEntities) {
-                Entity entity = level.getEntity(id);
-                if (entity != null && (posSet.contains(entity.blockPosition()) || posSet.contains(entity.blockPosition().above()))) {
-                    stillInRoom.add(id);
+    private void tickOutsideDoorGreatDoor(ServerLevel level) {
+        if (this.openingTick >= 0 && this.openingTick < FILL_START_TICK) {
+            return;
+        }
+        ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
+        if (destinationLevel == null) {
+            return;
+        }
+
+        for (DarkRoom room : rooms) {
+            if (!room.isActive()) {
+                continue;
+            }
+            for (Map.Entry<BlockPos, Direction> entry : room.getOutsideDoors().entrySet()) {
+                BlockPos doorLower = entry.getKey();
+                BlockPos canonDoor = DarkWorldUtil.canonicalLowerDoorFoot(level, doorLower);
+                if (!canonDoor.equals(doorLower)) {
+                    continue;
+                }
+                Direction dirFromInterior = entry.getValue();
+                BlockState doorState = level.getBlockState(canonDoor);
+                if (!(doorState.getBlock() instanceof DoorBlock)) {
+                    continue;
+                }
+                if (!DarknessBlock.isDoorVisuallyOpenFromSide(level, canonDoor, doorState, dirFromInterior.getOpposite())) {
+                    continue;
+                }
+                for (ServerPlayer player : new ArrayList<>(level.players())) {
+                    if (!player.level().dimension().equals(level.dimension())) {
+                        continue;
+                    }
+                    if (player.isSpectator()) {
+                        continue;
+                    }
+                    BlockPos feet = player.blockPosition();
+                    BlockState feetState = level.getBlockState(feet);
+                    if (!(feetState.getBlock() instanceof DoorBlock)) {
+                        continue;
+                    }
+                    BlockPos feetLower = feetState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER ? feet.below() : feet;
+                    BlockPos feetCanon = DarkWorldUtil.canonicalLowerDoorFoot(level, feetLower);
+                    if (!feetCanon.equals(canonDoor)) {
+                        continue;
+                    }
+                    if (this.teleportedEntities.contains(player.getUUID())) {
+                        continue;
+                    }
+                    GreatDoor greatDoor = DarkWorldUtil.ensureGreatDoorForOutsideDoor(destinationLevel, this.destinationPos, canonDoor, level.dimension(), dirFromInterior);
+                    if (greatDoor == null) {
+                        continue;
+                    }
+                    Vec3 spawn = GreatDoor.spawnCenterInFrontOfGreatDoor(greatDoor.greatDoorPos, greatDoor.direction, 2);
+                    float yaw = GreatDoor.yawFacingAwayFromDoor(greatDoor.direction);
+                    this.teleportedEntities.add(player.getUUID());
+                    level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(this.destinationPos, spawn.x, spawn.y, spawn.z, yaw, this.destinationDimension));
                 }
             }
-            this.teleportedEntities = stillInRoom;
         }
+    }
+
+    private void pruneLightFountainTeleportedEntities(ServerLevel level) {
+        HashSet<UUID> next = new HashSet<>();
+        Set<BlockPos> outsideDoorFeet = new HashSet<>();
+        for (DarkRoom room : rooms) {
+            if (room.isDissipating()) {
+                continue;
+            }
+            for (BlockPos d : room.getOutsideDoors().keySet()) {
+                DarkWorldUtil.addDoorStandingFeet(level, d, outsideDoorFeet);
+            }
+        }
+        for (UUID id : this.teleportedEntities) {
+            Entity entity = level.getEntity(id);
+            if (entity == null) {
+                continue;
+            }
+            BlockPos feet = entity.blockPosition();
+            if (outsideDoorFeet.contains(feet)) {
+                next.add(id);
+                continue;
+            }
+            boolean inDarknessCell = false;
+            for (DarkRoom room : rooms) {
+                if (room.isDissipating()) {
+                    continue;
+                }
+                for (BlockPos p : room.getPositions()) {
+                    if (!p.equals(feet) && !p.equals(feet.above())) {
+                        continue;
+                    }
+                    if (level.getBlockState(p).getBlock() instanceof DarknessBlock) {
+                        inDarknessCell = true;
+                        break;
+                    }
+                }
+                if (inDarknessCell) {
+                    break;
+                }
+            }
+            if (inDarknessCell) {
+                next.add(id);
+            }
+        }
+        this.teleportedEntities = next;
     }
 
     private void tickDarkWorldFountainPushing(ServerLevel level) {

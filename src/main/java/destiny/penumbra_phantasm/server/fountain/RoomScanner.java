@@ -121,6 +121,18 @@ public class RoomScanner {
         return state.isAir() || state.is(Blocks.CAVE_AIR) || state.is(Blocks.VOID_AIR);
     }
 
+    private static BlockPos outwardPastAdjacentDoorLeaves(Level level, BlockPos firstBeyond, Direction outwardDir) {
+        BlockPos p = firstBeyond;
+        for (int i = 0; i < 3; i++) {
+            BlockState st = level.getBlockState(p);
+            if (!(st.getBlock() instanceof DoorBlock)) {
+                return p;
+            }
+            p = p.relative(outwardDir);
+        }
+        return p;
+    }
+
     private static void classifyShellDoors(Level level, List<BlockPos> positions, Set<BlockPos> doorPositions, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors) {
         Set<BlockPos> posSet = new HashSet<>(positions);
         Map<BlockPos, ResourceKey<Level>> ownerMap = otherFountainRoomToDarkWorld != null ? otherFountainRoomToDarkWorld : Collections.emptyMap();
@@ -134,18 +146,18 @@ public class RoomScanner {
             if (outsideDoors.containsKey(lower) || sharedDoors.containsKey(lower)) {
                 return;
             }
-            BlockPos beyond = lower.relative(dirFromInterior);
-            BlockPos beyondUp = lower.above().relative(dirFromInterior);
-            ResourceKey<Level> shr = ownerMap.get(beyond);
+            BlockPos footBeyond = outwardPastAdjacentDoorLeaves(level, lower.relative(dirFromInterior), dirFromInterior);
+            BlockPos footBeyondUp = footBeyond.above();
+            ResourceKey<Level> shr = ownerMap.get(footBeyond);
             if (shr == null) {
-                shr = ownerMap.get(beyondUp);
+                shr = ownerMap.get(footBeyondUp);
             }
             if (shr != null) {
                 sharedDoors.put(lower, shr);
                 return;
             }
-            BlockState b0 = level.getBlockState(beyond);
-            BlockState b1 = level.getBlockState(beyondUp);
+            BlockState b0 = level.getBlockState(footBeyond);
+            BlockState b1 = level.getBlockState(footBeyondUp);
             if (isOpenAir(b0) || isOpenAir(b1)) {
                 outsideDoors.put(lower, dirFromInterior);
             }

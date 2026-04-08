@@ -29,12 +29,30 @@ public class ServerConfig {
             .comment("Default: 5")
             .defineInRange("dissipation_rate", 5, 1, 50);
 
+    private static final ForgeConfigSpec.IntValue GREAT_DOOR_PLACE_MIN_RADIUS = BUILDER
+            .comment("Minimum horizontal distance (blocks) from dark fountain anchor to try placing great_door structure")
+            .comment("Default: 16")
+            .defineInRange("great_door_place_min_radius", 16, 1, 512);
+
+    private static final ForgeConfigSpec.IntValue GREAT_DOOR_PLACE_MAX_RADIUS = BUILDER
+            .comment("Maximum horizontal distance (blocks) from dark fountain anchor to try placing great_door structure")
+            .comment("Default: 48")
+            .defineInRange("great_door_place_max_radius", 48, 1, 512);
+
+    private static final ForgeConfigSpec.IntValue RANDOM_GREAT_DOOR_CHUNK_RARITY = BUILDER
+            .comment("One in N newly loaded dark-world chunks may attempt random great_door structure placement (only if unclaimed shell doors exist)")
+            .comment("Default: 64")
+            .defineInRange("random_great_door_chunk_rarity", 64, 1, 4096);
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean realKnifeOP;
     public static int maxRoomVolume;
     public static int rescanInterval;
     public static int dissipationRate;
+    public static int greatDoorPlaceMinRadius;
+    public static int greatDoorPlaceMaxRadius;
+    public static int randomGreatDoorChunkRarity = 64;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -45,5 +63,8 @@ public class ServerConfig {
         maxRoomVolume = MAX_ROOM_VOLUME.get();
         rescanInterval = RESCAN_INTERVAL.get();
         dissipationRate = DISSIPATION_RATE.get();
+        greatDoorPlaceMinRadius = GREAT_DOOR_PLACE_MIN_RADIUS.get();
+        greatDoorPlaceMaxRadius = GREAT_DOOR_PLACE_MAX_RADIUS.get();
+        randomGreatDoorChunkRarity = RANDOM_GREAT_DOOR_CHUNK_RARITY.get();
     }
 }

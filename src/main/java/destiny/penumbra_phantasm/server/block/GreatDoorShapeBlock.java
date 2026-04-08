@@ -24,7 +24,7 @@ public class GreatDoorShapeBlock extends BaseEntityBlock {
     @Override
     public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (pLevel.getBlockEntity(pPos) instanceof GreatDoorShapeBlockEntity greatDoorShape) {
-            return greatDoorShape.cycleGreatDoorState(pLevel, pPos, greatDoorShape);
+            return greatDoorShape.cycleGreatDoorState(pLevel, pPos, greatDoorShape, pPlayer);
         } else {
             return InteractionResult.FAIL;
         }
