@@ -162,6 +162,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void clientTick(TickEvent.ClientTickEvent event) {
 		if(event.phase == TickEvent.Phase.END) {
+			IntroScreen.tickWorldThumbnail(Minecraft.getInstance());
 			LocalPlayer player = Minecraft.getInstance().player;
 			ClientLevel level = Minecraft.getInstance().level;
 			if (player == null) return;

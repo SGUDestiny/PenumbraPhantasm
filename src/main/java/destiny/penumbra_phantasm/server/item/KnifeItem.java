@@ -434,7 +434,7 @@ public class KnifeItem extends SwordItem {
         } else {
             targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
             if (targetLevel != null) {
-                lightCap.registerPersistentSite(roomResult.getPositions(), typeId, targetLevel.dimension());
+                lightCap.registerPersistentSite(fountainPos, typeId, targetLevel.dimension());
             }
         }
 

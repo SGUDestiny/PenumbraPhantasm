@@ -46,7 +46,7 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
                 continue;
             }
             for (BlockPos p : roomPositions) {
-                if (site.roomPositionsPacked.contains(p.asLong())) {
+                if (site.fountainPos.equals(p)) {
                     return Optional.of(site);
                 }
             }
@@ -54,12 +54,8 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         return Optional.empty();
     }
 
-    public void registerPersistentSite(Collection<BlockPos> roomPositions, ResourceLocation typeId, ResourceKey<Level> dimensionKey) {
-        HashSet<Long> packed = new HashSet<>();
-        for (BlockPos p : roomPositions) {
-            packed.add(p.asLong());
-        }
-        persistentDarkWorldSites.add(new PersistentDarkWorldSite(typeId, packed, dimensionKey));
+    public void registerPersistentSite(BlockPos fountainPos, ResourceLocation typeId, ResourceKey<Level> dimensionKey) {
+        persistentDarkWorldSites.add(new PersistentDarkWorldSite(typeId, fountainPos, dimensionKey));
     }
 
     @Override
@@ -90,8 +86,7 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
             CompoundTag siteTag = new CompoundTag();
             siteTag.putString("type", site.worldTypeId.toString());
             siteTag.putString("dimension", site.dimensionKey.location().toString());
-            long[] packed = site.roomPositionsPacked.stream().mapToLong(Long::longValue).toArray();
-            siteTag.putLongArray("positions", packed);
+            siteTag.putLong("fountain", site.fountainPos.asLong());
             list.add(siteTag);
         }
         return list;
@@ -135,23 +130,19 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
             ResourceLocation typeId = new ResourceLocation(siteTag.getString("type"));
             ResourceLocation dimLoc = new ResourceLocation(siteTag.getString("dimension"));
             ResourceKey<Level> dimKey = ResourceKey.create(Registries.DIMENSION, dimLoc);
-            long[] packedArr = siteTag.getLongArray("positions");
-            HashSet<Long> packed = new HashSet<>();
-            for (long v : packedArr) {
-                packed.add(v);
-            }
-            persistentDarkWorldSites.add(new PersistentDarkWorldSite(typeId, packed, dimKey));
+            BlockPos fountainPos = BlockPos.of(siteTag.getLong("fountain"));
+            persistentDarkWorldSites.add(new PersistentDarkWorldSite(typeId, fountainPos, dimKey));
         }
     }
 
     public static final class PersistentDarkWorldSite {
         public final ResourceLocation worldTypeId;
-        public final HashSet<Long> roomPositionsPacked;
+        public final BlockPos fountainPos;
         public ResourceKey<Level> dimensionKey;
 
-        public PersistentDarkWorldSite(ResourceLocation worldTypeId, HashSet<Long> roomPositionsPacked, ResourceKey<Level> dimensionKey) {
+        public PersistentDarkWorldSite(ResourceLocation worldTypeId, BlockPos fountainPos, ResourceKey<Level> dimensionKey) {
             this.worldTypeId = worldTypeId;
-            this.roomPositionsPacked = roomPositionsPacked;
+            this.fountainPos = fountainPos.immutable();
             this.dimensionKey = dimensionKey;
         }
     }
