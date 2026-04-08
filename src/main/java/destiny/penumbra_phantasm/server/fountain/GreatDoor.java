@@ -76,8 +76,8 @@ public class GreatDoor {
         return doorFacing.toYRot();
     }
 
-    public static Vec3 spawnCenterInFrontOfGreatDoor(BlockPos greatDoorPos, Direction doorFacing, int blocksOut) {
-        return Vec3.atBottomCenterOf(greatDoorPos.relative(doorFacing, blocksOut));
+    public static Vec3 spawnCenterInFrontOfGreatDoor(BlockPos greatDoorPos, Direction doorFacing) {
+        return Vec3.atBottomCenterOf(greatDoorPos.relative(doorFacing, 1));
     }
 
     public void refreshOpenFromLinkedLightDoor(ServerLevel darkLevel) {
@@ -184,7 +184,7 @@ public class GreatDoor {
                 return;
             }
             float yaw = yawFacingAwayFromDoor(peer.direction);
-            Vec3 destVec = spawnCenterInFrontOfGreatDoor(peer.greatDoorPos, peer.direction, 0);
+            Vec3 destVec = spawnCenterInFrontOfGreatDoor(peer.greatDoorPos, peer.direction);
             BlockPos destDarkAnchor = findDarkFountainAnchor(destinationLevel);
             for (Entity entity : greatDoorLevel.getEntitiesOfClass(Player.class, volumeBox)) {
                 if (entity instanceof ServerPlayer serverPlayer) {

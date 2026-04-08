@@ -813,7 +813,7 @@ public class DarkFountain {
                     if (greatDoor == null) {
                         continue;
                     }
-                    Vec3 spawn = GreatDoor.spawnCenterInFrontOfGreatDoor(greatDoor.greatDoorPos, greatDoor.direction, 2);
+                    Vec3 spawn = GreatDoor.spawnCenterInFrontOfGreatDoor(greatDoor.greatDoorPos, greatDoor.direction);
                     float yaw = GreatDoor.yawFacingAwayFromDoor(greatDoor.direction);
                     this.teleportedEntities.add(player.getUUID());
                     level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
