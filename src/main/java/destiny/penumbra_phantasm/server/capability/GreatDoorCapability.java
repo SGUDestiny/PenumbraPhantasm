@@ -12,20 +12,15 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import net.minecraft.server.MinecraftServer;
-
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
     private static final String GREAT_DOORS = "great_doors";
-    private static final String RANDOM_GREAT_DOOR_CHUNKS = "random_great_door_chunks";
 
     public HashMap<BlockPos, GreatDoor> greatDoors = new HashMap<>();
-    private final HashSet<Long> randomGreatDoorChunksProcessed = new HashSet<>();
 
     public void addGreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, List<BlockPos> volumePositions,
                              BlockPos lightDoorPos, ResourceKey<Level> lightDoorDimension, Direction lightDoorExitDirection,
@@ -52,27 +47,6 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
         }
     }
 
-    public boolean isRandomGreatDoorChunkProcessed(long chunkPacked) {
-        return randomGreatDoorChunksProcessed.contains(chunkPacked);
-    }
-
-    public void markRandomGreatDoorChunkProcessed(long chunkPacked) {
-        randomGreatDoorChunksProcessed.add(chunkPacked);
-    }
-
-    public static boolean isLightDoorClaimedGlobally(MinecraftServer server, BlockPos doorLower, ResourceKey<Level> doorDimension) {
-        for (ServerLevel sl : server.getAllLevels()) {
-            GreatDoor g = sl.getCapability(CapabilityRegistry.GREAT_DOOR)
-                    .resolve()
-                    .map(c -> c.findByLightDoor(doorLower, doorDimension))
-                    .orElse(null);
-            if (g != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private CompoundTag serializeGreatDoors() {
         CompoundTag objectsTag = new CompoundTag();
         ListTag greatDoorTag = new ListTag();
@@ -90,8 +64,6 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
         CompoundTag tag = new CompoundTag();
 
         tag.put(GREAT_DOORS, serializeGreatDoors());
-        long[] chunkLongs = randomGreatDoorChunksProcessed.stream().mapToLong(Long::longValue).toArray();
-        tag.putLongArray(RANDOM_GREAT_DOOR_CHUNKS, chunkLongs);
 
         return tag;
     }
@@ -108,12 +80,6 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
 
     @Override
     public void deserializeNBT(CompoundTag compoundTag) {
-        randomGreatDoorChunksProcessed.clear();
-        if (compoundTag.contains(RANDOM_GREAT_DOOR_CHUNKS, Tag.TAG_LONG_ARRAY)) {
-            for (long l : compoundTag.getLongArray(RANDOM_GREAT_DOOR_CHUNKS)) {
-                randomGreatDoorChunksProcessed.add(l);
-            }
-        }
         deserializeGreatDoors(compoundTag.getCompound(GREAT_DOORS));
     }
 }

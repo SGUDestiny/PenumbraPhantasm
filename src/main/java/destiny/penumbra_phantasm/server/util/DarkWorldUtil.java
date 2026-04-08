@@ -6,15 +6,12 @@ import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
 import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
-import destiny.penumbra_phantasm.server.fountain.DarkFountain;
-import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.worldgen.SeededNoiseBasedChunkGenerator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -49,21 +46,15 @@ import net.minecraftforge.common.util.LazyOptional;
 import javax.annotation.Nullable;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 public class DarkWorldUtil
 {
-	private static final Object RANDOM_GREAT_DOOR_PLACEMENT_LOCK = new Object();
-
 	public record GreatDoorStructureResult(BlockPos anchorPos, Direction facing) {}
-
-	public record RandomGreatDoorCandidate(boolean shared, BlockPos canonLower, Direction lightDoorExitFromInterior, @Nullable ResourceKey<Level> peerDarkDimension) {}
 
 	private static BlockPos doubleDoorPartnerLower(Level level, BlockPos lowerDoorFoot) {
 		BlockState low = level.getBlockState(lowerDoorFoot);
@@ -335,258 +326,12 @@ public class DarkWorldUtil
 		return Optional.empty();
 	}
 
-	private static boolean horizontalBoundingBoxInsideChunk(ChunkPos cp, BoundingBox bb) {
-		return bb.minX() >= cp.getMinBlockX() && bb.maxX() <= cp.getMaxBlockX()
-				&& bb.minZ() >= cp.getMinBlockZ() && bb.maxZ() <= cp.getMaxBlockZ();
-	}
-
-	public static Optional<GreatDoorStructureResult> tryPlaceGreatDoorStructureInChunk(ServerLevel level, ChunkPos cp, RandomSource random) {
-		ResourceLocation structureId = new ResourceLocation(PenumbraPhantasm.MODID, "great_door");
-		Optional<StructureTemplate> templateOpt = level.getStructureManager().get(structureId);
-		if (templateOpt.isEmpty()) {
-			return Optional.empty();
-		}
-		StructureTemplate template = templateOpt.get();
-		Vec3i tsz = template.getSize();
-		int maxHoriz = Math.max(tsz.getX(), tsz.getZ()) + 2;
-		int span = Math.min(12, Math.max(4, 16 - maxHoriz));
-		if (span < 2) {
-			return Optional.empty();
-		}
-		for (int attempt = 0; attempt < 40; attempt++) {
-			int bx = cp.getMinBlockX() + 2 + random.nextInt(span);
-			int bz = cp.getMinBlockZ() + 2 + random.nextInt(span);
-			BlockPos heightProbe = new BlockPos(bx, level.getMaxBuildHeight() - 1, bz);
-			int ay = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, heightProbe).getY();
-			BlockPos localAnchor = new BlockPos(bx, ay, bz);
-			int footY = resolveGreatDoorFootY(level, localAnchor, bx, bz);
-			if (footY == Integer.MIN_VALUE) {
-				continue;
-			}
-			int originY = footY - 1;
-			if (originY <= level.getMinBuildHeight()) {
-				continue;
-			}
-			BlockPos origin = new BlockPos(bx, originY, bz);
-			Rotation rot = switch (random.nextInt(4)) {
-				case 0 -> Rotation.NONE;
-				case 1 -> Rotation.CLOCKWISE_90;
-				case 2 -> Rotation.CLOCKWISE_180;
-				default -> Rotation.COUNTERCLOCKWISE_90;
-			};
-			StructurePlaceSettings settings = new StructurePlaceSettings().setRotation(rot).setMirror(Mirror.NONE).setIgnoreEntities(false);
-			BoundingBox bbPreview = template.getBoundingBox(settings, origin);
-			if (!horizontalBoundingBoxInsideChunk(cp, bbPreview)) {
-				continue;
-			}
-			ChunkPos forceCp = new ChunkPos(origin);
-			level.setChunkForced(forceCp.x, forceCp.z, true);
-			boolean placedOk;
-			try {
-				placedOk = template.placeInWorld(level, origin, origin, settings, random, 2);
-			} finally {
-				level.setChunkForced(forceCp.x, forceCp.z, false);
-			}
-			if (!placedOk) {
-				continue;
-			}
-			BoundingBox bb = template.getBoundingBox(settings, origin);
-			BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
-			BlockPos found = null;
-			Direction facing = Direction.NORTH;
-			for (int x = bb.minX(); x <= bb.maxX(); x++) {
-				for (int y = bb.minY(); y <= bb.maxY(); y++) {
-					for (int z = bb.minZ(); z <= bb.maxZ(); z++) {
-						m.set(x, y, z);
-						BlockState st = level.getBlockState(m);
-						if (st.is(BlockRegistry.GREAT_DOOR_SPAWNER.get())) {
-							found = m.immutable();
-							facing = st.getValue(HorizontalDirectionalBlock.FACING);
-							break;
-						}
-					}
-					if (found != null) {
-						break;
-					}
-				}
-				if (found != null) {
-					break;
-				}
-			}
-			if (found != null) {
-				level.setBlock(found, Blocks.AIR.defaultBlockState(), 3);
-				return Optional.of(new GreatDoorStructureResult(found, facing));
-			}
-		}
-		return Optional.empty();
-	}
-
-	@Nullable
-	public static DarkFountain getFirstDarkFountain(ServerLevel level) {
-		return level.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
-				.resolve()
-				.map(cap -> cap.darkFountains.entrySet().stream()
-						.min(Comparator.comparingLong(e -> e.getKey().asLong()))
-						.map(Map.Entry::getValue)
-						.orElse(null))
-				.orElse(null);
-	}
-
-	private static Direction findDirFromInteriorForShellDoor(Set<BlockPos> roomPositions, BlockPos canonLower) {
-		for (Direction dir : Direction.Plane.HORIZONTAL) {
-			if (roomPositions.contains(canonLower.relative(dir.getOpposite()))
-					|| roomPositions.contains(canonLower.above().relative(dir.getOpposite()))) {
-				return dir;
-			}
-		}
-		return null;
-	}
-
-	public static List<RandomGreatDoorCandidate> collectUnclaimedShellDoorCandidates(ServerLevel darkLevel, MinecraftServer server, DarkFountain fountain) {
-		List<RandomGreatDoorCandidate> out = new ArrayList<>();
-		Set<BlockPos> outsideCanonSeen = new HashSet<>();
-		Set<BlockPos> sharedCanonSeen = new HashSet<>();
-		ResourceKey<Level> darkDim = darkLevel.dimension();
-		for (DarkRoom room : fountain.rooms) {
-			if (room.isDissipating()) {
-				continue;
-			}
-			Set<BlockPos> posSet = new HashSet<>(room.getPositions());
-			for (Map.Entry<BlockPos, Direction> e : room.getOutsideDoors().entrySet()) {
-				BlockPos canon = canonicalLowerDoorFoot(darkLevel, e.getKey());
-				if (!canon.equals(e.getKey())) {
-					continue;
-				}
-				if (!outsideCanonSeen.add(canon)) {
-					continue;
-				}
-				if (GreatDoorCapability.isLightDoorClaimedGlobally(server, canon, darkDim)) {
-					continue;
-				}
-				out.add(new RandomGreatDoorCandidate(false, canon, e.getValue(), null));
-			}
-			for (Map.Entry<BlockPos, ResourceKey<Level>> e : room.getSharedDoors().entrySet()) {
-				BlockPos canon = canonicalLowerDoorFoot(darkLevel, e.getKey());
-				if (!canon.equals(e.getKey())) {
-					continue;
-				}
-				if (!sharedCanonSeen.add(canon)) {
-					continue;
-				}
-				Direction dir = findDirFromInteriorForShellDoor(posSet, canon);
-				if (dir == null) {
-					continue;
-				}
-				if (GreatDoorCapability.isLightDoorClaimedGlobally(server, canon, darkDim)) {
-					continue;
-				}
-				out.add(new RandomGreatDoorCandidate(true, canon, dir, e.getValue()));
-			}
-		}
-		return out;
-	}
-
-	private static void removeGreatDoorAndVolume(ServerLevel level, BlockPos greatDoorAnchor) {
-		level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
-			GreatDoor g = cap.greatDoors.remove(greatDoorAnchor);
-			if (g != null) {
-				for (BlockPos p : g.volumePositions) {
-					level.setBlock(p, Blocks.AIR.defaultBlockState(), 3);
-				}
-			}
-		});
-	}
-
-	public static void tryRandomGreatDoorForDarkChunk(ServerLevel level, ChunkPos cp) {
-		if (!isDarkWorld(level)) {
-			return;
-		}
-		MinecraftServer server = level.getServer();
-		GreatDoorCapability cap = level.getCapability(CapabilityRegistry.GREAT_DOOR).resolve().orElse(null);
-		if (cap == null) {
-			return;
-		}
-		if (cap.isRandomGreatDoorChunkProcessed(cp.toLong())) {
-			return;
-		}
-		DarkFountain fountain = getFirstDarkFountain(level);
-		if (fountain == null) {
-			return;
-		}
-		List<RandomGreatDoorCandidate> unclaimed = collectUnclaimedShellDoorCandidates(level, server, fountain);
-		if (unclaimed.isEmpty()) {
-			return;
-		}
-		long rollSeed = level.getSeed() ^ cp.toLong() ^ 0xC0AFE11DCAFEBAB2L;
-		RandomSource rollRng = RandomSource.create(rollSeed);
-		int rarity = Math.max(1, ServerConfig.randomGreatDoorChunkRarity);
-		if (rollRng.nextInt(rarity) != 0) {
-			cap.markRandomGreatDoorChunkProcessed(cp.toLong());
-			return;
-		}
-		synchronized (RANDOM_GREAT_DOOR_PLACEMENT_LOCK) {
-			if (cap.isRandomGreatDoorChunkProcessed(cp.toLong())) {
-				return;
-			}
-			List<RandomGreatDoorCandidate> unclaimed2 = collectUnclaimedShellDoorCandidates(level, server, fountain);
-			if (unclaimed2.isEmpty()) {
-				cap.markRandomGreatDoorChunkProcessed(cp.toLong());
-				return;
-			}
-			RandomSource pickRng = RandomSource.create(rollSeed ^ 0x9E3779B97F4A7C15L);
-			RandomGreatDoorCandidate choice = unclaimed2.get(pickRng.nextInt(unclaimed2.size()));
-			if (GreatDoorCapability.isLightDoorClaimedGlobally(server, choice.canonLower(), level.dimension())) {
-				cap.markRandomGreatDoorChunkProcessed(cp.toLong());
-				return;
-			}
-			if (choice.shared()) {
-				if (choice.peerDarkDimension() == null) {
-					cap.markRandomGreatDoorChunkProcessed(cp.toLong());
-					return;
-				}
-				if (server.getLevel(choice.peerDarkDimension()) == null) {
-					cap.markRandomGreatDoorChunkProcessed(cp.toLong());
-					return;
-				}
-			}
-			RandomSource placeRng = RandomSource.create(rollSeed ^ 0xDEADBEEFCAFEBAB2L);
-			Optional<GreatDoorStructureResult> placed = tryPlaceGreatDoorStructureInChunk(level, cp, placeRng);
-			if (placed.isEmpty()) {
-				cap.markRandomGreatDoorChunkProcessed(cp.toLong());
-				return;
-			}
-			GreatDoorStructureResult r = placed.get();
-			if (choice.shared()) {
-				ServerLevel peerLevel = server.getLevel(choice.peerDarkDimension());
-				createGreatDoor(level, r.anchorPos(), r.facing(), true, choice.canonLower(), level.dimension(),
-						choice.lightDoorExitFromInterior(), true, null, choice.peerDarkDimension());
-				GreatDoor created = level.getCapability(CapabilityRegistry.GREAT_DOOR)
-						.resolve()
-						.map(c -> c.greatDoors.get(r.anchorPos()))
-						.orElse(null);
-				if (created == null) {
-					cap.markRandomGreatDoorChunkProcessed(cp.toLong());
-					return;
-				}
-				if (!ensurePeerGreatDoor(created, level, peerLevel)) {
-					removeGreatDoorAndVolume(level, r.anchorPos());
-					cap.markRandomGreatDoorChunkProcessed(cp.toLong());
-					return;
-				}
-			} else {
-				createGreatDoor(level, r.anchorPos(), r.facing(), true, choice.canonLower(), level.dimension(),
-						choice.lightDoorExitFromInterior(), false, null, null);
-			}
-			cap.markRandomGreatDoorChunkProcessed(cp.toLong());
-		}
-	}
-
-	public static boolean ensurePeerGreatDoor(GreatDoor source, ServerLevel sourceLevel, ServerLevel destLevel) {
+	public static void ensurePeerGreatDoor(GreatDoor source, ServerLevel sourceLevel, ServerLevel destLevel) {
 		if (!source.isDestinationDarkWorld || source.destinationGreatDoorDimension == null) {
-			return false;
+			return;
 		}
 		if (!source.destinationGreatDoorDimension.equals(destLevel.dimension())) {
-			return false;
+			return;
 		}
 		if (source.destinationGreatDoorPos != null) {
 			GreatDoor existing = destLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
@@ -594,23 +339,22 @@ public class DarkWorldUtil
 					.map(c -> c.greatDoors.get(source.destinationGreatDoorPos))
 					.orElse(null);
 			if (existing != null) {
-				return true;
+				return;
 			}
 		}
 		BlockPos anchor = findDarkFountainAnchor(destLevel);
 		if (anchor == null) {
-			return false;
+			return;
 		}
 		Optional<GreatDoorStructureResult> placed = tryPlaceGreatDoorStructure(destLevel, anchor, destLevel.random);
 		if (placed.isEmpty()) {
-			return false;
+			return;
 		}
 		GreatDoorStructureResult r = placed.get();
 		createGreatDoor(destLevel, r.anchorPos(), r.facing(), true, source.lightDoorPos, source.lightDoorDimension,
 				source.lightDoorExitDirection, true, source.greatDoorPos, sourceLevel.dimension());
 		source.destinationGreatDoorPos = r.anchorPos();
 		source.destinationGreatDoorDimension = destLevel.dimension();
-		return true;
 	}
 
 	@Nullable

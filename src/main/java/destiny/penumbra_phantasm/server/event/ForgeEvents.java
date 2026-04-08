@@ -13,10 +13,7 @@ import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.FluidRegistry;
 import destiny.penumbra_phantasm.server.registry.ItemRegistry;
-import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -28,29 +25,11 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
-import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = PenumbraPhantasm.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ForgeEvents {
-    @SubscribeEvent
-    public static void onChunkLoad(ChunkEvent.Load event) {
-        if (event.getLevel().isClientSide()) {
-            return;
-        }
-        if (!(event.getChunk() instanceof LevelChunk)) {
-            return;
-        }
-        if (!(event.getLevel() instanceof ServerLevel serverLevel)) {
-            return;
-        }
-        if (!DarkWorldUtil.isDarkWorld(serverLevel)) {
-            return;
-        }
-        DarkWorldUtil.tryRandomGreatDoorForDarkChunk(serverLevel, event.getChunk().getPos());
-    }
-
     @SubscribeEvent
     public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event) {
         event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountains"), new GenericProvider<>(CapabilityRegistry.DARK_FOUNTAIN, new DarkFountainCapability()));
