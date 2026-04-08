@@ -30,6 +30,9 @@ import java.util.Collections;
 import java.util.List;
 
 public class IntroScreen extends Screen {
+    private static final int WORLD_THUMBNAIL_DELAY_TICKS = 20;
+    private static Path worldThumbnailPath;
+    private static int worldThumbnailTicksRemaining;
 
     Minecraft minecraft = Minecraft.getInstance();
     public static final ResourceLocation BLACK_SCREEN = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/black_screen.png");
@@ -707,11 +710,7 @@ public class IntroScreen extends Screen {
         {
 
             //TODO - Make this actually run after exiting intro and having loaded the world
-            IntegratedServer integratedserver = this.minecraft.getSingleplayerServer();
-            if(integratedserver != null && !integratedserver.isStopped())
-            {
-                minecraft.getSingleplayerServer().getWorldScreenshotFile().ifPresent(this::takeAutoScreenshot);
-            }
+            queueWorldThumbnail(minecraft);
 
             this.onFinished.run();
             minecraft.getSoundManager().stop();
@@ -721,44 +720,76 @@ public class IntroScreen extends Screen {
 
     public void closeScreen() {
         //TODO - Make this actually run after exiting intro and having loaded the world
-        IntegratedServer integratedserver = this.minecraft.getSingleplayerServer();
-        if(integratedserver != null && !integratedserver.isStopped())
-        {
-            minecraft.getSingleplayerServer().getWorldScreenshotFile().ifPresent(this::takeAutoScreenshot);
-        }
+        queueWorldThumbnail(minecraft);
 
         this.onFinished.run();
         minecraft.getSoundManager().stop();
         PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
     }
 
-    private void takeAutoScreenshot(Path pPath) {
-        if (this.minecraft.levelRenderer.countRenderedChunks() > 10 && this.minecraft.levelRenderer.hasRenderedAllChunks()) {
-            NativeImage nativeimage = Screenshot.takeScreenshot(this.minecraft.getMainRenderTarget());
-            Util.ioPool().execute(() -> {
-                int i = nativeimage.getWidth();
-                int j = nativeimage.getHeight();
-                int k = 0;
-                int l = 0;
-                if (i > j) {
-                    k = (i - j) / 2;
-                    i = j;
-                } else {
-                    l = (j - i) / 2;
-                    j = i;
-                }
-
-                try (NativeImage nativeimage1 = new NativeImage(64, 64, false)) {
-                    nativeimage.resizeSubRectTo(k, l, i, j, nativeimage1);
-                    nativeimage1.writeToFile(pPath);
-                } catch (IOException ioexception) {
-                    //LOGGER.warn("Couldn't save auto screenshot", (Throwable)ioexception);
-                } finally {
-                    nativeimage.close();
-                }
-
+    private static void queueWorldThumbnail(Minecraft mc) {
+        IntegratedServer integratedserver = mc.getSingleplayerServer();
+        if (integratedserver != null && !integratedserver.isStopped()) {
+            integratedserver.getWorldScreenshotFile().ifPresent(path -> {
+                worldThumbnailPath = path;
+                worldThumbnailTicksRemaining = WORLD_THUMBNAIL_DELAY_TICKS;
             });
         }
+    }
 
+    public static void tickworldThumbnail(Minecraft mc) {
+        Path path = worldThumbnailPath;
+        if (path == null) {
+            return;
+        }
+        if (mc.screen != null) {
+            return;
+        }
+        IntegratedServer server = mc.getSingleplayerServer();
+        if (server == null || server.isStopped()) {
+            worldThumbnailPath = null;
+            worldThumbnailTicksRemaining = 0;
+            return;
+        }
+        if (mc.level == null) {
+            return;
+        }
+        if (worldThumbnailTicksRemaining > 0) {
+            worldThumbnailTicksRemaining--;
+            return;
+        }
+        if (mc.levelRenderer.countRenderedChunks() <= 10 || !mc.levelRenderer.hasRenderedAllChunks()) {
+            return;
+        }
+        worldThumbnailPath = null;
+        worldThumbnailTicksRemaining = 0;
+        takeAutoScreenshot(mc, path);
+    }
+
+    private static void takeAutoScreenshot(Minecraft minecraft, Path pPath) {
+        NativeImage nativeimage = Screenshot.takeScreenshot(minecraft.getMainRenderTarget());
+        Util.ioPool().execute(() -> {
+            int i = nativeimage.getWidth();
+            int j = nativeimage.getHeight();
+            int k = 0;
+            int l = 0;
+            if (i > j) {
+                k = (i - j) / 2;
+                i = j;
+            } else {
+                l = (j - i) / 2;
+                j = i;
+            }
+
+            try (NativeImage nativeimage1 = new NativeImage(64, 64, false)) {
+                nativeimage.resizeSubRectTo(k, l, i, j, nativeimage1);
+                nativeimage1.writeToFile(pPath);
+            } catch (IOException ioexception) {
+                //LOGGER.warn("Couldn't save auto screenshot", (Throwable)ioexception);
+            } finally {
+                nativeimage.close();
+            }
+
+        });
     }
 }

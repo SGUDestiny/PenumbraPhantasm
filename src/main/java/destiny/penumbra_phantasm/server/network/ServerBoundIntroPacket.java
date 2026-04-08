@@ -51,12 +51,6 @@ public class ServerBoundIntroPacket
 
 			player.teleportTo(level, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), (float)Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270), player.getXRot());
 			player.connection.send(new ClientboundSetEntityMotionPacket(player));
-
-			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap ->
-				{
-					DarkFountain fountain = cap.darkFountains.get(destinationPos);
-					fountain.teleportedEntities.add(player.getUUID());
-				});
 		});
 		return true;
 	}
