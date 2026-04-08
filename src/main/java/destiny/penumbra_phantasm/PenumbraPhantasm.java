@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm;
 
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
+import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorBacksideModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorClosedModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenModel;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
@@ -114,6 +115,7 @@ public class PenumbraPhantasm {
             event.registerLayerDefinition(DeltashieldModel.LAYER_LOCATION, DeltashieldModel::createBodyLayer);
             event.registerLayerDefinition(GreatDoorClosedModel.LAYER_LOCATION, GreatDoorClosedModel::createBodyLayer);
             event.registerLayerDefinition(GreatDoorOpenModel.LAYER_LOCATION, GreatDoorOpenModel::createBodyLayer);
+            event.registerLayerDefinition(GreatDoorBacksideModel.LAYER_LOCATION, GreatDoorBacksideModel::createBodyLayer);
         }
 
         @SubscribeEvent

@@ -3,11 +3,13 @@ package destiny.penumbra_phantasm.client.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorBacksideModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorClosedModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenModel;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 public class GreatDoorRenderUtil {
     public static GreatDoorOpenModel greatDoorOpenModel;
     public static GreatDoorClosedModel greatDoorClosedModel;
+    public static GreatDoorBacksideModel greatDoorBacksideModel;
 
     public static final ResourceLocation greatDoorLightWorldTexture = new ResourceLocation(PenumbraPhantasm.MODID, "textures/great_door/great_door_light_world.png");
     public static final ResourceLocation greatDoorDarkWorldTexture = new ResourceLocation(PenumbraPhantasm.MODID, "textures/great_door/great_door_dark_world.png");
@@ -31,6 +34,12 @@ public class GreatDoorRenderUtil {
         return greatDoorClosedModel;
     }
 
+    public static GreatDoorBacksideModel getGreatDoorBacksideModel() {
+        if (greatDoorBacksideModel == null)
+            greatDoorBacksideModel = new GreatDoorBacksideModel(Minecraft.getInstance().getEntityModels().bakeLayer(GreatDoorBacksideModel.LAYER_LOCATION));
+        return greatDoorBacksideModel;
+    }
+
     public static void renderOpenGreatDoor(GreatDoor greatDoor, PoseStack pose, MultiBufferSource buffer, int packedLight, int overlay) {
         Direction direction = greatDoor.direction;
 
@@ -45,13 +54,17 @@ public class GreatDoorRenderUtil {
         } else if (direction == Direction.WEST) {
             pose.translate(1, 0, 0);
         }
+        ResourceLocation finalTexture;
         if (greatDoor.destinationGreatDoorDimension != null && DarkWorldUtil.isDarkWorldKey(greatDoor.destinationGreatDoorDimension)) {
-            getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorDarkWorldTexture)),
-                    packedLight, overlay, 1F, 1F, 1F, 1f);
+            finalTexture = greatDoorDarkWorldTexture;
         } else {
-            getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorLightWorldTexture)),
-                    packedLight, overlay, 1F, 1F, 1F, 1f);
+            finalTexture = greatDoorLightWorldTexture;
         }
+
+        getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(finalTexture)),
+                packedLight, overlay, 1F, 1F, 1F, 1f);
+        getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityTranslucentEmissive(finalTexture)),
+                LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1f);
         pose.popPose();
     }
 
@@ -69,13 +82,17 @@ public class GreatDoorRenderUtil {
         } else if (direction == Direction.WEST) {
             pose.translate(1, 0, 0);
         }
+        ResourceLocation finalTexture;
         if (greatDoor.destinationGreatDoorDimension != null && DarkWorldUtil.isDarkWorldKey(greatDoor.destinationGreatDoorDimension)) {
-            getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorDarkWorldTexture)),
-                    packedLight, overlay, 1F, 1F, 1F, 1f);
+            finalTexture = greatDoorDarkWorldTexture;
         } else {
-            getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorLightWorldTexture)),
-                    packedLight, overlay, 1F, 1F, 1F, 1f);
+            finalTexture = greatDoorLightWorldTexture;
         }
+
+        getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(finalTexture)),
+                packedLight, overlay, 1F, 1F, 1F, 1f);
+        getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityTranslucentEmissive(finalTexture)),
+                LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1f);
         pose.popPose();
     }
 }
