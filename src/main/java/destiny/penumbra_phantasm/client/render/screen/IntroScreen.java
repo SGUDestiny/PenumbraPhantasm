@@ -173,28 +173,28 @@ public class IntroScreen extends Screen {
             this.closeScreen();
         } else {
             if (tick == 16 * 20 || tick == 43 * 20) {
-                minecraft.player.playSound(SoundRegistry.INTRO_APPEARANCE.get());
+                minecraft.player.playSound(SoundRegistry.INTRO_APPEARANCE.get(), 0.5f, 1);
             }
 
             if (tick < depthsStart && tick < 36 * 20) {
                 if (tick % droneLength == 0 || tick == 0) {
-                    minecraft.player.playSound(SoundRegistry.INTRO_DRONE.get());
+                    minecraft.player.playSound(SoundRegistry.INTRO_DRONE.get(), 0.5f, 1);
                 }
             }
             if (tick == depthsStart) {
-                minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM.get());
+                minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM.get(), 0.5f, 1);
             }
             if (tick > depthsStart) {
                 if (tickText == 88 * 20) {
                     minecraft.getSoundManager().stop();
                     stopDepthsMusic = true;
-                    minecraft.player.playSound(SoundRegistry.GREAT_SHINE.get());
+                    minecraft.player.playSound(SoundRegistry.GREAT_SHINE.get(), 0.5f, 1);
                 }
                 if (tickText == 92 * 20 + 5) {
-                    minecraft.player.playSound(SoundRegistry.FOUNTAIN_SEAL.get());
+                    minecraft.player.playSound(SoundRegistry.FOUNTAIN_SEAL.get(), 0.5f, 1);
                 }
                 if ((tickDepthsMusic % depthsMusicLength == 0 || tickDepthsMusic == 0) && !stopDepthsMusic) {
-                    minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM_LOOP.get());
+                    minecraft.player.playSound(SoundRegistry.INTRO_ANOTHER_HIM_LOOP.get(), 0.5f, 1);
                 }
                 if (tick > depthsStart + (100.567 * 20) && !stopDepthsMusic) {
                     tickDepthsMusic++;
@@ -737,7 +737,7 @@ public class IntroScreen extends Screen {
         }
     }
 
-    public static void tickworldThumbnail(Minecraft mc) {
+    public static void tickWorldThumbnail(Minecraft mc) {
         Path path = worldThumbnailPath;
         if (path == null) {
             return;
