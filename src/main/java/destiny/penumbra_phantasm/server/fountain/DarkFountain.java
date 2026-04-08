@@ -459,15 +459,12 @@ public class DarkFountain {
                             DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
 
                             if (destinationFountain != null) {
-                                Vec3 target = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainFirstTeleportMinRadius, ServerConfig.fountainFirstTeleportMaxRadius);
+                                Vec3 target = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainContactTeleportMinRadius, ServerConfig.fountainContactTeleportMaxRadius);
 
                                 if (entity instanceof ServerPlayer player) {
-                                    destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
+                                    teleportPlayer(player, destinationLevel, target).getUUID();
                                 } else {
-                                    Entity teleported = ModUtil.teleportEntity(entity, destinationLevel, target);
-                                    if (teleported != null) {
-                                        destinationFountain.teleportedEntities.add(teleported.getUUID());
-                                    }
+                                    ModUtil.teleportEntity(entity, destinationLevel, target);
                                 }
                             }
                         });
@@ -906,41 +903,6 @@ public class DarkFountain {
                 player.displayClientMessage(Component.translatable("message.penumbra_phantasm.pushed_away_by_fountain"), true);
             }
         }
-    }
-
-    private void tickLightWorldTeleport(ServerLevel level) {
-        AABB teleportBox = new AABB(fountainPos.above()).inflate(1).setMaxY(level.dimensionType().height());
-        HashSet<UUID> teleportBoxEntities = new HashSet<>();
-        ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
-
-        if (destinationLevel == null) return;
-
-        destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-            DarkFountain destinationFountain = cap.darkFountains.get(this.destinationPos);
-
-            Vec3 fountainCenter = destinationPos.getCenter();
-            for (Entity entity : level.getEntitiesOfClass(Entity.class, teleportBox)) {
-                if (!this.teleportedEntities.contains(entity.getUUID())) {
-                    if (destinationFountain != null) {
-                        if (entity instanceof ServerPlayer player) {
-                            destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, fountainCenter).getUUID());
-                        } else {
-                            Entity teleported = ModUtil.teleportEntity(entity, destinationLevel, fountainCenter);
-                            if (teleported != null) destinationFountain.teleportedEntities.add(teleported.getUUID());
-                        }
-                    }
-                }
-                teleportBoxEntities.add(entity.getUUID());
-            }
-        });
-
-        HashSet<UUID> newTeleportedEntities = new HashSet<>();
-        for (UUID entity : teleportedEntities) {
-            if (teleportBoxEntities.contains(entity)) {
-                newTeleportedEntities.add(entity);
-            }
-        }
-        this.teleportedEntities = newTeleportedEntities;
     }
 
     private void tickSoundPackets(Level level) {
