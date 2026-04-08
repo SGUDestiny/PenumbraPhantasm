@@ -459,7 +459,7 @@ public class DarkFountain {
                             DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
 
                             if (destinationFountain != null) {
-                                Vec3 target = getRandomTeleportTarget(destinationLevel, 8, 16);
+                                Vec3 target = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainFirstTeleportMinRadius, ServerConfig.fountainFirstTeleportMaxRadius);
 
                                 if (entity instanceof ServerPlayer player) {
                                     destinationFountain.teleportedEntities.add(teleportPlayer(player, destinationLevel, target).getUUID());
@@ -741,7 +741,7 @@ public class DarkFountain {
                     DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
 
                     if (destinationFountain != null) {
-                        Vec3 target = getRandomTeleportTarget(destinationLevel, 256, 512);
+                        Vec3 target = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainContactTeleportMinRadius, ServerConfig.fountainContactTeleportMaxRadius);
 
                         if (entity instanceof ServerPlayer player) {
                             float yaw = (float) Math.toDegrees(Math.atan2(-((destinationPos.getX() + 0.5) - target.x), (destinationPos.getZ() + 0.5) - target.z));
