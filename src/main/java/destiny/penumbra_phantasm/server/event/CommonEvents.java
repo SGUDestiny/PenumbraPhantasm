@@ -3,10 +3,15 @@ package destiny.penumbra_phantasm.server.event;
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.*;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -15,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -24,8 +30,49 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class CommonEvents {
+    private static final Map<ResourceKey<Level>, Set<ChunkPos>> pendingGreatDoorSpawnerChunks = new HashMap<>();
+    private static final int GREAT_DOOR_SPAWNER_CHUNK_DRAIN_PER_TICK = 20;
+
+    private static void enqueueGreatDoorSpawnerChunkCheck(ServerLevel level, ChunkPos pos) {
+        pendingGreatDoorSpawnerChunks.computeIfAbsent(level.dimension(), k -> new HashSet<>()).add(pos);
+    }
+
+    private static void drainGreatDoorSpawnerChunkQueue(ServerLevel level) {
+        Set<ChunkPos> set = pendingGreatDoorSpawnerChunks.get(level.dimension());
+        if (set == null || set.isEmpty()) {
+            return;
+        }
+        int budget = GREAT_DOOR_SPAWNER_CHUNK_DRAIN_PER_TICK;
+        Iterator<ChunkPos> it = set.iterator();
+        while (budget > 0 && it.hasNext()) {
+            ChunkPos pos = it.next();
+            it.remove();
+            budget--;
+            ChunkAccess chunk = level.getChunkSource().getChunkNow(pos.x, pos.z);
+            if (chunk != null) {
+                DarkWorldUtil.convertGreatDoorSpawnersInChunk(level, chunk);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void chunkLoad(ChunkEvent.Load event) {
+        if (!(event.getLevel() instanceof ServerLevel serverLevel)) {
+            return;
+        }
+        if (!DarkWorldUtil.isDarkWorld(serverLevel)) {
+            return;
+        }
+        enqueueGreatDoorSpawnerChunkCheck(serverLevel, event.getChunk().getPos());
+    }
+
     @SubscribeEvent
     public void attackEntity(AttackEntityEvent event) {
         Level level = event.getEntity().level();
@@ -102,6 +149,10 @@ public class CommonEvents {
         if (event.phase == TickEvent.Phase.END) {
             Level level = event.level;
             if (level.isClientSide) return;
+
+            if (level instanceof ServerLevel serverLevel && DarkWorldUtil.isDarkWorld(serverLevel)) {
+                drainGreatDoorSpawnerChunkQueue(serverLevel);
+            }
 
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                 for (DarkFountain fountain : new ArrayList<>(cap.darkFountains.values())) {

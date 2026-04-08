@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:jigsaw",
+  "biomes": "#penumbra_phantasm:has_structure/random_great_door",
+  "step": "surface_structures",
+  "terrain_adaptation": "beard_thin",
+  "start_pool": "penumbra_phantasm:random_great_door",
+  "size": 1,
+  "start_height": {
+    "type": "minecraft:uniform",
+    "min_inclusive": {
+      "absolute": 0
+    },
+    "max_inclusive": {
+      "absolute": 0
+    }
+  },
+  "project_start_to_heightmap": "WORLD_SURFACE_WG",
+  "max_distance_from_center": 80,
+  "use_expansion_hack": false,
+  "spawn_overrides": {}
+}

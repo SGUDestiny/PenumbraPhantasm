@@ -47,8 +47,11 @@ public class GreatDoor {
     public Direction direction;
     public boolean isOpen;
     public List<BlockPos> volumePositions;
+    @Nullable
     public BlockPos lightDoorPos;
+    @Nullable
     public ResourceKey<Level> lightDoorDimension;
+    @Nullable
     public Direction lightDoorExitDirection;
     public boolean isDestinationDarkWorld;
     @Nullable
@@ -57,7 +60,7 @@ public class GreatDoor {
     public ResourceKey<Level> destinationGreatDoorDimension;
 
     public GreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, List<BlockPos> volumePositions,
-                     BlockPos lightDoorPos, ResourceKey<Level> lightDoorDimension, Direction lightDoorExitDirection,
+                     @Nullable BlockPos lightDoorPos, @Nullable ResourceKey<Level> lightDoorDimension, @Nullable Direction lightDoorExitDirection,
                      boolean isDestinationDarkWorld, @Nullable BlockPos destinationGreatDoorPos,
                      @Nullable ResourceKey<Level> destinationGreatDoorDimension) {
         this.greatDoorPos = greatDoorPos;
@@ -81,7 +84,7 @@ public class GreatDoor {
     }
 
     public void refreshOpenFromLinkedLightDoor(ServerLevel darkLevel) {
-        if (lightDoorPos == null || lightDoorDimension == null) {
+        if (lightDoorPos == null || lightDoorDimension == null || lightDoorExitDirection == null) {
             isOpen = false;
             return;
         }
@@ -150,11 +153,21 @@ public class GreatDoor {
                     teleportDestination = serverLevel.getServer().getLevel(destinationGreatDoorDimension);
                 }
             } else {
-                teleportDestination = serverLevel.getServer().getLevel(lightDoorDimension);
+                if (lightDoorDimension != null) {
+                    teleportDestination = serverLevel.getServer().getLevel(lightDoorDimension);
+                }
             }
 
             if (isOpen && teleportDestination != null) {
                 tickVolumeTeleportation(serverLevel, teleportDestination);
+            }
+
+            if (isUnlinkedForAutoBinding()) {
+                long gt = serverLevel.getGameTime();
+                long stagger = Math.floorMod(greatDoorPos.asLong(), 60L);
+                if (gt % 60L == stagger) {
+                    DarkWorldUtil.tryBindUnlinkedGreatDoor(serverLevel, this);
+                }
             }
         }
 
@@ -203,6 +216,9 @@ public class GreatDoor {
                 }
             }
         } else {
+            if (lightDoorPos == null || lightDoorExitDirection == null) {
+                return;
+            }
             Vec3 destVec = lightDoorPos.getCenter();
             float yaw = lightDoorExitDirection.toYRot();
             BlockPos darkAnchor = findDarkFountainAnchor(greatDoorLevel);
@@ -256,6 +272,14 @@ public class GreatDoor {
         });
     }
 
+    public boolean isUnlinkedForAutoBinding() {
+        return !isDestinationDarkWorld
+                && lightDoorPos == null
+                && lightDoorDimension == null
+                && destinationGreatDoorPos == null
+                && destinationGreatDoorDimension == null;
+    }
+
     private static void addPlayerToPairedLightFountainTeleported(ServerLevel lightLevel, ResourceKey<Level> darkDim, BlockPos darkFountainAnchor, UUID playerId) {
         lightLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
             for (DarkFountain lf : cap.darkFountains.values()) {
@@ -278,9 +302,13 @@ public class GreatDoor {
             volumePositionsTag.add(NbtUtils.writeBlockPos(pos));
         }
         tag.put(VOLUME_POSITIONS, volumePositionsTag);
-        tag.put(LIGHT_DOOR_POS, NbtUtils.writeBlockPos(lightDoorPos));
-        tag.putString(LIGHT_DOOR_DIMENSION, lightDoorDimension.location().toString());
-        tag.putString(LIGHT_DOOR_EXIT_DIRECTION, lightDoorExitDirection.getName());
+        boolean hasLightLink = lightDoorPos != null && lightDoorDimension != null && lightDoorExitDirection != null;
+        tag.putBoolean("has_light_link", hasLightLink);
+        if (hasLightLink) {
+            tag.put(LIGHT_DOOR_POS, NbtUtils.writeBlockPos(lightDoorPos));
+            tag.putString(LIGHT_DOOR_DIMENSION, lightDoorDimension.location().toString());
+            tag.putString(LIGHT_DOOR_EXIT_DIRECTION, lightDoorExitDirection.getName());
+        }
         tag.putBoolean(IS_DESTINATION_DARK_WORLD, isDestinationDarkWorld);
         if (isDestinationDarkWorld && destinationGreatDoorPos != null && destinationGreatDoorDimension != null) {
             tag.put(DESTINATION_GREAT_DOOR_POS, NbtUtils.writeBlockPos(destinationGreatDoorPos));
@@ -299,13 +327,29 @@ public class GreatDoor {
         for (Tag t : volumePositionsTag) {
             volumePositions.add(NbtUtils.readBlockPos((CompoundTag) t));
         }
-        BlockPos lightDoorPos = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_POS));
-        ResourceKey<Level> lightDoorDimension = ModUtil.stringToDimension(tag.getString(LIGHT_DOOR_DIMENSION));
-        Direction lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING)
-                ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION))
-                : null;
-        if (lightDoorExitDirection == null) {
-            lightDoorExitDirection = Direction.NORTH;
+        BlockPos lightDoorPos = null;
+        ResourceKey<Level> lightDoorDimension = null;
+        Direction lightDoorExitDirection = null;
+        if (tag.contains("has_light_link", Tag.TAG_BYTE)) {
+            if (tag.getBoolean("has_light_link") && tag.contains(LIGHT_DOOR_POS, Tag.TAG_COMPOUND)) {
+                lightDoorPos = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_POS));
+                lightDoorDimension = ModUtil.stringToDimension(tag.getString(LIGHT_DOOR_DIMENSION));
+                lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING)
+                        ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION))
+                        : Direction.NORTH;
+                if (lightDoorExitDirection == null) {
+                    lightDoorExitDirection = Direction.NORTH;
+                }
+            }
+        } else if (tag.contains(LIGHT_DOOR_POS, Tag.TAG_COMPOUND)) {
+            lightDoorPos = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_POS));
+            lightDoorDimension = ModUtil.stringToDimension(tag.getString(LIGHT_DOOR_DIMENSION));
+            lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING)
+                    ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION))
+                    : null;
+            if (lightDoorExitDirection == null) {
+                lightDoorExitDirection = Direction.NORTH;
+            }
         }
 
         boolean isDestinationDarkWorld;

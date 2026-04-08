@@ -4,8 +4,11 @@ import commoble.infiniverse.api.InfiniverseAPI;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
+import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
+import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -32,6 +35,7 @@ import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
@@ -48,6 +52,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -219,8 +224,57 @@ public class DarkWorldUtil
 		return Integer.MIN_VALUE;
 	}
 
-	public static void createGreatDoor(Level pLevel, BlockPos greatDoorPos, Direction direction, boolean isOpen, BlockPos lightDoorPos,
-									   ResourceKey<Level> lightDoorLevel, Direction lightDoorExitDirection, boolean isDestinationDarkWorld,
+	private static Optional<GreatDoorStructureResult> clearGreatDoorSpawnerInPlacedTemplate(ServerLevel level, StructureTemplate template,
+																						   StructurePlaceSettings settings, BlockPos origin) {
+		BoundingBox bb = template.getBoundingBox(settings, origin);
+		BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
+		BlockPos found = null;
+		Direction facing = Direction.NORTH;
+		for (int x = bb.minX(); x <= bb.maxX(); x++) {
+			for (int y = bb.minY(); y <= bb.maxY(); y++) {
+				for (int z = bb.minZ(); z <= bb.maxZ(); z++) {
+					m.set(x, y, z);
+					BlockState st = level.getBlockState(m);
+					if (st.is(BlockRegistry.GREAT_DOOR_SPAWNER.get())) {
+						found = m.immutable();
+						facing = st.getValue(HorizontalDirectionalBlock.FACING);
+						break;
+					}
+				}
+				if (found != null) {
+					break;
+				}
+			}
+			if (found != null) {
+				break;
+			}
+		}
+		if (found != null) {
+			level.setBlock(found, Blocks.AIR.defaultBlockState(), 3);
+			return Optional.of(new GreatDoorStructureResult(found, facing));
+		}
+		return Optional.empty();
+	}
+
+	private static Optional<GreatDoorStructureResult> placeGreatDoorStructureTemplate(ServerLevel level, StructureTemplate template, BlockPos origin,
+																					  Rotation rot, RandomSource random) {
+		StructurePlaceSettings settings = new StructurePlaceSettings().setRotation(rot).setMirror(Mirror.NONE).setIgnoreEntities(false);
+		ChunkPos cp = new ChunkPos(origin);
+		level.setChunkForced(cp.x, cp.z, true);
+		boolean placedOk;
+		try {
+			placedOk = template.placeInWorld(level, origin, origin, settings, random, 2);
+		} finally {
+			level.setChunkForced(cp.x, cp.z, false);
+		}
+		if (!placedOk) {
+			return Optional.empty();
+		}
+		return clearGreatDoorSpawnerInPlacedTemplate(level, template, settings, origin);
+	}
+
+	public static void createGreatDoor(Level pLevel, BlockPos greatDoorPos, Direction direction, boolean isOpen, @Nullable BlockPos lightDoorPos,
+									   @Nullable ResourceKey<Level> lightDoorLevel, @Nullable Direction lightDoorExitDirection, boolean isDestinationDarkWorld,
 									   @Nullable BlockPos destinationGreatDoorPos, @Nullable ResourceKey<Level> destinationGreatDoorLevel) {
 		GreatDoorCapability greatDoorCapability = null;
 		LazyOptional<GreatDoorCapability> lightLazyCapability = pLevel.getCapability(CapabilityRegistry.GREAT_DOOR);
@@ -283,51 +337,155 @@ public class DarkWorldUtil
 				case 2 -> Rotation.CLOCKWISE_180;
 				default -> Rotation.COUNTERCLOCKWISE_90;
 			};
-			StructurePlaceSettings settings = new StructurePlaceSettings().setRotation(rot).setMirror(Mirror.NONE).setIgnoreEntities(false);
-			ChunkPos cp = new ChunkPos(origin);
-			level.setChunkForced(cp.x, cp.z, true);
-			boolean placedOk;
-			try {
-				placedOk = template.placeInWorld(level, origin, origin, settings, random, 2);
-			} finally {
-				level.setChunkForced(cp.x, cp.z, false);
-			}
-			if (!placedOk) {
-				continue;
-			}
-			BoundingBox bb = template.getBoundingBox(settings, origin);
-			BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
-			BlockPos found = null;
-			Direction facing = Direction.NORTH;
-			for (int x = bb.minX(); x <= bb.maxX(); x++) {
-				for (int y = bb.minY(); y <= bb.maxY(); y++) {
-					for (int z = bb.minZ(); z <= bb.maxZ(); z++) {
-						m.set(x, y, z);
-						BlockState st = level.getBlockState(m);
-						if (st.is(BlockRegistry.GREAT_DOOR_SPAWNER.get())) {
-							found = m.immutable();
-							facing = st.getValue(HorizontalDirectionalBlock.FACING);
-							break;
-						}
-					}
-					if (found != null) {
-						break;
-					}
-				}
-				if (found != null) {
-					break;
-				}
-			}
-			if (found != null) {
-				level.setBlock(found, Blocks.AIR.defaultBlockState(), 3);
-				return Optional.of(new GreatDoorStructureResult(found, facing));
+			Optional<GreatDoorStructureResult> placed = placeGreatDoorStructureTemplate(level, template, origin, rot, random);
+			if (placed.isPresent()) {
+				return placed;
 			}
 		}
 		return Optional.empty();
 	}
 
+	public static void convertGreatDoorSpawnersInChunk(ServerLevel level, ChunkAccess chunk) {
+		if (!isDarkWorld(level)) {
+			return;
+		}
+		Optional<GreatDoorCapability> capOpt = level.getCapability(CapabilityRegistry.GREAT_DOOR).resolve();
+		if (capOpt.isEmpty()) {
+			return;
+		}
+		GreatDoorCapability cap = capOpt.get();
+		int minY = level.getMinBuildHeight();
+		int maxY = level.getMaxBuildHeight();
+		BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
+		int x0 = chunk.getPos().getMinBlockX();
+		int x1 = chunk.getPos().getMaxBlockX();
+		int z0 = chunk.getPos().getMinBlockZ();
+		int z1 = chunk.getPos().getMaxBlockZ();
+		for (int x = x0; x <= x1; x++) {
+			int relX = x - x0;
+			for (int z = z0; z <= z1; z++) {
+				int relZ = z - z0;
+				int surface = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, relX, relZ);
+				int yLo = Math.max(minY, surface - 40);
+				int yHi = Math.min(maxY - 1, surface + 24);
+				for (int y = yLo; y <= yHi; y++) {
+					m.set(x, y, z);
+					BlockState st = chunk.getBlockState(m);
+					if (!st.is(BlockRegistry.GREAT_DOOR_SPAWNER.get())) {
+						continue;
+					}
+					BlockPos anchor = m.immutable();
+					if (cap.greatDoors.containsKey(anchor)) {
+						continue;
+					}
+					Direction facing = st.getValue(HorizontalDirectionalBlock.FACING);
+					level.setBlock(anchor, Blocks.AIR.defaultBlockState(), 3);
+					createGreatDoor(level, anchor, facing, false, null, null, null, false, null, null);
+				}
+			}
+		}
+	}
+
+	public static void tryBindUnlinkedGreatDoor(ServerLevel darkLevel, GreatDoor door) {
+		if (!door.isUnlinkedForAutoBinding()) {
+			return;
+		}
+		ResourceKey<Level> darkDim = darkLevel.dimension();
+		MinecraftServer server = darkLevel.getServer();
+		for (ServerLevel lightLevel : server.getAllLevels()) {
+			if (isDarkWorld(lightLevel)) {
+				continue;
+			}
+			Optional<DarkFountainCapability> capOpt = lightLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).resolve();
+			if (capOpt.isEmpty()) {
+				continue;
+			}
+			for (DarkFountain fountain : capOpt.get().darkFountains.values()) {
+				if (!fountain.destinationDimension.equals(darkDim)) {
+					continue;
+				}
+				if (tryBindSharedDoorsForUnlinked(darkLevel, door, lightLevel, fountain)) {
+					return;
+				}
+				if (tryBindOutsideDoorsForUnlinked(darkLevel, door, lightLevel, fountain)) {
+					return;
+				}
+			}
+		}
+	}
+
+	private static boolean tryBindOutsideDoorsForUnlinked(ServerLevel darkLevel, GreatDoor door, ServerLevel lightLevel, DarkFountain fountain) {
+		for (DarkRoom room : fountain.rooms) {
+			for (Map.Entry<BlockPos, Direction> e : room.getOutsideDoors().entrySet()) {
+				BlockPos lower = e.getKey();
+				Direction exitDir = e.getValue();
+				GreatDoor taken = darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
+						.resolve()
+						.map(c -> c.findByLightDoor(lower, lightLevel.dimension()))
+						.orElse(null);
+				if (taken != null) {
+					continue;
+				}
+				door.lightDoorPos = lower;
+				door.lightDoorDimension = lightLevel.dimension();
+				door.lightDoorExitDirection = exitDir;
+				door.isDestinationDarkWorld = false;
+				door.destinationGreatDoorPos = null;
+				door.destinationGreatDoorDimension = null;
+				door.broadcastSync(darkLevel);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean tryBindSharedDoorsForUnlinked(ServerLevel darkLevel, GreatDoor door, ServerLevel lightLevel, DarkFountain fountain) {
+		for (DarkRoom room : fountain.rooms) {
+			for (Map.Entry<BlockPos, ResourceKey<Level>> e : room.getSharedDoors().entrySet()) {
+				BlockPos lower = e.getKey();
+				ResourceKey<Level> otherDarkKey = e.getValue();
+				if (!isDarkWorldKey(otherDarkKey)) {
+					continue;
+				}
+				GreatDoor taken = darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
+						.resolve()
+						.map(c -> c.findByLightDoor(lower, lightLevel.dimension()))
+						.orElse(null);
+				if (taken != null) {
+					continue;
+				}
+				ServerLevel otherLevel = darkLevel.getServer().getLevel(otherDarkKey);
+				if (otherLevel == null) {
+					continue;
+				}
+				Direction exitDir = room.interiorHorizontalDirectionTowardDoor(lower).orElse(Direction.NORTH);
+				door.lightDoorPos = lower;
+				door.lightDoorDimension = lightLevel.dimension();
+				door.lightDoorExitDirection = exitDir;
+				door.isDestinationDarkWorld = true;
+				door.destinationGreatDoorDimension = otherDarkKey;
+				door.destinationGreatDoorPos = null;
+				ensurePeerGreatDoor(door, darkLevel, otherLevel);
+				if (door.destinationGreatDoorPos == null) {
+					door.lightDoorPos = null;
+					door.lightDoorDimension = null;
+					door.lightDoorExitDirection = null;
+					door.isDestinationDarkWorld = false;
+					door.destinationGreatDoorDimension = null;
+					continue;
+				}
+				door.broadcastSync(darkLevel);
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static void ensurePeerGreatDoor(GreatDoor source, ServerLevel sourceLevel, ServerLevel destLevel) {
 		if (!source.isDestinationDarkWorld || source.destinationGreatDoorDimension == null) {
+			return;
+		}
+		if (source.lightDoorPos == null || source.lightDoorDimension == null || source.lightDoorExitDirection == null) {
 			return;
 		}
 		if (!source.destinationGreatDoorDimension.equals(destLevel.dimension())) {
@@ -422,8 +580,9 @@ public class DarkWorldUtil
 						("dark_world_"+pos.asLong()+"_"+origin.location()+"_"+typeKey).replace(':', '-')));
 
 		ServerLevel existingLevel = server.getLevel(key);
-		if(existingLevel != null)
+		if (existingLevel != null) {
 			return existingLevel;
+		}
 
 		long seed = createUniqueDarkWorldSeed(server, key);
 
@@ -433,8 +592,7 @@ public class DarkWorldUtil
 
 		LevelStem stem = new LevelStem(getDimensionType(server, type.dimensionType()), chunkGenerator);
 
-		ServerLevel level = InfiniverseAPI.get().getOrCreateLevel(server, key, () -> stem);
-		return level;
+		return InfiniverseAPI.get().getOrCreateLevel(server, key, () -> stem);
 	}
 
 	private static long createUniqueDarkWorldSeed(MinecraftServer server, ResourceKey<Level> levelKey)

@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+
+import javax.annotation.Nullable;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
@@ -28,9 +30,14 @@ public class ClientBoundSingleGreatDoorPacket {
         buffer.writeUtf(greatDoor.direction.getName());
         buffer.writeBoolean(greatDoor.isOpen);
         buffer.writeCollection(greatDoor.volumePositions, FriendlyByteBuf::writeBlockPos);
-        buffer.writeBlockPos(greatDoor.lightDoorPos);
-        buffer.writeResourceKey(greatDoor.lightDoorDimension);
-        buffer.writeUtf(greatDoor.lightDoorExitDirection.getName());
+        boolean hasLight = greatDoor.lightDoorPos != null && greatDoor.lightDoorDimension != null;
+        buffer.writeBoolean(hasLight);
+        if (hasLight) {
+            buffer.writeBlockPos(greatDoor.lightDoorPos);
+            buffer.writeResourceKey(greatDoor.lightDoorDimension);
+            Direction exit = greatDoor.lightDoorExitDirection != null ? greatDoor.lightDoorExitDirection : Direction.NORTH;
+            buffer.writeUtf(exit.getName());
+        }
         buffer.writeBoolean(greatDoor.isDestinationDarkWorld);
         if (greatDoor.isDestinationDarkWorld && greatDoor.destinationGreatDoorPos != null && greatDoor.destinationGreatDoorDimension != null) {
             buffer.writeBoolean(true);
@@ -46,11 +53,17 @@ public class ClientBoundSingleGreatDoorPacket {
         Direction direction = Direction.byName(buffer.readUtf());
         boolean isOpen = buffer.readBoolean();
         List<BlockPos> volumePositions = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readBlockPos);
-        BlockPos lightDoorPos = buffer.readBlockPos();
-        ResourceKey<Level> lightDoorDimension = buffer.readResourceKey(Registries.DIMENSION);
-        Direction lightDoorExitDirection = Direction.byName(buffer.readUtf());
-        if (lightDoorExitDirection == null) {
-            lightDoorExitDirection = Direction.NORTH;
+        boolean hasLight = buffer.readBoolean();
+        @Nullable BlockPos lightDoorPos = null;
+        @Nullable ResourceKey<Level> lightDoorDimension = null;
+        @Nullable Direction lightDoorExitDirection = null;
+        if (hasLight) {
+            lightDoorPos = buffer.readBlockPos();
+            lightDoorDimension = buffer.readResourceKey(Registries.DIMENSION);
+            lightDoorExitDirection = Direction.byName(buffer.readUtf());
+            if (lightDoorExitDirection == null) {
+                lightDoorExitDirection = Direction.NORTH;
+            }
         }
         boolean isDestinationDarkWorld = buffer.readBoolean();
         BlockPos destinationGreatDoorPos = null;

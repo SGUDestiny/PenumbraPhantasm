@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "penumbra_phantasm:random_great_door",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 42,
+    "separation": 14,
+    "salt": 441281947
+  }
+}

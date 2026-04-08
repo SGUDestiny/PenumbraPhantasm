@@ -200,6 +200,17 @@ public class DarkRoom {
     public Set<BlockPos> getDoorPositions() { return doorPositions; }
     public Map<BlockPos, Direction> getOutsideDoors() { return Collections.unmodifiableMap(outsideDoors); }
     public Map<BlockPos, ResourceKey<Level>> getSharedDoors() { return Collections.unmodifiableMap(sharedDoors); }
+
+    public Optional<Direction> interiorHorizontalDirectionTowardDoor(BlockPos doorLowerFoot) {
+        for (BlockPos p : positions) {
+            for (Direction dir : Direction.Plane.HORIZONTAL) {
+                if (p.relative(dir).equals(doorLowerFoot)) {
+                    return Optional.of(dir);
+                }
+            }
+        }
+        return Optional.empty();
+    }
     public Map<UUID, Integer> getTransportTickers() { return transportTickers; }
     public int getFillIndex() { return fillIndex; }
 }

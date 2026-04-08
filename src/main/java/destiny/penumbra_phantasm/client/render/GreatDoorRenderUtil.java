@@ -45,7 +45,7 @@ public class GreatDoorRenderUtil {
         } else if (direction == Direction.WEST) {
             pose.translate(1, 0, 0);
         }
-        if (DarkWorldUtil.isDarkWorldKey(greatDoor.lightDoorDimension)) {
+        if (greatDoor.lightDoorDimension != null && DarkWorldUtil.isDarkWorldKey(greatDoor.lightDoorDimension)) {
             getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorDarkWorldTexture)),
                     packedLight, overlay, 1F, 1F, 1F, 1f);
         } else {
@@ -69,7 +69,7 @@ public class GreatDoorRenderUtil {
         } else if (direction == Direction.WEST) {
             pose.translate(1, 0, 0);
         }
-        if (DarkWorldUtil.isDarkWorldKey(greatDoor.lightDoorDimension)) {
+        if (greatDoor.lightDoorDimension != null && DarkWorldUtil.isDarkWorldKey(greatDoor.lightDoorDimension)) {
             getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(greatDoorDarkWorldTexture)),
                     packedLight, overlay, 1F, 1F, 1F, 1f);
         } else {
