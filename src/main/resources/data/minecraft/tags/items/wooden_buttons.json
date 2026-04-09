@@ -2,8 +2,6 @@
   "replace": false,
   "values": [
     "penumbra_phantasm:scarlet_button",
-    "penumbra_phantasm:dark_candy_button",
-    "penumbra_phantasm:scarlet_wood_button",
-    "penumbra_phantasm:dark_candy_wood_button"
+    "penumbra_phantasm:dark_candy_button"
   ]
 }

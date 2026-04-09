@@ -241,7 +241,7 @@ public final class BlocksetRegistry {
 
     public static final List<WoodBlockset> WOOD_BLOCKSETS = List.of(
             new WoodBlockset(
-                    "scarlet_wood",
+                    "scarlet",
                     "scarlet_planks",
                     "scarlet",
                     "scarlet_log",
@@ -249,7 +249,7 @@ public final class BlocksetRegistry {
                     true
             ),
             new WoodBlockset(
-                    "dark_candy_wood",
+                    "dark_candy",
                     "dark_candy_planks",
                     "dark_candy",
                     "dark_candy_log",

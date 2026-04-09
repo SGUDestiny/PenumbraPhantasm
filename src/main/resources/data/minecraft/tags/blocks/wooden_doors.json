@@ -2,8 +2,6 @@
   "replace": false,
   "values": [
     "penumbra_phantasm:scarlet_door",
-    "penumbra_phantasm:dark_candy_door",
-    "penumbra_phantasm:scarlet_wood_door",
-    "penumbra_phantasm:dark_candy_wood_door"
+    "penumbra_phantasm:dark_candy_door"
   ]
 }
