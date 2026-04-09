@@ -46,6 +46,10 @@ public class RoomScanner {
             return RoomScanResult.failure();
         }
 
+        if (otherFountainRoomToDarkWorld != null && otherFountainRoomToDarkWorld.containsKey(fountainPos)) {
+            return RoomScanResult.failure();
+        }
+
         queue.add(fountainPos);
         visitedPositions.add(fountainPos);
 
@@ -63,6 +67,8 @@ public class RoomScanner {
                 if (visitedPositions.contains(neighborPos)) continue;
 
                 if (blockingPositions != null && blockingPositions.contains(neighborPos)) continue;
+
+                if (otherFountainRoomToDarkWorld != null && otherFountainRoomToDarkWorld.containsKey(neighborPos)) continue;
 
                 BlockState state = level.getBlockState(neighborPos);
 

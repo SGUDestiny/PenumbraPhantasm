@@ -554,6 +554,39 @@ public class DarkFountain {
         return map;
     }
 
+    public static void resolveCrossFountainRoomDisputes(DarkFountainCapability cap) {
+        if (cap.darkFountains.size() < 2) return;
+
+        HashMap<Long, BlockPos> cellWinner = new HashMap<>();
+        for (Map.Entry<BlockPos, DarkFountain> e : cap.darkFountains.entrySet()) {
+            BlockPos anchor = e.getKey();
+            for (DarkRoom room : e.getValue().rooms) {
+                if (room.isDissipating()) continue;
+                for (BlockPos p : room.getPositions()) {
+                    long key = p.asLong();
+                    BlockPos best = cellWinner.get(key);
+                    if (best == null || anchor.compareTo(best) < 0) {
+                        cellWinner.put(key, anchor);
+                    }
+                }
+            }
+        }
+
+        for (Map.Entry<BlockPos, DarkFountain> e : cap.darkFountains.entrySet()) {
+            BlockPos anchor = e.getKey();
+            for (DarkRoom room : new ArrayList<>(e.getValue().rooms)) {
+                if (room.isDissipating()) continue;
+                for (BlockPos p : room.getPositions()) {
+                    BlockPos winner = cellWinner.get(p.asLong());
+                    if (winner != null && !winner.equals(anchor)) {
+                        room.beginDissipation();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     @Nullable
     private Set<BlockPos> collectOtherFountainAnchors(ServerLevel level) {
         return otherFountainAnchors(level, this.fountainPos);

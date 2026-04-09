@@ -50,11 +50,14 @@ public class CommonEvents {
             return;
         }
         int budget = GREAT_DOOR_SPAWNER_CHUNK_DRAIN_PER_TICK;
+        ArrayList<ChunkPos> batch = new ArrayList<>(Math.min(budget, set.size()));
         Iterator<ChunkPos> it = set.iterator();
         while (budget > 0 && it.hasNext()) {
-            ChunkPos pos = it.next();
+            batch.add(it.next());
             it.remove();
             budget--;
+        }
+        for (ChunkPos pos : batch) {
             ChunkAccess chunk = level.getChunkSource().getChunkNow(pos.x, pos.z);
             if (chunk != null) {
                 DarkWorldUtil.convertGreatDoorSpawnersInChunk(level, chunk);
@@ -157,6 +160,9 @@ public class CommonEvents {
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                 for (DarkFountain fountain : new ArrayList<>(cap.darkFountains.values())) {
                     fountain.tick(level);
+                }
+                if (level instanceof ServerLevel serverLevel && !DarkWorldUtil.isDarkWorld(serverLevel)) {
+                    DarkFountain.resolveCrossFountainRoomDisputes(cap);
                 }
             });
 
