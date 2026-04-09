@@ -127,9 +127,9 @@ public class KnifeItem extends SwordItem {
 
         //Cancel if player isn't inside a valid room
         ServerLevel serverLevel = (ServerLevel) level;
-        BlockPos scanSeed = player.getOnPos().above();
         Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
-        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, scanSeed);
+        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
+        BlockPos scanSeed = player.getOnPos().above();
         RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, scanSeed, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
             if (scanSeedBlockedByExistingFountain(scanSeed, otherAnchors, otherRoomCells)) {
@@ -372,7 +372,7 @@ public class KnifeItem extends SwordItem {
             return;
         }
         Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
-        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, fountainPos);
+        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
         RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
             if (scanSeedBlockedByExistingFountain(fountainPos, otherAnchors, otherRoomCells)) {

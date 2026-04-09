@@ -62,6 +62,7 @@ public class GreatDoor {
     public BlockPos destinationGreatDoorPos;
     @Nullable
     public ResourceKey<Level> destinationGreatDoorDimension;
+    public boolean exclusiveLightDoorForceClosedWithoutFountain;
 
     public GreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, List<BlockPos> volumePositions,
                      @Nullable BlockPos lightDoorPos, @Nullable ResourceKey<Level> lightDoorDimension, @Nullable Direction lightDoorExitDirection,
@@ -100,6 +101,12 @@ public class GreatDoor {
                     shapeBlockEntity.greatDoorPos = greatDoorPos;
                 }
             }
+        }
+
+        if (!DarkWorldUtil.levelHasDarkFountain(darkLevel) && !isDestinationDarkWorld
+                && lightDoorPos != null && lightDoorDimension != null && lightDoorExitDirection != null) {
+            isOpen = false;
+            return;
         }
 
         if (lightDoorPos == null || lightDoorDimension == null || lightDoorExitDirection == null) {
@@ -208,9 +215,14 @@ public class GreatDoor {
 
         if (level instanceof ServerLevel serverLevel) {
             boolean localFountain = DarkWorldUtil.levelHasDarkFountain(serverLevel);
-            if (!localFountain && !isDestinationDarkWorld
+            if (localFountain) {
+                exclusiveLightDoorForceClosedWithoutFountain = false;
+            } else if (!isDestinationDarkWorld
                     && lightDoorPos != null && lightDoorDimension != null && lightDoorExitDirection != null) {
-                forceCloseExclusiveLinkedLightDoor(serverLevel, this);
+                if (!exclusiveLightDoorForceClosedWithoutFountain) {
+                    forceCloseExclusiveLinkedLightDoor(serverLevel, this);
+                    exclusiveLightDoorForceClosedWithoutFountain = true;
+                }
             }
 
             boolean openBefore = isOpen;

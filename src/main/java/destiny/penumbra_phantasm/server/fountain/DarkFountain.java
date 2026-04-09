@@ -569,7 +569,6 @@ public class DarkFountain {
                     }
                 }
             }
-            DarkFountainCapability.mergePersistentSiteAnchorsIntoScanBlockMap(cap, map, excludeFountainAnchor);
         });
         return map;
     }

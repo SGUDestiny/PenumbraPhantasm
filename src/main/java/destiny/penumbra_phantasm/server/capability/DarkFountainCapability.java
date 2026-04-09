@@ -15,8 +15,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 
-import javax.annotation.Nullable;
-
 import java.util.*;
 
 public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
@@ -68,15 +66,6 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
             return Optional.of(site);
         }
         return Optional.empty();
-    }
-
-    public static void mergePersistentSiteAnchorsIntoScanBlockMap(DarkFountainCapability cap, Map<BlockPos, ResourceKey<Level>> map, @Nullable BlockPos excludeFountainPos) {
-        for (PersistentDarkWorldSite site : cap.persistentDarkWorldSites) {
-            if (excludeFountainPos != null && site.fountainPos.equals(excludeFountainPos)) {
-                continue;
-            }
-            map.putIfAbsent(site.fountainPos, site.dimensionKey);
-        }
     }
 
     private boolean lightAlreadyLinksToDarkDimension(ResourceKey<Level> darkDimension) {
