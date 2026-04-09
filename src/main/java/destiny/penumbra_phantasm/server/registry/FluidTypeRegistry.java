@@ -28,6 +28,7 @@ public class FluidTypeRegistry {
             new LuminescentWaterFluidType(LUMINESCENT_WATER_STILL, LUMINESCENT_WATER_FLOW, LUMINESCENT_WATER_OVERLAY, 0xFFFFFFFF,
                     new Vector3f(21f / 255f, 18f / 255f, 38f / 255f),
                     FluidType.Properties.create().lightLevel(15).viscosity(4).density(7).canExtinguish(true)
+                            .canHydrate(true).canConvertToSource(true)
                             .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                             .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)));
 
