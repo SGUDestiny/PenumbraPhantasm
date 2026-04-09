@@ -7,6 +7,8 @@ import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,6 +41,32 @@ import java.util.Set;
 public class CommonEvents {
     private static final Map<ResourceKey<Level>, Set<ChunkPos>> pendingGreatDoorSpawnerChunks = new HashMap<>();
     private static final int GREAT_DOOR_SPAWNER_CHUNK_DRAIN_PER_TICK = 20;
+
+    private static void rescuePlayerIfStrandedDarkWorldWithoutFountain(ServerPlayer player) {
+        if (player.level().isClientSide) {
+            return;
+        }
+        if (!(player.level() instanceof ServerLevel level)) {
+            return;
+        }
+        if (!DarkWorldUtil.isDarkWorld(level)) {
+            return;
+        }
+        boolean noFountain = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
+                .map(cap -> cap.darkFountains.isEmpty())
+                .orElse(true);
+        if (!noFountain) {
+            return;
+        }
+        if (player.getServer() == null) {
+            return;
+        }
+        ServerLevel overworld = player.getServer().overworld();
+        BlockPos spawnPos = overworld.getSharedSpawnPos();
+        player.teleportTo(overworld, spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5,
+                overworld.getSharedSpawnAngle(), 0f);
+        player.displayClientMessage(Component.translatable("message.penumbra_phantasm.dark_world_without_fountain"), true);
+    }
 
     private static void enqueueGreatDoorSpawnerChunkCheck(ServerLevel level, ChunkPos pos) {
         pendingGreatDoorSpawnerChunks.computeIfAbsent(level.dimension(), k -> new HashSet<>()).add(pos);
@@ -217,6 +245,20 @@ public class CommonEvents {
     public void playerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             ChangedDimensionContainsTrigger.INSTANCE.trigger(serverPlayer, event.getFrom(), event.getTo());
+        }
+    }
+
+    @SubscribeEvent
+    public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            rescuePlayerIfStrandedDarkWorldWithoutFountain(serverPlayer);
+        }
+    }
+
+    @SubscribeEvent
+    public void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            rescuePlayerIfStrandedDarkWorldWithoutFountain(serverPlayer);
         }
     }
 

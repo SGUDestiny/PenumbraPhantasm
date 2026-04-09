@@ -363,6 +363,7 @@
   "message.penumbra_phantasm.pushed_away_by_fountain": "The flow of darkness pushes you away...",
   "message.penumbra_phantasm.sealing_fountain_no_fountain_nearby": "But there was no fountain nearby...",
   "message.penumbra_phantasm.sealing_fountain_already_being_sealed": "But the fountain was already being sealed...",
+  "message.penumbra_phantasm.dark_world_without_fountain": "The dark world you were in didn't have an active fountain",
 
   "screen.penumbra_phantasm.intro.line.1": "A R E    Y O U",
   "screen.penumbra_phantasm.intro.line.2": "T H E R E ?",
