@@ -129,9 +129,14 @@ public class KnifeItem extends SwordItem {
         ServerLevel serverLevel = (ServerLevel) level;
         Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
         Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
-        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, player.getOnPos().above(), ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
+        BlockPos scanSeed = player.getOnPos().above();
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, scanSeed, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
-            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_unsealed_or_too_big"), true);
+            if (scanSeedBlockedByExistingFountain(scanSeed, otherAnchors, otherRoomCells)) {
+                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
+            } else {
+                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_unsealed_or_too_big"), true);
+            }
             return InteractionResultHolder.fail(stack);
         }
 
@@ -170,17 +175,7 @@ public class KnifeItem extends SwordItem {
             return InteractionResultHolder.fail(stack);
         }
 
-        //Cancel if there is another dark fountain nearby
-        for(Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet())
-        {
-            if(entry.getValue().getFountainPos().distSqr(player.getOnPos()) < 256)
-            {
-                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_another_fountain_nearby"), true);
-                return InteractionResultHolder.fail(stack); // If fountain within 16 blocks of this(16 squared is 256)
-            }
-        }
-
-        if (DarkFountainCapability.roomIntersectsActiveFountain(cap, roomResult.getPositions())) {
+        if (DarkFountainCapability.roomContainsActiveFountainAnchor(cap, roomResult.getPositions())) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
             return InteractionResultHolder.fail(stack);
         }
@@ -327,6 +322,13 @@ public class KnifeItem extends SwordItem {
         );
     }
 
+    private static boolean scanSeedBlockedByExistingFountain(BlockPos scanSeed, Set<BlockPos> otherAnchors, Map<BlockPos, ResourceKey<Level>> otherRoomCells) {
+        if (otherRoomCells.containsKey(scanSeed)) {
+            return true;
+        }
+        return otherAnchors != null && otherAnchors.contains(scanSeed);
+    }
+
     private static boolean isStandingOnFullFace(Level level, Player player) {
         if (!player.onGround()) {
             return false;
@@ -373,7 +375,11 @@ public class KnifeItem extends SwordItem {
         Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
         RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
-            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_unsealed_or_too_big"), true);
+            if (scanSeedBlockedByExistingFountain(fountainPos, otherAnchors, otherRoomCells)) {
+                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
+            } else {
+                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_unsealed_or_too_big"), true);
+            }
             resetMakingState(tag);
             return;
         }
@@ -412,7 +418,7 @@ public class KnifeItem extends SwordItem {
             return;
         }
 
-        if (DarkFountainCapability.roomIntersectsActiveFountain(lightCap, roomResult.getPositions())) {
+        if (DarkFountainCapability.roomContainsActiveFountainAnchor(lightCap, roomResult.getPositions())) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
             resetMakingState(tag);
             return;

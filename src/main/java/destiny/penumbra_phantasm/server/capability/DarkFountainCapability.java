@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.capability;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
-import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -23,18 +22,14 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
     public HashMap<BlockPos, DarkFountain> darkFountains = new HashMap<>();
     private final List<PersistentDarkWorldSite> persistentDarkWorldSites = new ArrayList<>();
 
-    public static boolean roomIntersectsActiveFountain(DarkFountainCapability cap, Iterable<BlockPos> candidateRoom) {
+    public static boolean roomContainsActiveFountainAnchor(DarkFountainCapability cap, Iterable<BlockPos> candidateRoom) {
+        HashSet<Long> roomCells = new HashSet<>();
+        for (BlockPos p : candidateRoom) {
+            roomCells.add(p.asLong());
+        }
         for (DarkFountain fountain : cap.darkFountains.values()) {
-            HashSet<Long> occupied = new HashSet<>();
-            for (DarkRoom room : fountain.rooms) {
-                for (BlockPos p : room.getPositions()) {
-                    occupied.add(p.asLong());
-                }
-            }
-            for (BlockPos p : candidateRoom) {
-                if (occupied.contains(p.asLong())) {
-                    return true;
-                }
+            if (roomCells.contains(fountain.getFountainPos().asLong())) {
+                return true;
             }
         }
         return false;
