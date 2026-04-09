@@ -104,7 +104,7 @@ public class RoomScanner {
 
         Map<BlockPos, Direction> outsideDoors = new HashMap<>();
         Map<BlockPos, ResourceKey<Level>> sharedDoors = new HashMap<>();
-        classifyShellDoors(level, positions, doorPositions, otherFountainRoomToDarkWorld, outsideDoors, sharedDoors);
+        classifyShellDoors(level, positions, doorPositions, otherFountainRoomToDarkWorld, outsideDoors, sharedDoors, maxVolume, blockingPositions);
 
         return RoomScanResult.success(positions, keyBlockPositions, doorPositions, outsideDoors, sharedDoors);
     }
@@ -133,7 +133,17 @@ public class RoomScanner {
         return p;
     }
 
-    private static void classifyShellDoors(Level level, List<BlockPos> positions, Set<BlockPos> doorPositions, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors) {
+    private static boolean exteriorPocketExceedsRoomBudget(Level level, BlockPos footBeyond, BlockState b0, Set<BlockPos> posSet, int maxVolume, @Nullable Set<BlockPos> scanBlockingAnchors, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld) {
+        BlockPos seed = isOpenAir(b0) ? footBeyond : footBeyond.above();
+        HashSet<BlockPos> exteriorBlock = new HashSet<>(posSet);
+        if (scanBlockingAnchors != null) {
+            exteriorBlock.addAll(scanBlockingAnchors);
+        }
+        RoomScanResult side = scan(level, seed, maxVolume, false, false, exteriorBlock, otherFountainRoomToDarkWorld);
+        return !side.isValid();
+    }
+
+    private static void classifyShellDoors(Level level, List<BlockPos> positions, Set<BlockPos> doorPositions, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors, int maxVolume, @Nullable Set<BlockPos> scanBlockingAnchors) {
         Set<BlockPos> posSet = new HashSet<>(positions);
         Map<BlockPos, ResourceKey<Level>> ownerMap = otherFountainRoomToDarkWorld != null ? otherFountainRoomToDarkWorld : Collections.emptyMap();
 
@@ -159,7 +169,9 @@ public class RoomScanner {
             BlockState b0 = level.getBlockState(footBeyond);
             BlockState b1 = level.getBlockState(footBeyondUp);
             if (isOpenAir(b0) || isOpenAir(b1)) {
-                outsideDoors.put(lower, dirFromInterior);
+                if (exteriorPocketExceedsRoomBudget(level, footBeyond, b0, posSet, maxVolume, scanBlockingAnchors, otherFountainRoomToDarkWorld)) {
+                    outsideDoors.put(lower, dirFromInterior);
+                }
             }
         };
 
