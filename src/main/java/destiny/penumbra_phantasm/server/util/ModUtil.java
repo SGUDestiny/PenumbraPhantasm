@@ -1,10 +1,13 @@
 package destiny.penumbra_phantasm.server.util;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -14,6 +17,18 @@ import net.minecraft.world.level.Level;
 import java.util.stream.Stream;
 
 public class ModUtil {
+    public static double worldSurfaceYAtXZ(ServerLevel level, double x, double z, Heightmap.Types heightmapType) {
+        ChunkPos chunk = new ChunkPos(BlockPos.containing(x, level.getMaxBuildHeight(), z));
+        level.setChunkForced(chunk.x, chunk.z, true);
+        BlockPos heightmapPos = level.getHeightmapPos(heightmapType, BlockPos.containing(x, level.getMaxBuildHeight(), z));
+        level.setChunkForced(chunk.x, chunk.z, false);
+        return heightmapPos.getY() + 1;
+    }
+
+    public static double worldSurfaceYAtXZ(ServerLevel level, double x, double z) {
+        return worldSurfaceYAtXZ(level, x, z, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES);
+    }
+
     public static Entity teleportEntity(Entity entity, ServerLevel destinationLevel, Vec3 targetPos) {
         return entity.changeDimension(destinationLevel, new DarkFountain.DarkFountainTeleporter(targetPos, entity.getDeltaMovement(), entity.getYRot(), entity.getXRot()));
     }

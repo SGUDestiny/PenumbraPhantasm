@@ -15,7 +15,6 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.portal.PortalInfo;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -425,20 +423,30 @@ public class DarkFountain {
         ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
         if (destinationLevel == null) return;
 
+        Vec3 lightAnchor = Vec3.atBottomCenterOf(this.fountainPos);
+
         for (DarkRoom room : rooms) {
             if (room.isDissipating()) continue;
 
             Set<BlockPos> posSet = new HashSet<>(room.getPositions());
-            Iterator<Map.Entry<UUID, Integer>> iterator = room.getTransportTickers().entrySet().iterator();
+            List<UUID> completedThisTick = new ArrayList<>();
+            List<Map.Entry<UUID, Integer>> snapshot = new ArrayList<>(room.getTransportTickers().entrySet());
 
-            while (iterator.hasNext()) {
-                Map.Entry<UUID, Integer> entry = iterator.next();
-                UUID entityId = entry.getKey();
-                int ticker = entry.getValue();
+            for (Map.Entry<UUID, Integer> snapshotEntry : snapshot) {
+                UUID entityId = snapshotEntry.getKey();
+                Integer boxedTicker = room.getTransportTickers().get(entityId);
+                if (boxedTicker == null) {
+                    continue;
+                }
+                int ticker = boxedTicker;
 
                 Entity entity = level.getEntity(entityId);
                 if (entity == null) {
-                    iterator.remove();
+                    room.getTransportTickers().remove(entityId);
+                    continue;
+                }
+                if (!(entity instanceof ServerPlayer serverPlayer)) {
+                    room.getTransportTickers().remove(entityId);
                     continue;
                 }
 
@@ -446,51 +454,59 @@ public class DarkFountain {
 
                 if (inRoom) {
                     ticker = Math.min(ticker + 1, TRANSPORT_TICKER_DURATION);
-                    entry.setValue(ticker);
+                    room.getTransportTickers().put(entityId, ticker);
 
-                    if (entity instanceof ServerPlayer serverPlayer) {
-                        int finalTicker = ticker;
-
-                        serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = finalTicker);
-                    }
+                    int finalTicker = ticker;
+                    serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = finalTicker);
 
                     if (ticker == TRANSPORT_TICKER_DURATION) {
-                        destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                            DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
-
-                            if (destinationFountain != null) {
-                                Vec3 target = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainContactTeleportMinRadius, ServerConfig.fountainContactTeleportMaxRadius);
-
-                                if (entity instanceof ServerPlayer player) {
-                                    teleportPlayer(player, destinationLevel, target).getUUID();
-                                } else {
-                                    ModUtil.teleportEntity(entity, destinationLevel, target);
-                                }
-                            }
-                        });
-                        iterator.remove();
-                        continue;
+                        completedThisTick.add(entityId);
                     }
                 } else {
                     ticker = Math.max(ticker - 1, 0);
-                    entry.setValue(ticker);
-
-                    if (entity instanceof ServerPlayer serverPlayer) {
-                        int finalTicker = ticker;
-
-                        serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = finalTicker);
-                    }
-
+                    int finalTicker = ticker;
+                    serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.darknessOverlayTicker = finalTicker);
                     if (ticker == 0) {
-                        iterator.remove();
-                        continue;
+                        room.getTransportTickers().remove(entityId);
+                    } else {
+                        room.getTransportTickers().put(entityId, ticker);
                     }
                 }
+            }
 
-                if (entity instanceof ServerPlayer player) {
-                    float progress = (float) ticker / TRANSPORT_TICKER_DURATION;
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(progress));
+            if (!completedThisTick.isEmpty()) {
+                DarkFountain destinationFountain = destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
+                        .map(cap -> cap.darkFountains.get(destinationPos))
+                        .orElse(null);
+                if (destinationFountain != null) {
+                    Vec3 base = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainContactTeleportMinRadius, ServerConfig.fountainContactTeleportMaxRadius);
+                    for (UUID completedId : completedThisTick) {
+                        ServerPlayer player = level.getServer().getPlayerList().getPlayer(completedId);
+                        if (player == null || !player.level().dimension().equals(level.dimension())) {
+                            room.getTransportTickers().remove(completedId);
+                            continue;
+                        }
+                        double tx = base.x + (player.getX() - lightAnchor.x);
+                        double tz = base.z + (player.getZ() - lightAnchor.z);
+                        double ty = ModUtil.worldSurfaceYAtXZ(destinationLevel, tx, tz);
+                        Vec3 target = new Vec3(tx, ty, tz);
+                        teleportPlayer(player, destinationLevel, target, player.getYRot(), player.getXRot());
+                        room.getTransportTickers().remove(completedId);
+                    }
+                } else {
+                    for (UUID completedId : completedThisTick) {
+                        room.getTransportTickers().remove(completedId);
+                    }
                 }
+            }
+
+            for (Map.Entry<UUID, Integer> entry : room.getTransportTickers().entrySet()) {
+                Entity entity = level.getEntity(entry.getKey());
+                if (!(entity instanceof ServerPlayer player)) {
+                    continue;
+                }
+                float progress = (float) entry.getValue() / TRANSPORT_TICKER_DURATION;
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(progress));
             }
 
             room.checkActivation();
@@ -740,7 +756,7 @@ public class DarkFountain {
 
         AABB roomBox = new AABB(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
         Set<BlockPos> posSet = new HashSet<>(room.getPositions());
-        for (Entity entity : level.getEntitiesOfClass(Entity.class, roomBox)) {
+        for (ServerPlayer entity : level.getEntitiesOfClass(ServerPlayer.class, roomBox)) {
             if (posSet.contains(entity.blockPosition()) || posSet.contains(entity.blockPosition().above())) {
                 room.getTransportTickers().put(entity.getUUID(), 0);
             }
@@ -767,9 +783,9 @@ public class DarkFountain {
             }
             AABB roomBox = new AABB(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
 
-            for (Entity entity : level.getEntitiesOfClass(Entity.class, roomBox)) {
-                if (this.teleportedEntities.contains(entity.getUUID())) continue;
-                if (!posSet.contains(entity.blockPosition()) && !posSet.contains(entity.blockPosition().above())) continue;
+            for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, roomBox)) {
+                if (this.teleportedEntities.contains(player.getUUID())) continue;
+                if (!posSet.contains(player.blockPosition()) && !posSet.contains(player.blockPosition().above())) continue;
 
                 destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                     DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
@@ -777,20 +793,15 @@ public class DarkFountain {
                     if (destinationFountain != null) {
                         Vec3 target = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainContactTeleportMinRadius, ServerConfig.fountainContactTeleportMaxRadius);
 
-                        if (entity instanceof ServerPlayer player) {
-                            float yaw = (float) Math.toDegrees(Math.atan2(-((destinationPos.getX() + 0.5) - target.x), (destinationPos.getZ() + 0.5) - target.z));
+                        float yaw = (float) Math.toDegrees(Math.atan2(-((destinationPos.getX() + 0.5) - target.x), (destinationPos.getZ() + 0.5) - target.z));
 
-                            level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
+                        level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
 
-                            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
-                            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension));
-                        } else {
-                            Entity teleported = ModUtil.teleportEntity(entity, destinationLevel, target);
-                            if (teleported != null) destinationFountain.teleportedEntities.add(teleported.getUUID());
-                        }
+                        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
+                        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension));
                     }
                 });
-                this.teleportedEntities.add(entity.getUUID());
+                this.teleportedEntities.add(player.getUUID());
             }
         }
         pruneLightFountainTeleportedEntities(level);
@@ -959,22 +970,12 @@ public class DarkFountain {
         double distance = teleportMinRadius + destinationLevel.getRandom().nextDouble() * (teleportMaxRadius - teleportMinRadius);
         double x = destinationPos.getX() + 0.5 + Math.cos(angle) * distance;
         double z = destinationPos.getZ() + 0.5 + Math.sin(angle) * distance;
-
-        ChunkPos chunk = new ChunkPos(BlockPos.containing(x, destinationPos.getY(), z));
-
-        destinationLevel.setChunkForced(chunk.x, chunk.z, true);
-        BlockPos heightmapPos = destinationLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BlockPos.containing(x, destinationLevel.getMaxBuildHeight(), z));
-        destinationLevel.setChunkForced(chunk.x, chunk.z, false);
-
-        return new Vec3(x, heightmapPos.getY() + 1, z);
+        double y = ModUtil.worldSurfaceYAtXZ(destinationLevel, x, z);
+        return new Vec3(x, y, z);
     }
 
-    public Entity teleportPlayer(ServerPlayer player, ServerLevel destinationLevel, Vec3 targetPos) {
-        double dx = (destinationPos.getX() + 0.5) - targetPos.x;
-        double dz = (destinationPos.getZ() + 0.5) - targetPos.z;
-        float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
-
-        player.teleportTo(destinationLevel, targetPos.x, targetPos.y, targetPos.z, yaw, 0f);
+    public Entity teleportPlayer(ServerPlayer player, ServerLevel destinationLevel, Vec3 targetPos, float yRot, float xRot) {
+        player.teleportTo(destinationLevel, targetPos.x, targetPos.y, targetPos.z, yRot, xRot);
         player.connection.send(new ClientboundSetEntityMotionPacket(player));
 
         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));

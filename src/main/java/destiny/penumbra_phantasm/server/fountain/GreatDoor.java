@@ -20,7 +20,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
@@ -269,20 +268,16 @@ public class GreatDoor {
             float yaw = peer.direction.toYRot();
             Vec3 destVec = spawnCenterInFrontOfGreatDoor(peer.greatDoorPos, peer.direction);
             BlockPos destDarkAnchor = DarkWorldUtil.findDarkFountainAnchor(destinationLevel);
-            for (Entity entity : greatDoorLevel.getEntitiesOfClass(Player.class, volumeBox)) {
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    if (serverPlayer.isSpectator()) {
-                        continue;
-                    }
-                    greatDoorLevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
-                    serverPlayer.teleportTo(destinationLevel, destVec.x, destVec.y, destVec.z, yaw, 0f);
-                    serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundTransportTickerPacket(0f));
-                    if (destDarkAnchor != null) {
-                        addToDarkFountainTeleported(destinationLevel, destDarkAnchor, serverPlayer.getUUID());
-                    }
-                } else {
-                    ModUtil.teleportEntity(entity, destinationLevel, destVec);
+            for (ServerPlayer serverPlayer : greatDoorLevel.getEntitiesOfClass(ServerPlayer.class, volumeBox)) {
+                if (serverPlayer.isSpectator()) {
+                    continue;
+                }
+                greatDoorLevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
+                serverPlayer.teleportTo(destinationLevel, destVec.x, destVec.y, destVec.z, yaw, 0f);
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundTransportTickerPacket(0f));
+                if (destDarkAnchor != null) {
+                    addToDarkFountainTeleported(destinationLevel, destDarkAnchor, serverPlayer.getUUID());
                 }
             }
         } else {
@@ -292,20 +287,16 @@ public class GreatDoor {
             Vec3 destVec = lightDoorPos.getCenter();
             float yaw = lightDoorExitDirection.toYRot();
             BlockPos darkAnchor = DarkWorldUtil.findDarkFountainAnchor(greatDoorLevel);
-            for (Entity entity : greatDoorLevel.getEntitiesOfClass(Player.class, volumeBox)) {
-                if (entity instanceof ServerPlayer serverPlayer) {
-                    if (serverPlayer.isSpectator()) {
-                        continue;
-                    }
-                    greatDoorLevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
-                    serverPlayer.teleportTo(destinationLevel, destVec.x, destVec.y, destVec.z, yaw, 0f);
-                    serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundTransportTickerPacket(0f));
-                    if (darkAnchor != null) {
-                        addPlayerToPairedLightFountainTeleported(destinationLevel, greatDoorLevel.dimension(), darkAnchor, serverPlayer.getUUID());
-                    }
-                } else {
-                    ModUtil.teleportEntity(entity, destinationLevel, destVec);
+            for (ServerPlayer serverPlayer : greatDoorLevel.getEntitiesOfClass(ServerPlayer.class, volumeBox)) {
+                if (serverPlayer.isSpectator()) {
+                    continue;
+                }
+                greatDoorLevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
+                serverPlayer.teleportTo(destinationLevel, destVec.x, destVec.y, destVec.z, yaw, 0f);
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundTransportTickerPacket(0f));
+                if (darkAnchor != null) {
+                    addPlayerToPairedLightFountainTeleported(destinationLevel, greatDoorLevel.dimension(), darkAnchor, serverPlayer.getUUID());
                 }
             }
         }

@@ -495,7 +495,7 @@ public class KnifeItem extends SwordItem {
         lightFountain.addRoom(fountainRoom);
 
         //For every entity in fountain room, add to fountain's transport tickers
-        for (Entity ent : level.getEntitiesOfClass(Entity.class, roomBox)) {
+        for (ServerPlayer ent : level.getEntitiesOfClass(ServerPlayer.class, roomBox)) {
             if (positionSet.contains(ent.blockPosition()) || positionSet.contains(ent.blockPosition().above())) {
                 fountainRoom.getTransportTickers().put(ent.getUUID(), 0);
             }
