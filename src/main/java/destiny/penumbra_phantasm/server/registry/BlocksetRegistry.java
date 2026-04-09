@@ -165,9 +165,9 @@ public final class BlocksetRegistry {
             ),
 
             new StoneBlockset(
-                    "polished_rosegold",
-                    "polished_rosegold",
-                    "rosegold/polished",
+                    "rosegold",
+                    "rosegold",
+                    "rosegold",
                     "",
                     1,
                     false,

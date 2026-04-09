@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:ore",
+  "config": {
+    "discard_chance_on_air_exposure": 0,
+    "size": 9,
+    "targets": [
+      {
+        "state": {
+          "Name": "penumbra_phantasm:umbrastone_rosegold_ore"
+        },
+        "target": {
+          "predicate_type": "minecraft:tag_match",
+          "tag": "penumbra_phantasm:dark_world_ore_replaceables"
+        }
+      }
+    ]
+  }
+}

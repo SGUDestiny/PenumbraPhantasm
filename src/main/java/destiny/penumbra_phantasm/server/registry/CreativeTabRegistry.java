@@ -35,15 +35,20 @@ public class CreativeTabRegistry {
 
                 output.accept(ItemRegistry.ITEM_MUSIC_MEDIUM_THE_HOLY.get());
 
+                output.accept(ItemRegistry.RAW_ROSEGOLD.get());
+                output.accept(ItemRegistry.ROSEGOLD_INGOT.get());
+
+                output.accept(BlockRegistry.UMBRASTONE_ROSEGOLD_ORE.get());
+
                 output.accept(BlockRegistry.GREAT_DOOR_SPAWNER.get());
                 output.accept(BlockRegistry.ROSEGOLD_PILLAR.get());
 
-                output.accept(BlockRegistry.POLISHED_ROSEGOLD.get());
-                output.accept(BlockRegistry.POLISHED_ROSEGOLD_STAIRS.get());
-                output.accept(BlockRegistry.POLISHED_ROSEGOLD_SLAB.get());
-                output.accept(BlockRegistry.POLISHED_ROSEGOLD_WALL.get());
-                output.accept(BlockRegistry.POLISHED_ROSEGOLD_BUTTON.get());
-                output.accept(BlockRegistry.POLISHED_ROSEGOLD_PRESSURE_PLATE.get());
+                output.accept(BlockRegistry.ROSEGOLD_BLOCK.get());
+                output.accept(BlockRegistry.ROSEGOLD_STAIRS.get());
+                output.accept(BlockRegistry.ROSEGOLD_SLAB.get());
+                output.accept(BlockRegistry.ROSEGOLD_WALL.get());
+                output.accept(BlockRegistry.ROSEGOLD_BUTTON.get());
+                output.accept(BlockRegistry.ROSEGOLD_PRESSURE_PLATE.get());
 
                 output.accept(BlockRegistry.ROSEGOLD_BRICKS.get());
                 output.accept(BlockRegistry.ROSEGOLD_BRICK_STAIRS.get());

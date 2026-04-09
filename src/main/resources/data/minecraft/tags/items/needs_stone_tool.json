@@ -28,17 +28,18 @@
     "penumbra_phantasm:chiseled_cliffrock",
     "penumbra_phantasm:cliffrock_pillar",
     "penumbra_phantasm:cliffrock_path",
-    "penumbra_phantasm:polished_rosegold",
-    "penumbra_phantasm:polished_rosegold_stairs",
-    "penumbra_phantasm:polished_rosegold_slab",
-    "penumbra_phantasm:polished_rosegold_wall",
-    "penumbra_phantasm:polished_rosegold_button",
-    "penumbra_phantasm:polished_rosegold_pressure_plate",
     "penumbra_phantasm:rosegold_bricks",
     "penumbra_phantasm:rosegold_brick_stairs",
     "penumbra_phantasm:rosegold_brick_slab",
     "penumbra_phantasm:rosegold_brick_wall",
     "penumbra_phantasm:rosegold_brick_button",
-    "penumbra_phantasm:rosegold_brick_pressure_plate"
+    "penumbra_phantasm:rosegold_brick_pressure_plate",
+    "penumbra_phantasm:rosegold_block",
+    "penumbra_phantasm:rosegold_stairs",
+    "penumbra_phantasm:rosegold_slab",
+    "penumbra_phantasm:rosegold_wall",
+    "penumbra_phantasm:rosegold_button",
+    "penumbra_phantasm:rosegold_pressure_plate",
+    "penumbra_phantasm:umbrastone_rosegold_ore"
   ]
 }

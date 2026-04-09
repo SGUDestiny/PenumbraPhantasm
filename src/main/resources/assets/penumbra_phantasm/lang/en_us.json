@@ -18,6 +18,9 @@
 
   "item.penumbra_phantasm.dark_candy_stick": "Dark Candy Stick",
 
+  "item.penumbra_phantasm.raw_rosegold": "Raw Rosegold",
+  "item.penumbra_phantasm.rosegold_ingot": "Rosegold Ingot",
+
   "item.penumbra_phantasm.dark_candy_sword": "Dark Candy Sword",
   "item.penumbra_phantasm.dark_candy_pickaxe": "Dark Candy Pickaxe",
   "item.penumbra_phantasm.dark_candy_axe": "Dark Candy Axe",
@@ -254,7 +257,25 @@
 
   "block.penumbra_phantasm.hearth": "Hearth",
 
+  "block.penumbra_phantasm.umbrastone_rosegold_ore": "Umbrastone Rosegold Ore",
+
   "block.penumbra_phantasm.great_door_spawner": "Great Door Spawner",
+  "block.penumbra_phantasm.rosegold_pillar": "Rosegold Pillar",
+  "block.penumbra_phantasm.chiseled_rosegold": "Chiseled Rosegold",
+
+  "block.penumbra_phantasm.rosegold_block": "Rosegold Block",
+  "block.penumbra_phantasm.rosegold_stairs": "Rosegold Stairs",
+  "block.penumbra_phantasm.rosegold_slab": "Rosegold Slab",
+  "block.penumbra_phantasm.rosegold_wall": "Rosegold Wall",
+  "block.penumbra_phantasm.rosegold_button": "Rosegold Button",
+  "block.penumbra_phantasm.rosegold_pressure_plate": "Rosegold Pressure Plate",
+
+  "block.penumbra_phantasm.rosegold_bricks": "Rosegold Bricks",
+  "block.penumbra_phantasm.rosegold_brick_stairs": "Rosegold Brick Stairs",
+  "block.penumbra_phantasm.rosegold_brick_slab": "Rosegold Brick Slab",
+  "block.penumbra_phantasm.rosegold_brick_wall": "Rosegold Brick Wall",
+  "block.penumbra_phantasm.rosegold_brick_button": "Rosegold Brick Button",
+  "block.penumbra_phantasm.rosegold_brick_pressure_plate": "Rosegold Brick Pressure Plate",
 
   "itemGroup.penumbra_phantasm.main": "PENUMBRA PHANTASM",
   "itemGroup.penumbra_phantasm.card_kingdom": "CARD KINGDOM",

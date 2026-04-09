@@ -332,18 +332,21 @@ public class BlockRegistry {
 
 
 
+    //Rosegold ores
+    public static final RegistryObject<Block> UMBRASTONE_ROSEGOLD_ORE = registerBlock("umbrastone_rosegold_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.GOLD_ORE).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().sound(SoundType.STONE)));
+
     //Rosegold misc
     public static final RegistryObject<Block> GREAT_DOOR_SPAWNER = registerBlock("great_door_spawner",
             () -> new GreatDoorSpawnerBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)));
     public static final RegistryObject<Block> ROSEGOLD_PILLAR = registerBlock("rosegold_pillar", () -> new RotatedPillarBlock(ROSEGOLD_PROPERTIES));
 
     //Polished rosegold
-    public static final RegistryObject<Block> POLISHED_ROSEGOLD = registerBlock("polished_rosegold", () -> new Block(ROSEGOLD_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_ROSEGOLD_STAIRS = registerBlock("polished_rosegold_stairs", () -> new StairBlock(BlockRegistry.POLISHED_ROSEGOLD.get().defaultBlockState(), ROSEGOLD_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_ROSEGOLD_SLAB = registerBlock("polished_rosegold_slab", () -> new SlabBlock(ROSEGOLD_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_ROSEGOLD_WALL = registerBlock("polished_rosegold_wall", () -> new WallBlock(ROSEGOLD_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_ROSEGOLD_BUTTON = registerBlock("polished_rosegold_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> POLISHED_ROSEGOLD_PRESSURE_PLATE = registerBlock("polished_rosegold_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET));
+    public static final RegistryObject<Block> ROSEGOLD_BLOCK = registerBlock("rosegold_block", () -> new Block(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_STAIRS = registerBlock("rosegold_stairs", () -> new StairBlock(BlockRegistry.ROSEGOLD_BLOCK.get().defaultBlockState(), ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_SLAB = registerBlock("rosegold_slab", () -> new SlabBlock(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_WALL = registerBlock("rosegold_wall", () -> new WallBlock(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_BUTTON = registerBlock("rosegold_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> ROSEGOLD_PRESSURE_PLATE = registerBlock("rosegold_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET));
 
     //Rosegold bricks
     public static final RegistryObject<Block> ROSEGOLD_BRICKS = registerBlock("rosegold_bricks", () -> new Block(ROSEGOLD_PROPERTIES));

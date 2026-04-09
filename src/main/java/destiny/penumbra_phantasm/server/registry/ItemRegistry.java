@@ -57,6 +57,11 @@ public class ItemRegistry {
     public static final RegistryObject<Item> DARK_CANDY_STICK = ITEMS.register("dark_candy_stick",
             () -> new Item(new Item.Properties()));
 
+    public static final RegistryObject<Item> RAW_ROSEGOLD = ITEMS.register("raw_rosegold",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ROSEGOLD_INGOT = ITEMS.register("rosegold_ingot",
+            () -> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> DARk_CANDY_SWORD = ITEMS.register("dark_candy_sword",
             () -> new PickaxeItem(Tiers.WOOD, 0, 0, new Item.Properties()));
     public static final RegistryObject<Item> DARk_CANDY_AXE = ITEMS.register("dark_candy_axe",
