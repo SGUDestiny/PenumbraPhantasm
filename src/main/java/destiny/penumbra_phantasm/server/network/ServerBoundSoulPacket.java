@@ -1,9 +1,13 @@
 package destiny.penumbra_phantasm.server.network;
 
+import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.PacketDistributor;
 
 import java.util.function.Supplier;
 
@@ -34,10 +38,9 @@ public class ServerBoundSoulPacket
 			if(player == null)
 				return;
 
-			player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap ->
-				{
-					cap.soulType = this.soulType;
-				});
+			int clamped = Mth.clamp(this.soulType, 1, 7);
+			player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> cap.soulType = clamped);
+			PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundSoulBreakPacket(false, clamped));
 		});
 		return true;
 	}

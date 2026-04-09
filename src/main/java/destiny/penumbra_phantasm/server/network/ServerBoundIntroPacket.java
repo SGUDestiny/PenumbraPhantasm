@@ -1,7 +1,5 @@
 package destiny.penumbra_phantasm.server.network;
 
-import destiny.penumbra_phantasm.server.fountain.DarkFountain;
-import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -49,7 +47,19 @@ public class ServerBoundIntroPacket
 			if(level == null)
 				return;
 
-			player.teleportTo(level, destinationPos.getX(), destinationPos.getY(), destinationPos.getZ(), (float)Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270), player.getXRot());
+			double tx = destinationPos.getX();
+			double ty = destinationPos.getY();
+			double tz = destinationPos.getZ();
+			float yaw = (float) Math.toDegrees(Math.atan2((float) player.getLookAngle().x(), (float) player.getLookAngle().z()) + 270);
+
+			if (!level.players().contains(player)) {
+				player.revive();
+				player.moveTo(tx, ty, tz, yaw, player.getXRot());
+				player.setServerLevel(level);
+				level.addDuringCommandTeleport(player);
+			}
+
+			player.teleportTo(level, tx, ty, tz, yaw, player.getXRot());
 			player.connection.send(new ClientboundSetEntityMotionPacket(player));
 		});
 		return true;
