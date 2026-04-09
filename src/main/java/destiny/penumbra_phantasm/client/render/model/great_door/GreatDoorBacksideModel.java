@@ -24,7 +24,7 @@ public class GreatDoorBacksideModel extends EntityModel<Entity> {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create().texOffs(96, 320).addBox(-5.0F, -144.0F, 31.9F, 96.0F, 144.0F, 0.0F, new CubeDeformation(0.01F)), PartPose.offset(-91.0F, 0.0F, 0.0F));
+        PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create().texOffs(96, 320).addBox(-5.0F, -144.0F, 31.0F, 96.0F, 144.0F, 0.0F, new CubeDeformation(0.01F)), PartPose.offset(-91.0F, 0.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 512, 512);
     }
