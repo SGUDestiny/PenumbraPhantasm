@@ -138,7 +138,7 @@ public class GreatDoor {
     }
 
     public static boolean toggleLinkedLightDoor(ServerLevel darkLevel, GreatDoor door, @Nullable Entity causedBy, boolean playLightDoorSoundsFromGreatDoorUse) {
-        if (door.lightDoorPos == null || door.lightDoorDimension == null) {
+        if (door.lightDoorPos == null || door.lightDoorDimension == null || door.lightDoorExitDirection == null) {
             return false;
         }
 
@@ -158,10 +158,14 @@ public class GreatDoor {
             return false;
         }
 
-        boolean currentOpen = DarknessBlock.getDoorOpenState(lightLevel, interactPos, doorState);
+        Direction fromDoorToRoom = door.lightDoorExitDirection.getOpposite();
+        boolean currentVisual = DarknessBlock.isDoorVisuallyOpenFromSide(lightLevel, interactPos, doorState, fromDoorToRoom);
+        boolean targetVisual = !currentVisual;
+        Direction facing = doorState.getValue(DoorBlock.FACING);
+        boolean parallel = facing.getAxis() == fromDoorToRoom.getAxis();
+        boolean targetPhysical = parallel ? targetVisual : !targetVisual;
         boolean openBefore = doorState.getValue(DoorBlock.OPEN);
-        boolean targetOpen = !currentOpen;
-        doorBlock.setOpen(causedBy, lightLevel, doorState, interactPos, targetOpen);
+        doorBlock.setOpen(causedBy, lightLevel, doorState, interactPos, targetPhysical);
         BlockState afterState = lightLevel.getBlockState(interactPos);
         boolean openAfter = afterState.getBlock() instanceof DoorBlock && afterState.getValue(DoorBlock.OPEN);
         if (playLightDoorSoundsFromGreatDoorUse && openBefore != openAfter) {
