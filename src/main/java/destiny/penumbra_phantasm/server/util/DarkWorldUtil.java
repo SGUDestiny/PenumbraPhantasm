@@ -538,11 +538,20 @@ public class DarkWorldUtil
 				.orElse(null);
 	}
 
+	public static boolean levelHasDarkFountain(ServerLevel level) {
+		return level.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
+				.map(cap -> !cap.darkFountains.isEmpty())
+				.orElse(false);
+	}
+
 	@Nullable
-	private static BlockPos findDarkFountainAnchor(ServerLevel darkLevel) {
+	public static BlockPos findDarkFountainAnchor(ServerLevel darkLevel) {
+		if (!levelHasDarkFountain(darkLevel)) {
+			return null;
+		}
 		return darkLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
 				.resolve()
-				.map(cap -> cap.darkFountains.isEmpty() ? null : cap.darkFountains.keySet().iterator().next())
+				.map(cap -> cap.darkFountains.keySet().iterator().next())
 				.orElse(null);
 	}
 

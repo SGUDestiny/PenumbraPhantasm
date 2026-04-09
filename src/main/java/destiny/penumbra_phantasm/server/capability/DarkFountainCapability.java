@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.capability;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -13,7 +14,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.*;
 
@@ -38,11 +38,7 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
     }
 
     public static boolean isDarkWorldAvailableForNewFountain(ServerLevel darkLevel) {
-        LazyOptional<DarkFountainCapability> opt = darkLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
-        if (!opt.isPresent() || opt.resolve().isEmpty()) {
-            return true;
-        }
-        return opt.resolve().get().darkFountains.isEmpty();
+        return !DarkWorldUtil.levelHasDarkFountain(darkLevel);
     }
 
     public Optional<PersistentDarkWorldSite> findMatchingPersistentSite(MinecraftServer server, Iterable<BlockPos> roomPositions, ResourceLocation typeId) {

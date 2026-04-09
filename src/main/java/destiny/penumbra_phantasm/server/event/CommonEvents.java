@@ -52,9 +52,7 @@ public class CommonEvents {
         if (!DarkWorldUtil.isDarkWorld(level)) {
             return;
         }
-        boolean noFountain = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
-                .map(cap -> cap.darkFountains.isEmpty())
-                .orElse(true);
+        boolean noFountain = !DarkWorldUtil.levelHasDarkFountain(level);
         if (!noFountain) {
             return;
         }

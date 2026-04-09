@@ -169,6 +169,35 @@ public class GreatDoor {
         return true;
     }
 
+    public static void forceCloseExclusiveLinkedLightDoor(ServerLevel darkLevel, GreatDoor door) {
+        if (door.isDestinationDarkWorld || door.lightDoorPos == null || door.lightDoorDimension == null) {
+            return;
+        }
+        ServerLevel lightLevel = darkLevel.getServer().getLevel(door.lightDoorDimension);
+        if (lightLevel == null) {
+            return;
+        }
+        BlockPos interactPos = door.lightDoorPos;
+        BlockState doorState = lightLevel.getBlockState(interactPos);
+        if (doorState.getBlock() instanceof DoorBlock && doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
+            interactPos = door.lightDoorPos.below();
+            doorState = lightLevel.getBlockState(interactPos);
+        }
+        if (!(doorState.getBlock() instanceof DoorBlock doorBlock)) {
+            return;
+        }
+        boolean openBefore = doorState.getValue(DoorBlock.OPEN);
+        if (!openBefore) {
+            door.refreshOpenFromLinkedLightDoor(darkLevel);
+            return;
+        }
+        doorBlock.setOpen(null, lightLevel, doorState, interactPos, false);
+        BlockSetType setType = doorBlock.type();
+        float pitch = lightLevel.getRandom().nextFloat() * 0.1F + 0.9F;
+        lightLevel.playSound(null, interactPos, setType.doorClose(), SoundSource.BLOCKS, 1.0F, pitch);
+        door.refreshOpenFromLinkedLightDoor(darkLevel);
+    }
+
     public void broadcastSync(ServerLevel darkLevel) {
         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> darkLevel.getChunkAt(greatDoorPos)), new ClientBoundSingleGreatDoorPacket(this));
     }
@@ -179,6 +208,12 @@ public class GreatDoor {
         }
 
         if (level instanceof ServerLevel serverLevel) {
+            boolean localFountain = DarkWorldUtil.levelHasDarkFountain(serverLevel);
+            if (!localFountain && !isDestinationDarkWorld
+                    && lightDoorPos != null && lightDoorDimension != null && lightDoorExitDirection != null) {
+                forceCloseExclusiveLinkedLightDoor(serverLevel, this);
+            }
+
             boolean openBefore = isOpen;
             refreshOpenFromLinkedLightDoor(serverLevel);
             if (openBefore != isOpen) {
@@ -197,16 +232,12 @@ public class GreatDoor {
                 }
             }
 
-            if (isOpen && teleportDestination != null) {
-                tickVolumeTeleportation(serverLevel, teleportDestination);
+            boolean canTeleport = localFountain;
+            if (canTeleport && isDestinationDarkWorld && teleportDestination != null) {
+                canTeleport = DarkWorldUtil.levelHasDarkFountain(teleportDestination);
             }
-
-            if (isUnlinkedForAutoBinding()) {
-                long gt = serverLevel.getGameTime();
-                long stagger = Math.floorMod(greatDoorPos.asLong(), 60L);
-                if (gt % 60L == stagger) {
-                    DarkWorldUtil.tryBindUnlinkedGreatDoor(serverLevel, this);
-                }
+            if (isOpen && teleportDestination != null && canTeleport) {
+                tickVolumeTeleportation(serverLevel, teleportDestination);
             }
         }
 
@@ -237,7 +268,7 @@ public class GreatDoor {
             }
             float yaw = peer.direction.toYRot();
             Vec3 destVec = spawnCenterInFrontOfGreatDoor(peer.greatDoorPos, peer.direction);
-            BlockPos destDarkAnchor = findDarkFountainAnchor(destinationLevel);
+            BlockPos destDarkAnchor = DarkWorldUtil.findDarkFountainAnchor(destinationLevel);
             for (Entity entity : greatDoorLevel.getEntitiesOfClass(Player.class, volumeBox)) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     if (serverPlayer.isSpectator()) {
@@ -260,7 +291,7 @@ public class GreatDoor {
             }
             Vec3 destVec = lightDoorPos.getCenter();
             float yaw = lightDoorExitDirection.toYRot();
-            BlockPos darkAnchor = findDarkFountainAnchor(greatDoorLevel);
+            BlockPos darkAnchor = DarkWorldUtil.findDarkFountainAnchor(greatDoorLevel);
             for (Entity entity : greatDoorLevel.getEntitiesOfClass(Player.class, volumeBox)) {
                 if (entity instanceof ServerPlayer serverPlayer) {
                     if (serverPlayer.isSpectator()) {
@@ -291,14 +322,6 @@ public class GreatDoor {
         return destWorld.getCapability(CapabilityRegistry.GREAT_DOOR)
                 .resolve()
                 .map(cap -> cap.greatDoors.get(destinationGreatDoorPos))
-                .orElse(null);
-    }
-
-    @Nullable
-    private static BlockPos findDarkFountainAnchor(ServerLevel darkLevel) {
-        return darkLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
-                .resolve()
-                .map(cap -> cap.darkFountains.isEmpty() ? null : cap.darkFountains.keySet().iterator().next())
                 .orElse(null);
     }
 

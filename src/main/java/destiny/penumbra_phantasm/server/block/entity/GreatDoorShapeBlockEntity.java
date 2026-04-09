@@ -5,7 +5,9 @@ import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
@@ -62,6 +64,25 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
         }
 
         if (!(level instanceof ServerLevel serverLevel)) {
+            return InteractionResult.FAIL;
+        }
+
+        if (greatDoor.isUnlinkedForAutoBinding()) {
+            DarkWorldUtil.tryBindUnlinkedGreatDoor(serverLevel, greatDoor);
+        }
+        if (!DarkWorldUtil.levelHasDarkFountain(serverLevel)) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.great_door_cant_open_no_fountain"), true);
+            return InteractionResult.FAIL;
+        }
+        if (greatDoor.isDestinationDarkWorld && greatDoor.destinationGreatDoorDimension != null) {
+            ServerLevel destLevel = serverLevel.getServer().getLevel(greatDoor.destinationGreatDoorDimension);
+            if (destLevel == null || !DarkWorldUtil.levelHasDarkFountain(destLevel)) {
+                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.great_door_cant_open_no_fountain_destination"), true);
+                return InteractionResult.FAIL;
+            }
+        }
+        if (greatDoor.lightDoorPos == null || greatDoor.lightDoorDimension == null) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.great_door_cant_open_no_light_door"), true);
             return InteractionResult.FAIL;
         }
 
