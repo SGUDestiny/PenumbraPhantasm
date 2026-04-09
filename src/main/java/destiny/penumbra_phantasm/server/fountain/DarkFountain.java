@@ -547,9 +547,13 @@ public class DarkFountain {
                         for (BlockPos p : room.getPositions()) {
                             map.put(p, destDim);
                         }
+                        for (BlockPos d : room.getDoorPositions()) {
+                            map.put(d, destDim);
+                        }
                     }
                 }
             }
+            DarkFountainCapability.mergePersistentSiteAnchorsIntoScanBlockMap(cap, map, excludeFountainAnchor);
         });
         return map;
     }

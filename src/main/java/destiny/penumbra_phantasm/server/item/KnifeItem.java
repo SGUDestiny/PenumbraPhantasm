@@ -127,9 +127,9 @@ public class KnifeItem extends SwordItem {
 
         //Cancel if player isn't inside a valid room
         ServerLevel serverLevel = (ServerLevel) level;
-        Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
-        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
         BlockPos scanSeed = player.getOnPos().above();
+        Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
+        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, scanSeed);
         RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, scanSeed, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
             if (scanSeedBlockedByExistingFountain(scanSeed, otherAnchors, otherRoomCells)) {
@@ -372,7 +372,7 @@ public class KnifeItem extends SwordItem {
             return;
         }
         Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
-        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
+        Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, fountainPos);
         RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
             if (scanSeedBlockedByExistingFountain(fountainPos, otherAnchors, otherRoomCells)) {
@@ -501,7 +501,13 @@ public class KnifeItem extends SwordItem {
             }
         }
 
-        //Add dark world fountain to the capability
+        if (!DarkFountainCapability.isDarkWorldAvailableForNewFountain(targetLevel)) {
+            lightCap.removeDarkFountain(level, fountainPos);
+            sendErrorMessage(player);
+            resetMakingState(tag);
+            return;
+        }
+
         darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), fountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //If player is not creative, put cooldown on knife
