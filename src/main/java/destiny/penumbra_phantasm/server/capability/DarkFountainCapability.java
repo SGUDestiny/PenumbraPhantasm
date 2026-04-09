@@ -9,9 +9,11 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.*;
 
@@ -35,18 +37,48 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         return false;
     }
 
-    public Optional<PersistentDarkWorldSite> findMatchingPersistentSite(Iterable<BlockPos> roomPositions, ResourceLocation typeId) {
+    public static boolean isDarkWorldAvailableForNewFountain(ServerLevel darkLevel) {
+        LazyOptional<DarkFountainCapability> opt = darkLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+        if (!opt.isPresent() || opt.resolve().isEmpty()) {
+            return true;
+        }
+        return opt.resolve().get().darkFountains.isEmpty();
+    }
+
+    public Optional<PersistentDarkWorldSite> findMatchingPersistentSite(MinecraftServer server, Iterable<BlockPos> roomPositions, ResourceLocation typeId) {
         for (PersistentDarkWorldSite site : persistentDarkWorldSites) {
             if (!site.worldTypeId.equals(typeId)) {
                 continue;
             }
+            boolean roomContainsSiteAnchor = false;
             for (BlockPos p : roomPositions) {
                 if (site.fountainPos.equals(p)) {
-                    return Optional.of(site);
+                    roomContainsSiteAnchor = true;
+                    break;
                 }
             }
+            if (!roomContainsSiteAnchor) {
+                continue;
+            }
+            if (lightAlreadyLinksToDarkDimension(site.dimensionKey)) {
+                continue;
+            }
+            ServerLevel candidate = server.getLevel(site.dimensionKey);
+            if (candidate != null && !isDarkWorldAvailableForNewFountain(candidate)) {
+                continue;
+            }
+            return Optional.of(site);
         }
         return Optional.empty();
+    }
+
+    private boolean lightAlreadyLinksToDarkDimension(ResourceKey<Level> darkDimension) {
+        for (DarkFountain fountain : darkFountains.values()) {
+            if (fountain.getDestinationDimension().equals(darkDimension)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void registerPersistentSite(BlockPos fountainPos, ResourceLocation typeId, ResourceKey<Level> dimensionKey) {

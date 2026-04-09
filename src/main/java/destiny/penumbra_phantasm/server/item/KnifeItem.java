@@ -425,7 +425,7 @@ public class KnifeItem extends SwordItem {
         }
 
         Optional<DarkFountainCapability.PersistentDarkWorldSite> matchedSite =
-                lightCap.findMatchingPersistentSite(roomResult.getPositions(), typeId);
+                lightCap.findMatchingPersistentSite(level.getServer(), roomResult.getPositions(), typeId);
 
         ServerLevel targetLevel = null;
         if (matchedSite.isPresent()) {
@@ -448,6 +448,16 @@ public class KnifeItem extends SwordItem {
             sendErrorMessage(player);
             resetMakingState(tag);
             return;
+        }
+
+        if (!DarkFountainCapability.isDarkWorldAvailableForNewFountain(targetLevel)) {
+            targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
+            if (targetLevel == null) {
+                sendErrorMessage(player);
+                resetMakingState(tag);
+                return;
+            }
+            lightCap.registerPersistentSite(fountainPos, typeId, targetLevel.dimension());
         }
 
         DarkFountainCapability darkCap;
