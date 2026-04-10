@@ -33,6 +33,8 @@ public class DarknessFallScreen extends Screen {
     public final double spawnZ;
     public final float spawnYaw;
     public final ResourceKey<Level> dimension;
+    public final boolean narrowGreatDoorPrepare;
+    public final net.minecraft.core.BlockPos arrivalGreatDoorAnchor;
 
     public int tick = 0;
     public int screenDuration = 35;
@@ -40,7 +42,8 @@ public class DarknessFallScreen extends Screen {
     public final float frameLifeTime = 15f;
     public List<Float> activeFrames = new ArrayList<>();
 
-    public DarknessFallScreen(Runnable onFinished, net.minecraft.core.BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dimension) {
+    public DarknessFallScreen(Runnable onFinished, net.minecraft.core.BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dimension,
+            boolean narrowGreatDoorPrepare, net.minecraft.core.BlockPos arrivalGreatDoorAnchor) {
         super(GameNarrator.NO_TITLE);
         this.onFinished = onFinished;
         this.destinationPos = destinationPos;
@@ -49,6 +52,8 @@ public class DarknessFallScreen extends Screen {
         this.spawnZ = spawnZ;
         this.spawnYaw = spawnYaw;
         this.dimension = dimension;
+        this.narrowGreatDoorPrepare = narrowGreatDoorPrepare;
+        this.arrivalGreatDoorAnchor = arrivalGreatDoorAnchor;
     }
 
     @Override
@@ -114,7 +119,8 @@ public class DarknessFallScreen extends Screen {
     public void closeScreen() {
         onFinished.run();
         Minecraft.getInstance().getSoundManager().stop();
-        PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
+        PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension,
+                narrowGreatDoorPrepare, arrivalGreatDoorAnchor));
         Minecraft.getInstance().player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(anim -> anim.darknessLandTicker = 0);
     }
 

@@ -10,7 +10,8 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public record ClientBoundDarknessFallPacket(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ,
-                                            float spawnYaw, ResourceKey<Level> dimension) {
+                                            float spawnYaw, ResourceKey<Level> dimension, boolean narrowGreatDoorPrepare,
+                                            BlockPos arrivalGreatDoorAnchor) {
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(destinationPos);
@@ -19,6 +20,10 @@ public record ClientBoundDarknessFallPacket(BlockPos destinationPos, double spaw
         buffer.writeDouble(spawnZ);
         buffer.writeFloat(spawnYaw);
         buffer.writeResourceKey(dimension);
+        buffer.writeBoolean(narrowGreatDoorPrepare);
+        if (narrowGreatDoorPrepare) {
+            buffer.writeBlockPos(arrivalGreatDoorAnchor);
+        }
     }
 
     public static ClientBoundDarknessFallPacket decode(FriendlyByteBuf buffer) {
@@ -28,11 +33,14 @@ public record ClientBoundDarknessFallPacket(BlockPos destinationPos, double spaw
         double spawnZ = buffer.readDouble();
         float spawnYaw = buffer.readFloat();
         ResourceKey<Level> dimension = buffer.readResourceKey(Registries.DIMENSION);
-        return new ClientBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension);
+        boolean narrow = buffer.readBoolean();
+        BlockPos arrivalGreatDoor = narrow ? buffer.readBlockPos() : BlockPos.ZERO;
+        return new ClientBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension, narrow, arrivalGreatDoor);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> ClientBoundPacketHandler.openDarknessFallScreen(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension));
+        ctx.get().enqueueWork(() -> ClientBoundPacketHandler.openDarknessFallScreen(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension,
+                narrowGreatDoorPrepare, arrivalGreatDoorAnchor));
         return true;
     }
 }

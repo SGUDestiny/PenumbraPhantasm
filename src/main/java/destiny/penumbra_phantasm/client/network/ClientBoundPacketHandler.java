@@ -37,9 +37,11 @@ public class ClientBoundPacketHandler
 		}));
 	}
 
-	public static void openDarknessFallScreen(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dim) {
+	public static void openDarknessFallScreen(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ, float spawnYaw, ResourceKey<Level> dim,
+			boolean narrowGreatDoorPrepare, BlockPos arrivalGreatDoorAnchor) {
 		Minecraft minecraft = Minecraft.getInstance();
-		minecraft.setScreen(new DarknessFallScreen(() -> minecraft.setScreen(null), destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dim));
+		minecraft.setScreen(new DarknessFallScreen(() -> minecraft.setScreen(null), destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dim,
+				narrowGreatDoorPrepare, arrivalGreatDoorAnchor));
 	}
 
 	public static void syncSoulBreak(boolean diedWithSoulHearth, int soulType)
