@@ -95,7 +95,6 @@ public class RoomScanner {
                         if (state.is(currentTag)) {
                             visitedPositions.add(neighborPos);
                             keyBlockPositions.add(neighborPos);
-                            queue.add(neighborPos);
                         }
                     }
                 }
