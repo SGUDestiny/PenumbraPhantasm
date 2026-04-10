@@ -33,7 +33,9 @@ public class LuminescentWaterFluidBlock extends LiquidBlock {
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (entity instanceof LivingEntity livingEntity) {
-            livingEntity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 200, 0, true, true, true));
+            if (!livingEntity.hasEffect(MobEffects.REGENERATION)) {
+                livingEntity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 100, 0, true, true, true));
+            }
         }
     }
 }
