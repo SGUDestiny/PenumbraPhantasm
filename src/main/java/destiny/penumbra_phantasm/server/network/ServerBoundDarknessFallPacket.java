@@ -1,7 +1,9 @@
 package destiny.penumbra_phantasm.server.network;
 
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,6 +44,10 @@ public record ServerBoundDarknessFallPacket(BlockPos destinationPos, double spaw
 
             ServerLevel level = player.getServer().getLevel(dimension);
             if (level == null) return;
+
+            if (DarkWorldUtil.isDarkWorld(level)) {
+                GreatDoor.prepareDarkWorldGreatDoorsAfterPlayerTravel(level);
+            }
 
             player.teleportTo(level, spawnX, spawnY, spawnZ, spawnYaw, 0f);
             player.connection.send(new ClientboundSetEntityMotionPacket(player));

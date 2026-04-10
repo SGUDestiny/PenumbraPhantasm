@@ -62,7 +62,7 @@ public class DarkWorldUtil
 {
 	public record GreatDoorStructureResult(BlockPos anchorPos, Direction facing) {}
 
-	private static BlockPos doubleDoorPartnerLower(Level level, BlockPos lowerDoorFoot) {
+	public static BlockPos getDoubleDoorPartnerLower(Level level, BlockPos lowerDoorFoot) {
 		BlockState low = level.getBlockState(lowerDoorFoot);
 		if (!(low.getBlock() instanceof DoorBlock) || low.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) {
 			return null;
@@ -100,7 +100,7 @@ public class DarkWorldUtil
 		if (!(low.getBlock() instanceof DoorBlock) || low.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) {
 			return lower;
 		}
-		BlockPos partner = doubleDoorPartnerLower(level, lower);
+		BlockPos partner = getDoubleDoorPartnerLower(level, lower);
 		if (partner == null) {
 			return lower;
 		}
@@ -111,7 +111,7 @@ public class DarkWorldUtil
 		BlockPos c = canonicalLowerDoorFoot(level, anyDoorPart);
 		out.add(c);
 		out.add(c.above());
-		BlockPos partner = doubleDoorPartnerLower(level, c);
+		BlockPos partner = getDoubleDoorPartnerLower(level, c);
 		if (partner != null) {
 			out.add(partner);
 			out.add(partner.above());
@@ -275,7 +275,7 @@ public class DarkWorldUtil
 	}
 
 	public static void createGreatDoor(Level pLevel, BlockPos greatDoorPos, Direction direction, boolean isOpen, @Nullable BlockPos lightDoorPos,
-									   @Nullable ResourceKey<Level> lightDoorLevel, @Nullable Direction lightDoorExitDirection, boolean isDestinationDarkWorld,
+									   @Nullable BlockPos lightDoorSecondLower, @Nullable ResourceKey<Level> lightDoorLevel, @Nullable Direction lightDoorExitDirection, boolean isDestinationDarkWorld,
 									   @Nullable BlockPos destinationGreatDoorPos, @Nullable ResourceKey<Level> destinationGreatDoorLevel) {
 		GreatDoorCapability greatDoorCapability = null;
 		LazyOptional<GreatDoorCapability> lightLazyCapability = pLevel.getCapability(CapabilityRegistry.GREAT_DOOR);
@@ -297,7 +297,7 @@ public class DarkWorldUtil
 			}
 		}
 
-		greatDoorCapability.addGreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorLevel,
+		greatDoorCapability.addGreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorSecondLower, lightDoorLevel,
 				lightDoorExitDirection, isDestinationDarkWorld, destinationGreatDoorPos, destinationGreatDoorLevel);
 
 		BlockState block = BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState();
@@ -381,7 +381,7 @@ public class DarkWorldUtil
 					}
 					Direction facing = st.getValue(HorizontalDirectionalBlock.FACING);
 					level.setBlock(anchor, Blocks.AIR.defaultBlockState(), 3);
-					createGreatDoor(level, anchor, facing, false, null, null, null, false, null, null);
+					createGreatDoor(level, anchor, facing, false, null, null, null, null, false, null, null);
 				}
 			}
 		}
@@ -415,21 +415,27 @@ public class DarkWorldUtil
 		}
 	}
 
+	private static boolean lightDoorPairTaken(ServerLevel darkLevel, BlockPos lower, @Nullable BlockPos secondLower, ResourceKey<Level> lightDim) {
+		return darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
+				.resolve()
+				.map(c -> c.findByLightDoor(lower, lightDim) != null
+						|| (secondLower != null && c.findByLightDoor(secondLower, lightDim) != null))
+				.orElse(false);
+	}
+
 	private static boolean tryBindOutsideDoorsForUnlinked(ServerLevel darkLevel, GreatDoor door, ServerLevel lightLevel, DarkFountain fountain) {
 		for (DarkRoom room : fountain.rooms) {
-			for (Map.Entry<BlockPos, Direction> e : room.getOutsideDoors().entrySet()) {
+			for (Map.Entry<BlockPos, DarkRoom.OutsideDoorExit> e : room.getOutsideDoors().entrySet()) {
 				BlockPos lower = e.getKey();
-				Direction exitDir = e.getValue();
-				GreatDoor taken = darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
-						.resolve()
-						.map(c -> c.findByLightDoor(lower, lightLevel.dimension()))
-						.orElse(null);
-				if (taken != null) {
+				DarkRoom.OutsideDoorExit exit = e.getValue();
+				BlockPos secondLower = exit.secondLowerHalf();
+				if (lightDoorPairTaken(darkLevel, lower, secondLower, lightLevel.dimension())) {
 					continue;
 				}
 				door.lightDoorPos = lower;
+				door.lightDoorSecondLower = secondLower;
 				door.lightDoorDimension = lightLevel.dimension();
-				door.lightDoorExitDirection = exitDir;
+				door.lightDoorExitDirection = exit.exitFromInterior();
 				door.isDestinationDarkWorld = false;
 				door.destinationGreatDoorPos = null;
 				door.destinationGreatDoorDimension = null;
@@ -442,17 +448,15 @@ public class DarkWorldUtil
 
 	private static boolean tryBindSharedDoorsForUnlinked(ServerLevel darkLevel, GreatDoor door, ServerLevel lightLevel, DarkFountain fountain) {
 		for (DarkRoom room : fountain.rooms) {
-			for (Map.Entry<BlockPos, ResourceKey<Level>> e : room.getSharedDoors().entrySet()) {
+			for (Map.Entry<BlockPos, DarkRoom.SharedDoorLink> e : room.getSharedDoors().entrySet()) {
 				BlockPos lower = e.getKey();
-				ResourceKey<Level> otherDarkKey = e.getValue();
+				DarkRoom.SharedDoorLink link = e.getValue();
+				ResourceKey<Level> otherDarkKey = link.otherDarkWorld();
+				BlockPos secondLower = link.secondLowerHalf();
 				if (!isDarkWorldKey(otherDarkKey)) {
 					continue;
 				}
-				GreatDoor taken = darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
-						.resolve()
-						.map(c -> c.findByLightDoor(lower, lightLevel.dimension()))
-						.orElse(null);
-				if (taken != null) {
+				if (lightDoorPairTaken(darkLevel, lower, secondLower, lightLevel.dimension())) {
 					continue;
 				}
 				ServerLevel otherLevel = darkLevel.getServer().getLevel(otherDarkKey);
@@ -461,6 +465,7 @@ public class DarkWorldUtil
 				}
 				Direction exitDir = room.interiorHorizontalDirectionTowardDoor(lower).orElse(Direction.NORTH);
 				door.lightDoorPos = lower;
+				door.lightDoorSecondLower = secondLower;
 				door.lightDoorDimension = lightLevel.dimension();
 				door.lightDoorExitDirection = exitDir;
 				door.isDestinationDarkWorld = true;
@@ -469,6 +474,7 @@ public class DarkWorldUtil
 				ensurePeerGreatDoor(door, darkLevel, otherLevel);
 				if (door.destinationGreatDoorPos == null) {
 					door.lightDoorPos = null;
+					door.lightDoorSecondLower = null;
 					door.lightDoorDimension = null;
 					door.lightDoorExitDirection = null;
 					door.isDestinationDarkWorld = false;
@@ -510,7 +516,7 @@ public class DarkWorldUtil
 			return;
 		}
 		GreatDoorStructureResult r = placed.get();
-		createGreatDoor(destLevel, r.anchorPos(), r.facing(), true, source.lightDoorPos, source.lightDoorDimension,
+		createGreatDoor(destLevel, r.anchorPos(), r.facing(), true, source.lightDoorPos, source.lightDoorSecondLower, source.lightDoorDimension,
 				source.lightDoorExitDirection, true, source.greatDoorPos, sourceLevel.dimension());
 		source.destinationGreatDoorPos = r.anchorPos();
 		source.destinationGreatDoorDimension = destLevel.dimension();
@@ -518,7 +524,7 @@ public class DarkWorldUtil
 
 	@Nullable
 	public static GreatDoor ensureGreatDoorForOutsideDoor(ServerLevel darkLevel, BlockPos darkFountainAnchor, BlockPos lightDoorLower,
-														  ResourceKey<Level> lightDimension, Direction lightDoorExitFromInterior) {
+														  ResourceKey<Level> lightDimension, Direction lightDoorExitFromInterior, @Nullable BlockPos lightDoorSecondLower) {
 		GreatDoor existing = darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
 				.resolve()
 				.map(c -> c.findByLightDoor(lightDoorLower, lightDimension))
@@ -526,12 +532,21 @@ public class DarkWorldUtil
 		if (existing != null) {
 			return existing;
 		}
+		if (lightDoorSecondLower != null) {
+			GreatDoor bySecond = darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
+					.resolve()
+					.map(c -> c.findByLightDoor(lightDoorSecondLower, lightDimension))
+					.orElse(null);
+			if (bySecond != null) {
+				return bySecond;
+			}
+		}
 		Optional<GreatDoorStructureResult> placed = tryPlaceGreatDoorStructure(darkLevel, darkFountainAnchor, darkLevel.random);
 		if (placed.isEmpty()) {
 			return null;
 		}
 		GreatDoorStructureResult r = placed.get();
-		createGreatDoor(darkLevel, r.anchorPos(), r.facing(), true, lightDoorLower, lightDimension, lightDoorExitFromInterior,
+		createGreatDoor(darkLevel, r.anchorPos(), r.facing(), true, lightDoorLower, lightDoorSecondLower, lightDimension, lightDoorExitFromInterior,
 				false, null, null);
 		return darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
 				.resolve()

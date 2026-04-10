@@ -34,6 +34,10 @@ public class ClientBoundSingleGreatDoorPacket {
         buffer.writeBoolean(hasLight);
         if (hasLight) {
             buffer.writeBlockPos(greatDoor.lightDoorPos);
+            buffer.writeBoolean(greatDoor.lightDoorSecondLower != null);
+            if (greatDoor.lightDoorSecondLower != null) {
+                buffer.writeBlockPos(greatDoor.lightDoorSecondLower);
+            }
             buffer.writeResourceKey(greatDoor.lightDoorDimension);
             Direction exit = greatDoor.lightDoorExitDirection != null ? greatDoor.lightDoorExitDirection : Direction.NORTH;
             buffer.writeUtf(exit.getName());
@@ -55,10 +59,14 @@ public class ClientBoundSingleGreatDoorPacket {
         List<BlockPos> volumePositions = buffer.readCollection(ArrayList::new, FriendlyByteBuf::readBlockPos);
         boolean hasLight = buffer.readBoolean();
         @Nullable BlockPos lightDoorPos = null;
+        @Nullable BlockPos lightDoorSecondLower = null;
         @Nullable ResourceKey<Level> lightDoorDimension = null;
         @Nullable Direction lightDoorExitDirection = null;
         if (hasLight) {
             lightDoorPos = buffer.readBlockPos();
+            if (buffer.readBoolean()) {
+                lightDoorSecondLower = buffer.readBlockPos();
+            }
             lightDoorDimension = buffer.readResourceKey(Registries.DIMENSION);
             lightDoorExitDirection = Direction.byName(buffer.readUtf());
             if (lightDoorExitDirection == null) {
@@ -73,7 +81,7 @@ public class ClientBoundSingleGreatDoorPacket {
             destinationGreatDoorDimension = buffer.readResourceKey(Registries.DIMENSION);
         }
 
-        GreatDoor greatDoor = new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorDimension,
+        GreatDoor greatDoor = new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorSecondLower, lightDoorDimension,
                 lightDoorExitDirection, isDestinationDarkWorld, destinationGreatDoorPos, destinationGreatDoorDimension);
 
         return new ClientBoundSingleGreatDoorPacket(greatDoor);

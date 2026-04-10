@@ -13,15 +13,24 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import javax.annotation.Nullable;
+
 import java.util.*;
 
 public class DarkRoom {
+    public record OutsideDoorExit(Direction exitFromInterior, @Nullable BlockPos secondLowerHalf) {
+    }
+
+    public record SharedDoorLink(ResourceKey<Level> otherDarkWorld, @Nullable BlockPos secondLowerHalf) {
+    }
+
     public static final String SEED_POS = "seedPos";
     public static final String POSITIONS = "positions";
     public static final String DOOR_POSITIONS = "doorPositions";
     public static final String OUTSIDE_DOORS = "outsideDoors";
     public static final String SHARED_DOORS = "sharedDoors";
     public static final String ENTRY_POS = "pos";
+    public static final String ENTRY_SECOND_LOWER = "secondLower";
     public static final String ENTRY_DIR = "dir";
     public static final String ENTRY_DIM = "dim";
     public static final String ACTIVE = "active";
@@ -30,14 +39,14 @@ public class DarkRoom {
     BlockPos seedPos;
     List<BlockPos> positions;
     Set<BlockPos> doorPositions;
-    Map<BlockPos, Direction> outsideDoors;
-    Map<BlockPos, ResourceKey<Level>> sharedDoors;
+    Map<BlockPos, OutsideDoorExit> outsideDoors;
+    Map<BlockPos, SharedDoorLink> sharedDoors;
     Map<UUID, Integer> transportTickers;
     int fillIndex;
     boolean active;
     List<BlockPos> dissipationQueue;
 
-    public DarkRoom(BlockPos seedPos, List<BlockPos> positions, Set<BlockPos> doorPositions, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors) {
+    public DarkRoom(BlockPos seedPos, List<BlockPos> positions, Set<BlockPos> doorPositions, Map<BlockPos, OutsideDoorExit> outsideDoors, Map<BlockPos, SharedDoorLink> sharedDoors) {
         this.seedPos = seedPos;
         this.positions = positions;
         this.doorPositions = doorPositions;
@@ -125,19 +134,25 @@ public class DarkRoom {
         tag.put(DOOR_POSITIONS, doorsTag);
 
         ListTag outsideList = new ListTag();
-        for (Map.Entry<BlockPos, Direction> e : outsideDoors.entrySet()) {
+        for (Map.Entry<BlockPos, OutsideDoorExit> e : outsideDoors.entrySet()) {
             CompoundTag entry = new CompoundTag();
             entry.put(ENTRY_POS, NbtUtils.writeBlockPos(e.getKey()));
-            entry.putString(ENTRY_DIR, e.getValue().getName());
+            entry.putString(ENTRY_DIR, e.getValue().exitFromInterior().getName());
+            if (e.getValue().secondLowerHalf() != null) {
+                entry.put(ENTRY_SECOND_LOWER, NbtUtils.writeBlockPos(e.getValue().secondLowerHalf()));
+            }
             outsideList.add(entry);
         }
         tag.put(OUTSIDE_DOORS, outsideList);
 
         ListTag sharedList = new ListTag();
-        for (Map.Entry<BlockPos, ResourceKey<Level>> e : sharedDoors.entrySet()) {
+        for (Map.Entry<BlockPos, SharedDoorLink> e : sharedDoors.entrySet()) {
             CompoundTag entry = new CompoundTag();
             entry.put(ENTRY_POS, NbtUtils.writeBlockPos(e.getKey()));
-            entry.putString(ENTRY_DIM, e.getValue().location().toString());
+            entry.putString(ENTRY_DIM, e.getValue().otherDarkWorld().location().toString());
+            if (e.getValue().secondLowerHalf() != null) {
+                entry.put(ENTRY_SECOND_LOWER, NbtUtils.writeBlockPos(e.getValue().secondLowerHalf()));
+            }
             sharedList.add(entry);
         }
         tag.put(SHARED_DOORS, sharedList);
@@ -163,28 +178,34 @@ public class DarkRoom {
             doorPositions.add(NbtUtils.readBlockPos((CompoundTag) t));
         }
 
-        Map<BlockPos, Direction> outsideDoors = new HashMap<>();
+        Map<BlockPos, OutsideDoorExit> outsideDoors = new HashMap<>();
         if (tag.contains(OUTSIDE_DOORS)) {
             ListTag outsideList = tag.getList(OUTSIDE_DOORS, Tag.TAG_COMPOUND);
             for (Tag t : outsideList) {
                 CompoundTag entry = (CompoundTag) t;
                 BlockPos pos = NbtUtils.readBlockPos(entry.getCompound(ENTRY_POS));
                 Direction dir = Direction.byName(entry.getString(ENTRY_DIR));
+                BlockPos secondLower = entry.contains(ENTRY_SECOND_LOWER, Tag.TAG_COMPOUND)
+                        ? NbtUtils.readBlockPos(entry.getCompound(ENTRY_SECOND_LOWER))
+                        : null;
                 if (dir != null) {
-                    outsideDoors.put(pos, dir);
+                    outsideDoors.put(pos, new OutsideDoorExit(dir, secondLower));
                 }
             }
         }
 
-        Map<BlockPos, ResourceKey<Level>> sharedDoors = new HashMap<>();
+        Map<BlockPos, SharedDoorLink> sharedDoors = new HashMap<>();
         if (tag.contains(SHARED_DOORS)) {
             ListTag sharedList = tag.getList(SHARED_DOORS, Tag.TAG_COMPOUND);
             for (Tag t : sharedList) {
                 CompoundTag entry = (CompoundTag) t;
                 BlockPos pos = NbtUtils.readBlockPos(entry.getCompound(ENTRY_POS));
                 ResourceKey<Level> dim = ModUtil.stringToDimension(entry.getString(ENTRY_DIM));
+                BlockPos secondLower = entry.contains(ENTRY_SECOND_LOWER, Tag.TAG_COMPOUND)
+                        ? NbtUtils.readBlockPos(entry.getCompound(ENTRY_SECOND_LOWER))
+                        : null;
                 if (dim != null) {
-                    sharedDoors.put(pos, dim);
+                    sharedDoors.put(pos, new SharedDoorLink(dim, secondLower));
                 }
             }
         }
@@ -198,8 +219,8 @@ public class DarkRoom {
     public BlockPos getSeedPos() { return seedPos; }
     public List<BlockPos> getPositions() { return positions; }
     public Set<BlockPos> getDoorPositions() { return doorPositions; }
-    public Map<BlockPos, Direction> getOutsideDoors() { return Collections.unmodifiableMap(outsideDoors); }
-    public Map<BlockPos, ResourceKey<Level>> getSharedDoors() { return Collections.unmodifiableMap(sharedDoors); }
+    public Map<BlockPos, OutsideDoorExit> getOutsideDoors() { return Collections.unmodifiableMap(outsideDoors); }
+    public Map<BlockPos, SharedDoorLink> getSharedDoors() { return Collections.unmodifiableMap(sharedDoors); }
 
     public Optional<Direction> interiorHorizontalDirectionTowardDoor(BlockPos doorLowerFoot) {
         for (BlockPos p : positions) {

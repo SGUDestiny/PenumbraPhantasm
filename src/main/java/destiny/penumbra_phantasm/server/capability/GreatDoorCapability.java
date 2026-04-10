@@ -23,10 +23,10 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
     public HashMap<BlockPos, GreatDoor> greatDoors = new HashMap<>();
 
     public void addGreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, List<BlockPos> volumePositions,
-                             @Nullable BlockPos lightDoorPos, @Nullable ResourceKey<Level> lightDoorDimension, @Nullable Direction lightDoorExitDirection,
+                             @Nullable BlockPos lightDoorPos, @Nullable BlockPos lightDoorSecondLower, @Nullable ResourceKey<Level> lightDoorDimension, @Nullable Direction lightDoorExitDirection,
                              boolean isDestinationDarkWorld, @Nullable BlockPos destinationGreatDoorPos,
                              @Nullable ResourceKey<Level> destinationGreatDoorDimension) {
-        this.greatDoors.put(greatDoorPos, new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos,
+        this.greatDoors.put(greatDoorPos, new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorSecondLower,
                 lightDoorDimension, lightDoorExitDirection, isDestinationDarkWorld, destinationGreatDoorPos, destinationGreatDoorDimension));
     }
 
@@ -36,7 +36,13 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
             return null;
         }
         for (GreatDoor door : this.greatDoors.values()) {
-            if (lightDoorPos.equals(door.lightDoorPos) && lightDimension.equals(door.lightDoorDimension)) {
+            if (!lightDimension.equals(door.lightDoorDimension)) {
+                continue;
+            }
+            if (lightDoorPos.equals(door.lightDoorPos)) {
+                return door;
+            }
+            if (door.lightDoorSecondLower != null && lightDoorPos.equals(door.lightDoorSecondLower)) {
                 return door;
             }
         }

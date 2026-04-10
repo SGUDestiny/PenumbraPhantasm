@@ -801,6 +801,11 @@ public class DarkFountain {
         pruneLightFountainTeleportedEntities(level);
     }
 
+    private static AABB lightDoorLowerColumnBox(BlockPos lowerFoot) {
+        return new AABB(lowerFoot.getX(), lowerFoot.getY(), lowerFoot.getZ(),
+                lowerFoot.getX() + 1.0, lowerFoot.getY() + 2.0, lowerFoot.getZ() + 1.0);
+    }
+
     private void tickOutsideDoorGreatDoor(ServerLevel level) {
         if (this.openingTick >= 0 && this.openingTick < FILL_START_TICK) {
             return;
@@ -814,22 +819,39 @@ public class DarkFountain {
             if (!room.isActive()) {
                 continue;
             }
-            for (Map.Entry<BlockPos, Direction> entry : room.getOutsideDoors().entrySet()) {
+            for (Map.Entry<BlockPos, DarkRoom.OutsideDoorExit> entry : room.getOutsideDoors().entrySet()) {
                 BlockPos doorLower = entry.getKey();
                 BlockPos canonDoor = DarkWorldUtil.canonicalLowerDoorFoot(level, doorLower);
                 if (!canonDoor.equals(doorLower)) {
                     continue;
                 }
-                Direction dirFromInterior = entry.getValue();
+                DarkRoom.OutsideDoorExit outsideExit = entry.getValue();
+                Direction dirFromInterior = outsideExit.exitFromInterior();
                 BlockState doorState = level.getBlockState(canonDoor);
                 if (!(doorState.getBlock() instanceof DoorBlock)) {
                     continue;
                 }
-                if (!DarknessBlock.isDoorVisuallyOpenFromSide(level, canonDoor, doorState, dirFromInterior.getOpposite())) {
+                Direction viewFromExterior = dirFromInterior.getOpposite();
+                boolean passageOpen = DarknessBlock.isDoorVisuallyOpenFromSide(level, canonDoor, doorState, viewFromExterior);
+                BlockPos secondLower = outsideExit.secondLowerHalf();
+                if (secondLower != null) {
+                    BlockPos lower2 = secondLower;
+                    BlockState doorState2 = level.getBlockState(lower2);
+                    if (doorState2.getBlock() instanceof DoorBlock && doorState2.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
+                        lower2 = secondLower.below();
+                        doorState2 = level.getBlockState(lower2);
+                    }
+                    if (doorState2.getBlock() instanceof DoorBlock) {
+                        passageOpen = passageOpen || DarknessBlock.isDoorVisuallyOpenFromSide(level, lower2, doorState2, viewFromExterior);
+                    }
+                }
+                if (!passageOpen) {
                     continue;
                 }
-                AABB doorCandidateBox = new AABB(canonDoor.getX(), canonDoor.getY(), canonDoor.getZ(),
-                        canonDoor.getX() + 1.0, canonDoor.getY() + 2.0, canonDoor.getZ() + 1.0);
+                AABB doorCandidateBox = lightDoorLowerColumnBox(canonDoor);
+                if (secondLower != null) {
+                    doorCandidateBox = doorCandidateBox.minmax(lightDoorLowerColumnBox(secondLower));
+                }
                 for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, doorCandidateBox)) {
                     if (!player.level().dimension().equals(level.dimension())) {
                         continue;
@@ -850,7 +872,7 @@ public class DarkFountain {
                     if (this.teleportedEntities.contains(player.getUUID())) {
                         continue;
                     }
-                    GreatDoor greatDoor = DarkWorldUtil.ensureGreatDoorForOutsideDoor(destinationLevel, this.destinationPos, canonDoor, level.dimension(), dirFromInterior);
+                    GreatDoor greatDoor = DarkWorldUtil.ensureGreatDoorForOutsideDoor(destinationLevel, this.destinationPos, canonDoor, level.dimension(), dirFromInterior, secondLower);
                     if (greatDoor == null) {
                         continue;
                     }

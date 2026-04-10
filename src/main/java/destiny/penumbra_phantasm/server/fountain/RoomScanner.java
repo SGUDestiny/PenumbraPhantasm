@@ -107,8 +107,8 @@ public class RoomScanner {
 
         positions.sort(Comparator.comparingInt((BlockPos pos) -> pos.getY()).reversed());
 
-        Map<BlockPos, Direction> outsideDoors = new HashMap<>();
-        Map<BlockPos, ResourceKey<Level>> sharedDoors = new HashMap<>();
+        Map<BlockPos, DarkRoom.OutsideDoorExit> outsideDoors = new HashMap<>();
+        Map<BlockPos, DarkRoom.SharedDoorLink> sharedDoors = new HashMap<>();
         classifyShellDoors(level, positions, doorPositions, otherFountainRoomToDarkWorld, outsideDoors, sharedDoors, maxVolume, blockingPositions);
 
         return RoomScanResult.success(positions, keyBlockPositions, doorPositions, outsideDoors, sharedDoors);
@@ -148,7 +148,7 @@ public class RoomScanner {
         return !side.isValid();
     }
 
-    private static void classifyShellDoors(Level level, List<BlockPos> positions, Set<BlockPos> doorPositions, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors, int maxVolume, @Nullable Set<BlockPos> scanBlockingAnchors) {
+    private static void classifyShellDoors(Level level, List<BlockPos> positions, Set<BlockPos> doorPositions, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld, Map<BlockPos, DarkRoom.OutsideDoorExit> outsideDoors, Map<BlockPos, DarkRoom.SharedDoorLink> sharedDoors, int maxVolume, @Nullable Set<BlockPos> scanBlockingAnchors) {
         Set<BlockPos> posSet = new HashSet<>(positions);
         Map<BlockPos, ResourceKey<Level>> ownerMap = otherFountainRoomToDarkWorld != null ? otherFountainRoomToDarkWorld : Collections.emptyMap();
 
@@ -158,24 +158,26 @@ public class RoomScanner {
                 return;
             }
             BlockPos lower = doorLowerHalf(level, doorPartPos);
-            if (outsideDoors.containsKey(lower) || sharedDoors.containsKey(lower)) {
+            BlockPos canonKey = DarkWorldUtil.canonicalLowerDoorFoot(level, lower);
+            if (outsideDoors.containsKey(canonKey) || sharedDoors.containsKey(canonKey)) {
                 return;
             }
-            BlockPos footBeyond = outwardPastAdjacentDoorLeaves(level, lower.relative(dirFromInterior), dirFromInterior);
+            BlockPos footBeyond = outwardPastAdjacentDoorLeaves(level, canonKey.relative(dirFromInterior), dirFromInterior);
             BlockPos footBeyondUp = footBeyond.above();
             ResourceKey<Level> shr = ownerMap.get(footBeyond);
             if (shr == null) {
                 shr = ownerMap.get(footBeyondUp);
             }
+            BlockPos secondLower = DarkWorldUtil.getDoubleDoorPartnerLower(level, canonKey);
             if (shr != null) {
-                sharedDoors.put(lower, shr);
+                sharedDoors.put(canonKey, new DarkRoom.SharedDoorLink(shr, secondLower));
                 return;
             }
             BlockState b0 = level.getBlockState(footBeyond);
             BlockState b1 = level.getBlockState(footBeyondUp);
             if (isOpenAir(b0) || isOpenAir(b1)) {
                 if (exteriorPocketExceedsRoomBudget(level, footBeyond, b0, posSet, maxVolume, scanBlockingAnchors, otherFountainRoomToDarkWorld)) {
-                    outsideDoors.put(lower, dirFromInterior);
+                    outsideDoors.put(canonKey, new DarkRoom.OutsideDoorExit(dirFromInterior, secondLower));
                 }
             }
         };
@@ -224,11 +226,11 @@ public class RoomScanner {
         private final List<BlockPos> positions;
         private final List<BlockPos> keyBlockPositions;
         private final Set<BlockPos> doorPositions;
-        private final Map<BlockPos, Direction> outsideDoors;
-        private final Map<BlockPos, ResourceKey<Level>> sharedDoors;
+        private final Map<BlockPos, DarkRoom.OutsideDoorExit> outsideDoors;
+        private final Map<BlockPos, DarkRoom.SharedDoorLink> sharedDoors;
         private final boolean valid;
 
-        private RoomScanResult(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors, boolean valid) {
+        private RoomScanResult(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Map<BlockPos, DarkRoom.OutsideDoorExit> outsideDoors, Map<BlockPos, DarkRoom.SharedDoorLink> sharedDoors, boolean valid) {
             this.positions = positions;
             this.keyBlockPositions = keyBlockPositions;
             this.doorPositions = doorPositions;
@@ -237,7 +239,7 @@ public class RoomScanner {
             this.valid = valid;
         }
 
-        public static RoomScanResult success(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Map<BlockPos, Direction> outsideDoors, Map<BlockPos, ResourceKey<Level>> sharedDoors) {
+        public static RoomScanResult success(List<BlockPos> positions, List<BlockPos> keyBlockPositions, Set<BlockPos> doorPositions, Map<BlockPos, DarkRoom.OutsideDoorExit> outsideDoors, Map<BlockPos, DarkRoom.SharedDoorLink> sharedDoors) {
             return new RoomScanResult(positions, keyBlockPositions, doorPositions, outsideDoors, sharedDoors, true);
         }
 
@@ -254,10 +256,10 @@ public class RoomScanner {
         public Set<BlockPos> getDoorPositions() {
             return doorPositions;
         }
-        public Map<BlockPos, Direction> getOutsideDoors() {
+        public Map<BlockPos, DarkRoom.OutsideDoorExit> getOutsideDoors() {
             return outsideDoors;
         }
-        public Map<BlockPos, ResourceKey<Level>> getSharedDoors() {
+        public Map<BlockPos, DarkRoom.SharedDoorLink> getSharedDoors() {
             return sharedDoors;
         }
         public boolean isValid() {
