@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.DoorHingeSide;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -67,7 +68,7 @@ public class DarkWorldUtil
 			return null;
 		}
 		Direction facing = low.getValue(DoorBlock.FACING);
-		boolean open = low.getValue(DoorBlock.OPEN);
+		DoorHingeSide hinge = low.getValue(DoorBlock.HINGE);
 		for (Direction dir : Direction.Plane.HORIZONTAL) {
 			BlockPos o = lowerDoorFoot.relative(dir);
 			BlockState os = level.getBlockState(o);
@@ -82,7 +83,7 @@ public class DarkWorldUtil
 			if (os.getBlock() instanceof DoorBlock
 					&& os.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER
 					&& os.getValue(DoorBlock.FACING) == facing
-					&& os.getValue(DoorBlock.OPEN) == open) {
+					&& os.getValue(DoorBlock.HINGE) != hinge) {
 				return oLower;
 			}
 		}
