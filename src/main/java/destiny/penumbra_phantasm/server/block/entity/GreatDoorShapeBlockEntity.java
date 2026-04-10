@@ -89,7 +89,7 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
             return InteractionResult.FAIL;
         }
 
-        if (!GreatDoor.toggleLinkedLightDoor(serverLevel, greatDoor, player, true)) {
+        if (!GreatDoor.toggleLinkedLightDoor(serverLevel, greatDoor, player)) {
             return InteractionResult.FAIL;
         }
 

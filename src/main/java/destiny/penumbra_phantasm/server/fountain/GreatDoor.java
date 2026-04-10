@@ -18,13 +18,11 @@ import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -194,7 +192,7 @@ public class GreatDoor {
         isOpen = DarknessBlock.isDoorVisuallyOpenFromSide(lightLevel, lower, doorState, fromDoorToRoom);
     }
 
-    public static boolean toggleLinkedLightDoor(ServerLevel darkLevel, GreatDoor door, @Nullable Entity causedBy, boolean playLightDoorSoundsFromGreatDoorUse) {
+    public static boolean toggleLinkedLightDoor(ServerLevel darkLevel, GreatDoor door, @Nullable Entity causedBy) {
         if (door.lightDoorPos == null || door.lightDoorDimension == null || door.lightDoorExitDirection == null) {
             return false;
         }
@@ -222,20 +220,7 @@ public class GreatDoor {
         Direction facing = doorState.getValue(DoorBlock.FACING);
         boolean parallel = facing.getAxis() == fromDoorToRoom.getAxis();
         boolean targetPhysical = parallel ? targetVisual : !targetVisual;
-        boolean openBefore = doorState.getValue(DoorBlock.OPEN);
-
         doorBlock.setOpen(causedBy, lightLevel, doorState, interactPos, targetPhysical);
-
-        BlockState afterState = lightLevel.getBlockState(interactPos);
-        boolean openAfter = afterState.getBlock() instanceof DoorBlock && afterState.getValue(DoorBlock.OPEN);
-
-        if (playLightDoorSoundsFromGreatDoorUse && openBefore != openAfter) {
-            BlockSetType setType = doorBlock.type();
-            SoundEvent doorSound = openAfter ? setType.doorOpen() : setType.doorClose();
-            float pitch = lightLevel.getRandom().nextFloat() * 0.1F + 0.9F;
-
-            lightLevel.playSound(causedBy, interactPos, doorSound, SoundSource.BLOCKS, 1.0F, pitch);
-        }
 
         door.refreshOpenFromLinkedLightDoor(darkLevel);
 
@@ -274,11 +259,6 @@ public class GreatDoor {
         }
 
         doorBlock.setOpen(null, lightLevel, doorState, interactPos, false);
-
-        BlockSetType setType = doorBlock.type();
-        float pitch = lightLevel.getRandom().nextFloat() * 0.1F + 0.9F;
-
-        lightLevel.playSound(null, interactPos, setType.doorClose(), SoundSource.BLOCKS, 1.0F, pitch);
 
         door.refreshOpenFromLinkedLightDoor(darkLevel);
     }
