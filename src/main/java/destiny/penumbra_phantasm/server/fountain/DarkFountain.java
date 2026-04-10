@@ -833,7 +833,9 @@ public class DarkFountain {
                 if (!DarknessBlock.isDoorVisuallyOpenFromSide(level, canonDoor, doorState, dirFromInterior.getOpposite())) {
                     continue;
                 }
-                for (ServerPlayer player : new ArrayList<>(level.players())) {
+                AABB doorCandidateBox = new AABB(canonDoor.getX(), canonDoor.getY(), canonDoor.getZ(),
+                        canonDoor.getX() + 1.0, canonDoor.getY() + 2.0, canonDoor.getZ() + 1.0);
+                for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, doorCandidateBox)) {
                     if (!player.level().dimension().equals(level.dimension())) {
                         continue;
                     }

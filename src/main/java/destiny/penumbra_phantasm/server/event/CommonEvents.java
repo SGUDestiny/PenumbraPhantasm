@@ -188,15 +188,20 @@ public class CommonEvents {
                     fountain.tick(level);
                 }
                 if (level instanceof ServerLevel serverLevel && !DarkWorldUtil.isDarkWorld(serverLevel)) {
-                    DarkFountain.resolveCrossFountainRoomDisputes(cap);
+                    //DarkFountain.resolveCrossFountainRoomDisputes(cap);
                 }
             });
 
-            level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
-                for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
-                    greatDoor.tick(level);
-                }
-            });
+            if (level instanceof ServerLevel serverLevel) {
+                level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
+                    for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
+                        ChunkPos doorChunk = new ChunkPos(greatDoor.greatDoorPos);
+                        if (serverLevel.getChunkSource().getChunkNow(doorChunk.x, doorChunk.z) != null) {
+                            greatDoor.tick(level);
+                        }
+                    }
+                });
+            }
         }
     }
 

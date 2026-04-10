@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.block.entity;
 
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
-import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
@@ -38,7 +37,25 @@ public class DarknessBlockEntity extends BlockEntity {
         if (darkness.removalEarliestGameTime < 0L) {
             darkness.removalEarliestGameTime = level.getGameTime() + 200L;
         }
-        //Get light fountain capability
+        if (level.getGameTime() < darkness.removalEarliestGameTime) {
+            //Get light fountain capability
+            DarkFountainCapability fountainCapability = null;
+            LazyOptional<DarkFountainCapability> lazyOptional = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+            if(lazyOptional.isPresent() && lazyOptional.resolve().isPresent())
+                fountainCapability = lazyOptional.resolve().get();
+
+            if (fountainCapability == null){
+                return;
+            }
+
+            if (fountainCapability.darkFountains.get(darkness.fountainPos) != null) {
+                return;
+            }
+            return;
+        }
+        if (level.random.nextDouble() <= 0.8) {
+            return;
+        }
         DarkFountainCapability fountainCapability = null;
         LazyOptional<DarkFountainCapability> lazyOptional = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
         if(lazyOptional.isPresent() && lazyOptional.resolve().isPresent())
@@ -49,10 +66,6 @@ public class DarknessBlockEntity extends BlockEntity {
         }
 
         if (fountainCapability.darkFountains.get(darkness.fountainPos) != null) {
-            return;
-        }
-
-        if (level.getGameTime() < darkness.removalEarliestGameTime) {
             return;
         }
 

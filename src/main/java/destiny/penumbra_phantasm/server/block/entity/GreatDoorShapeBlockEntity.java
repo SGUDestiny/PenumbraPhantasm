@@ -48,6 +48,9 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
         if (level.getGameTime() < greatDoorShape.removalEarliestGameTime) {
             return;
         }
+        if (level.random.nextDouble() <= 0.8) {
+            return;
+        }
         if (getGreatDoor(level, greatDoorShape) == null) {
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         }
