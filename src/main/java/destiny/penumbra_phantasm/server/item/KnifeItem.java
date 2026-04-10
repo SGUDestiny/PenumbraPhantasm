@@ -312,7 +312,7 @@ public class KnifeItem extends SwordItem {
 
         //Final particle positioning
         double particleX = centerX + rowX * offsetAlongRow;
-        double particleY = fountainPos.getY() + 1 + (-0.5f + level.getRandom().nextFloat() * 0.5f);
+        double particleY = fountainPos.above().getY() + 1 + (-0.5f + level.getRandom().nextFloat() * 0.5f);
         double particleZ = centerZ + forwardX * offsetAlongRow;
 
         //Spawn particle
