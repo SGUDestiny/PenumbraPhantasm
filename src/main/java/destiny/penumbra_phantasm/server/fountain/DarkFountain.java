@@ -158,11 +158,11 @@ public class DarkFountain {
                 if (this.sealingTick == 0 && level instanceof ServerLevel sealingServerLevel) {
                     BlockPos sealingFountainPos = this.getFountainPos();
                     PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.DIMENSION.with(() -> sealingServerLevel.dimension()),
+                            PacketDistributor.DIMENSION.with(sealingServerLevel::dimension),
                             new ClientBoundSoundPackets.FountainWind(sealingFountainPos, true)
                     );
                     PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.DIMENSION.with(() -> sealingServerLevel.dimension()),
+                            PacketDistributor.DIMENSION.with(sealingServerLevel::dimension),
                             new ClientBoundSoundPackets.FountainMusic(sealingFountainPos, true)
                     );
                 }
@@ -545,7 +545,7 @@ public class DarkFountain {
         HashSet<BlockPos> anchors = new HashSet<>();
         level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
             for (Map.Entry<BlockPos, DarkFountain> e : cap.darkFountains.entrySet()) {
-                if (excludeFountainAnchor != null && e.getKey().equals(excludeFountainAnchor)) continue;
+                if (e.getKey().equals(excludeFountainAnchor)) continue;
                 anchors.add(e.getValue().getFountainPos());
             }
         });
@@ -556,7 +556,7 @@ public class DarkFountain {
         Map<BlockPos, ResourceKey<Level>> map = new HashMap<>();
         level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
             for (Map.Entry<BlockPos, DarkFountain> e : cap.darkFountains.entrySet()) {
-                if (excludeFountainAnchor != null && e.getKey().equals(excludeFountainAnchor)) continue;
+                if (e.getKey().equals(excludeFountainAnchor)) continue;
                 ResourceKey<Level> destDim = e.getValue().getDestinationDimension();
                 for (DarkRoom room : e.getValue().rooms) {
                     if (!room.isDissipating()) {
@@ -623,11 +623,6 @@ public class DarkFountain {
                 rooms.add(newRoom);
             }
             return;
-        }
-
-        Set<BlockPos> allPositions = new HashSet<>();
-        for (DarkRoom room : rooms) {
-            if (!room.isDissipating()) allPositions.addAll(room.getPositions());
         }
 
         for (DarkRoom room : rooms) {
@@ -975,12 +970,11 @@ public class DarkFountain {
         return new Vec3(x, y, z);
     }
 
-    public Entity teleportPlayer(ServerPlayer player, ServerLevel destinationLevel, Vec3 targetPos, float yRot, float xRot) {
+    public void teleportPlayer(ServerPlayer player, ServerLevel destinationLevel, Vec3 targetPos, float yRot, float xRot) {
         player.teleportTo(destinationLevel, targetPos.x, targetPos.y, targetPos.z, yRot, xRot);
         player.connection.send(new ClientboundSetEntityMotionPacket(player));
 
         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
-        return player;
     }
 
     public void playWind() {

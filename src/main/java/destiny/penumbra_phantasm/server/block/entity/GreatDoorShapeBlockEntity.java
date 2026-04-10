@@ -96,7 +96,7 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
         serverLevel.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                 SoundRegistry.GREAT_DOOR.get(), SoundSource.BLOCKS, 1f, 1f);
 
-        greatDoor.broadcastSync(serverLevel);
+        //greatDoor.broadcastSync(serverLevel);
         markUpdated();
 
         return InteractionResult.SUCCESS;

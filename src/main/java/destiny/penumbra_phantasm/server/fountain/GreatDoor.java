@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.fountain;
 import destiny.penumbra_phantasm.client.network.ClientBoundSingleGreatDoorPacket;
 import destiny.penumbra_phantasm.client.network.ClientBoundTransportTickerPacket;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
+import destiny.penumbra_phantasm.server.block.GreatDoorShapeBlock;
 import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -20,7 +21,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,6 +34,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static destiny.penumbra_phantasm.server.block.GreatDoorShapeBlock.IS_DOOR_OPEN;
 
 public class GreatDoor {
     public static final String GREAT_DOOR_POS = "greatDoorPos";
@@ -62,12 +64,11 @@ public class GreatDoor {
     public BlockPos destinationGreatDoorPos;
     @Nullable
     public ResourceKey<Level> destinationGreatDoorDimension;
-    public boolean exclusiveLightDoorForceClosedWithoutFountain;
+    public boolean lightDoorForceClosedWithoutFountain;
 
-    public GreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, List<BlockPos> volumePositions,
-                     @Nullable BlockPos lightDoorPos, @Nullable ResourceKey<Level> lightDoorDimension, @Nullable Direction lightDoorExitDirection,
-                     boolean isDestinationDarkWorld, @Nullable BlockPos destinationGreatDoorPos,
-                     @Nullable ResourceKey<Level> destinationGreatDoorDimension) {
+    public GreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, List<BlockPos> volumePositions, @Nullable BlockPos lightDoorPos,
+                     @Nullable ResourceKey<Level> lightDoorDimension, @Nullable Direction lightDoorExitDirection, boolean isDestinationDarkWorld,
+                     @Nullable BlockPos destinationGreatDoorPos, @Nullable ResourceKey<Level> destinationGreatDoorDimension) {
         this.greatDoorPos = greatDoorPos;
         this.direction = direction;
         this.isOpen = isOpen;
@@ -80,138 +81,6 @@ public class GreatDoor {
         this.destinationGreatDoorDimension = destinationGreatDoorDimension;
     }
 
-    public static Vec3 spawnCenterInFrontOfGreatDoor(BlockPos greatDoorPos, Direction doorFacing) {
-        return Vec3.atBottomCenterOf(greatDoorPos.relative(doorFacing, 1))
-                .add(Vec3.atLowerCornerOf(BlockPos.ZERO.relative(doorFacing.getClockWise(), 1)).scale(2.5));
-    }
-
-    public void refreshOpenFromLinkedLightDoor(ServerLevel darkLevel) {
-        ChunkPos chunkPos = new ChunkPos(greatDoorPos);
-        if (darkLevel.getChunkSource().getChunkNow(chunkPos.x, chunkPos.z) == null)
-            return;
-
-        for (BlockPos pos : volumePositions) {
-            if (darkLevel.getBlockState(pos) != BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState()) {
-                darkLevel.setBlock(pos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState(), 3);
-                if (darkLevel.getBlockEntity(pos) instanceof GreatDoorShapeBlockEntity shapeBlockEntity) {
-                    shapeBlockEntity.greatDoorPos = greatDoorPos;
-                }
-            } else if (darkLevel.getBlockEntity(pos) instanceof GreatDoorShapeBlockEntity shapeBlockEntity) {
-                if (shapeBlockEntity.greatDoorPos != greatDoorPos) {
-                    shapeBlockEntity.greatDoorPos = greatDoorPos;
-                }
-            }
-        }
-
-        if (!DarkWorldUtil.levelHasDarkFountain(darkLevel) && !isDestinationDarkWorld
-                && lightDoorPos != null && lightDoorDimension != null && lightDoorExitDirection != null) {
-            isOpen = false;
-            return;
-        }
-
-        if (lightDoorPos == null || lightDoorDimension == null || lightDoorExitDirection == null) {
-            isOpen = false;
-            return;
-        }
-
-        ServerLevel lightLevel = darkLevel.getServer().getLevel(lightDoorDimension);
-
-        if (lightLevel == null) {
-            isOpen = false;
-            return;
-        }
-
-        BlockPos lower = lightDoorPos;
-        BlockState doorState = lightLevel.getBlockState(lower);
-        if (doorState.getBlock() instanceof DoorBlock && doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
-            lower = lightDoorPos.below();
-            doorState = lightLevel.getBlockState(lower);
-        }
-        if (!(doorState.getBlock() instanceof DoorBlock)) {
-            isOpen = false;
-            return;
-        }
-
-        Direction fromDoorToRoom = lightDoorExitDirection.getOpposite();
-
-        isOpen = DarknessBlock.isDoorVisuallyOpenFromSide(lightLevel, lower, doorState, fromDoorToRoom);
-    }
-
-    public static boolean toggleLinkedLightDoor(ServerLevel darkLevel, GreatDoor door, @Nullable Entity causedBy, boolean playLightDoorSoundsFromGreatDoorUse) {
-        if (door.lightDoorPos == null || door.lightDoorDimension == null || door.lightDoorExitDirection == null) {
-            return false;
-        }
-
-        ServerLevel lightLevel = darkLevel.getServer().getLevel(door.lightDoorDimension);
-        if (lightLevel == null) {
-            return false;
-        }
-
-        BlockPos interactPos = door.lightDoorPos;
-        BlockState doorState = lightLevel.getBlockState(interactPos);
-        if (doorState.getBlock() instanceof DoorBlock && doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
-            interactPos = door.lightDoorPos.below();
-            doorState = lightLevel.getBlockState(interactPos);
-        }
-
-        if (!(doorState.getBlock() instanceof DoorBlock doorBlock)) {
-            return false;
-        }
-
-        Direction fromDoorToRoom = door.lightDoorExitDirection.getOpposite();
-        boolean currentVisual = DarknessBlock.isDoorVisuallyOpenFromSide(lightLevel, interactPos, doorState, fromDoorToRoom);
-        boolean targetVisual = !currentVisual;
-        Direction facing = doorState.getValue(DoorBlock.FACING);
-        boolean parallel = facing.getAxis() == fromDoorToRoom.getAxis();
-        boolean targetPhysical = parallel ? targetVisual : !targetVisual;
-        boolean openBefore = doorState.getValue(DoorBlock.OPEN);
-        doorBlock.setOpen(causedBy, lightLevel, doorState, interactPos, targetPhysical);
-        BlockState afterState = lightLevel.getBlockState(interactPos);
-        boolean openAfter = afterState.getBlock() instanceof DoorBlock && afterState.getValue(DoorBlock.OPEN);
-        if (playLightDoorSoundsFromGreatDoorUse && openBefore != openAfter) {
-            BlockSetType setType = doorBlock.type();
-            SoundEvent doorSound = openAfter ? setType.doorOpen() : setType.doorClose();
-            float pitch = lightLevel.getRandom().nextFloat() * 0.1F + 0.9F;
-            lightLevel.playSound(causedBy, interactPos, doorSound, SoundSource.BLOCKS, 1.0F, pitch);
-        }
-        door.refreshOpenFromLinkedLightDoor(darkLevel);
-
-        return true;
-    }
-
-    public static void forceCloseExclusiveLinkedLightDoor(ServerLevel darkLevel, GreatDoor door) {
-        if (door.isDestinationDarkWorld || door.lightDoorPos == null || door.lightDoorDimension == null) {
-            return;
-        }
-        ServerLevel lightLevel = darkLevel.getServer().getLevel(door.lightDoorDimension);
-        if (lightLevel == null) {
-            return;
-        }
-        BlockPos interactPos = door.lightDoorPos;
-        BlockState doorState = lightLevel.getBlockState(interactPos);
-        if (doorState.getBlock() instanceof DoorBlock && doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
-            interactPos = door.lightDoorPos.below();
-            doorState = lightLevel.getBlockState(interactPos);
-        }
-        if (!(doorState.getBlock() instanceof DoorBlock doorBlock)) {
-            return;
-        }
-        boolean openBefore = doorState.getValue(DoorBlock.OPEN);
-        if (!openBefore) {
-            door.refreshOpenFromLinkedLightDoor(darkLevel);
-            return;
-        }
-        doorBlock.setOpen(null, lightLevel, doorState, interactPos, false);
-        BlockSetType setType = doorBlock.type();
-        float pitch = lightLevel.getRandom().nextFloat() * 0.1F + 0.9F;
-        lightLevel.playSound(null, interactPos, setType.doorClose(), SoundSource.BLOCKS, 1.0F, pitch);
-        door.refreshOpenFromLinkedLightDoor(darkLevel);
-    }
-
-    public void broadcastSync(ServerLevel darkLevel) {
-        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> darkLevel.getChunkAt(greatDoorPos)), new ClientBoundSingleGreatDoorPacket(this));
-    }
-
     public void tick(Level level) {
         if (level.isClientSide() || !DarkWorldUtil.isDarkWorld(level)) {
             return;
@@ -219,18 +88,22 @@ public class GreatDoor {
 
         if (level instanceof ServerLevel serverLevel) {
             boolean localFountain = DarkWorldUtil.levelHasDarkFountain(serverLevel);
+
             if (localFountain) {
-                exclusiveLightDoorForceClosedWithoutFountain = false;
+                lightDoorForceClosedWithoutFountain = false;
             } else if (!isDestinationDarkWorld
                     && lightDoorPos != null && lightDoorDimension != null && lightDoorExitDirection != null) {
-                if (!exclusiveLightDoorForceClosedWithoutFountain) {
-                    forceCloseExclusiveLinkedLightDoor(serverLevel, this);
-                    exclusiveLightDoorForceClosedWithoutFountain = true;
+                if (!lightDoorForceClosedWithoutFountain) {
+                    forceCloseLinkedLightDoor(serverLevel, this);
+                    lightDoorForceClosedWithoutFountain = true;
                 }
             }
 
+            maintainDoorShape(serverLevel);
+
             boolean openBefore = isOpen;
             refreshOpenFromLinkedLightDoor(serverLevel);
+
             if (openBefore != isOpen) {
                 serverLevel.playSound(null, greatDoorPos.getX() + 0.5, greatDoorPos.getY() + 0.5, greatDoorPos.getZ() + 0.5,
                         SoundRegistry.GREAT_DOOR.get(), SoundSource.BLOCKS, 1f, 1f);
@@ -259,6 +132,157 @@ public class GreatDoor {
         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(greatDoorPos)), new ClientBoundSingleGreatDoorPacket(this));
     }
 
+    public void maintainDoorShape(ServerLevel darkLevel) {
+        for (BlockPos pos : volumePositions) {
+            if (!(darkLevel.getBlockState(pos).getBlock() instanceof GreatDoorShapeBlock)) {
+                if (isOpen) {
+                    darkLevel.setBlock(pos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState().setValue(IS_DOOR_OPEN, true), 3);
+                } else {
+                    darkLevel.setBlock(pos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState().setValue(IS_DOOR_OPEN, false), 3);
+                }
+            } else {
+                if (darkLevel.getBlockState(pos).getValue(IS_DOOR_OPEN) != isOpen) {
+                    darkLevel.setBlock(pos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState().setValue(IS_DOOR_OPEN, isOpen), 3);
+                }
+
+                if (darkLevel.getBlockEntity(pos) instanceof GreatDoorShapeBlockEntity shapeBlockEntity) {
+                    if (shapeBlockEntity.greatDoorPos != greatDoorPos) {
+                        shapeBlockEntity.greatDoorPos = greatDoorPos;
+                    }
+                }
+            }
+        }
+    }
+
+    public void refreshOpenFromLinkedLightDoor(ServerLevel darkLevel) {
+        if (!DarkWorldUtil.levelHasDarkFountain(darkLevel) && !isDestinationDarkWorld && lightDoorPos != null && lightDoorDimension != null
+                && lightDoorExitDirection != null) {
+            isOpen = false;
+
+            return;
+        }
+
+        if (lightDoorPos == null || lightDoorDimension == null || lightDoorExitDirection == null) {
+            isOpen = false;
+
+            return;
+        }
+
+        ServerLevel lightLevel = darkLevel.getServer().getLevel(lightDoorDimension);
+
+        if (lightLevel == null) {
+            isOpen = false;
+
+            return;
+        }
+
+        BlockPos lower = lightDoorPos;
+        BlockState doorState = lightLevel.getBlockState(lower);
+
+        if (doorState.getBlock() instanceof DoorBlock && doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
+            lower = lightDoorPos.below();
+            doorState = lightLevel.getBlockState(lower);
+        }
+        if (!(doorState.getBlock() instanceof DoorBlock)) {
+            isOpen = false;
+
+            return;
+        }
+
+        Direction fromDoorToRoom = lightDoorExitDirection.getOpposite();
+
+        isOpen = DarknessBlock.isDoorVisuallyOpenFromSide(lightLevel, lower, doorState, fromDoorToRoom);
+    }
+
+    public static boolean toggleLinkedLightDoor(ServerLevel darkLevel, GreatDoor door, @Nullable Entity causedBy, boolean playLightDoorSoundsFromGreatDoorUse) {
+        if (door.lightDoorPos == null || door.lightDoorDimension == null || door.lightDoorExitDirection == null) {
+            return false;
+        }
+
+        ServerLevel lightLevel = darkLevel.getServer().getLevel(door.lightDoorDimension);
+        if (lightLevel == null) {
+            return false;
+        }
+
+        BlockPos interactPos = door.lightDoorPos;
+        BlockState doorState = lightLevel.getBlockState(interactPos);
+
+        if (doorState.getBlock() instanceof DoorBlock && doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
+            interactPos = door.lightDoorPos.below();
+            doorState = lightLevel.getBlockState(interactPos);
+        }
+
+        if (!(doorState.getBlock() instanceof DoorBlock doorBlock)) {
+            return false;
+        }
+
+        Direction fromDoorToRoom = door.lightDoorExitDirection.getOpposite();
+        boolean currentVisual = DarknessBlock.isDoorVisuallyOpenFromSide(lightLevel, interactPos, doorState, fromDoorToRoom);
+        boolean targetVisual = !currentVisual;
+        Direction facing = doorState.getValue(DoorBlock.FACING);
+        boolean parallel = facing.getAxis() == fromDoorToRoom.getAxis();
+        boolean targetPhysical = parallel ? targetVisual : !targetVisual;
+        boolean openBefore = doorState.getValue(DoorBlock.OPEN);
+
+        doorBlock.setOpen(causedBy, lightLevel, doorState, interactPos, targetPhysical);
+
+        BlockState afterState = lightLevel.getBlockState(interactPos);
+        boolean openAfter = afterState.getBlock() instanceof DoorBlock && afterState.getValue(DoorBlock.OPEN);
+
+        if (playLightDoorSoundsFromGreatDoorUse && openBefore != openAfter) {
+            BlockSetType setType = doorBlock.type();
+            SoundEvent doorSound = openAfter ? setType.doorOpen() : setType.doorClose();
+            float pitch = lightLevel.getRandom().nextFloat() * 0.1F + 0.9F;
+
+            lightLevel.playSound(causedBy, interactPos, doorSound, SoundSource.BLOCKS, 1.0F, pitch);
+        }
+
+        door.refreshOpenFromLinkedLightDoor(darkLevel);
+
+        return true;
+    }
+
+    public static void forceCloseLinkedLightDoor(ServerLevel darkLevel, GreatDoor door) {
+        if (door.isDestinationDarkWorld || door.lightDoorPos == null || door.lightDoorDimension == null) {
+            return;
+        }
+
+        ServerLevel lightLevel = darkLevel.getServer().getLevel(door.lightDoorDimension);
+
+        if (lightLevel == null) {
+            return;
+        }
+
+        BlockPos interactPos = door.lightDoorPos;
+        BlockState doorState = lightLevel.getBlockState(interactPos);
+
+        if (doorState.getBlock() instanceof DoorBlock && doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
+            interactPos = door.lightDoorPos.below();
+            doorState = lightLevel.getBlockState(interactPos);
+        }
+
+        if (!(doorState.getBlock() instanceof DoorBlock doorBlock)) {
+            return;
+        }
+
+        boolean openBefore = doorState.getValue(DoorBlock.OPEN);
+
+        if (!openBefore) {
+            door.refreshOpenFromLinkedLightDoor(darkLevel);
+
+            return;
+        }
+
+        doorBlock.setOpen(null, lightLevel, doorState, interactPos, false);
+
+        BlockSetType setType = doorBlock.type();
+        float pitch = lightLevel.getRandom().nextFloat() * 0.1F + 0.9F;
+
+        lightLevel.playSound(null, interactPos, setType.doorClose(), SoundSource.BLOCKS, 1.0F, pitch);
+
+        door.refreshOpenFromLinkedLightDoor(darkLevel);
+    }
+
     public void tickVolumeTeleportation(ServerLevel greatDoorLevel, ServerLevel destinationLevel) {
         int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
         int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
@@ -273,53 +297,61 @@ public class GreatDoor {
         AABB volumeBox = new AABB(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
 
         if (isDestinationDarkWorld) {
-            GreatDoor peer = resolvePeerGreatDoor(greatDoorLevel, destinationLevel);
+            GreatDoor peer = resolvePeerGreatDoor(destinationLevel);
             if (peer == null) {
                 DarkWorldUtil.ensurePeerGreatDoor(this, greatDoorLevel, destinationLevel);
-                peer = resolvePeerGreatDoor(greatDoorLevel, destinationLevel);
+                peer = resolvePeerGreatDoor(destinationLevel);
             }
+
             if (peer == null) {
                 return;
             }
+
             float yaw = peer.direction.toYRot();
             Vec3 destVec = spawnCenterInFrontOfGreatDoor(peer.greatDoorPos, peer.direction);
-            BlockPos destDarkAnchor = DarkWorldUtil.findDarkFountainAnchor(destinationLevel);
+
             for (ServerPlayer serverPlayer : greatDoorLevel.getEntitiesOfClass(ServerPlayer.class, volumeBox)) {
                 if (serverPlayer.isSpectator()) {
                     continue;
                 }
+
                 greatDoorLevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
+
                 serverPlayer.teleportTo(destinationLevel, destVec.x, destVec.y, destVec.z, yaw, 0f);
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+
                 PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundTransportTickerPacket(0f));
-                if (destDarkAnchor != null) {
-                    addToDarkFountainTeleported(destinationLevel, destDarkAnchor, serverPlayer.getUUID());
-                }
             }
         } else {
             if (lightDoorPos == null || lightDoorExitDirection == null) {
                 return;
             }
+
             Vec3 destVec = lightDoorPos.getCenter();
             float yaw = lightDoorExitDirection.toYRot();
             BlockPos darkAnchor = DarkWorldUtil.findDarkFountainAnchor(greatDoorLevel);
+
             for (ServerPlayer serverPlayer : greatDoorLevel.getEntitiesOfClass(ServerPlayer.class, volumeBox)) {
                 if (serverPlayer.isSpectator()) {
                     continue;
                 }
+
                 greatDoorLevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
+
                 serverPlayer.teleportTo(destinationLevel, destVec.x, destVec.y, destVec.z, yaw, 0f);
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+
                 PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundTransportTickerPacket(0f));
+
                 if (darkAnchor != null) {
-                    addPlayerToPairedLightFountainTeleported(destinationLevel, greatDoorLevel.dimension(), darkAnchor, serverPlayer.getUUID());
+                    addPlayerToLightFountain(destinationLevel, greatDoorLevel.dimension(), darkAnchor, serverPlayer.getUUID());
                 }
             }
         }
     }
 
     @Nullable
-    private GreatDoor resolvePeerGreatDoor(ServerLevel sourceWorld, ServerLevel destWorld) {
+    private GreatDoor resolvePeerGreatDoor(ServerLevel destWorld) {
         if (destinationGreatDoorDimension == null || !destinationGreatDoorDimension.equals(destWorld.dimension())) {
             return null;
         }
@@ -332,24 +364,12 @@ public class GreatDoor {
                 .orElse(null);
     }
 
-    private static void addToDarkFountainTeleported(ServerLevel darkLevel, BlockPos fountainAnchor, UUID id) {
-        darkLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-            DarkFountain f = cap.darkFountains.get(fountainAnchor);
-            if (f != null) {
-                f.teleportedEntities.add(id);
-            }
-        });
-    }
-
     public boolean isUnlinkedForAutoBinding() {
-        return !isDestinationDarkWorld
-                && lightDoorPos == null
-                && lightDoorDimension == null
-                && destinationGreatDoorPos == null
+        return !isDestinationDarkWorld && lightDoorPos == null && lightDoorDimension == null && destinationGreatDoorPos == null
                 && destinationGreatDoorDimension == null;
     }
 
-    private static void addPlayerToPairedLightFountainTeleported(ServerLevel lightLevel, ResourceKey<Level> darkDim, BlockPos darkFountainAnchor, UUID playerId) {
+    private static void addPlayerToLightFountain(ServerLevel lightLevel, ResourceKey<Level> darkDim, BlockPos darkFountainAnchor, UUID playerId) {
         lightLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
             for (DarkFountain lf : cap.darkFountains.values()) {
                 if (darkDim.equals(lf.destinationDimension) && darkFountainAnchor.equals(lf.destinationPos)) {
@@ -358,6 +378,15 @@ public class GreatDoor {
                 }
             }
         });
+    }
+
+    public static Vec3 spawnCenterInFrontOfGreatDoor(BlockPos greatDoorPos, Direction doorFacing) {
+        return Vec3.atBottomCenterOf(greatDoorPos.relative(doorFacing, 1))
+                .add(Vec3.atLowerCornerOf(BlockPos.ZERO.relative(doorFacing.getClockWise(), 1)).scale(2.5));
+    }
+
+    public void broadcastSync(ServerLevel darkLevel) {
+        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> darkLevel.getChunkAt(greatDoorPos)), new ClientBoundSingleGreatDoorPacket(this));
     }
 
     public CompoundTag save() {
@@ -393,19 +422,21 @@ public class GreatDoor {
         boolean isOpen = tag.getBoolean(IS_OPEN);
         List<BlockPos> volumePositions = new ArrayList<>();
         ListTag volumePositionsTag = tag.getList(VOLUME_POSITIONS, Tag.TAG_COMPOUND);
+
         for (Tag t : volumePositionsTag) {
             volumePositions.add(NbtUtils.readBlockPos((CompoundTag) t));
         }
+
         BlockPos lightDoorPos = null;
         ResourceKey<Level> lightDoorDimension = null;
         Direction lightDoorExitDirection = null;
+
         if (tag.contains("has_light_link", Tag.TAG_BYTE)) {
             if (tag.getBoolean("has_light_link") && tag.contains(LIGHT_DOOR_POS, Tag.TAG_COMPOUND)) {
                 lightDoorPos = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_POS));
                 lightDoorDimension = ModUtil.stringToDimension(tag.getString(LIGHT_DOOR_DIMENSION));
-                lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING)
-                        ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION))
-                        : Direction.NORTH;
+                lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING) ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION)) : Direction.NORTH;
+
                 if (lightDoorExitDirection == null) {
                     lightDoorExitDirection = Direction.NORTH;
                 }
@@ -413,9 +444,8 @@ public class GreatDoor {
         } else if (tag.contains(LIGHT_DOOR_POS, Tag.TAG_COMPOUND)) {
             lightDoorPos = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_POS));
             lightDoorDimension = ModUtil.stringToDimension(tag.getString(LIGHT_DOOR_DIMENSION));
-            lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING)
-                    ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION))
-                    : null;
+            lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING) ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION)) : null;
+
             if (lightDoorExitDirection == null) {
                 lightDoorExitDirection = Direction.NORTH;
             }
@@ -427,6 +457,7 @@ public class GreatDoor {
 
         if (tag.contains(IS_DESTINATION_DARK_WORLD)) {
             isDestinationDarkWorld = tag.getBoolean(IS_DESTINATION_DARK_WORLD);
+
             if (isDestinationDarkWorld && tag.contains(DESTINATION_GREAT_DOOR_POS, Tag.TAG_COMPOUND)) {
                 destinationGreatDoorPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_GREAT_DOOR_POS));
                 destinationGreatDoorDimension = ModUtil.stringToDimension(tag.getString(DESTINATION_GREAT_DOOR_DIMENSION));
@@ -435,8 +466,10 @@ public class GreatDoor {
             if (tag.contains(DESTINATION_GREAT_DOOR_POS, Tag.TAG_COMPOUND)) {
                 destinationGreatDoorPos = NbtUtils.readBlockPos(tag.getCompound(DESTINATION_GREAT_DOOR_POS));
             }
+
             destinationGreatDoorDimension = ModUtil.stringToDimension(tag.getString(DESTINATION_GREAT_DOOR_DIMENSION));
             isDestinationDarkWorld = destinationGreatDoorDimension != null && DarkWorldUtil.isDarkWorldKey(destinationGreatDoorDimension);
+
             if (!isDestinationDarkWorld) {
                 destinationGreatDoorPos = null;
                 destinationGreatDoorDimension = null;
