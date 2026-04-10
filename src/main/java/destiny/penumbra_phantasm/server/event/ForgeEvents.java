@@ -57,6 +57,10 @@ public class ForgeEvents {
             if (!(stack.getItem() instanceof ScarletBucketItem)) {
                 event.setCanceled(true);
             }
+        } else {
+            if ((stack.getItem() instanceof ScarletBucketItem)) {
+                event.setCanceled(true);
+            }
         }
     }
 }
