@@ -499,22 +499,9 @@ public class FountainRenderUtil
 					1f, 1f, 1f, Mth.clamp(flashDelta, 0f, 1f),
 					48f, 140f, 1, 0.01f);
 			poseStack.popPose();
-			poseStack.pushPose();
-			poseStack.translate(0.5f, 0f, 0.5f);
-			poseStack.scale(1.0f, 1.0f, 1.0f);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomSealing)),
-					1f, 1f, 1f, Mth.clamp(flashDelta, 0f, 1f),
-					48f, 140f, 1, 0.01f);
-			poseStack.popPose();
-			poseStack.pushPose();
-			poseStack.translate(0.5f, 0f, 0.5f);
-			poseStack.scale(1.0f, 1.0f, 1.0f);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomSealing)),
-					1f, 1f, 1f, Mth.clamp(flashDelta, 0f, 1f),
-					48f, 140f, 1, 0.01f);
-			poseStack.popPose();
 
 			poseStack.pushPose();
+			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(edgePulse, 1.0f, edgePulse);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleSealing)),
 					1f, 1f, 1f, flashDelta,
