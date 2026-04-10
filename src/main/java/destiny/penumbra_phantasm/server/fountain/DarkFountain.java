@@ -792,7 +792,7 @@ public class DarkFountain {
                         level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
 
                         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
-                        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension));
+                        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension, false, BlockPos.ZERO));
                     }
                 });
                 this.teleportedEntities.add(player.getUUID());
@@ -881,7 +881,7 @@ public class DarkFountain {
                     this.teleportedEntities.add(player.getUUID());
                     level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
                     PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(this.destinationPos, spawn.x, spawn.y, spawn.z, yaw, this.destinationDimension));
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(this.destinationPos, spawn.x, spawn.y, spawn.z, yaw, this.destinationDimension, true, greatDoor.greatDoorPos));
                 }
             }
         }

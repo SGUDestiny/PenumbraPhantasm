@@ -156,11 +156,19 @@ public class GreatDoor {
         }
     }
 
-    public static void prepareDarkWorldGreatDoorsAfterPlayerTravel(ServerLevel darkLevel) {
+    public static void prepareDarkWorldGreatDoorsAfterPlayerTravel(ServerLevel darkLevel, @Nullable BlockPos onlyGreatDoorAnchor) {
         if (!DarkWorldUtil.isDarkWorld(darkLevel)) {
             return;
         }
         darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
+            if (onlyGreatDoorAnchor != null) {
+                GreatDoor door = cap.greatDoors.get(onlyGreatDoorAnchor);
+                if (door != null) {
+                    door.refreshOpenFromLinkedLightDoor(darkLevel);
+                    door.maintainDoorShape(darkLevel);
+                }
+                return;
+            }
             for (GreatDoor door : new ArrayList<>(cap.greatDoors.values())) {
                 door.refreshOpenFromLinkedLightDoor(darkLevel);
                 door.maintainDoorShape(darkLevel);
@@ -352,7 +360,8 @@ public class GreatDoor {
                 return;
             }
 
-            prepareDarkWorldGreatDoorsAfterPlayerTravel(destinationLevel);
+            peer.refreshOpenFromLinkedLightDoor(destinationLevel);
+            peer.maintainDoorShape(destinationLevel);
 
             float yaw = peer.direction.toYRot();
             Vec3 destVec = spawnCenterInFrontOfGreatDoor(peer.greatDoorPos, peer.direction);

@@ -17,7 +17,8 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public record ServerBoundDarknessFallPacket(BlockPos destinationPos, double spawnX, double spawnY, double spawnZ,
-                                            float spawnYaw, ResourceKey<Level> dimension) {
+                                            float spawnYaw, ResourceKey<Level> dimension, boolean narrowGreatDoorPrepare,
+                                            BlockPos arrivalGreatDoorAnchor) {
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(destinationPos);
         buffer.writeDouble(spawnX);
@@ -25,6 +26,10 @@ public record ServerBoundDarknessFallPacket(BlockPos destinationPos, double spaw
         buffer.writeDouble(spawnZ);
         buffer.writeFloat(spawnYaw);
         buffer.writeResourceKey(dimension);
+        buffer.writeBoolean(narrowGreatDoorPrepare);
+        if (narrowGreatDoorPrepare) {
+            buffer.writeBlockPos(arrivalGreatDoorAnchor);
+        }
     }
 
     public static ServerBoundDarknessFallPacket decode(FriendlyByteBuf buffer) {
@@ -34,7 +39,9 @@ public record ServerBoundDarknessFallPacket(BlockPos destinationPos, double spaw
         double spawnZ = buffer.readDouble();
         float spawnYaw = buffer.readFloat();
         ResourceKey<Level> dimension = buffer.readResourceKey(Registries.DIMENSION);
-        return new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension);
+        boolean narrow = buffer.readBoolean();
+        BlockPos arrivalGreatDoor = narrow ? buffer.readBlockPos() : BlockPos.ZERO;
+        return new ServerBoundDarknessFallPacket(destinationPos, spawnX, spawnY, spawnZ, spawnYaw, dimension, narrow, arrivalGreatDoor);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
@@ -46,7 +53,7 @@ public record ServerBoundDarknessFallPacket(BlockPos destinationPos, double spaw
             if (level == null) return;
 
             if (DarkWorldUtil.isDarkWorld(level)) {
-                GreatDoor.prepareDarkWorldGreatDoorsAfterPlayerTravel(level);
+                GreatDoor.prepareDarkWorldGreatDoorsAfterPlayerTravel(level, narrowGreatDoorPrepare ? arrivalGreatDoorAnchor : null);
             }
 
             player.teleportTo(level, spawnX, spawnY, spawnZ, spawnYaw, 0f);
