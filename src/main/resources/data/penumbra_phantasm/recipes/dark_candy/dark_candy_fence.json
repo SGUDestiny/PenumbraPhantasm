@@ -4,10 +4,10 @@
   "group": "wooden_fence",
   "key": {
     "#": {
-      "item": "penumbra_phantasm:dark_candy_wood_planks"
+      "item": "penumbra_phantasm:dark_candy_planks"
     },
     "W": {
-      "item": "minecraft:stick"
+      "item": "penumbra_phantasm:dark_candy_stick"
     }
   },
   "pattern": [
@@ -16,7 +16,7 @@
   ],
   "result": {
     "count": 3,
-    "item": "penumbra_phantasm:dark_candy_wood_fence"
+    "item": "penumbra_phantasm:dark_candy_fence"
   },
   "show_notification": true
 }
