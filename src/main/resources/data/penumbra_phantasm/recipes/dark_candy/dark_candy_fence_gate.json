@@ -11,9 +11,9 @@
     }
   },
   "pattern": [
-    " W ",
+    "   ",
     "W#W",
-    " W "
+    "W#W"
   ],
   "result": {
     "item": "penumbra_phantasm:dark_candy_fence_gate"
