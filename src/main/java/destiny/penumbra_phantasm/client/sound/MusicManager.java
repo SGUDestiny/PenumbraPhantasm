@@ -1,6 +1,5 @@
 package destiny.penumbra_phantasm.client.sound;
 
-import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
@@ -116,10 +115,15 @@ public class MusicManager {
                 currentSound.stopSound();
                 minecraft.getSoundManager().stop(currentSound);
             }
-            currentSound = null;
-            currentSoundEvent = null;
-            state = State.SILENT;
-            fadeInTicks = 0;
+            if (state == State.PLAYING && currentSoundEvent != null
+                    && scheduleBiomeWaitIfApplicable(currentSoundEvent)) {
+                fadeInTicks = 0;
+            } else {
+                currentSound = null;
+                currentSoundEvent = null;
+                state = State.SILENT;
+                fadeInTicks = 0;
+            }
         }
 
         SoundEvent desiredSound = null;
@@ -212,14 +216,9 @@ public class MusicManager {
         if (currentSound == null) return;
 
         if (currentSound.isStopped()) {
-            if (state == State.PLAYING && currentSoundEvent != null) {
-                BiomeMusic bm = findBiomeMusic(currentSoundEvent);
-                if (bm != null && !bm.looping()) {
-                    state = State.WAITING;
-                    waitTimer = bm.minDelay() + random.nextInt(Math.max(1, bm.maxDelay() - bm.minDelay()));
-                    currentSound = null;
-                    return;
-                }
+            if (state == State.PLAYING && currentSoundEvent != null
+                    && scheduleBiomeWaitIfApplicable(currentSoundEvent)) {
+                return;
             }
             state = State.SILENT;
             currentSound = null;
@@ -358,6 +357,17 @@ public class MusicManager {
             if (bm.sound().equals(sound)) return bm;
         }
         return null;
+    }
+
+    private boolean scheduleBiomeWaitIfApplicable(SoundEvent sound) {
+        BiomeMusic bm = findBiomeMusic(sound);
+        if (bm == null || bm.looping()) {
+            return false;
+        }
+        state = State.WAITING;
+        waitTimer = bm.minDelay() + random.nextInt(Math.max(1, bm.maxDelay() - bm.minDelay()));
+        currentSound = null;
+        return true;
     }
 
     public boolean isPlayingPriority(MusicPriority priority) {
