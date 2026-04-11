@@ -47,47 +47,6 @@ public class DarknessBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        for (Direction dir : Direction.values()) {
-            BlockPos neighborPos = pos.relative(dir);
-            BlockState neighbor = level.getBlockState(neighborPos);
-
-            boolean shouldSpawn = false;
-            Direction particleDirection = dir;
-
-            if (neighbor.is(Blocks.AIR) || neighbor.is(Blocks.CAVE_AIR) || neighbor.is(Blocks.VOID_AIR)) {
-                shouldSpawn = true;
-            } else if (neighbor.getBlock() instanceof DoorBlock) {
-                Direction fromDoorToRoom = dir.getOpposite();
-                if (isDoorVisuallyOpenFromSide(level, neighborPos, neighbor, fromDoorToRoom)) {
-                    BlockPos beyondDoor = neighborPos.relative(dir);
-                    if (!(level.getBlockState(beyondDoor).getBlock() instanceof DarknessBlock)) {
-                        shouldSpawn = true;
-                        particleDirection = dir;
-                    }
-                }
-            }
-
-            if (!shouldSpawn) continue;
-
-            double px = pos.getX() + 0.5 + dir.getStepX() * 0.4;
-            double py = pos.getY() + 0.5 + dir.getStepY() * 0.4;
-            double pz = pos.getZ() + 0.5 + dir.getStepZ() * 0.4;
-
-            double baseSpeed = 0.15;
-            double vx = particleDirection.getStepX() * baseSpeed + (random.nextDouble() - 0.5) * 0.02;
-            double vy = particleDirection.getStepY() * baseSpeed + random.nextDouble() * 0.02;
-            double vz = particleDirection.getStepZ() * baseSpeed + (random.nextDouble() - 0.5) * 0.02;
-
-            if (level instanceof ServerLevel serverLevel) {
-                serverLevel.sendParticles(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), px, py, pz, 1, vx, vy, vz, 0);
-            } else {
-                level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), px, py, pz, vx, vy, vz);
-            }
-        }
-    }
-
-    @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
