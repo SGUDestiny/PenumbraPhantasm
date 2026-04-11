@@ -44,14 +44,14 @@ public class BlockRegistry {
             () -> new TwilightGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.GRASS).randomTicks()));
     public static final RegistryObject<Block> TWILIGHT_GRASS = registerBlock("twilight_grass",
-            () -> new TallGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
+            () -> new NonTallGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.GRASS)));
 
     public static final RegistryObject<Block> NIGHT_GRASS_BLOCK = registerBlock("night_grass_block",
             () -> new NightGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
                     .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRASS).randomTicks()));
     public static final RegistryObject<Block> NIGHT_GRASS = registerBlock("night_grass",
-            () -> new TallGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
+            () -> new NonTallGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
                     .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRASS)));
     public static final RegistryObject<Block> NIGHT_DIRT = registerBlock("night_dirt",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.DIRT)
