@@ -120,11 +120,7 @@ public class DarknessBlockEntity extends BlockEntity {
             double vy = particleDirection.getStepY() * baseSpeed + random.nextDouble() * 0.02;
             double vz = particleDirection.getStepZ() * baseSpeed + (random.nextDouble() - 0.5) * 0.02;
 
-            if (level instanceof ServerLevel serverLevel) {
-                serverLevel.sendParticles(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), px, py, pz, 1, vx, vy, vz, 0);
-            } else {
-                level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), px, py, pz, vx, vy, vz);
-            }
+            level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), px, py, pz, vx, vy, vz);
         }
     }
 
