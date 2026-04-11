@@ -251,6 +251,9 @@ public class MusicManager {
     }
 
     private void tickWaiting(SoundEvent desiredSound, MusicPriority desiredPriority, boolean desiredLooping) {
+        if (minecraft.isPaused()) {
+            return;
+        }
         waitTimer--;
         if (waitTimer <= 0) {
             startTrack(desiredSound, desiredPriority, desiredLooping);
