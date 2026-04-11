@@ -297,7 +297,7 @@ public final class BlocksetServerProvider {
                   "category": "redstone",
                   "group": "wooden_fence_gate",
                   "key": { "#": { "item": "%PLK%" }, "W": { "item": "minecraft:stick" } },
-                  "pattern": [ " W ", "W#W", " W " ],
+                  "pattern": [ "   ", "W#W", "W#W" ],
                   "result": { "item": "%OUT%" },
                   "show_notification": true
                 }""".replace("%PLK%", plank).replace("%OUT%", out);
