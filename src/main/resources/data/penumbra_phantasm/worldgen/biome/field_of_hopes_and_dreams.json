@@ -8,6 +8,7 @@
   },
   "downfall": 0.4,
   "effects": {
+    "ambient_sound": "penumbra_phantasm:ambience_wind",
     "fog_color": 0,
     "grass_color": 9371812,
     "foliage_color": 16711744,
@@ -23,7 +24,6 @@
     [],
     [],
     [
-      "penumbra_phantasm:ore/rosegold_ore"
     ],
     [],
     [],

@@ -208,5 +208,11 @@
     [
       "penumbra_phantasm:great_door"
     ]
+  },
+  "ambience_wind": {
+    "sounds":
+    [
+      "penumbra_phantasm:ambience_wind"
+    ]
   }
 }

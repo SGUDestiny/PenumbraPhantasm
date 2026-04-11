@@ -45,6 +45,8 @@ public class SoundRegistry {
 
     public static RegistryObject<SoundEvent> GREAT_DOOR = registerSoundEvent("great_door");
 
+    public static RegistryObject<SoundEvent> AMBIENCE_WIND = registerSoundEvent("ambience_wind");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));
