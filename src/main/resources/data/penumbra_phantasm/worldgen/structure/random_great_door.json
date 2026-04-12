@@ -2,7 +2,7 @@
   "type": "minecraft:jigsaw",
   "biomes": "#penumbra_phantasm:has_structure/random_great_door",
   "step": "top_layer_modification",
-  "terrain_adaptation": "beard_thin",
+  "terrain_adaptation": "encapsulate",
   "start_pool": "penumbra_phantasm:random_great_door",
   "size": 1,
   "start_height": {

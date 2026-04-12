@@ -5,6 +5,8 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -14,6 +16,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.*;
@@ -39,6 +42,9 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
+   private static final ResourceKey<Biome> GREAT_BOARD = ResourceKey.create(Registries.BIOME, new ResourceLocation(PenumbraPhantasm.MODID, "great_board"));
+   private static final int GREAT_BOARD_BAND_HEIGHT = 5;
+
    public static final Codec<SeededNoiseBasedChunkGenerator> CODEC = RecordCodecBuilder.create((instance) ->
            instance.group(BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) ->
                    generator.biomeSource), NoiseGeneratorSettings.CODEC.fieldOf("settings").forGetter((generator) ->
@@ -54,7 +60,7 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
    public SeededNoiseBasedChunkGenerator(BiomeSource source, Holder<NoiseGeneratorSettings> noise, long seed) {
       super(source, noise);
       this.settings = noise;
-      this.globalFluidPicker = Suppliers.memoize(() -> createFluidPicker(noise.value()));
+      this.globalFluidPicker = Suppliers.memoize(() -> createDarkWorldAquiferFluidPicker(noise.value()));
       this.seed = seed;
    }
 
@@ -62,17 +68,14 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
 										 RandomState randomState, long seed) {
       super(source, noise);
       this.settings = noise;
-      this.globalFluidPicker = Suppliers.memoize(() -> createFluidPicker(noise.value()));
+      this.globalFluidPicker = Suppliers.memoize(() -> createDarkWorldAquiferFluidPicker(noise.value()));
       this.customState = randomState;
       this.seed = seed;
    }
 
-   private static Aquifer.FluidPicker createFluidPicker(NoiseGeneratorSettings pSettings) {
-      Aquifer.FluidStatus aquifer$fluidstatus = new Aquifer.FluidStatus(-54, Blocks.LAVA.defaultBlockState());
-      int i = pSettings.seaLevel();
-      Aquifer.FluidStatus aquifer$fluidstatus1 = new Aquifer.FluidStatus(i, pSettings.defaultFluid());
-      Aquifer.FluidStatus aquifer$fluidstatus2 = new Aquifer.FluidStatus(DimensionType.MIN_Y * 2, Blocks.AIR.defaultBlockState());
-      return (p_224274_, p_224275_, p_224276_) -> p_224275_ < Math.min(-54, i) ? aquifer$fluidstatus : aquifer$fluidstatus1;
+   private static Aquifer.FluidPicker createDarkWorldAquiferFluidPicker(NoiseGeneratorSettings pSettings) {
+      Aquifer.FluidStatus air = new Aquifer.FluidStatus(pSettings.seaLevel(), Blocks.AIR.defaultBlockState());
+      return (pX, pY, pZ) -> air;
    }
 
    private RandomState getResolvedState(RandomState pFallbackState) {
@@ -213,11 +216,11 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
       }
    }
 
+   @Override
    public void buildSurface(WorldGenRegion pLevel, StructureManager pStructureManager, RandomState pRandom, ChunkAccess pChunk) {
+      super.buildSurface(pLevel, pStructureManager, pRandom, pChunk);
       if (!SharedConstants.debugVoidTerrain(pChunk.getPos())) {
-         WorldGenerationContext worldgenerationcontext = new WorldGenerationContext(this, pLevel);
-         RandomState randomState = this.getResolvedState(pRandom);
-         this.buildSurface(pChunk, worldgenerationcontext, randomState, pStructureManager, pLevel.getBiomeManager(), pLevel.registryAccess().registryOrThrow(Registries.BIOME), Blender.of(pLevel));
+         this.applyGreatBoardPolishedSurface(pChunk);
       }
    }
 
@@ -355,6 +358,13 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
                            blockstate = this.settings.value().defaultBlock();
                         }
 
+                        if (blockstate.is(BlockRegistry.UMBRASTONE.get())) {
+                           Holder<Biome> biomeHolder = pChunk.getNoiseBiome(QuartPos.fromBlock(l3), QuartPos.fromBlock(l2), QuartPos.fromBlock(k4));
+                           if (biomeHolder.is(GREAT_BOARD)) {
+                              blockstate = this.greatBoardStratumState(l3, l2, k4);
+                           }
+                        }
+
                         blockstate = this.debugPreliminarySurfaceLevel(noisechunk, l3, l2, k4, blockstate);
                         if (blockstate != AIR && !SharedConstants.debugVoidTerrain(pChunk.getPos())) {
                            levelchunksection.setBlockState(i4, i3, l4, blockstate, false);
@@ -380,6 +390,44 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
 
    private BlockState debugPreliminarySurfaceLevel(NoiseChunk pChunk, int pX, int pY, int pZ, BlockState pState) {
       return pState;
+   }
+
+   private void applyGreatBoardPolishedSurface(ChunkAccess chunk) {
+      ChunkPos chunkPos = chunk.getPos();
+      int minX = chunkPos.getMinBlockX();
+      int minZ = chunkPos.getMinBlockZ();
+      BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+      for (int lx = 0; lx < 16; ++lx) {
+         for (int lz = 0; lz < 16; ++lz) {
+            int wx = minX + lx;
+            int wz = minZ + lz;
+            int y = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, lx, lz);
+            blockPos.set(wx, y, wz);
+            Holder<Biome> biome = chunk.getNoiseBiome(QuartPos.fromBlock(wx), QuartPos.fromBlock(y), QuartPos.fromBlock(wz));
+            if (!biome.is(GREAT_BOARD)) {
+               continue;
+            }
+            BlockState current = chunk.getBlockState(blockPos);
+            if (!current.is(BlockRegistry.DARK_MARBLE.get()) && !current.is(BlockRegistry.SCARLET_MARBLE.get())) {
+               continue;
+            }
+            boolean darkSquare = (Mth.floorDiv(wx, 3) + Mth.floorDiv(wz, 3)) % 2 == 0;
+            BlockState polished = darkSquare ? BlockRegistry.POLISHED_DARK_MARBLE.get().defaultBlockState() : BlockRegistry.POLISHED_SCARLET_MARBLE.get().defaultBlockState();
+            chunk.setBlockState(blockPos, polished, false);
+         }
+      }
+   }
+
+   private double greatBoardLayerWarp(int x, int z) {
+      double sx = x * 0.04;
+      double sz = z * 0.04;
+      return (Mth.sin((float) sx) * Mth.cos((float) sz) + Mth.sin((float) (sz * 1.7 + sx * 0.8)) * 0.6) * 2.5;
+   }
+
+   private BlockState greatBoardStratumState(int x, int y, int z) {
+      int warpedY = y + Mth.floor(this.greatBoardLayerWarp(x, z));
+      int band = Mth.floorDiv(warpedY, GREAT_BOARD_BAND_HEIGHT);
+      return (band & 1) == 0 ? BlockRegistry.DARK_MARBLE.get().defaultBlockState() : BlockRegistry.SCARLET_MARBLE.get().defaultBlockState();
    }
 
    public int getGenDepth() {

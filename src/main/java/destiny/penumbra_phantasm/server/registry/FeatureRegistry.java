@@ -22,6 +22,7 @@ public class FeatureRegistry {
     public static final DeferredRegister<Feature<?>> FEATURES = DeferredRegister.create(ForgeRegistries.FEATURES, PenumbraPhantasm.MODID);
 
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> SCARLET_BUSH = FEATURES.register("scarlet_bush", () -> new ScarletBushFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> GREAT_BOARD_CHESS_RANDOM = FEATURES.register("great_board_chess_random", () -> new GreatBoardChessRandomFeature(NoneFeatureConfiguration.CODEC));
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCARLET_TREE = registerKey("tree/scarlet_tree");
     public static final RegistryObject<TrunkPlacerType<ScarletTrunkPlacer>> SCARLET_TRUNK = TRUNKS.register("scarlet_trunk_placer", () -> new TrunkPlacerType<>(ScarletTrunkPlacer.CODEC));

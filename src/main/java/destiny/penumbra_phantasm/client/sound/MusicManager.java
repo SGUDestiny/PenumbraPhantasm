@@ -67,6 +67,10 @@ public class MusicManager {
                     new ResourceLocation(PenumbraPhantasm.MODID, "scarlet_forest"),
                     new BiomeMusic(() -> SoundRegistry.EVERLASTING_AUTUMN.get(), false, 60 * 20, 15 * 60 * 20)
             );
+            biomeMusicMap.put(
+                    new ResourceLocation(PenumbraPhantasm.MODID, "great_board"),
+                    new BiomeMusic(() -> SoundRegistry.FIELD_OF_HOPES_AND_DREAMS.get(), false, 60 * 20, 15 * 60 * 20)
+            );
         }
     }
 
