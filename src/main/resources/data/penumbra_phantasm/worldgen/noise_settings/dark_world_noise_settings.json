@@ -20,29 +20,32 @@
     "size_vertical": 2
   },
   "noise_router": {
-  "barrier": 0,
-  "fluid_level_floodedness": {
-    "type": "minecraft:range_choice",
-    "input": {
-        "type": "minecraft:shifted_noise",
-        "noise": "minecraft:temperature",
-        "xz_scale": 0.25,
-        "y_scale": 0,
-        "shift_x": "minecraft:shift_x",
-        "shift_y": 0,
-        "shift_z": "minecraft:shift_z"
-      },
-      "min_inclusive": 0.25,
-      "max_exclusive": 10,
-      "when_in_range": -1.0,
-      "when_out_of_range": 1.0
+  "barrier": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_barrier",
+      "xz_scale": 1.0,
+      "y_scale": 0.5
     },
-    "fluid_level_spread": 0,
-    "lava": 0,
+    "fluid_level_floodedness": {
+      "type": "minecraft:constant",
+      "argument": -1.0
+    },
+    "fluid_level_spread": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_fluid_level_spread",
+      "xz_scale": 1.0,
+      "y_scale": 0.7142857142857143
+    },
+    "lava": {
+      "type": "minecraft:noise",
+      "noise": "minecraft:aquifer_lava",
+      "xz_scale": 1.0,
+      "y_scale": 1.0
+    },
     "temperature": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:temperature",
-      "xz_scale": 0.25,
+      "xz_scale": 0.8,
       "y_scale": 0,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
@@ -156,10 +159,50 @@
       {
         "type": "minecraft:condition",
         "if_true": {
-          "type": "minecraft:water",
-          "offset": 0,
-          "surface_depth_multiplier": 0,
-          "add_stone_depth": false
+          "type": "minecraft:not",
+          "invert": {
+            "type": "minecraft:biome",
+            "biome_is": [
+              "penumbra_phantasm:great_board"
+            ]
+          }
+        },
+        "then_run": {
+          "type": "minecraft:condition",
+          "if_true": {
+            "type": "minecraft:water",
+            "offset": 0,
+            "surface_depth_multiplier": 0,
+            "add_stone_depth": false
+          },
+          "then_run": {
+            "type": "minecraft:condition",
+            "if_true": {
+              "type": "minecraft:stone_depth",
+              "offset": 0,
+              "surface_type": "floor",
+              "add_surface_depth": false,
+              "secondary_depth_range": 0
+            },
+            "then_run": {
+              "type": "minecraft:block",
+              "result_state": {
+                "Name": "penumbra_phantasm:night_grass_block"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "if_true": {
+          "type": "minecraft:not",
+          "invert": {
+            "type": "minecraft:biome",
+            "biome_is": [
+              "penumbra_phantasm:great_board"
+            ]
+          }
         },
         "then_run": {
           "type": "minecraft:condition",
@@ -168,29 +211,13 @@
             "offset": 0,
             "surface_type": "floor",
             "add_surface_depth": false,
-            "secondary_depth_range": 0
+            "secondary_depth_range": 8
           },
           "then_run": {
             "type": "minecraft:block",
             "result_state": {
-              "Name": "penumbra_phantasm:night_grass_block"
+              "Name": "penumbra_phantasm:night_dirt"
             }
-          }
-        }
-      },
-      {
-        "type": "minecraft:condition",
-        "if_true": {
-          "type": "minecraft:stone_depth",
-          "offset": 0,
-          "surface_type": "floor",
-          "add_surface_depth": false,
-          "secondary_depth_range": 8
-        },
-        "then_run": {
-          "type": "minecraft:block",
-          "result_state": {
-            "Name": "penumbra_phantasm:night_dirt"
           }
         }
       }

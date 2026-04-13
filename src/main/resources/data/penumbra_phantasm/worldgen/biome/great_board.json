@@ -8,6 +8,7 @@
   },
   "downfall": 0.4,
   "effects": {
+    "ambient_sound": "penumbra_phantasm:ambience_wind",
     "fog_color": 0,
     "grass_color": 9371812,
     "foliage_color": 16711744,
@@ -22,15 +23,10 @@
     [],
     [],
     [],
-    [
-      "penumbra_phantasm:ore/rosegold_ore"
-    ],
     [],
     [],
     [
-      "penumbra_phantasm:tree/scarlet_tree_forest",
-      "penumbra_phantasm:twilight_grass_patch",
-      "penumbra_phantasm:scarlet_bush_patch"
+      "penumbra_phantasm:great_board/chess_piece_rare"
     ],
     []
   ],

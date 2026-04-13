@@ -76,6 +76,7 @@ public class LocationTitleOverlay {
 
         String fieldOfHopesAndDreamsTranslatable = Util.makeDescriptionId("biome", new ResourceLocation(PenumbraPhantasm.MODID, "field_of_hopes_and_dreams"));
         String scarletForestTranslatable = Util.makeDescriptionId("biome", new ResourceLocation(PenumbraPhantasm.MODID, "scarlet_forest"));
+        String greatBoardTranslatable = Util.makeDescriptionId("biome", new ResourceLocation(PenumbraPhantasm.MODID, "great_board"));
 
         int color = 0xFFFFFF;
         if (currentLocation.equals(fountainTranslatable))
@@ -84,6 +85,8 @@ public class LocationTitleOverlay {
             color = 0xCD00D1;
         if (currentLocation.equals(scarletForestTranslatable))
             color = 0xE8004D;
+        if (currentLocation.equals(greatBoardTranslatable))
+            color = 0xC9A227;
 
         pose.pushPose();
         pose.translate(width / 2f, height / 2f, 0f);

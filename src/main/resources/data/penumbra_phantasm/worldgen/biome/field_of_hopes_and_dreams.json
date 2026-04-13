@@ -1,9 +1,9 @@
 {
   "carvers": {
     "air": [
-      "minecraft:cave",
-      "minecraft:cave_extra_underground",
-      "minecraft:canyon"
+      "penumbra_phantasm:dark_world_cave",
+      "penumbra_phantasm:dark_world_cave_extra_underground",
+      "penumbra_phantasm:dark_world_canyon"
     ]
   },
   "downfall": 0.4,
@@ -18,13 +18,13 @@
   },
   "features": [
     [],
-    [],
-    [],
-    [],
-    [],
-    [],
     [
+      "penumbra_phantasm:lake/field_luminescent_lake"
     ],
+    [],
+    [],
+    [],
+    [],
     [],
     [],
     [
