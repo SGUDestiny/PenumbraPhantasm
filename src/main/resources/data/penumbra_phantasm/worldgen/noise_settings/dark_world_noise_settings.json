@@ -51,7 +51,15 @@
       "shift_y": 0,
       "shift_z": "minecraft:shift_z"
     },
-    "vegetation": 0,
+    "vegetation": {
+      "type": "minecraft:shifted_noise",
+      "noise": "minecraft:vegetation",
+      "xz_scale": 0.75,
+      "y_scale": 0,
+      "shift_x": "minecraft:shift_x",
+      "shift_y": 0,
+      "shift_z": "minecraft:shift_z"
+    },
     "continents": 0,
     "erosion": "minecraft:overworld/erosion",
     "depth": "minecraft:overworld/depth",
