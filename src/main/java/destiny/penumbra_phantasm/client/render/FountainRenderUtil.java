@@ -33,6 +33,20 @@ public class FountainRenderUtil
 {
 	public static float fountainHueAlpha = 0F;
 
+	public static final float OPENING_SHADOW_FADE_START = 70f;
+	public static final float OPENING_SHADOW_FADE_DURATION = 20f;
+	public static final float OPENING_POSTERIZE_SHADOW_FADE_TAIL = 4f;
+	public static final float OPENING_PULSE_FREQ = 2.0f;
+	public static final int POSTERIZE_STRENGTH_RAMP_TICKS = 10;
+	public static final int OPENING_POSTERIZE_TICK_END = 130;
+	public static final float POSTERIZE_DISTANCE_RAMP_START = 16f;
+	public static final float POSTERIZE_DISTANCE_OUTER = 24f;
+	public static final float POSTERIZE_DISTANCE_OUTER_SOFT = 2.5f;
+	public static final float OPENING_POSTERIZE_STRENGTH_MAX = 1f;
+	public static final float OPENING_POSTERIZE_LUMA_THRESHOLD = 0.26f;
+	public static final float FOUNTAIN_SCREEN_TINT_FADE_START = 24f;
+	public static final float FOUNTAIN_SCREEN_TINT_FADE_END = 16f;
+
 	private static final float COS45 = 0.70710678f;
 
 	private static DarkFountainGroundCrackModel cachedCrackModel;
@@ -111,7 +125,6 @@ public class FountainRenderUtil
 		float pulsateTime = 120f;
 		float shrinkTime = 5;
 		float pulseAmp = 0.04f;
-		float pulseFreq = 2.0f;
 
 		float baseScale = 1f;
 		boolean applyPulse = false;
@@ -126,15 +139,13 @@ public class FountainRenderUtil
 			baseScale = 1f - shrinkProg;
 		}
 
-		float pulse = applyPulse ? (1f + pulseAmp * (float) Math.sin(openingTick * pulseFreq)) : 1f;
+		float pulse = applyPulse ? (1f + pulseAmp * (float) Math.sin(openingTick * OPENING_PULSE_FREQ)) : 1f;
 		float scaleXZ = baseScale * pulse;
 
-		float fadeStart = 70;
-		float fadeDuration = 20f;
 		float alphaDark = 0f;
-		if (openingTick >= fadeStart) {
-			if (openingTick < fadeStart + fadeDuration) {
-				float prog = (openingTick - fadeStart) / fadeDuration;
+		if (openingTick >= OPENING_SHADOW_FADE_START) {
+			if (openingTick < OPENING_SHADOW_FADE_START + OPENING_SHADOW_FADE_DURATION) {
+				float prog = (openingTick - OPENING_SHADOW_FADE_START) / OPENING_SHADOW_FADE_DURATION;
 				alphaDark = prog;
 			} else {
 				alphaDark = 1f;
@@ -241,10 +252,8 @@ public class FountainRenderUtil
 				distanceSquared = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos()));
 
 			float distanceInBlocks = (float) Math.sqrt(distanceSquared);
-			float fadeStartDistance = 24f;
-			float fadeEndDistance = 16f;
-			float fadeRange = fadeStartDistance - fadeEndDistance;
-			float tintDelta = (fadeStartDistance - distanceInBlocks) / fadeRange;
+			float fadeRange = FOUNTAIN_SCREEN_TINT_FADE_START - FOUNTAIN_SCREEN_TINT_FADE_END;
+			float tintDelta = (FOUNTAIN_SCREEN_TINT_FADE_START - distanceInBlocks) / fadeRange;
 			tintDelta = Math.max(0f, Math.min(1f, tintDelta));
 
 			float middleRed = middleColor.getRed() / 255f;
@@ -399,10 +408,8 @@ public class FountainRenderUtil
 				distanceSquared = (float) player.position().distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos()));
 
 			float distanceInBlocks = (float) Math.sqrt(distanceSquared);
-			float fadeStartDistance = 24f;
-			float fadeEndDistance = 16f;
-			float fadeRange = fadeStartDistance - fadeEndDistance;
-			float tintDelta = (fadeStartDistance - distanceInBlocks) / fadeRange;
+			float fadeRange = FOUNTAIN_SCREEN_TINT_FADE_START - FOUNTAIN_SCREEN_TINT_FADE_END;
+			float tintDelta = (FOUNTAIN_SCREEN_TINT_FADE_START - distanceInBlocks) / fadeRange;
 			tintDelta = Math.max(0f, Math.min(1f, tintDelta));
 
 			float middleRed = middleColor.getRed() / 255f;
@@ -492,6 +499,20 @@ public class FountainRenderUtil
 			poseStack.popPose();
 
 			//Flash transparent overlays
+			poseStack.pushPose();
+			poseStack.translate(0.5f, 0f, 0.5f);
+			poseStack.scale(1.0f, 1.0f, 1.0f);
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomSealing)),
+					1f, 1f, 1f, Mth.clamp(flashDelta, 0f, 1f),
+					48f, 140f, 1, 0.01f);
+			poseStack.popPose();
+			poseStack.pushPose();
+			poseStack.translate(0.5f, 0f, 0.5f);
+			poseStack.scale(1.0f, 1.0f, 1.0f);
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomSealing)),
+					1f, 1f, 1f, Mth.clamp(flashDelta, 0f, 1f),
+					48f, 140f, 1, 0.01f);
+			poseStack.popPose();
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);

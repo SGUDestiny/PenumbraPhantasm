@@ -5,13 +5,18 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.GreatDoorRenderUtil;
+import destiny.penumbra_phantasm.client.render.screen.DarkWorldInventoryScreen;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.client.event.ScreenEvent;
 import org.lwjgl.opengl.GL11;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.FountainRenderUtil;
@@ -42,7 +47,6 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
-
 	private static final BufferBuilder FOUNTAIN_BUFFER = new BufferBuilder(65536);
 
 	@SubscribeEvent
@@ -80,7 +84,7 @@ public class ClientEvents {
 								fountain.getFountainPos().getZ());
 
 						if (renderSkyPass) {
-							if (openingTick < 130 && openingTick >= 0) {
+							if (openingTick < FountainRenderUtil.OPENING_POSTERIZE_TICK_END && openingTick >= 0) {
 								FountainRenderUtil.renderOpeningFoutain(openingTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 							} else {
 								double viewDistance = event.getLevelRenderer().getLastViewDistance();
@@ -257,6 +261,20 @@ public class ClientEvents {
 					.equals(InputConstants.getKey(event.getKey(), event.getScanCode())))
 			{
 				introScreen.pickChoice();
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onScreenOpen(ScreenEvent.Opening event) {
+		Screen newScreen = event.getNewScreen();
+		Player player = Minecraft.getInstance().player;
+		if (player == null)
+			return;
+
+		if (DarkWorldUtil.isDarkWorld(player.level())) {
+			if (newScreen instanceof InventoryScreen) {
+				event.setNewScreen(new DarkWorldInventoryScreen(player));
 			}
 		}
 	}

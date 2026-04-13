@@ -19,6 +19,7 @@ import java.io.IOException;
 public class ModShaders {
 
     public static ShaderInstance FOUNTAIN_MASKED;
+    public static ShaderInstance OPENING_POSTERIZE;
 
     @SubscribeEvent
     public static void registerShaders(RegisterShadersEvent event) throws IOException {
@@ -32,6 +33,14 @@ public class ModShaders {
                 s -> FOUNTAIN_MASKED = s
         );
 
+        event.registerShader(
+                new ShaderInstance(
+                        event.getResourceProvider(),
+                        new ResourceLocation("penumbra_phantasm", "opening_posterize"),
+                        DefaultVertexFormat.POSITION_TEX
+                ),
+                s -> OPENING_POSTERIZE = s
+        );
 
     }
 }

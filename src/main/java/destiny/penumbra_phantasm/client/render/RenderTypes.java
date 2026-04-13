@@ -23,6 +23,18 @@ public class RenderTypes extends RenderType {
                         .createCompositeState(true));
     }
 
+    public static RenderType fountainOptimized(ResourceLocation rl)
+    {
+        return create("fountain_optimized", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
+                false, false,
+                RenderType.CompositeState.builder()
+                        .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
+                        .setTextureState(new TextureStateShard(rl, false, false))
+                        .setTransparencyState(NO_TRANSPARENCY)
+                        .setCullState(CULL)
+                        .createCompositeState(true));
+    }
+
     public static RenderType fountainShockwave(ResourceLocation rl)
     {
         return create("fountain_shockwave", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,

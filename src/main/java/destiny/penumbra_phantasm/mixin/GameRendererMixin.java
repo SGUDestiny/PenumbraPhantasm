@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.mixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
+import destiny.penumbra_phantasm.client.render.LightWorldOpeningPosterizeRenderer;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
@@ -24,6 +25,10 @@ public class GameRendererMixin {
 	@Inject(method = "render", at = @At("TAIL"))
 	private void renderDarknessOverlays(float partialTick, long nanoTime, boolean renderLevel, CallbackInfo ci) {
 		Minecraft minecraft = Minecraft.getInstance();
+
+		if (!minecraft.isPaused() && minecraft.level != null) {
+			LightWorldOpeningPosterizeRenderer.render(minecraft, (GameRenderer) (Object) this, partialTick);
+		}
 
 		if (minecraft.isPaused())
 			return;
