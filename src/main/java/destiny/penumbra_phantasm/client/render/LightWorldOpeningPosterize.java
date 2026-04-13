@@ -26,11 +26,6 @@ public final class LightWorldOpeningPosterize {
             return 0f;
         }
 
-        float rampEnd = FountainRenderUtil.POSTERIZE_STRENGTH_RAMP_TICKS;
-        if (tick < rampEnd) {
-            return smoothStep(0f, rampEnd, tick);
-        }
-
         if (tick < FountainRenderUtil.OPENING_SHADOW_FADE_START) {
             return 1f;
         }
@@ -47,11 +42,6 @@ public final class LightWorldOpeningPosterize {
     public static float whiteLevel(float tick) {
         if (tick < 0f || tick >= FountainRenderUtil.OPENING_POSTERIZE_TICK_END) {
             return 0f;
-        }
-
-        float rampEnd = FountainRenderUtil.POSTERIZE_STRENGTH_RAMP_TICKS;
-        if (tick < rampEnd) {
-            return 1f;
         }
 
         if (tick < FountainRenderUtil.OPENING_SHADOW_FADE_START) {
@@ -118,7 +108,7 @@ public final class LightWorldOpeningPosterize {
 
         DarkFountainCapability cap = capOpt.get();
         for (DarkFountain fountain : cap.darkFountains.values()) {
-            float t = fountain.getOpeningTick(partialTick);
+            float t = fountain.openingTick;
             if (t < 0f || t >= FountainRenderUtil.OPENING_POSTERIZE_TICK_END) {
                 continue;
             }

@@ -37,7 +37,7 @@ public class FountainRenderUtil
 	public static final float OPENING_SHADOW_FADE_DURATION = 20f;
 	public static final float OPENING_POSTERIZE_SHADOW_FADE_TAIL = 4f;
 	public static final float OPENING_PULSE_FREQ = 2.0f;
-	public static final int POSTERIZE_STRENGTH_RAMP_TICKS = 10;
+	public static final int POSTERIZE_STRENGTH_RAMP_TICKS = 0;
 	public static final int OPENING_POSTERIZE_TICK_END = 130;
 	public static final float POSTERIZE_DISTANCE_RAMP_START = 16f;
 	public static final float POSTERIZE_DISTANCE_OUTER = 24f;

@@ -53,12 +53,12 @@ public final class LightWorldOpeningPosterizeRenderer {
 
         float d = LightWorldOpeningPosterize.distanceInBlocks(camPos, fountain.getFountainPos());
         float fade = LightWorldOpeningPosterize.distanceFade(d);
-        float tick = fountain.getOpeningTick(partialTick);
+        float tick = fountain.openingTick;
         float s = LightWorldOpeningPosterize.strength(tick);
         float w = LightWorldOpeningPosterize.whiteLevel(tick);
         float strengthUniform = s * fade * FountainRenderUtil.OPENING_POSTERIZE_STRENGTH_MAX;
 
-        if (strengthUniform <= 1e-4f) {
+        if (s <= 0f || fade <= 0f) {
             return;
         }
 
