@@ -12,9 +12,8 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
-public final class LightWorldOpeningPosterize {
-    private LightWorldOpeningPosterize() {
-    }
+public final class FountainOpeningPosterize {
+    private FountainOpeningPosterize() {}
 
     private static float smoothStep(float edge0, float edge1, float x) {
         float t = Mth.clamp((x - edge0) / (edge1 - edge0), 0f, 1f);
@@ -24,6 +23,10 @@ public final class LightWorldOpeningPosterize {
     public static float strength(float tick) {
         if (tick < 0f || tick >= FountainRenderUtil.OPENING_POSTERIZE_TICK_END) {
             return 0f;
+        }
+
+        if (tick < FountainRenderUtil.OPENING_POSTERIZE_STRENGTH_FADE_IN) {
+            return smoothStep(0f, FountainRenderUtil.OPENING_POSTERIZE_STRENGTH_FADE_IN, tick);
         }
 
         if (tick < FountainRenderUtil.OPENING_SHADOW_FADE_START) {
@@ -42,6 +45,10 @@ public final class LightWorldOpeningPosterize {
     public static float whiteLevel(float tick) {
         if (tick < 0f || tick >= FountainRenderUtil.OPENING_POSTERIZE_TICK_END) {
             return 0f;
+        }
+
+        if (tick < FountainRenderUtil.OPENING_POSTERIZE_STRENGTH_FADE_IN) {
+            return smoothStep(0f, FountainRenderUtil.OPENING_POSTERIZE_STRENGTH_FADE_IN, tick);
         }
 
         if (tick < FountainRenderUtil.OPENING_SHADOW_FADE_START) {
@@ -77,17 +84,17 @@ public final class LightWorldOpeningPosterize {
     }
 
     public static float distanceFade(float distanceInBlocks) {
-        float outer = FountainRenderUtil.POSTERIZE_DISTANCE_OUTER + FountainRenderUtil.POSTERIZE_DISTANCE_OUTER_SOFT;
+        float outer = FountainRenderUtil.OPENING_POSTERIZE_DISTANCE_FADE_END;
         if (distanceInBlocks >= outer) {
             return 0f;
         }
 
-        if (distanceInBlocks <= FountainRenderUtil.POSTERIZE_DISTANCE_RAMP_START) {
+        if (distanceInBlocks <= FountainRenderUtil.OPENING_POSTERIZE_FADE_START) {
             return 1f;
         }
 
         return 1f - smoothStep(
-                FountainRenderUtil.POSTERIZE_DISTANCE_RAMP_START,
+                FountainRenderUtil.OPENING_POSTERIZE_FADE_START,
                 outer,
                 distanceInBlocks
         );

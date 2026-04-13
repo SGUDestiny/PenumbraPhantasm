@@ -29,21 +29,22 @@ import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
 
-public class FountainRenderUtil
-{
+public class FountainRenderUtil {
 	public static float fountainHueAlpha = 0F;
 
 	public static final float OPENING_SHADOW_FADE_START = 70f;
 	public static final float OPENING_SHADOW_FADE_DURATION = 20f;
 	public static final float OPENING_POSTERIZE_SHADOW_FADE_TAIL = 4f;
 	public static final float OPENING_PULSE_FREQ = 2.0f;
-	public static final int POSTERIZE_STRENGTH_RAMP_TICKS = 0;
+
+	public static final int OPENING_POSTERIZE_STRENGTH_FADE_IN = 10;
 	public static final int OPENING_POSTERIZE_TICK_END = 130;
-	public static final float POSTERIZE_DISTANCE_RAMP_START = 16f;
-	public static final float POSTERIZE_DISTANCE_OUTER = 24f;
-	public static final float POSTERIZE_DISTANCE_OUTER_SOFT = 2.5f;
+	public static final float OPENING_POSTERIZE_FADE_START = 16f;
+	public static final float OPENING_POSTERIZE_DISTANCE_FADE_END = 24f;
+
 	public static final float OPENING_POSTERIZE_STRENGTH_MAX = 1f;
-	public static final float OPENING_POSTERIZE_LUMA_THRESHOLD = 0.26f;
+	public static final float OPENING_POSTERIZE_LUMA_THRESHOLD = 0.2f;
+
 	public static final float FOUNTAIN_SCREEN_TINT_FADE_START = 24f;
 	public static final float FOUNTAIN_SCREEN_TINT_FADE_END = 16f;
 

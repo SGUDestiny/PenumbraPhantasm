@@ -20,8 +20,7 @@ import org.joml.Matrix4f;
 
 import java.util.Optional;
 
-public final class LightWorldOpeningPosterizeRenderer {
-
+public final class FountainOpeningPosterizeRenderer {
     private static final int GL_COLOR_BUFFER_BIT = 16384;
     private static final int GL_NEAREST = 9728;
     private static final int GL_READ_FRAMEBUFFER = 36008;
@@ -29,8 +28,7 @@ public final class LightWorldOpeningPosterizeRenderer {
 
     private static RenderTarget scratch;
 
-    private LightWorldOpeningPosterizeRenderer() {
-    }
+    private FountainOpeningPosterizeRenderer() {}
 
     public static void render(Minecraft minecraft, GameRenderer gameRenderer, float partialTick) {
         if (!(minecraft.level instanceof ClientLevel)) {
@@ -44,18 +42,18 @@ public final class LightWorldOpeningPosterizeRenderer {
 
         ClientLevel level = minecraft.level;
         Vec3 camPos = gameRenderer.getMainCamera().getPosition();
-        Optional<DarkFountain> fountainOpt = LightWorldOpeningPosterize.findClosestOpeningFountain(level, camPos, partialTick);
+        Optional<DarkFountain> fountainOpt = FountainOpeningPosterize.findClosestOpeningFountain(level, camPos, partialTick);
         if (fountainOpt.isEmpty()) {
             return;
         }
 
         DarkFountain fountain = fountainOpt.get();
 
-        float d = LightWorldOpeningPosterize.distanceInBlocks(camPos, fountain.getFountainPos());
-        float fade = LightWorldOpeningPosterize.distanceFade(d);
-        float tick = fountain.openingTick;
-        float s = LightWorldOpeningPosterize.strength(tick);
-        float w = LightWorldOpeningPosterize.whiteLevel(tick);
+        float d = FountainOpeningPosterize.distanceInBlocks(camPos, fountain.getFountainPos());
+        float fade = FountainOpeningPosterize.distanceFade(d);
+        float tick = fountain.getOpeningTick(partialTick);
+        float s = FountainOpeningPosterize.strength(tick);
+        float w = FountainOpeningPosterize.whiteLevel(tick);
         float strengthUniform = s * fade * FountainRenderUtil.OPENING_POSTERIZE_STRENGTH_MAX;
 
         if (s <= 0f || fade <= 0f) {

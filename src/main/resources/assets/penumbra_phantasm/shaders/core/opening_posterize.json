@@ -42,7 +42,7 @@
       "name": "Threshold",
       "type": "float",
       "count": 1,
-      "values": [0.3]
+      "values": [0.2]
     }
   ]
 }
