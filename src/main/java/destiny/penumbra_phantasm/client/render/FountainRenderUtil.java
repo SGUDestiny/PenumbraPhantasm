@@ -22,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -112,6 +113,87 @@ public class FountainRenderUtil {
 				consumer.vertex(matrix, x1 - nx, yTop, z1 - nz).color(r, g, b, a).uv(0.5f, 0f).endVertex();
 				consumer.vertex(matrix, x1 - nx, yBot, z1 - nz).color(r, g, b, a).uv(0.5f, 1f).endVertex();
 				consumer.vertex(matrix, x2 - nx, yBot, z2 - nz).color(r, g, b, a).uv(0f, 1f).endVertex();
+			}
+		}
+	}
+
+	private static void renderFountainCrossSorted(PoseStack poseStack, VertexConsumer consumer,
+												  float r, float g, float b, float a,
+												  float halfWidthPixels, float tileHeightPixels, int tileCount, float deformation,
+												  Vec3 cameraPos, BlockPos fountainPos) {
+		Matrix4f matrix = poseStack.last().pose();
+		float hw = (halfWidthPixels + deformation) / 16f;
+		float tileHeight = tileHeightPixels / 16f;
+		float off = deformation / 16f;
+
+		float[][] faces = {
+				{ hw * COS45, -hw * COS45,  COS45, COS45,  1f },
+				{ hw * COS45, -hw * COS45,  COS45, COS45, -1f },
+				{ hw * COS45,  hw * COS45, -COS45, COS45,  1f },
+				{ hw * COS45,  hw * COS45, -COS45, COS45, -1f }
+		};
+
+		float fountainCenterX = fountainPos.getX() + 0.5f;
+		float fountainCenterZ = fountainPos.getZ() + 0.5f;
+		float vx = (float) (cameraPos.x - fountainCenterX);
+		float vz = (float) (cameraPos.z - fountainCenterZ);
+		float vLen = Mth.sqrt(vx * vx + vz * vz);
+		if (vLen < 1.0e-5f) {
+			vx = 0f;
+			vz = 1f;
+		} else {
+			vx /= vLen;
+			vz /= vLen;
+		}
+
+		float[] faceDepth = new float[4];
+		int[] order = {0, 1, 2, 3};
+		for (int i = 0; i < 4; i++) {
+			float nx = faces[i][2] * off;
+			float nz = faces[i][3] * off;
+			float sign = faces[i][4];
+			float cx = sign * nx;
+			float cz = sign * nz;
+			faceDepth[i] = cx * vx + cz * vz;
+		}
+		for (int i = 0; i < order.length - 1; i++) {
+			for (int j = i + 1; j < order.length; j++) {
+				if (faceDepth[order[i]] > faceDepth[order[j]]) {
+					int tmp = order[i];
+					order[i] = order[j];
+					order[j] = tmp;
+				}
+			}
+		}
+
+		for (int idx = 0; idx < order.length; idx++) {
+			float[] face = faces[order[idx]];
+			float x1 = face[0], z1 = face[1];
+			float x2 = -face[0], z2 = -face[1];
+			float nx = face[2] * off;
+			float nz = face[3] * off;
+			float sign = face[4];
+			float sx = sign * nx;
+			float sz = sign * nz;
+			float rankBias = (idx - 1.5f) * 0.0025f;
+			float bx = vx * rankBias;
+			float bz = vz * rankBias;
+
+			for (int tile = 0; tile < tileCount; tile++) {
+				float yBot = tile * tileHeight;
+				float yTop = (tile + 1) * tileHeight;
+
+				if (sign > 0f) {
+					consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(r, g, b, a).uv(0f, 0f).endVertex();
+					consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(r, g, b, a).uv(0.5f, 0f).endVertex();
+					consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(r, g, b, a).uv(0.5f, 1f).endVertex();
+					consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(r, g, b, a).uv(0f, 1f).endVertex();
+				} else {
+					consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(r, g, b, a).uv(0f, 0f).endVertex();
+					consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(r, g, b, a).uv(0.5f, 0f).endVertex();
+					consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(r, g, b, a).uv(0.5f, 1f).endVertex();
+					consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(r, g, b, a).uv(0f, 1f).endVertex();
+				}
 			}
 		}
 	}
@@ -611,14 +693,14 @@ public class FountainRenderUtil {
 		poseStack.popPose();
 	}
 
-	public static void renderOpenFountainOptimized(DarkFountain fountain, int length, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha) {
+	public static void renderOpenFountainOptimized(DarkFountain fountain, int length, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha, Vec3 cameraPos) {
 		int frameOptimized = fountain.frameOptimized;
 		ResourceLocation textureMiddleOptimized = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/fountain_middle_" + frameOptimized + ".png");
 
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.75f, 0.5f);
-		renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleOptimized)),
-				1F, 1F, 1F, alpha, 48f, 240f, length, 0.1f);
+		renderFountainCrossSorted(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleOptimized)),
+				1F, 1F, 1F, alpha, 48f, 240f, length, 0.1f, cameraPos, fountain.getFountainPos());
 		poseStack.popPose();
 	}
 
