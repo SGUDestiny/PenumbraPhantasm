@@ -1,7 +1,7 @@
 {
-  "replace": false,
   "values": [
     "penumbra_phantasm:field_of_hopes_and_dreams",
-    "penumbra_phantasm:scarlet_forest"
+    "penumbra_phantasm:scarlet_forest",
+    "penumbra_phantasm:great_board"
   ]
 }

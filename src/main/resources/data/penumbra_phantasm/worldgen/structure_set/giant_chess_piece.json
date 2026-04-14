@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "penumbra_phantasm:giant_chess_piece",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spread_type": "triangular",
+    "spacing": 5,
+    "separation": 3,
+    "salt": 436237947
+  }
+}

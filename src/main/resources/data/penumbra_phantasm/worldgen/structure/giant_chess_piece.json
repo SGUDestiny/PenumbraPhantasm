@@ -1,9 +1,9 @@
 {
   "type": "minecraft:jigsaw",
-  "biomes": "#penumbra_phantasm:has_structure/random_great_door",
+  "biomes": "#penumbra_phantasm:has_structure/giant_chess_piece",
   "step": "surface_structures",
   "terrain_adaptation": "encapsulate",
-  "start_pool": "penumbra_phantasm:random_great_door",
+  "start_pool": "penumbra_phantasm:giant_chess_piece",
   "size": 1,
   "start_height": {
     "type": "minecraft:uniform",
