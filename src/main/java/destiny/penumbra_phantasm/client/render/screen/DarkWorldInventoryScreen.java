@@ -16,6 +16,7 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -49,6 +50,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
     public int equippedLabelY = 4;
     public int slotsOffsetX = 0;
     public int slotsOffsetY = 10;
+    public final NonNullList<Slot> slots = NonNullList.create();
 
     public DarkWorldInventoryScreen(Player pPlayer) {
         super(pPlayer.inventoryMenu, pPlayer.getInventory(), Component.translatable("container.crafting"));
@@ -69,6 +71,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
 
     }
 
+    @Override
     protected void init() {
         if (this.minecraft.gameMode.hasInfiniteItems()) {
             this.minecraft.setScreen(new CreativeModeInventoryScreen(this.minecraft.player, this.minecraft.player.connection.enabledFeatures(), this.minecraft.options.operatorItemsTab().get()));
@@ -85,10 +88,17 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
             }));
             this.addWidget(this.recipeBookComponent);
             this.setInitialFocus(this.recipeBookComponent);
-        }
 
+            for (int i = 0; i < this.menu.slots.size(); i++) {
+                Slot slot = this.menu.slots.get(i);
+                Slot offsetSlot = new Slot(slot.container, slot.index, slot.x - slotsOffsetX, slot.y - slotsOffsetY);
+
+                slots.add(i, offsetSlot);
+            }
+        }
     }
 
+    @Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
         //Equipped label
         this.drawCenteredString(pGuiGraphics, this.font, this.equippedLabel, this.equippedLabelX, this.equippedLabelY, -1, false);
@@ -98,6 +108,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         this.drawCenteredString(pGuiGraphics, this.font, this.inventoryLabel, this.inventoryLabelX, this.inventoryLabelY, -1, false);
     }
 
+    @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         int i = this.leftPos;
         int j = this.topPos;
@@ -109,16 +120,16 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         pGuiGraphics.pose().translate((float)i, (float)j, 0.0F);
         this.hoveredSlot = null;
 
-        for(int k = 0; k < this.menu.slots.size(); ++k) {
-            Slot slot = this.menu.slots.get(k);
+        for(int k = 0; k < slots.size(); ++k) {
+            Slot slot = slots.get(k);
             if (slot.isActive()) {
-                this.renderSlot(pGuiGraphics, slot);
+                renderSlot(pGuiGraphics, slot);
             }
 
             if (this.isHovering(slot, pMouseX, pMouseY) && slot.isActive()) {
                 this.hoveredSlot = slot;
-                int x = slot.x + slotsOffsetX - slotsOffsetX;
-                int y = slot.y + slotsOffsetY - slotsOffsetY;
+                int x = slot.x;
+                int y = slot.y;
                 if (this.hoveredSlot.isHighlightable()) {
                     renderSlotHighlight(pGuiGraphics, x, y, 0, this.getSlotColor(k));
                 }
@@ -162,6 +173,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         RenderSystem.enableDepthTest();
     }
 
+    @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         int i = this.leftPos;
         int j = this.topPos;
@@ -259,8 +271,8 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
 
     @Override
     public void renderSlot(GuiGraphics pGuiGraphics, Slot pSlot) {
-        int x = pSlot.x - slotsOffsetX;
-        int y = pSlot.y - slotsOffsetY;
+        int x = pSlot.x;
+        int y = pSlot.y;
         ItemStack itemstack = pSlot.getItem();
         boolean flag = false;
         boolean flag1 = pSlot == this.clickedSlot && !this.draggingItem.isEmpty() && !this.isSplittingStack;
