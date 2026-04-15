@@ -115,7 +115,6 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         this.renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
         MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, pGuiGraphics, pMouseX, pMouseY));
         RenderSystem.disableDepthTest();
-        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         pGuiGraphics.pose().pushPose();
         pGuiGraphics.pose().translate((float)i, (float)j, 0.0F);
         this.hoveredSlot = null;
