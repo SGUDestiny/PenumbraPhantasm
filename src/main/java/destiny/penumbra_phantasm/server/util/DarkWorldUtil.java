@@ -417,6 +417,12 @@ public class DarkWorldUtil
 				.orElse(false);
 	}
 
+	private static boolean isValidOutsideDoorGreatDoorTarget(GreatDoor g) {
+		return g.destinationGreatDoorPos == null
+				&& g.destinationGreatDoorDimension == null
+				&& !g.isDestinationDarkWorld;
+	}
+
 	private static boolean tryBindOutsideDoorsForUnlinked(ServerLevel darkLevel, GreatDoor door, ServerLevel lightLevel, DarkFountain fountain) {
 		for (DarkRoom room : fountain.rooms) {
 			for (Map.Entry<BlockPos, DarkRoom.OutsideDoorExit> e : room.getOutsideDoors().entrySet()) {
@@ -523,17 +529,24 @@ public class DarkWorldUtil
 				.resolve()
 				.map(c -> c.findByLightDoor(lightDoorLower, lightDimension))
 				.orElse(null);
-		if (existing != null) {
-			return existing;
-		}
-		if (lightDoorSecondLower != null) {
-			GreatDoor bySecond = darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
+		if (existing == null && lightDoorSecondLower != null) {
+			existing = darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR)
 					.resolve()
 					.map(c -> c.findByLightDoor(lightDoorSecondLower, lightDimension))
 					.orElse(null);
-			if (bySecond != null) {
-				return bySecond;
+		}
+		if (existing != null) {
+			if (!isValidOutsideDoorGreatDoorTarget(existing)) {
+				existing.isDestinationDarkWorld = false;
+				existing.destinationGreatDoorPos = null;
+				existing.destinationGreatDoorDimension = null;
 			}
+			existing.lightDoorPos = lightDoorLower;
+			existing.lightDoorSecondLower = lightDoorSecondLower;
+			existing.lightDoorDimension = lightDimension;
+			existing.lightDoorExitDirection = lightDoorExitFromInterior;
+			existing.broadcastSync(darkLevel);
+			return existing;
 		}
 		Optional<GreatDoorStructureResult> placed = tryPlaceGreatDoorStructure(darkLevel, darkFountainAnchor, darkLevel.random);
 		if (placed.isEmpty()) {
