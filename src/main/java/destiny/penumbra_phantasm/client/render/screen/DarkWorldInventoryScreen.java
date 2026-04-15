@@ -50,7 +50,6 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
     public int equippedLabelY = 4;
     public int slotsOffsetX = 0;
     public int slotsOffsetY = 10;
-    public final NonNullList<Slot> slots = NonNullList.create();
 
     public DarkWorldInventoryScreen(Player pPlayer) {
         super(pPlayer.inventoryMenu, pPlayer.getInventory(), Component.translatable("container.crafting"));
@@ -62,13 +61,13 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         this.titleLabelY = 4;
     }
 
+    @Override
     public void containerTick() {
         if (this.minecraft.gameMode.hasInfiniteItems()) {
             this.minecraft.setScreen(new CreativeModeInventoryScreen(this.minecraft.player, this.minecraft.player.connection.enabledFeatures(), this.minecraft.options.operatorItemsTab().get()));
         } else {
             this.recipeBookComponent.tick();
         }
-
     }
 
     @Override
@@ -91,9 +90,9 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
 
             for (int i = 0; i < this.menu.slots.size(); i++) {
                 Slot slot = this.menu.slots.get(i);
-                Slot offsetSlot = new Slot(slot.container, slot.index, slot.x - slotsOffsetX, slot.y - slotsOffsetY);
+                Slot offsetSlot = new Slot(slot.container, i, slot.x - slotsOffsetX, slot.y - slotsOffsetY);
 
-                slots.add(i, offsetSlot);
+                this.menu.slots.set(i, offsetSlot);
             }
         }
     }
@@ -119,8 +118,8 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         pGuiGraphics.pose().translate((float)i, (float)j, 0.0F);
         this.hoveredSlot = null;
 
-        for(int k = 0; k < slots.size(); ++k) {
-            Slot slot = slots.get(k);
+        for(int k = 0; k < this.menu.slots.size(); ++k) {
+            Slot slot = this.menu.slots.get(k);
             if (slot.isActive()) {
                 renderSlot(pGuiGraphics, slot);
             }
