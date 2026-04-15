@@ -109,7 +109,10 @@ public final class FountainOpeningPosterizeRenderer {
 
             Uniform uThreshold = shader.getUniform("Threshold");
             if (uThreshold != null) {
-                uThreshold.set(FountainRenderUtil.OPENING_POSTERIZE_LUMA_THRESHOLD);
+                uThreshold.set(FountainRenderUtil.openingPosterizeLumaThresholdForCameraBlockLight(
+                        level,
+                        camPos,
+                        FountainRenderUtil.OPENING_POSTERIZE_LUMA_THRESHOLD));
             }
 
             shader.apply();

@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
@@ -44,12 +45,21 @@ public class FountainRenderUtil {
 	public static final float OPENING_POSTERIZE_DISTANCE_FADE_END = 24f;
 
 	public static final float OPENING_POSTERIZE_STRENGTH_MAX = 1f;
-	public static final float OPENING_POSTERIZE_LUMA_THRESHOLD = 0.2f;
+	public static final float OPENING_POSTERIZE_LUMA_THRESHOLD = 0.05f;
+	public static final float OPENING_POSTERIZE_LUMA_THRESHOLD_BLOCK_DARK_MUL = 0.48f;
+	public static final float OPENING_POSTERIZE_LUMA_THRESHOLD_BLOCK_BRIGHT_MUL = 11f;
 
 	public static final float FOUNTAIN_SCREEN_TINT_FADE_START = 24f;
 	public static final float FOUNTAIN_SCREEN_TINT_FADE_END = 16f;
 
 	private static final float COS45 = 0.70710678f;
+
+	public static float openingPosterizeLumaThresholdForCameraBlockLight(Level level, Vec3 cameraPos, float baseThreshold) {
+		int blockLight = level.getBrightness(LightLayer.BLOCK, BlockPos.containing(cameraPos));
+		float t = Mth.clamp(blockLight / 15f, 0f, 1f);
+		float mul = Mth.lerp(OPENING_POSTERIZE_LUMA_THRESHOLD_BLOCK_DARK_MUL, OPENING_POSTERIZE_LUMA_THRESHOLD_BLOCK_BRIGHT_MUL, t);
+		return Mth.clamp(baseThreshold * mul, 0.03f, 0.55f);
+	}
 
 	private static DarkFountainGroundCrackModel cachedCrackModel;
 	private static DarkFountainOpeningModel cachedOpeningModel;
