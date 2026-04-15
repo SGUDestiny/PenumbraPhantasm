@@ -12,7 +12,7 @@ public class FountainDarknessParticle extends TextureSheetParticle {
         super(level, x, y, z, 0.0D, 0.0D, 0.0D);
         this.sprites = sprite;
         this.friction = 1f;
-        this.lifetime = 60;
+        this.lifetime = 40;
         this.setSpriteFromAge(sprite);
         this.xd = xSpeed;
         this.yd = ySpeed;
@@ -59,7 +59,7 @@ public class FountainDarknessParticle extends TextureSheetParticle {
                 this.zd *= 1.1f;
             }
 
-            if (this.age > 50) {
+            if (this.age > this.lifetime - 10) {
                 this.alpha -= 0.1f;
             }
 
