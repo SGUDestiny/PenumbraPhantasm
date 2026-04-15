@@ -346,6 +346,10 @@
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "TRUST: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "THE SOUL WITHIN REJECTS YOU.",
 
+  "gui.penumbra_phantasm.dark_world_inventory_title": "INVENTORY",
+  "gui.penumbra_phantasm.dark_world_inventory_crafting": "CRAFT",
+  "gui.penumbra_phantasm.dark_world_inventory_equipped": "EQUIPPED",
+
   "location.penumbra_phantasm.dark_fountain": "Dark Fountain",
   "location.penumbra_phantasm.dark_fountain.description": "'The geyser that gives this land form...'",
 
