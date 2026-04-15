@@ -4,7 +4,7 @@
       "model": "penumbra_phantasm:block/rosegold_slab"
     },
     "type=double": {
-      "model": "penumbra_phantasm:block/rosegold"
+      "model": "penumbra_phantasm:block/rosegold_block"
     },
     "type=top": {
       "model": "penumbra_phantasm:block/rosegold_slab_top"
