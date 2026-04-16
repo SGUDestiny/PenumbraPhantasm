@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "penumbra_phantasm:block/tall_scarlet_bush_bottom"
+    },
+    "half=upper": {
+      "model": "penumbra_phantasm:block/tall_scarlet_bush_top"
+    }
+  }
+}

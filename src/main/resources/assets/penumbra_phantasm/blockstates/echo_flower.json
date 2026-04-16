@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "penumbra_phantasm:block/echo_flower_bottom"
+    },
+    "half=upper": {
+      "model": "penumbra_phantasm:block/echo_flower_top"
+    }
+  }
+}

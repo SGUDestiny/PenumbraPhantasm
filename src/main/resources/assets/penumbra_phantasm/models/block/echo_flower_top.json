@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_cross_emissive",
+  "textures": {
+    "cross": "penumbra_phantasm:block/echo_flower_top"
+  }
+}

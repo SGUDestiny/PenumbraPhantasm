@@ -6,6 +6,7 @@ import destiny.penumbra_phantasm.server.worldgen.DarkCandyGrower;
 import destiny.penumbra_phantasm.server.worldgen.ScarletGrower;
 import destiny.penumbra_phantasm.server.block.TenebralithSpikeBlock;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -53,6 +54,12 @@ public class BlockRegistry {
     public static final RegistryObject<Block> NIGHT_GRASS = registerBlock("night_grass",
             () -> new NonTallGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
                     .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> ECHO_FLOWER = registerBlock("echo_flower",
+            () -> new DoublePlantBlock(BlockBehaviour.Properties.copy(Blocks.SUNFLOWER)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.PINK_PETALS)));
+    public static final RegistryObject<Block> STARTAIL = registerBlock("startail",
+            () -> new StartailBlock(BlockBehaviour.Properties.copy(Blocks.SUNFLOWER)
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.PINK_PETALS).lightLevel(state -> 15)));
     public static final RegistryObject<Block> NIGHT_DIRT = registerBlock("night_dirt",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.DIRT)
                     .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRAVEL)));
@@ -101,9 +108,21 @@ public class BlockRegistry {
     public static final RegistryObject<Block> SCARLET_BUSH = registerBlock("scarlet_bush",
             () -> new ScarletBushBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission()));
+    public static final RegistryObject<Block> TALL_SCARLET_BUSH = registerBlock("tall_scarlet_bush",
+            () -> new SlowingDoublePlantBlock(BlockBehaviour.Properties.copy(Blocks.PEONY)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.PINK_PETALS).noCollission()));
+    public static final RegistryObject<Block> SCARLET_ROSE = registerBlock("scarlet_rose",
+            () -> new FlowerBlock(MobEffects.REGENERATION, 20, BlockBehaviour.Properties.copy(Blocks.POPPY)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.PINK_PETALS).noCollission()));
+    public static final RegistryObject<Block> POTTED_SCARLET_ROSE = BLOCKS.register("potted_scarlet_rose",
+            () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.SCARLET_ROSE,
+                    BlockBehaviour.Properties.copy(Blocks.POTTED_POPPY).noOcclusion()));
     public static final RegistryObject<Block> SCARLET_LEAVES = registerBlock("scarlet_leaves",
             () -> new ScarletLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES)));
+    public static final RegistryObject<Block> FALLEN_SCARLET_LEAVES = registerBlock("fallen_scarlet_leaves",
+            () -> new CarpetBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak()));
     public static final RegistryObject<Block> SCARLET_LOG = registerBlock("scarlet_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
@@ -134,6 +153,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> DARK_CANDY_LEAVES = registerBlock("dark_candy_leaves",
             () -> new DarkCandyLeaves(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()));
+    public static final RegistryObject<Block> FALLEN_DARK_CANDY_LEAVES = registerBlock("fallen_dark_candy_leaves",
+            () -> new CarpetBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak()));
     public static final RegistryObject<Block> DARK_CANDY_LOG = registerBlock("dark_candy_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));

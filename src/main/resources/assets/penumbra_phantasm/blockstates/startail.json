@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "penumbra_phantasm:block/startail_bottom"
+    },
+    "half=upper": {
+      "model": "penumbra_phantasm:block/startail_top"
+    }
+  }
+}

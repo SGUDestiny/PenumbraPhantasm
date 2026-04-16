@@ -10,14 +10,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.ProbabilityFeatureConfiguration;
 
-public class ScarletBushFeature extends Feature<NoneFeatureConfiguration> {
-    public ScarletBushFeature(Codec<NoneFeatureConfiguration> pCodec) {
+public class ScarletBushFeature extends Feature<ProbabilityFeatureConfiguration> {
+    public ScarletBushFeature(Codec<ProbabilityFeatureConfiguration> pCodec) {
         super(pCodec);
     }
 
     @Override
-    public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> pContext) {
+    public boolean place(FeaturePlaceContext<ProbabilityFeatureConfiguration> pContext) {
         WorldGenLevel level = pContext.level();
         BlockPos origin = pContext.origin();
         Direction extension = Direction.Plane.HORIZONTAL.getRandomDirection(pContext.random());

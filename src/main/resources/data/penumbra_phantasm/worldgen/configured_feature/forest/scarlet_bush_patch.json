@@ -1,4 +1,6 @@
 {
   "type": "penumbra_phantasm:scarlet_bush",
-  "config": {}
+  "config": {
+    "probability": 0.2
+  }
 }

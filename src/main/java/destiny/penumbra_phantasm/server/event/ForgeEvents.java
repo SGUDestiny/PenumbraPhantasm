@@ -47,18 +47,15 @@ public class ForgeEvents {
     @SubscribeEvent
     public static void fillBucketEvent(FillBucketEvent event) {
         Level level = event.getLevel();
-        ItemStack stack = event.getEmptyBucket();
+        ItemStack emptyBucket = event.getEmptyBucket();
+        ItemStack filledBucket = event.getFilledBucket();
         Vec3 location = event.getTarget().getLocation();
         BlockPos clickPos = BlockPos.containing(location.x, location.y, location.z);
 
         if (level.getBlockState(clickPos).getBlock() instanceof LuminescentWaterFluidBlock
                 || level.getBlockState(clickPos).getFluidState().is(FluidRegistry.SOURCE_PURE_DARKNESS.get()))
         {
-            if (!(stack.getItem() instanceof ScarletBucketItem)) {
-                event.setCanceled(true);
-            }
-        } else {
-            if ((stack.getItem() instanceof ScarletBucketItem)) {
+            if (!(emptyBucket.getItem() instanceof ScarletBucketItem)) {
                 event.setCanceled(true);
             }
         }

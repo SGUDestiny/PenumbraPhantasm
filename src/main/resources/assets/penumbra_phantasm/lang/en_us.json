@@ -77,6 +77,11 @@
   "block.penumbra_phantasm.cobbled_umbrastone_pressure_plate": "Cobbled Umbrastone Pressure Plate",
 
   "block.penumbra_phantasm.scarlet_bush": "Scarlet Bush",
+  "block.penumbra_phantasm.tall_scarlet_bush": "Tall Scarlet Bush",
+  "block.penumbra_phantasm.scarlet_rose": "Scarlet Rose",
+  "block.penumbra_phantasm.fallen_scarlet_leaves": "Fallen Scarlet Leaves",
+  "block.penumbra_phantasm.echo_flower": "Echo Flower",
+  "block.penumbra_phantasm.startail": "Startail",
 
   "block.penumbra_phantasm.scarlet_sapling": "Scarlet Sapling",
   "block.penumbra_phantasm.potted_scarlet_sapling": "Potted Scarlet Sapling",
@@ -100,6 +105,7 @@
   "block.penumbra_phantasm.potted_dark_candy_sapling": "Potted Dark Candy Sapling",
 
   "block.penumbra_phantasm.dark_candy_leaves": "Dark Candy Leaves",
+  "block.penumbra_phantasm.fallen_dark_candy_leaves": "Fallen Dark Candy Leaves",
   "block.penumbra_phantasm.dark_candy_log": "Dark Candy Log",
 
   "block.penumbra_phantasm.dark_candy_crafting_table": "Dark Candy Crafting Table",
@@ -374,6 +380,8 @@
   "message.penumbra_phantasm.great_door_cant_open_no_fountain": "But the door wouldn't budge... (This dark world doesn't have a fountain)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain_destination": "But the door wouldn't budge... (Destination dark world doesn't have a fountain)",
 
+  "screen.penumbra_phantasm.intro.skip_notification": "PRESS [ESC] TO SKIP WITH A RANDOM CHOICE.",
+  "screen.penumbra_phantasm.intro.skip_notification_post": "PRESS [ESC] TO SKIP WITH YOUR CHOICE.",
   "screen.penumbra_phantasm.intro.line.1": "A R E    Y O U",
   "screen.penumbra_phantasm.intro.line.2": "T H E R E ?",
   "screen.penumbra_phantasm.intro.line.3": "A R E   W E",

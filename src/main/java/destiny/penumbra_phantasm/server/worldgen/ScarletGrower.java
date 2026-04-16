@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public class ScarletGrower extends AbstractTreeGrower {
     @Override
     protected @Nullable ResourceKey<ConfiguredFeature<?, ?>> getConfiguredFeature(RandomSource randomSource, boolean b) {
-        return FeatureRegistry.SCARLET_TREE;
+        return FeatureRegistry.SCARLET_TREE_GROWN;
     }
 
     @Override

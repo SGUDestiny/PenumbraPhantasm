@@ -28,9 +28,11 @@
     [],
     [],
     [
+      "penumbra_phantasm:forest/scarlet_bush_patch",
       "penumbra_phantasm:tree/scarlet_tree_forest",
-      "penumbra_phantasm:twilight_grass_patch",
-      "penumbra_phantasm:scarlet_bush_patch"
+      "penumbra_phantasm:forest/tall_scarlet_bush",
+      "penumbra_phantasm:forest/scarlet_rose_patch",
+      "penumbra_phantasm:forest/twilight_grass_patch"
     ],
     []
   ],

@@ -16,11 +16,11 @@
   "noise": {
     "min_y": -64,
     "height": 384,
-    "size_horizontal": 1,
+    "size_horizontal": 1.5,
     "size_vertical": 2
   },
   "noise_router": {
-  "barrier": {
+    "barrier": {
       "type": "minecraft:noise",
       "noise": "minecraft:aquifer_barrier",
       "xz_scale": 1.0,
@@ -45,7 +45,7 @@
     "temperature": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:temperature",
-      "xz_scale": 0.8,
+      "xz_scale": 0.4,
       "y_scale": 0,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
@@ -54,7 +54,7 @@
     "vegetation": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:vegetation",
-      "xz_scale": 0.75,
+      "xz_scale": 0.35,
       "y_scale": 0,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,

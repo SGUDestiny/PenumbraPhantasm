@@ -1,0 +1,25 @@
+{
+  "feature": "penumbra_phantasm:forest/scarlet_rose_patch",
+  "placement": [
+    {
+      "type": "minecraft:noise_threshold_count",
+      "above_noise": 15,
+      "below_noise": 15,
+      "noise_level": -0.9
+    },
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 30
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

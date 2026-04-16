@@ -1,5 +1,5 @@
 {
-  "feature": "penumbra_phantasm:tree/scarlet_tree",
+  "feature": "penumbra_phantasm:tree/scarlet_tree_generated",
   "placement": [
     {
       "type": "minecraft:noise_threshold_count",

@@ -84,13 +84,20 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.LUMINESCENT_WATER_BUCKET.get());
                 output.accept(ItemRegistry.PURE_DARKNESS_BUCKET.get());
 
+                output.accept(BlockRegistry.STARTAIL.get());
+                output.accept(BlockRegistry.ECHO_FLOWER.get());
+
                 output.accept(BlockRegistry.TWILIGHT_GRASS.get());
                 output.accept(BlockRegistry.TWILIGHT_GRASS_BLOCK.get());
+
+                output.accept(BlockRegistry.SCARLET_ROSE.get());
+                output.accept(BlockRegistry.TALL_SCARLET_BUSH.get());
 
                 output.accept(BlockRegistry.SCARLET_BUSH.get());
 
                 output.accept(BlockRegistry.SCARLET_SAPLING.get());
                 output.accept(BlockRegistry.SCARLET_LEAVES.get());
+                output.accept(BlockRegistry.FALLEN_SCARLET_LEAVES.get());
 
                 output.accept(BlockRegistry.SCARLET_LOG.get());
                 output.accept(BlockRegistry.SCARLET_PLANKS.get());
@@ -108,6 +115,7 @@ public class CreativeTabRegistry {
 
                 output.accept(BlockRegistry.DARK_CANDY_SAPLING.get());
                 output.accept(BlockRegistry.DARK_CANDY_LEAVES.get());
+                output.accept(BlockRegistry.FALLEN_DARK_CANDY_LEAVES.get());
 
                 output.accept(BlockRegistry.DARK_CANDY_LOG.get());
 

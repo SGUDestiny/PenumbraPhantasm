@@ -1,0 +1,25 @@
+{
+  "feature": "penumbra_phantasm:forest/tall_scarlet_bush",
+  "placement": [
+    {
+      "type": "minecraft:noise_threshold_count",
+      "above_noise": 30,
+      "below_noise": 15,
+      "noise_level": -0.8
+    },
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 20
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "MOTION_BLOCKING"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

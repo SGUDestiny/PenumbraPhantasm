@@ -159,6 +159,7 @@ public class PenumbraPhantasm {
             event.enqueueWork(() -> {
                 ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.SCARLET_SAPLING.getId(), BlockRegistry.POTTED_SCARLET_SAPLING);
                 ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.DARK_CANDY_SAPLING.getId(), BlockRegistry.POTTED_DARK_CANDY_SAPLING);
+                ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.SCARLET_ROSE.getId(), BlockRegistry.POTTED_SCARLET_ROSE);
             });
         }
 
