@@ -35,28 +35,7 @@ public class CreativeTabRegistry {
 
                 output.accept(ItemRegistry.ITEM_MUSIC_MEDIUM_THE_HOLY.get());
 
-                output.accept(ItemRegistry.RAW_ROSEGOLD.get());
-                output.accept(ItemRegistry.ROSEGOLD_INGOT.get());
-
-                output.accept(BlockRegistry.UMBRASTONE_ROSEGOLD_ORE.get());
-
                 output.accept(BlockRegistry.GREAT_DOOR_SPAWNER.get());
-                output.accept(BlockRegistry.ROSEGOLD_PILLAR.get());
-
-                output.accept(BlockRegistry.ROSEGOLD_BLOCK.get());
-                output.accept(BlockRegistry.ROSEGOLD_STAIRS.get());
-                output.accept(BlockRegistry.ROSEGOLD_SLAB.get());
-                output.accept(BlockRegistry.ROSEGOLD_WALL.get());
-                output.accept(BlockRegistry.ROSEGOLD_BUTTON.get());
-                output.accept(BlockRegistry.ROSEGOLD_PRESSURE_PLATE.get());
-
-                output.accept(BlockRegistry.ROSEGOLD_BRICKS.get());
-                output.accept(BlockRegistry.ROSEGOLD_BRICK_STAIRS.get());
-                output.accept(BlockRegistry.ROSEGOLD_BRICK_SLAB.get());
-                output.accept(BlockRegistry.ROSEGOLD_BRICK_WALL.get());
-                output.accept(BlockRegistry.ROSEGOLD_BRICK_BUTTON.get());
-                output.accept(BlockRegistry.ROSEGOLD_BRICK_PRESSURE_PLATE.get());
-
             })
             .build()
     );
@@ -78,7 +57,14 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.UMBRASTONE_SHOVEL.get());
                 output.accept(ItemRegistry.UMBRASTONE_HOE.get());
 
+                output.accept(ItemRegistry.IVORY_SWORD.get());
+                output.accept(ItemRegistry.IVORY.get());
+
                 output.accept(ItemRegistry.DARK_CANDY_STICK.get());
+
+                output.accept(ItemRegistry.ROSEGOLD_SWORD.get());
+                output.accept(ItemRegistry.RAW_ROSEGOLD.get());
+                output.accept(ItemRegistry.ROSEGOLD_INGOT.get());
 
                 output.accept(ItemRegistry.DARK_CANDY_BUCKET.get());
                 output.accept(ItemRegistry.LUMINESCENT_WATER_BUCKET.get());
@@ -152,6 +138,8 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.UMBRASTONE_BRICK_BUTTON.get());
                 output.accept(BlockRegistry.UMBRASTONE_BRICK_PRESSURE_PLATE.get());
 
+                output.accept(BlockRegistry.UMBRASTONE_ROSEGOLD_ORE.get());
+
                 output.accept(BlockRegistry.UMBRASTONE.get());
                 output.accept(BlockRegistry.UMBRASTONE_STAIRS.get());
                 output.accept(BlockRegistry.UMBRASTONE_SLAB.get());
@@ -190,6 +178,8 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.SCARLET_MARBLE_BRICK_BUTTON.get());
                 output.accept(BlockRegistry.SCARLET_MARBLE_BRICK_PRESSURE_PLATE.get());
 
+                output.accept(BlockRegistry.SCARLET_MARBLE_IVORY_ORE.get());
+
                 output.accept(BlockRegistry.SCARLET_MARBLE.get());
                 output.accept(BlockRegistry.SCARLET_MARBLE_STAIRS.get());
                 output.accept(BlockRegistry.SCARLET_MARBLE_SLAB.get());
@@ -227,6 +217,8 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.DARK_MARBLE_BRICK_WALL.get());
                 output.accept(BlockRegistry.DARK_MARBLE_BRICK_BUTTON.get());
                 output.accept(BlockRegistry.DARK_MARBLE_BRICK_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.DARK_MARBLE_IVORY_ORE.get());
 
                 output.accept(BlockRegistry.DARK_MARBLE.get());
                 output.accept(BlockRegistry.DARK_MARBLE_STAIRS.get());
@@ -278,6 +270,22 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.COBBLED_CLIFFROCK_WALL.get());
                 output.accept(BlockRegistry.COBBLED_CLIFFROCK_BUTTON.get());
                 output.accept(BlockRegistry.COBBLED_CLIFFROCK_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.ROSEGOLD_PILLAR.get());
+
+                output.accept(BlockRegistry.ROSEGOLD_BLOCK.get());
+                output.accept(BlockRegistry.ROSEGOLD_STAIRS.get());
+                output.accept(BlockRegistry.ROSEGOLD_SLAB.get());
+                output.accept(BlockRegistry.ROSEGOLD_WALL.get());
+                output.accept(BlockRegistry.ROSEGOLD_BUTTON.get());
+                output.accept(BlockRegistry.ROSEGOLD_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.ROSEGOLD_BRICKS.get());
+                output.accept(BlockRegistry.ROSEGOLD_BRICK_STAIRS.get());
+                output.accept(BlockRegistry.ROSEGOLD_BRICK_SLAB.get());
+                output.accept(BlockRegistry.ROSEGOLD_BRICK_WALL.get());
+                output.accept(BlockRegistry.ROSEGOLD_BRICK_BUTTON.get());
+                output.accept(BlockRegistry.ROSEGOLD_BRICK_PRESSURE_PLATE.get());
             })
             .build()
     );

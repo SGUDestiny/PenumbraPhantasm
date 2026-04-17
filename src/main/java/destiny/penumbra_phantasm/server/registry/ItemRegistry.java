@@ -56,10 +56,11 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> DARK_CANDY_STICK = ITEMS.register("dark_candy_stick",
             () -> new Item(new Item.Properties()));
-
     public static final RegistryObject<Item> RAW_ROSEGOLD = ITEMS.register("raw_rosegold",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROSEGOLD_INGOT = ITEMS.register("rosegold_ingot",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> IVORY = ITEMS.register("ivory",
             () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> DARk_CANDY_SWORD = ITEMS.register("dark_candy_sword",
@@ -83,6 +84,12 @@ public class ItemRegistry {
             () -> new ShovelItem(Tiers.STONE, 0, 0, new Item.Properties()));
     public static final RegistryObject<Item> UMBRASTONE_HOE = ITEMS.register("umbrastone_hoe",
             () -> new HoeItem(Tiers.STONE, 0, 0, new Item.Properties()));
+
+    public static final RegistryObject<Item> IVORY_SWORD = ITEMS.register("ivory_sword",
+            () -> new PickaxeItem(Tiers.IRON, 0, 0, new Item.Properties()));
+
+    public static final RegistryObject<Item> ROSEGOLD_SWORD = ITEMS.register("rosegold_sword",
+            () -> new PickaxeItem(Tiers.IRON, 0, 0, new Item.Properties()));
 
     public static final RegistryObject<Item> DARK_CANDY_BUCKET = ITEMS.register("dark_candy_bucket",
             () -> new ScarletBucketItem(Fluids.EMPTY, new Item.Properties()));

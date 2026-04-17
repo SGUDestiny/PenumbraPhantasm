@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:dark_candy_stick"
+    },
+    "X": {
+      "item": "penumbra_phantasm:rosegold_ingot"
+    }
+  },
+  "pattern": [
+    " X ",
+    " X ",
+    " # "
+  ],
+  "result": {
+    "item": "penumbra_phantasm:rosegold_sword"
+  },
+  "show_notification": true
+}

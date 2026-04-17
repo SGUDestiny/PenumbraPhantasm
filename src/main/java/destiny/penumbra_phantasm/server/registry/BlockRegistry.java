@@ -354,13 +354,11 @@ public class BlockRegistry {
 
 
 
-    //Rosegold ores
-    public static final RegistryObject<Block> UMBRASTONE_ROSEGOLD_ORE = registerBlock("umbrastone_rosegold_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.GOLD_ORE).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().sound(SoundType.STONE)));
-
     //Rosegold misc
     public static final RegistryObject<Block> GREAT_DOOR_SPAWNER = registerBlock("great_door_spawner",
             () -> new GreatDoorSpawnerBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)));
     public static final RegistryObject<Block> ROSEGOLD_PILLAR = registerBlock("rosegold_pillar", () -> new RotatedPillarBlock(ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> UMBRASTONE_ROSEGOLD_ORE = registerBlock("umbrastone_rosegold_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.GOLD_ORE).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().sound(SoundType.STONE)));
 
     //Polished rosegold
     public static final RegistryObject<Block> ROSEGOLD_BLOCK = registerBlock("rosegold_block", () -> new Block(ROSEGOLD_PROPERTIES));
@@ -385,6 +383,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> RED_CHECK = registerBlock("red_check", () -> new CheckBlock(DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> YELLOW_CHECK = registerBlock("yellow_check", () -> new CheckBlock(DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> BLUE_CHECK = registerBlock("blue_check", () -> new CheckBlock(DARK_MARBLE_PROPERTIES));
+
+    public static final RegistryObject<Block> DARK_MARBLE_IVORY_ORE = registerBlock("dark_marble_ivory_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_ORE).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().sound(SoundType.STONE)));
+    public static final RegistryObject<Block> SCARLET_MARBLE_IVORY_ORE = registerBlock("scarlet_marble_ivory_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_ORE).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().sound(SoundType.STONE)));
 
 
 

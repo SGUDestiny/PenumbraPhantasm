@@ -18,9 +18,6 @@
 
   "item.penumbra_phantasm.dark_candy_stick": "Dark Candy Stick",
 
-  "item.penumbra_phantasm.raw_rosegold": "Raw Rosegold",
-  "item.penumbra_phantasm.rosegold_ingot": "Rosegold Ingot",
-
   "item.penumbra_phantasm.dark_candy_sword": "Dark Candy Sword",
   "item.penumbra_phantasm.dark_candy_pickaxe": "Dark Candy Pickaxe",
   "item.penumbra_phantasm.dark_candy_axe": "Dark Candy Axe",
@@ -32,6 +29,15 @@
   "item.penumbra_phantasm.umbrastone_axe": "Umbrastone Axe",
   "item.penumbra_phantasm.umbrastone_shovel": "Umbrastone Shovel",
   "item.penumbra_phantasm.umbrastone_hoe": "Umbrastone Hoe",
+
+  "item.penumbra_phantasm.raw_rosegold": "Raw Rosegold",
+  "item.penumbra_phantasm.rosegold_ingot": "Rosegold Ingot",
+
+  "item.penumbra_phantasm.rosegold_sword": "Rosegold Sword",
+
+  "item.penumbra_phantasm.ivory": "Ivory",
+
+  "item.penumbra_phantasm.ivory_sword": "Ivory Sword",
 
   "item.penumbra_phantasm.dark_candy_bucket": "Dark Candy Bucket",
   "item.penumbra_phantasm.luminescent_water_bucket": "Luminescent Water Bucket",
@@ -270,6 +276,9 @@
   "block.penumbra_phantasm.hearth": "Hearth",
 
   "block.penumbra_phantasm.umbrastone_rosegold_ore": "Umbrastone Rosegold Ore",
+
+  "block.penumbra_phantasm.dark_marble_ivory_ore": "Dark Marble Ivory Ore",
+  "block.penumbra_phantasm.scarlet_marble_ivory_ore": "Scarlet Marble Ivory Ore",
 
   "block.penumbra_phantasm.great_door_spawner": "Great Door Spawner",
   "block.penumbra_phantasm.rosegold_pillar": "Rosegold Pillar",
