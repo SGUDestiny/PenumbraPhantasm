@@ -5,7 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,49 +15,55 @@ import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.ContainerScreenEvent;
-import net.minecraftforge.common.MinecraftForge;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<InventoryMenu> implements RecipeUpdateListener {
+public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<DarkWorldInventoryMenu> implements RecipeUpdateListener {
     private static final ResourceLocation RECIPE_BUTTON_LOCATION = new ResourceLocation("textures/gui/recipe_button.png");
+    private static final int NARROW_SCREEN_WIDTH = 379;
     public static final ResourceLocation DARK_WORLD_INVENTORY_LOCATION = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/inventory.png");
+    private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_1 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_1.png");
+    private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_2 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_2.png");
+    private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_3 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_3.png");
+    private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_4 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_4.png");
+    private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_5 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_5.png");
     private float xMouse;
     private float yMouse;
     private final RecipeBookComponent recipeBookComponent = new RecipeBookComponent();
     private boolean widthTooNarrow;
     private boolean buttonClicked;
+    private final Player player;
+    private final AbstractContainerMenu previousMenu;
     public Component inventoryLabel = Component.translatable("gui.penumbra_phantasm.dark_world_inventory_title");
     public Component craftingLabel = Component.translatable("gui.penumbra_phantasm.dark_world_inventory_crafting");
     public Component equippedLabel = Component.translatable("gui.penumbra_phantasm.dark_world_inventory_equipped");
     public int equippedLabelX = 57;
     public int equippedLabelY = 4;
-    public int slotsOffsetX = 0;
-    public int slotsOffsetY = 10;
 
     public DarkWorldInventoryScreen(Player pPlayer) {
-        super(pPlayer.inventoryMenu, pPlayer.getInventory(), Component.translatable("container.crafting"));
+        super(new DarkWorldInventoryMenu(pPlayer.getInventory(), pPlayer), pPlayer.getInventory(), Component.translatable("container.crafting"));
         this.imageWidth = 188;
         this.imageHeight = 185;
         this.inventoryLabelX = 57;
         this.inventoryLabelY = 87;
         this.titleLabelX = 137;
         this.titleLabelY = 4;
+        this.player = pPlayer;
+        this.previousMenu = pPlayer.containerMenu;
     }
 
     @Override
@@ -75,8 +80,9 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         if (this.minecraft.gameMode.hasInfiniteItems()) {
             this.minecraft.setScreen(new CreativeModeInventoryScreen(this.minecraft.player, this.minecraft.player.connection.enabledFeatures(), this.minecraft.options.operatorItemsTab().get()));
         } else {
+            this.player.containerMenu = this.menu;
             super.init();
-            this.widthTooNarrow = this.width < 379;
+            this.widthTooNarrow = this.width < NARROW_SCREEN_WIDTH;
             this.recipeBookComponent.init(this.width, this.height, this.minecraft, this.widthTooNarrow, this.menu);
             this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth);
             this.addRenderableWidget(new ImageButton(this.leftPos + 104, this.height / 2 - 22, 20, 18, 0, 0, 19, RECIPE_BUTTON_LOCATION, (p_289631_) -> {
@@ -87,88 +93,32 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
             }));
             this.addWidget(this.recipeBookComponent);
             this.setInitialFocus(this.recipeBookComponent);
-
-            for (int i = 0; i < this.menu.slots.size(); i++) {
-                Slot slot = this.menu.slots.get(i);
-                Slot offsetSlot = new Slot(slot.container, i, slot.x - slotsOffsetX, slot.y - slotsOffsetY);
-
-                this.menu.slots.set(i, offsetSlot);
-            }
         }
     }
 
     @Override
     protected void renderLabels(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
-        //Equipped label
         this.drawCenteredString(pGuiGraphics, this.font, this.equippedLabel, this.equippedLabelX, this.equippedLabelY, -1, false);
-        //Crafting label
         this.drawCenteredString(pGuiGraphics, this.font, this.craftingLabel, this.titleLabelX, this.titleLabelY, -1, false);
-        //Inventory label
         this.drawCenteredString(pGuiGraphics, this.font, this.inventoryLabel, this.inventoryLabelX, this.inventoryLabelY, -1, false);
     }
 
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-        int i = this.leftPos;
-        int j = this.topPos;
-        this.renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
-        MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Background(this, pGuiGraphics, pMouseX, pMouseY));
-        RenderSystem.disableDepthTest();
-        pGuiGraphics.pose().pushPose();
-        pGuiGraphics.pose().translate((float)i, (float)j, 0.0F);
-        this.hoveredSlot = null;
-
-        for(int k = 0; k < this.menu.slots.size(); ++k) {
-            Slot slot = this.menu.slots.get(k);
-            if (slot.isActive()) {
-                renderSlot(pGuiGraphics, slot);
-            }
-
-            if (this.isHovering(slot, pMouseX, pMouseY) && slot.isActive()) {
-                this.hoveredSlot = slot;
-                int x = slot.x;
-                int y = slot.y;
-                if (this.hoveredSlot.isHighlightable()) {
-                    renderSlotHighlight(pGuiGraphics, x, y, 0, this.getSlotColor(k));
-                }
-            }
+        this.renderBackground(pGuiGraphics);
+        if (this.recipeBookComponent.isVisible() && this.widthTooNarrow) {
+            this.renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
+            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+        } else {
+            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+            super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+            this.recipeBookComponent.renderGhostRecipe(pGuiGraphics, this.leftPos, this.topPos, true, pPartialTick);
         }
 
-        this.renderLabels(pGuiGraphics, pMouseX, pMouseY);
-        MinecraftForge.EVENT_BUS.post(new ContainerScreenEvent.Render.Foreground(this, pGuiGraphics, pMouseX, pMouseY));
-        ItemStack itemstack = this.draggingItem.isEmpty() ? this.menu.getCarried() : this.draggingItem;
-        if (!itemstack.isEmpty()) {
-            int l1 = 8;
-            int i2 = this.draggingItem.isEmpty() ? 8 : 16;
-            String s = null;
-            if (!this.draggingItem.isEmpty() && this.isSplittingStack) {
-                itemstack = itemstack.copyWithCount(Mth.ceil((float)itemstack.getCount() / 2.0F));
-            } else if (this.isQuickCrafting && this.quickCraftSlots.size() > 1) {
-                itemstack = itemstack.copyWithCount(this.quickCraftingRemainder);
-                if (itemstack.isEmpty()) {
-                    s = ChatFormatting.YELLOW + "0";
-                }
-            }
-
-            this.renderFloatingItem(pGuiGraphics, itemstack, pMouseX - i - 8, pMouseY - j - i2, s);
-        }
-
-        if (!this.snapbackItem.isEmpty()) {
-            float f = (float)(Util.getMillis() - this.snapbackTime) / 100.0F;
-            if (f >= 1.0F) {
-                f = 1.0F;
-                this.snapbackItem = ItemStack.EMPTY;
-            }
-
-            int j2 = this.snapbackEnd.x - this.snapbackStartX;
-            int k2 = this.snapbackEnd.y - this.snapbackStartY;
-            int j1 = this.snapbackStartX + (int)((float)j2 * f);
-            int k1 = this.snapbackStartY + (int)((float)k2 * f);
-            this.renderFloatingItem(pGuiGraphics, this.snapbackItem, j1, k1, null);
-        }
-
-        pGuiGraphics.pose().popPose();
-        RenderSystem.enableDepthTest();
+        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        this.recipeBookComponent.renderTooltip(pGuiGraphics, this.leftPos, this.topPos, pMouseX, pMouseY);
+        this.xMouse = pMouseX;
+        this.yMouse = pMouseY;
     }
 
     @Override
@@ -185,31 +135,31 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         renderEntityInInventoryFollowsAngle(pGuiGraphics, pX, pY, pScale, f, f1, pEntity);
     }
 
-    public static void renderEntityInInventoryFollowsAngle(GuiGraphics p_282802_, int p_275688_, int p_275245_, int p_275535_, float angleXComponent, float angleYComponent, LivingEntity p_275689_) {
+    public static void renderEntityInInventoryFollowsAngle(GuiGraphics pGuiGraphics, int pX, int pY, int pScale, float angleXComponent, float angleYComponent, LivingEntity pEntity) {
         Quaternionf quaternionf = (new Quaternionf()).rotateZ((float)Math.PI);
         Quaternionf quaternionf1 = (new Quaternionf()).rotateX(angleYComponent * 20.0F * ((float)Math.PI / 180F));
         quaternionf.mul(quaternionf1);
-        float f2 = p_275689_.yBodyRot;
-        float f3 = p_275689_.getYRot();
-        float f4 = p_275689_.getXRot();
-        float f5 = p_275689_.yHeadRotO;
-        float f6 = p_275689_.yHeadRot;
-        p_275689_.yBodyRot = 180.0F + angleXComponent * 20.0F;
-        p_275689_.setYRot(180.0F + angleXComponent * 40.0F);
-        p_275689_.setXRot(-angleYComponent * 20.0F);
-        p_275689_.yHeadRot = p_275689_.getYRot();
-        p_275689_.yHeadRotO = p_275689_.getYRot();
-        renderEntityInInventory(p_282802_, p_275688_, p_275245_, p_275535_, quaternionf, quaternionf1, p_275689_);
-        p_275689_.yBodyRot = f2;
-        p_275689_.setYRot(f3);
-        p_275689_.setXRot(f4);
-        p_275689_.yHeadRotO = f5;
-        p_275689_.yHeadRot = f6;
+        float f = pEntity.yBodyRot;
+        float f1 = pEntity.getYRot();
+        float f2 = pEntity.getXRot();
+        float f3 = pEntity.yHeadRotO;
+        float f4 = pEntity.yHeadRot;
+        pEntity.yBodyRot = 180.0F + angleXComponent * 20.0F;
+        pEntity.setYRot(180.0F + angleXComponent * 40.0F);
+        pEntity.setXRot(-angleYComponent * 20.0F);
+        pEntity.yHeadRot = pEntity.getYRot();
+        pEntity.yHeadRotO = pEntity.getYRot();
+        renderEntityInInventory(pGuiGraphics, pX, pY, pScale, quaternionf, quaternionf1, pEntity);
+        pEntity.yBodyRot = f;
+        pEntity.setYRot(f1);
+        pEntity.setXRot(f2);
+        pEntity.yHeadRotO = f3;
+        pEntity.yHeadRot = f4;
     }
 
     public static void renderEntityInInventory(GuiGraphics pGuiGraphics, int pX, int pY, int pScale, Quaternionf pPose, @Nullable Quaternionf pCameraOrientation, LivingEntity pEntity) {
         pGuiGraphics.pose().pushPose();
-        pGuiGraphics.pose().translate(pX, pY, (double)50.0F);
+        pGuiGraphics.pose().translate(pX, pY, 50.0D);
         pGuiGraphics.pose().mulPoseMatrix((new Matrix4f()).scaling((float)pScale, (float)pScale, (float)(-pScale)));
         pGuiGraphics.pose().mulPose(pPose);
         Lighting.setupForEntityInInventory();
@@ -227,44 +177,65 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         Lighting.setupFor3DItems();
     }
 
+    @Override
     protected boolean isHovering(int pX, int pY, int pWidth, int pHeight, double pMouseX, double pMouseY) {
         return (!this.widthTooNarrow || !this.recipeBookComponent.isVisible()) && super.isHovering(pX, pY, pWidth, pHeight, pMouseX, pMouseY);
     }
 
+    @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
         if (this.recipeBookComponent.mouseClicked(pMouseX, pMouseY, pButton)) {
             this.setFocused(this.recipeBookComponent);
             return true;
-        } else {
-            return this.widthTooNarrow && this.recipeBookComponent.isVisible() ? false : super.mouseClicked(pMouseX, pMouseY, pButton);
         }
+        return this.widthTooNarrow && this.recipeBookComponent.isVisible() ? false : super.mouseClicked(pMouseX, pMouseY, pButton);
     }
 
+    @Override
     public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
         if (this.buttonClicked) {
             this.buttonClicked = false;
             return true;
-        } else {
-            return super.mouseReleased(pMouseX, pMouseY, pButton);
         }
+        return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 
+    @Override
+    public boolean keyPressed(int pKeyCode, int pScanCode, int pModifiers) {
+        return this.recipeBookComponent.keyPressed(pKeyCode, pScanCode, pModifiers) || super.keyPressed(pKeyCode, pScanCode, pModifiers);
+    }
+
+    @Override
+    public boolean charTyped(char pCodePoint, int pModifiers) {
+        return this.recipeBookComponent.charTyped(pCodePoint, pModifiers) || super.charTyped(pCodePoint, pModifiers);
+    }
+
+    @Override
     protected boolean hasClickedOutside(double pMouseX, double pMouseY, int pGuiLeft, int pGuiTop, int pMouseButton) {
         boolean flag = pMouseX < (double)pGuiLeft || pMouseY < (double)pGuiTop || pMouseX >= (double)(pGuiLeft + this.imageWidth) || pMouseY >= (double)(pGuiTop + this.imageHeight);
         return this.recipeBookComponent.hasClickedOutside(pMouseX, pMouseY, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, pMouseButton) && flag;
     }
 
+    @Override
     protected void slotClicked(Slot pSlot, int pSlotId, int pMouseButton, ClickType pType) {
         super.slotClicked(pSlot, pSlotId, pMouseButton, pType);
         this.recipeBookComponent.slotClicked(pSlot);
     }
 
+    @Override
     public void recipesUpdated() {
         this.recipeBookComponent.recipesUpdated();
     }
 
+    @Override
     public RecipeBookComponent getRecipeBookComponent() {
         return this.recipeBookComponent;
+    }
+
+    @Override
+    public void removed() {
+        this.player.containerMenu = this.previousMenu != null ? this.previousMenu : this.player.inventoryMenu;
+        super.removed();
     }
 
     @Override
@@ -290,8 +261,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
                 int i1 = AbstractContainerMenu.getQuickCraftPlaceCount(this.quickCraftSlots, this.quickCraftingType, itemstack1) + l;
                 if (i1 > k) {
                     i1 = k;
-                    String var10000 = ChatFormatting.YELLOW.toString();
-                    s = var10000 + k;
+                    s = ChatFormatting.YELLOW + String.valueOf(k);
                 }
 
                 itemstack = itemstack1.copyWithCount(i1);
@@ -305,6 +275,11 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
         pGuiGraphics.pose().translate(0.0F, 0.0F, 100.0F);
 
         if (!flag1) {
+            ResourceLocation emptySlotTexture = this.getEmptySlotTexture(pSlot, itemstack);
+            if (emptySlotTexture != null) {
+                pGuiGraphics.blit(emptySlotTexture, x, y, 0, 0, 16, 16, 16, 16);
+            }
+
             if (flag) {
                 pGuiGraphics.fill(x, y, x + 16, y + 16, -2130706433);
             }
@@ -324,7 +299,21 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Inv
     public void drawString(GuiGraphics graphics, Font font, FormattedCharSequence charSequence, float textX, float textY, int color, boolean dropShadow) {
         PoseStack poseStack = graphics.pose();
         MultiBufferSource bufferSource = graphics.bufferSource();
-
         font.drawInBatch(charSequence, textX, textY, color, dropShadow, poseStack.last().pose(), bufferSource, Font.DisplayMode.NORMAL, 0, 15728880);
+    }
+
+    private ResourceLocation getEmptySlotTexture(Slot pSlot, ItemStack pStack) {
+        if (!pStack.isEmpty() || pSlot.container != this.player.getInventory()) {
+            return null;
+        }
+
+        return switch (pSlot.getSlotIndex()) {
+            case 39 -> EMPTY_EQUIPMENT_SLOT_1;
+            case 38 -> EMPTY_EQUIPMENT_SLOT_2;
+            case 37 -> EMPTY_EQUIPMENT_SLOT_3;
+            case 36 -> EMPTY_EQUIPMENT_SLOT_4;
+            case 40 -> EMPTY_EQUIPMENT_SLOT_5;
+            default -> null;
+        };
     }
 }
