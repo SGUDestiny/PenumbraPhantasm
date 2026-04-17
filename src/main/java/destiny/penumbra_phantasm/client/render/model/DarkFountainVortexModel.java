@@ -24,9 +24,9 @@ public class DarkFountainVortexModel extends EntityModel<Entity> {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create().texOffs(-1016, -254).addBox(-128.0F, 0.0F, -128.0F, 256.0F, 0.0F, 256.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create().texOffs(-512, 0).addBox(-256.0F, 0.0F, -256.0F, 512.0F, 0.0F, 512.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        return LayerDefinition.create(meshdefinition, 512, 256);
+        return LayerDefinition.create(meshdefinition, 1024, 512);
     }
 
     @Override

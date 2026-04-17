@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.client.render.model.*;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
@@ -713,9 +714,21 @@ public class FountainRenderUtil {
 		poseStack.popPose();
 
 		int pixelLength = (240 / 16) * length;
+		int width = 1024 / 16;
+
 		poseStack.pushPose();
-		poseStack.translate(0f, pixelLength, 0f);
-		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureVortexLower)),
+		poseStack.translate(width, pixelLength + 16, width);
+		poseStack.mulPose(Axis.YP.rotationDegrees(360f * (Mth.lerp(fountain.frameTick / 27f * 3f, 0, 1))));
+		poseStack.scale(3, 1, 3);
+		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainNoCull(textureVortexTop)),
+				LightTexture.FULL_BRIGHT, overlay, 1f, 1f, 1f, alpha);
+		poseStack.popPose();
+
+		poseStack.pushPose();
+		poseStack.translate(width, pixelLength, width);
+		poseStack.mulPose(Axis.YP.rotationDegrees((360f / 3f) * frameOptimized));
+		poseStack.scale(3, 1, 3);
+		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainNoCull(textureVortexLower)),
 				LightTexture.FULL_BRIGHT, overlay, 1f, 1f, 1f, alpha);
 		poseStack.popPose();
 	}
