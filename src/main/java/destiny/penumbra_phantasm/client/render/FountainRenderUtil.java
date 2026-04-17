@@ -715,7 +715,7 @@ public class FountainRenderUtil {
 		poseStack.pushPose();
 		poseStack.translate(0.5f, pixelLength + 8f, 0.5f);
 		poseStack.mulPose(Axis.YN.rotationDegrees(topRotation));
-		poseStack.scale(2, 1, 2);
+		poseStack.scale(1.5f, 1, 1.5f);
 		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainNoCull(textureVortexTop)),
 				LightTexture.FULL_BRIGHT, overlay, 1f, 1f, 1f, alpha);
 		poseStack.popPose();
@@ -723,7 +723,7 @@ public class FountainRenderUtil {
 		poseStack.pushPose();
 		poseStack.translate(0.5f, pixelLength, 0.5f);
 		poseStack.mulPose(Axis.YN.rotationDegrees(lowerRotation));
-		poseStack.scale(3, 1, 3);
+		poseStack.scale(2, 1, 2);
 		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainNoCull(textureVortexLower)),
 				LightTexture.FULL_BRIGHT, overlay, 1f, 1f, 1f, alpha);
 		poseStack.popPose();
