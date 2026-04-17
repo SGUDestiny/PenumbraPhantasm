@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:block/template_fallen_leaves_emissive",
+  "textures": {
+    "leaves": "penumbra_phantasm:block/fallen_dark_candy_leaves_1"
+  }
+}

@@ -9,10 +9,44 @@
           "functions": [
             {
               "add": false,
-              "count": {
-                "type": "minecraft:constant",
-                "value": 1
-              },
+              "conditions": [
+                {
+                  "block": "penumbra_phantasm:fallen_scarlet_leaves",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "leaves": "2"
+                  }
+                }
+              ],
+              "count": 2,
+              "function": "minecraft:set_count"
+            },
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "penumbra_phantasm:fallen_scarlet_leaves",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "leaves": "3"
+                  }
+                }
+              ],
+              "count": 3,
+              "function": "minecraft:set_count"
+            },
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "penumbra_phantasm:fallen_scarlet_leaves",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "leaves": "4"
+                  }
+                }
+              ],
+              "count": 4,
               "function": "minecraft:set_count"
             },
             {

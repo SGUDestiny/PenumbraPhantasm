@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "penumbra_phantasm:block/fallen_scarlet_leaves"
+    "layer0": "penumbra_phantasm:block/fallen_scarlet_leaves_4"
   }
 }
