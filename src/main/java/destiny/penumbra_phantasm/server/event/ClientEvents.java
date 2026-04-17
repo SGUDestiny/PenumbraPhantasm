@@ -61,7 +61,7 @@ public class ClientEvents {
 
 			Camera camera = event.getCamera();
 
-			int length = level.getHeight() / 6;
+			int length = 16;
 			ResourceLocation textureCrack = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_ground_crack.png");
 
 			PoseStack pose = event.getPoseStack();

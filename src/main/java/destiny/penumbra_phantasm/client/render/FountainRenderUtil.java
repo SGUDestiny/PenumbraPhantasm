@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import destiny.penumbra_phantasm.client.render.model.DarkFountainFrontModel;
+import destiny.penumbra_phantasm.client.render.model.*;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 
@@ -14,9 +14,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.render.model.DarkFountainGroundCrackModel;
-import destiny.penumbra_phantasm.client.render.model.DarkFountainMiddleModel;
-import destiny.penumbra_phantasm.client.render.model.DarkFountainOpeningModel;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
@@ -64,7 +61,7 @@ public class FountainRenderUtil {
 	private static DarkFountainGroundCrackModel cachedCrackModel;
 	private static DarkFountainOpeningModel cachedOpeningModel;
 	private static DarkFountainMiddleModel cachedMiddleModel;
-	private static DarkFountainFrontModel cachedFrontModel;
+	private static DarkFountainVortexModel cachedVortexModel;
 	private static final Map<Long, Float> sealedPulseMotionByFountain = new HashMap<>();
 	private static final Map<Long, Float> sealedShaderTimeByFountain = new HashMap<>();
 
@@ -86,10 +83,10 @@ public class FountainRenderUtil {
 		return cachedMiddleModel;
 	}
 
-	private static DarkFountainFrontModel getFrontModel() {
-		if (cachedFrontModel == null)
-			cachedFrontModel = new DarkFountainFrontModel(Minecraft.getInstance().getEntityModels().bakeLayer(DarkFountainFrontModel.LAYER_LOCATION));
-		return cachedFrontModel;
+	private static DarkFountainVortexModel getVortexModel() {
+		if (cachedVortexModel == null)
+			cachedVortexModel = new DarkFountainVortexModel(Minecraft.getInstance().getEntityModels().bakeLayer(DarkFountainVortexModel.LAYER_LOCATION));
+		return cachedVortexModel;
 	}
 
 	private static void renderFountainCross(PoseStack poseStack, VertexConsumer consumer,
@@ -706,11 +703,20 @@ public class FountainRenderUtil {
 	public static void renderOpenFountainOptimized(DarkFountain fountain, int length, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha, Vec3 cameraPos) {
 		int frameOptimized = fountain.frameOptimized;
 		ResourceLocation textureMiddleOptimized = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/fountain_middle_" + frameOptimized + ".png");
+		ResourceLocation textureVortexLower = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/vortex/fountain_vortex_lower.png");
+		ResourceLocation textureVortexTop = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/vortex/fountain_vortex_top.png");
 
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.75f, 0.5f);
 		renderFountainCrossSorted(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleOptimized)),
 				1F, 1F, 1F, alpha, 48f, 240f, length, 0.1f, cameraPos, fountain.getFountainPos());
+		poseStack.popPose();
+
+		int pixelLength = (240 / 16) * length;
+		poseStack.pushPose();
+		poseStack.translate(0f, pixelLength, 0f);
+		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureVortexLower)),
+				LightTexture.FULL_BRIGHT, overlay, 1f, 1f, 1f, alpha);
 		poseStack.popPose();
 	}
 
