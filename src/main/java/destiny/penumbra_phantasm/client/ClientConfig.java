@@ -25,11 +25,17 @@ public class ClientConfig {
             .comment("Default: 64")
             .defineInRange("fountain_lod_distance", 64d, 8d, 256d);
 
+    private static final ForgeConfigSpec.BooleanValue BIOME_MUSIC_LOOP = BUILDER
+            .comment("Is biome music played on repeat?")
+            .comment("Default: false")
+            .define("biome_music_loop", false);
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean alternateDarkFountainMusic;
     public static boolean always_show_location_titles;
     public static double fountainLodDistance;
+    public static boolean biomeMusicLoop;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -39,5 +45,6 @@ public class ClientConfig {
         alternateDarkFountainMusic = ALTERNATE_DARK_FOUNTAIN_MUSIC.get();
         always_show_location_titles = ALWAYS_SHOW_LOCATION_TITLES.get();
         fountainLodDistance = FOUNTAIN_LOD_DISTANCE.get();
+        biomeMusicLoop = BIOME_MUSIC_LOOP.get();
     }
 }
