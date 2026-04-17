@@ -707,29 +707,31 @@ public class FountainRenderUtil {
 		ResourceLocation textureVortexLower = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/vortex/fountain_vortex_lower.png");
 		ResourceLocation textureVortexTop = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/vortex/fountain_vortex_top.png");
 
-		poseStack.pushPose();
-		poseStack.translate(0.5f, 0.75f, 0.5f);
-		renderFountainCrossSorted(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleOptimized)),
-				1F, 1F, 1F, alpha, 48f, 240f, length, 0.1f, cameraPos, fountain.getFountainPos());
-		poseStack.popPose();
-
 		int pixelLength = (240 / 16) * length;
-		int width = 1024 / 16;
+		float optimizedCycleProgress = fountain.getFrameTick() / (27f * 3f);
+		float lowerRotation = 360f * optimizedCycleProgress* 0.5f;
+		float topRotation = 360f * optimizedCycleProgress * 0.25f;
 
 		poseStack.pushPose();
-		poseStack.translate(width, pixelLength + 16, width);
-		poseStack.mulPose(Axis.YP.rotationDegrees(360f * (Mth.lerp(fountain.frameTick / 27f * 3f, 0, 1))));
-		poseStack.scale(3, 1, 3);
+		poseStack.translate(0.5f, pixelLength + 8f, 0.5f);
+		poseStack.mulPose(Axis.YN.rotationDegrees(topRotation));
+		poseStack.scale(2, 1, 2);
 		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainNoCull(textureVortexTop)),
 				LightTexture.FULL_BRIGHT, overlay, 1f, 1f, 1f, alpha);
 		poseStack.popPose();
 
 		poseStack.pushPose();
-		poseStack.translate(width, pixelLength, width);
-		poseStack.mulPose(Axis.YP.rotationDegrees((360f / 3f) * frameOptimized));
+		poseStack.translate(0.5f, pixelLength, 0.5f);
+		poseStack.mulPose(Axis.YN.rotationDegrees(lowerRotation));
 		poseStack.scale(3, 1, 3);
 		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountainNoCull(textureVortexLower)),
 				LightTexture.FULL_BRIGHT, overlay, 1f, 1f, 1f, alpha);
+		poseStack.popPose();
+
+		poseStack.pushPose();
+		poseStack.translate(0.5f, 0.75f, 0.5f);
+		renderFountainCrossSorted(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleOptimized)),
+				1F, 1F, 1F, alpha, 48f, 240f, length, 0.1f, cameraPos, fountain.getFountainPos());
 		poseStack.popPose();
 	}
 
