@@ -1,0 +1,25 @@
+{
+  "feature": "penumbra_phantasm:great_board/red_check_patch",
+  "placement": [
+    {
+      "type": "minecraft:noise_threshold_count",
+      "above_noise": 30,
+      "below_noise": 15,
+      "noise_level": -0.8
+    },
+    {
+      "type": "minecraft:rarity_filter",
+      "chance": 130
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "WORLD_SURFACE_WG"
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -25,7 +25,11 @@
     [],
     [],
     [
-      "penumbra_phantasm:great_board/chess_piece_rare"
+      "penumbra_phantasm:great_board/chess_piece_rare",
+      "penumbra_phantasm:great_board/black_check_patch",
+      "penumbra_phantasm:great_board/blue_check_patch",
+      "penumbra_phantasm:great_board/red_check_patch",
+      "penumbra_phantasm:great_board/yellow_check_patch"
     ],
     []
   ],
