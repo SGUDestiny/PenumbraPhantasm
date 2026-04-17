@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "checks=1": {
+      "model": "penumbra_phantasm:block/black_check_1"
+    },
+    "checks=2": {
+      "model": "penumbra_phantasm:block/black_check_2"
+    },
+    "checks=3": {
+      "model": "penumbra_phantasm:block/black_check_3"
+    },
+    "checks=4": {
+      "model": "penumbra_phantasm:block/black_check_4"
+    }
+  }
+}

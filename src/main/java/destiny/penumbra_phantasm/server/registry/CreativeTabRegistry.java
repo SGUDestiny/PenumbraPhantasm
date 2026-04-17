@@ -242,6 +242,11 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.COBBLED_DARK_MARBLE_BUTTON.get());
                 output.accept(BlockRegistry.COBBLED_DARK_MARBLE_PRESSURE_PLATE.get());
 
+                output.accept(BlockRegistry.BLACK_CHECK.get());
+                output.accept(BlockRegistry.BLUE_CHECK.get());
+                output.accept(BlockRegistry.RED_CHECK.get());
+                output.accept(BlockRegistry.YELLOW_CHECK.get());
+
                 output.accept(BlockRegistry.CLIFFROCK_PATH.get());
                 output.accept(BlockRegistry.CLIFFROCK_PILLAR.get());
                 output.accept(BlockRegistry.CHISELED_CLIFFROCK.get());

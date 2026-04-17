@@ -6,10 +6,14 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class ChessKingBlock extends ChessBlock {
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+
     public static final VoxelShape SHAPE_NORTH_SOUTH = ModUtil.buildShape(
             Block.box(4, 14, 4, 12, 17, 12),
             Block.box(5, 4, 5, 11, 18, 11),

@@ -380,6 +380,14 @@ public class BlockRegistry {
 
 
 
+    //Ivory misc
+    public static final RegistryObject<Block> BLACK_CHECK = registerBlock("black_check", () -> new CheckBlock(DARK_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> RED_CHECK = registerBlock("red_check", () -> new CheckBlock(DARK_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> YELLOW_CHECK = registerBlock("yellow_check", () -> new CheckBlock(DARK_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> BLUE_CHECK = registerBlock("blue_check", () -> new CheckBlock(DARK_MARBLE_PROPERTIES));
+
+
+
     public static final RegistryObject<LiquidBlock> LUMINESCENT_WATER = BLOCKS.register("luminescent_water",
             () -> new LuminescentWaterFluidBlock(FluidRegistry.SOURCE_LUMINESCENT_WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()
                     .lightLevel(state -> 15).randomTicks()));

@@ -262,6 +262,11 @@
   "block.penumbra_phantasm.dark_marble_queen": "Dark Marble Queen",
   "block.penumbra_phantasm.dark_marble_king": "Dark Marble King",
 
+  "block.penumbra_phantasm.black_check": "Black Check",
+  "block.penumbra_phantasm.blue_check": "Blue Check",
+  "block.penumbra_phantasm.red_check": "Red Check",
+  "block.penumbra_phantasm.yellow_check": "Yellow Check",
+
   "block.penumbra_phantasm.hearth": "Hearth",
 
   "block.penumbra_phantasm.umbrastone_rosegold_ore": "Umbrastone Rosegold Ore",

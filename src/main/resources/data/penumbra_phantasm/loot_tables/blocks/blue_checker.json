@@ -1,0 +1,62 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "penumbra_phantasm:blue_check",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "checks": "2"
+                  }
+                }
+              ],
+              "count": 2,
+              "function": "minecraft:set_count"
+            },
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "penumbra_phantasm:blue_check",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "checks": "3"
+                  }
+                }
+              ],
+              "count": 3,
+              "function": "minecraft:set_count"
+            },
+            {
+              "add": false,
+              "conditions": [
+                {
+                  "block": "penumbra_phantasm:blue_check",
+                  "condition": "minecraft:block_state_property",
+                  "properties": {
+                    "checks": "4"
+                  }
+                }
+              ],
+              "count": 4,
+              "function": "minecraft:set_count"
+            },
+            {
+              "function": "minecraft:explosion_decay"
+            }
+          ],
+          "name": "penumbra_phantasm:blue_check"
+        }
+      ],
+      "rolls": 1
+    }
+  ]
+}

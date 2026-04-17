@@ -1,0 +1,8 @@
+{
+  "parent": "penumbra_phantasm:block/template_check_3",
+  "textures": {
+    "top": "penumbra_phantasm:block/red_check_top",
+    "side1": "penumbra_phantasm:block/red_check_side_1",
+    "side2": "penumbra_phantasm:block/red_check_side_2"
+  }
+}
