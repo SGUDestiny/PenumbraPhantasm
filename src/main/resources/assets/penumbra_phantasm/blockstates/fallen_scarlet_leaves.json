@@ -1,7 +1,16 @@
 {
   "variants": {
-    "": {
-      "model": "penumbra_phantasm:block/fallen_scarlet_leaves"
+    "leaves=1": {
+      "model": "penumbra_phantasm:block/fallen_scarlet_leaves_1"
+    },
+    "leaves=2": {
+      "model": "penumbra_phantasm:block/fallen_scarlet_leaves_2"
+    },
+    "leaves=3": {
+      "model": "penumbra_phantasm:block/fallen_scarlet_leaves_3"
+    },
+    "leaves=4": {
+      "model": "penumbra_phantasm:block/fallen_scarlet_leaves_4"
     }
   }
 }

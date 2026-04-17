@@ -147,6 +147,10 @@
     "penumbra_phantasm:rosegold_wall",
     "penumbra_phantasm:rosegold_button",
     "penumbra_phantasm:rosegold_pressure_plate",
-    "penumbra_phantasm:umbrastone_rosegold_ore"
+    "penumbra_phantasm:umbrastone_rosegold_ore",
+    "penumbra_phantasm:black_check",
+    "penumbra_phantasm:blue_check",
+    "penumbra_phantasm:red_check",
+    "penumbra_phantasm:yellow_check"
   ]
 }

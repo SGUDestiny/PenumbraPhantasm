@@ -121,7 +121,7 @@ public class BlockRegistry {
             () -> new ScarletLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES)));
     public static final RegistryObject<Block> FALLEN_SCARLET_LEAVES = registerBlock("fallen_scarlet_leaves",
-            () -> new CarpetBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
+            () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak()));
     public static final RegistryObject<Block> SCARLET_LOG = registerBlock("scarlet_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
@@ -154,7 +154,7 @@ public class BlockRegistry {
             () -> new DarkCandyLeaves(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()));
     public static final RegistryObject<Block> FALLEN_DARK_CANDY_LEAVES = registerBlock("fallen_dark_candy_leaves",
-            () -> new CarpetBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
+            () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak()));
     public static final RegistryObject<Block> DARK_CANDY_LOG = registerBlock("dark_candy_log",
             () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)

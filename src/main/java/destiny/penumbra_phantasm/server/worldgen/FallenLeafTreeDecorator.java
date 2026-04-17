@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static destiny.penumbra_phantasm.server.block.FallenLeafBlock.LEAVES;
+
 public class FallenLeafTreeDecorator extends TreeDecorator {
     public static final Codec<FallenLeafTreeDecorator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BlockState.CODEC.fieldOf("leaf_block").forGetter(d -> d.fallenLeafBlock),
@@ -52,7 +54,7 @@ public class FallenLeafTreeDecorator extends TreeDecorator {
             BlockPos placePos = groundPos.above();
             if (!context.isAir(placePos)) continue;
 
-            context.setBlock(placePos, fallenLeafBlock);
+            context.setBlock(placePos, fallenLeafBlock.setValue(LEAVES, random.nextInt(1, 4)));
         }
     }
 
