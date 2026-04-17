@@ -365,7 +365,7 @@ public class CardKingdomDimensionEffects extends DarkWorldDimensionEffects {
 
         float radius = 120.0F;
         float lowerY = -18.0F;
-        float horizonY = -16.0F;
+        float horizonY = 0.0F;
         float upperY = 18.0F;
         float horizonAlpha = 0.5F;
         int segments = 64;

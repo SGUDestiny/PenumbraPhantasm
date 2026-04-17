@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.render.screen.component.DarkWorldRecipeBookComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -33,7 +34,7 @@ import javax.annotation.Nullable;
 
 @OnlyIn(Dist.CLIENT)
 public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<DarkWorldInventoryMenu> implements RecipeUpdateListener {
-    private static final ResourceLocation RECIPE_BUTTON_LOCATION = new ResourceLocation("textures/gui/recipe_button.png");
+    private static final ResourceLocation RECIPE_BUTTON_LOCATION = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/recipe_button.png");
     private static final int NARROW_SCREEN_WIDTH = 379;
     public static final ResourceLocation DARK_WORLD_INVENTORY_LOCATION = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/inventory.png");
     private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_1 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_1.png");
@@ -43,7 +44,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
     private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_5 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_5.png");
     private float xMouse;
     private float yMouse;
-    private final RecipeBookComponent recipeBookComponent = new RecipeBookComponent();
+    private final DarkWorldRecipeBookComponent recipeBookComponent = new DarkWorldRecipeBookComponent();
     private boolean widthTooNarrow;
     private boolean buttonClicked;
     private final Player player;
@@ -228,7 +229,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
     }
 
     @Override
-    public RecipeBookComponent getRecipeBookComponent() {
+    public DarkWorldRecipeBookComponent getRecipeBookComponent() {
         return this.recipeBookComponent;
     }
 
