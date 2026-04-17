@@ -9,6 +9,7 @@ import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenMod
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.client.render.model.item.DeltashieldModel;
+import destiny.penumbra_phantasm.client.render.dimension.CardKingdomDimensionEffects;
 import destiny.penumbra_phantasm.client.render.dimension.DarkWorldDimensionEffects;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
 import destiny.penumbra_phantasm.client.render.overlay.DarknessLandOverlay;
@@ -130,8 +131,10 @@ public class PenumbraPhantasm {
         @SubscribeEvent
         public static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
             DarkWorldDimensionEffects darkWorldDimensionEffects = new DarkWorldDimensionEffects();
+            CardKingdomDimensionEffects cardKingdomDimensionEffects = new CardKingdomDimensionEffects();
 
             event.register(DarkWorldDimensionEffects.DARK_WORLD_DIMENSION_EFFECTS, darkWorldDimensionEffects);
+            event.register(CardKingdomDimensionEffects.CARD_KINGDOM_DIMENSION_EFFECTS, cardKingdomDimensionEffects);
         }
 
         @SubscribeEvent

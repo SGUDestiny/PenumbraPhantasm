@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.server.event;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
+import destiny.penumbra_phantasm.client.render.dimension.CardKingdomDimensionEffects;
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.GreatDoorRenderUtil;
 import destiny.penumbra_phantasm.client.render.screen.DarkWorldInventoryScreen;
@@ -68,6 +69,16 @@ public class ClientEvents {
 			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(FOUNTAIN_BUFFER);
 
 			GL11.glEnable(0x864F);
+
+			if (renderSkyPass && CardKingdomDimensionEffects.isCardKingdomDarkWorld(level)) {
+				CardKingdomDimensionEffects cardKingdomDimensionEffects = CardKingdomDimensionEffects.getInstance();
+				
+				if (cardKingdomDimensionEffects != null) {
+					pose.pushPose();
+					cardKingdomDimensionEffects.renderOverlay(level, partialTick, pose, camera, event.getProjectionMatrix());
+					pose.popPose();
+				}
+			}
 
 			level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
 				cap.darkFountains.forEach((key, fountain) ->
