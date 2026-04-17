@@ -86,7 +86,7 @@ public class LocationTitleOverlay {
         if (currentLocation.equals(scarletForestTranslatable))
             color = 0xE8004D;
         if (currentLocation.equals(greatBoardTranslatable))
-            color = 0x5B5B5B;
+            color = 0xf46836;
 
         pose.pushPose();
         pose.translate(width / 2f, height / 2f, 0f);

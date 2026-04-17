@@ -28,6 +28,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 public class IntroScreen extends Screen {
     private static final int WORLD_THUMBNAIL_DELAY_TICKS = 20;
@@ -252,15 +253,23 @@ public class IntroScreen extends Screen {
 
     public void renderText(GuiGraphics graphics, PoseStack pose)
     {
-        pose.pushPose();
-        pose.translate(this.width / 2f, this.height / 2f, 0f);
-        pose.scale(2.5f, 2.5f, 0);
-        pose.translate(-this.width / 2f, -this.height / 2f, 0f);
-
         float outlineAlphaDelta = outlineTick / 60f;
         float outlineAlpha = outlineAlphaDelta <= 0.5f
                 ? Mth.lerp(outlineAlphaDelta * 2.0f, 0.2f, 0.5f)
                 : Mth.lerp((outlineAlphaDelta - 0.5f) * 2.0f, 0.5f, 0.2f);
+
+        if (tick > 55 * 20) {
+            drawStringOutlined(graphics, Component.translatable("screen.penumbra_phantasm.intro.skip_notification_post"),
+                    2, this.height - 10, 0x3e3e3e, 1f, outlineAlpha);
+        } else {
+            drawStringOutlined(graphics, Component.translatable("screen.penumbra_phantasm.intro.skip_notification"),
+                    2, this.height - 10, 0x3e3e3e, 1f, outlineAlpha);
+        }
+
+        pose.pushPose();
+        pose.translate(this.width / 2f, this.height / 2f, 0f);
+        pose.scale(2.5f, 2.5f, 0);
+        pose.translate(-this.width / 2f, -this.height / 2f, 0f);
 
         Component lineString1 = line1.getVisibleText(tickText);
         drawStringOutlined(graphics, lineString1,
@@ -706,20 +715,20 @@ public class IntroScreen extends Screen {
 
     @Override
     public void onClose() {
-        if (minecraft.player.getAbilities().instabuild)
-        {
+        queueWorldThumbnail(minecraft);
 
-            //TODO - Make this actually run after exiting intro and having loaded the world
-            queueWorldThumbnail(minecraft);
+        this.onFinished.run();
+        minecraft.getSoundManager().stop();
 
-            this.onFinished.run();
-            minecraft.getSoundManager().stop();
+        if (tick > 55 * 20) {
             PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
+        } else {
+            Random random = new Random();
+            PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(random.nextInt(1, 7)));
         }
     }
 
     public void closeScreen() {
-        //TODO - Make this actually run after exiting intro and having loaded the world
         queueWorldThumbnail(minecraft);
 
         this.onFinished.run();
