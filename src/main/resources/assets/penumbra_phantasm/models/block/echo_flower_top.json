@@ -1,6 +1,56 @@
 {
-  "parent": "penumbra_phantasm:block/template_cross_emissive",
+  "render_type": "minecraft:cutout",
   "textures": {
-    "cross": "penumbra_phantasm:block/echo_flower_top"
-  }
+    "0": "penumbra_phantasm:block/echo_flower_top",
+    "1": "penumbra_phantasm:block/echo_flower_top_flower",
+    "particle": "penumbra_phantasm:block/echo_flower_top"
+  },
+  "elements": [
+    {
+      "from": [0.8, 0, 8],
+      "to": [15.2, 16, 8],
+      "forge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "shade": false,
+      "rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8], "rescale": true},
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#0"}
+      }
+    },
+    {
+      "from": [8, 0, 0.8],
+      "to": [8, 16, 15.2],
+      "forge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "shade": false,
+      "rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8], "rescale": true},
+      "faces": {
+        "east": {"uv": [0, 0, 16, 16], "texture": "#0"},
+        "west": {"uv": [0, 0, 16, 16], "texture": "#0"}
+      }
+    },
+    {
+      "from": [0, 1, 7],
+      "to": [16, 17, 7],
+      "forge_data": {
+        "block_light": 15,
+        "sky_light": 15
+      },
+      "shade": false,
+      "rotation": {"angle": 22.5, "axis": "x", "origin": [8, 9, 7]},
+      "faces": {
+        "north": {"uv": [0, 0, 16, 16], "texture": "#1"},
+        "east": {"uv": [2, 0, 2, 16], "texture": "#1"},
+        "south": {"uv": [0, 0, 16, 16], "texture": "#1"},
+        "west": {"uv": [0, 0, 0, 16], "texture": "#1"},
+        "up": {"uv": [0, 0, 16, 0], "texture": "#1"},
+        "down": {"uv": [0, 2, 16, 2], "texture": "#1"}
+      }
+    }
+  ]
 }
