@@ -32,6 +32,7 @@ import java.util.Random;
 
 public class IntroScreen extends Screen {
     private static final int WORLD_THUMBNAIL_DELAY_TICKS = 20;
+    private static final float REFERENCE_GUI_SCALE = 2.0f;
     private static Path worldThumbnailPath;
     private static int worldThumbnailTicksRemaining;
 
@@ -257,18 +258,23 @@ public class IntroScreen extends Screen {
         float outlineAlpha = outlineAlphaDelta <= 0.5f
                 ? Mth.lerp(outlineAlphaDelta * 2.0f, 0.2f, 0.5f)
                 : Mth.lerp((outlineAlphaDelta - 0.5f) * 2.0f, 0.5f, 0.2f);
+        float guiScaleCompensation = getGuiScaleCompensation();
+        int skipTextY = Mth.floor(getReferenceGuiHeight() - 10f);
 
+        pose.pushPose();
+        pose.scale(guiScaleCompensation, guiScaleCompensation, 1f);
         if (tick > 55 * 20) {
             drawStringOutlined(graphics, Component.translatable("screen.penumbra_phantasm.intro.skip_notification_post"),
-                    2, this.height - 10, 0x3e3e3e, 1f, outlineAlpha);
+                    2, skipTextY, 0x3e3e3e, 1f, outlineAlpha);
         } else {
             drawStringOutlined(graphics, Component.translatable("screen.penumbra_phantasm.intro.skip_notification"),
-                    2, this.height - 10, 0x3e3e3e, 1f, outlineAlpha);
+                    2, skipTextY, 0x3e3e3e, 1f, outlineAlpha);
         }
+        pose.popPose();
 
         pose.pushPose();
         pose.translate(this.width / 2f, this.height / 2f, 0f);
-        pose.scale(2.5f, 2.5f, 0);
+        pose.scale(2.5f * guiScaleCompensation, 2.5f * guiScaleCompensation, 1f);
         pose.translate(-this.width / 2f, -this.height / 2f, 0f);
 
         Component lineString1 = line1.getVisibleText(tickText);
@@ -445,6 +451,7 @@ public class IntroScreen extends Screen {
     public void renderBackground(GuiGraphics graphics, PoseStack pose)
     {
         ResourceLocation BLURRY_SOUL = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/blurry_soul_" + currentChoice + ".png");
+        float guiScaleCompensation = getGuiScaleCompensation();
 
         pose.popPose();
 
@@ -469,7 +476,7 @@ public class IntroScreen extends Screen {
         pose.pushPose();
         pose.translate(this.width / 2f, this.height / 2f, 0);
         if (tick >= appearStart && tick < disappearStart + appearDuration) {
-            pose.scale(soulX, soulY, 1f);
+            pose.scale(soulX * guiScaleCompensation, soulY * guiScaleCompensation, 1f);
             pose.translate(-10f, -10f + (3 * Math.sin(tick * 0.1f)), 0f);
             graphics.blit(BLURRY_SOUL, 0, 0, 0, 0.0F, 0.0F, 20, 20, 20, 20);
         }
@@ -553,7 +560,7 @@ public class IntroScreen extends Screen {
                 }
 
                 pose.translate(this.width / 2f, this.height / 2f, 0);
-                pose.scale(1.25f, 1.25f, 1);
+                pose.scale(1.25f * guiScaleCompensation, 1.25f * guiScaleCompensation, 1f);
                 pose.translate(-10f - 135f + choiceSoulX, yPos, 0f);
                 RenderBlitUtil.blit(BLURRY_SOUL, pose, 0, 0, 1, 1, 1, choiceSoulAlpha, 0, 0.0F, 0.0F, 20, 20, 20, 20);
             }
@@ -587,14 +594,14 @@ public class IntroScreen extends Screen {
 
                 pose.pushPose();
                 pose.translate(this.width / 2f, this.height / 2f, 0);
-                pose.scale(1.25f * endingSoulSize, 1.25f * endingSoulSize, 1);
+                pose.scale(1.25f * endingSoulSize * guiScaleCompensation, 1.25f * endingSoulSize * guiScaleCompensation, 1f);
                 pose.translate(-10f, -10, 0f);
                 RenderBlitUtil.blit(BLURRY_SOUL, pose, 0, 0, 1, 1, 1, 1, 0, 0.0F, 0.0F, 20, 20, 20, 20);
                 pose.popPose();
 
                 pose.pushPose();
                 pose.translate(this.width / 2f, this.height / 2f, 0);
-                pose.scale(endingSoulSecondarySize, endingSoulSecondarySize, 1);
+                pose.scale(endingSoulSecondarySize * guiScaleCompensation, endingSoulSecondarySize * guiScaleCompensation, 1f);
                 pose.translate(-10f, -10, 0f);
                 RenderBlitUtil.blit(BLURRY_SOUL, pose, 0, 0, 1, 1, 1, endingSoulAlpha, 0, 0.0F, 0.0F, 20, 20, 20, 20);
                 pose.popPose();
@@ -711,6 +718,14 @@ public class IntroScreen extends Screen {
     public Component getSpacedNickname(Component nickname) {
         String spacedNickname = String.join(" ", nickname.getString().split(""));
         return Component.literal(spacedNickname);
+    }
+
+    private float getGuiScaleCompensation() {
+        return REFERENCE_GUI_SCALE / (float) minecraft.getWindow().getGuiScale();
+    }
+
+    private float getReferenceGuiHeight() {
+        return minecraft.getWindow().getHeight() / REFERENCE_GUI_SCALE;
     }
 
     @Override
