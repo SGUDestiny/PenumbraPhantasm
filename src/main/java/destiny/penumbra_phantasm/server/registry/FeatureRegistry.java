@@ -38,7 +38,7 @@ public class FeatureRegistry {
 
     public static final RegistryObject<TreeDecoratorType<FallenLeafTreeDecorator>> FALLEN_LEAF_TREE_DECORATOR = TREE_DECORATORS.register("fallen_leaf_tree_decorator", () -> new TreeDecoratorType<>(FallenLeafTreeDecorator.CODEC));
 
-    public static final RegistryObject<Feature<ProbabilityFeatureConfiguration>> STARTAIL_FEATURE = FEATURES.register("startail_feature", () -> new StartailFeature(ProbabilityFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> STARTAIL_FEATURE = FEATURES.register("startail_feature", () -> new StartailFeature(NoneFeatureConfiguration.CODEC));
 
     public static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(PenumbraPhantasm.MODID, name));

@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.FluidRegistry;
 import destiny.penumbra_phantasm.server.registry.ItemRegistry;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -47,7 +48,7 @@ public class StartailBlock extends DoublePlantBlock implements SimpleWaterlogged
                 && level.getBlockState(blockpos).getBlock() == BlockRegistry.LUMINESCENT_WATER.get()
                 && level.getBlockState(blockpos.above()).isAir();
 
-        return canPlace ? this.defaultBlockState().setValue(WATERLOGGED, levelaccessor.getFluidState(blockpos).getType() == FluidRegistry.SOURCE_LUMINESCENT_WATER.get()) : null;
+        return canPlace ? this.defaultBlockState().setValue(WATERLOGGED, isLuminescentWater(levelaccessor.getFluidState(blockpos))) : null;
     }
 
     @Override
@@ -57,12 +58,12 @@ public class StartailBlock extends DoublePlantBlock implements SimpleWaterlogged
 
     @Override
     public boolean canPlaceLiquid(BlockGetter pLevel, BlockPos pPos, BlockState pState, Fluid pFluid) {
-        return pFluid == FluidRegistry.SOURCE_LUMINESCENT_WATER.get();
+        return isLuminescentWater(pFluid);
     }
 
     @Override
     public boolean placeLiquid(LevelAccessor pLevel, BlockPos pPos, BlockState pState, FluidState pFluidState) {
-        if (!(Boolean)pState.getValue(BlockStateProperties.WATERLOGGED) && pFluidState.getType() == FluidRegistry.SOURCE_LUMINESCENT_WATER.get()) {
+        if (!pState.getValue(BlockStateProperties.WATERLOGGED) && isLuminescentWater(pFluidState)) {
             if (!pLevel.isClientSide()) {
                 pLevel.setBlock(pPos, pState.setValue(BlockStateProperties.WATERLOGGED, true), 3);
                 pLevel.scheduleTick(pPos, pFluidState.getType(), pFluidState.getType().getTickDelay(pLevel));
@@ -72,6 +73,16 @@ public class StartailBlock extends DoublePlantBlock implements SimpleWaterlogged
         } else {
             return false;
         }
+    }
+
+    @Override
+    public @NotNull BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
+        if (pState.getValue(WATERLOGGED)) {
+            pLevel.scheduleTick(pPos, FluidRegistry.SOURCE_LUMINESCENT_WATER.get(), FluidRegistry.SOURCE_LUMINESCENT_WATER.get().getTickDelay(pLevel));
+        }
+
+        BlockState updatedState = super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+        return updatedState.isAir() && pState.getValue(WATERLOGGED) ? BlockRegistry.LUMINESCENT_WATER.get().defaultBlockState() : updatedState;
     }
 
     @Override
@@ -89,6 +100,15 @@ public class StartailBlock extends DoublePlantBlock implements SimpleWaterlogged
     }
 
     @Override
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (!pState.is(pNewState.getBlock()) && pNewState.isAir() && pState.getValue(HALF) == DoubleBlockHalf.LOWER && pState.getValue(WATERLOGGED)) {
+            pLevel.setBlock(pPos, BlockRegistry.LUMINESCENT_WATER.get().defaultBlockState(), 3);
+        }
+
+        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
+    }
+
+    @Override
     public ItemStack pickupBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
         if (pState.getValue(BlockStateProperties.WATERLOGGED)) {
             pLevel.setBlock(pPos, pState.setValue(BlockStateProperties.WATERLOGGED, false), 3);
@@ -100,5 +120,13 @@ public class StartailBlock extends DoublePlantBlock implements SimpleWaterlogged
         } else {
             return ItemStack.EMPTY;
         }
+    }
+
+    private static boolean isLuminescentWater(FluidState pFluidState) {
+        return isLuminescentWater(pFluidState.getType());
+    }
+
+    private static boolean isLuminescentWater(Fluid pFluid) {
+        return pFluid == FluidRegistry.SOURCE_LUMINESCENT_WATER.get() || pFluid == FluidRegistry.FLOWING_LUMINESCENT_WATER.get();
     }
 }

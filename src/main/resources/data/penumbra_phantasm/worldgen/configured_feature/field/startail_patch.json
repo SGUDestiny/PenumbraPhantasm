@@ -1,6 +1,4 @@
 {
   "type": "penumbra_phantasm:startail_feature",
-  "config": {
-    "probability": 0.8
-  }
+  "config": {}
 }
