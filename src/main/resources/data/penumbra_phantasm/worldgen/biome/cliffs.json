@@ -1,0 +1,49 @@
+{
+  "carvers": {
+    "air": [
+      "penumbra_phantasm:dark_world_cave",
+      "penumbra_phantasm:dark_world_cave_extra_underground",
+      "penumbra_phantasm:dark_world_canyon"
+    ]
+  },
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 0,
+    "grass_color": 5592405,
+    "foliage_color": 4473924,
+    "sky_color": 0,
+    "water_color": 0,
+    "water_fog_color": 0
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "penumbra_phantasm:ore/ivory_ore_dark",
+      "penumbra_phantasm:ore/ivory_ore_scarlet"
+    ],
+    [],
+    [],
+    [
+      "penumbra_phantasm:cliffs/cliffs_paths"
+    ],
+    []
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.2
+}

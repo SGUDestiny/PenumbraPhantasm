@@ -31,6 +31,7 @@ public class BlockRegistry {
     public static final BlockBehaviour.Properties DARK_MARBLE_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops();
     public static final BlockBehaviour.Properties UMBRASTONE_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops();
     public static final BlockBehaviour.Properties CLIFFROCK_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF);
+    public static final BlockBehaviour.Properties CLIFF_VOID_PROPERTIES = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK).noOcclusion();
     public static final BlockBehaviour.Properties TENEBRALITH_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE);
     public static final BlockBehaviour.Properties ROSEGOLD_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().sound(SoundType.METAL);
 
@@ -276,6 +277,7 @@ public class BlockRegistry {
 
     //Cliffrock misc
     public static final RegistryObject<Block> CLIFFROCK_PATH = registerBlock("cliffrock_path", () -> new Block(CLIFFROCK_PROPERTIES));
+    public static final RegistryObject<Block> CLIFFROCK_SLIDE = registerBlock("cliffrock_slide", () -> new CliffrockSlideBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noOcclusion()));
     public static final RegistryObject<Block> CLIFFROCK_PILLAR = registerBlock("cliffrock_pillar", () -> new RotatedPillarBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CHISELED_CLIFFROCK = registerBlock("chiseled_cliffrock", () -> new Block(CLIFFROCK_PROPERTIES));
 
@@ -403,6 +405,8 @@ public class BlockRegistry {
             () -> new DarknessBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLACK).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
                     .noOcclusion()));
+    public static final RegistryObject<Block> CLIFF_VOID = BLOCKS.register("cliff_void",
+            () -> new CliffVoidBlock(CLIFF_VOID_PROPERTIES));
 
     public static final RegistryObject<Block> GREAT_DOOR_SHAPE = BLOCKS.register("great_door_shape",
             () -> new GreatDoorShapeBlock(BlockBehaviour.Properties.of()

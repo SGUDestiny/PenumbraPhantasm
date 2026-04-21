@@ -41,6 +41,18 @@
           "depth": 0,
           "offset": 0.2
         }
+      },
+      {
+        "biome": "penumbra_phantasm:cliffs",
+        "parameters": {
+          "temperature": 0.15,
+          "humidity": -0.25,
+          "continentalness": 0,
+          "erosion": 0,
+          "weirdness": 0,
+          "depth": 0,
+          "offset": 0.2
+        }
       }
     ]
   }

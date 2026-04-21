@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "top=false": {
+      "model": "penumbra_phantasm:block/cliff_void"
+    },
+    "top=true": {
+      "model": "penumbra_phantasm:block/cliff_void_top"
+    }
+  }
+}

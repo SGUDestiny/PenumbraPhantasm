@@ -24,6 +24,7 @@ public class FeatureRegistry {
 
     public static final RegistryObject<Feature<ProbabilityFeatureConfiguration>> SCARLET_BUSH = FEATURES.register("scarlet_bush", () -> new ScarletBushFeature(ProbabilityFeatureConfiguration.CODEC));
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> GREAT_BOARD_CHESS_RANDOM = FEATURES.register("great_board_chess_random", () -> new GreatBoardChessRandomFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> CLIFFS_PATHS = FEATURES.register("cliffs_paths", () -> new CliffsPathFeature(NoneFeatureConfiguration.CODEC));
 
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCARLET_TREE_GENERATED = registerKey("tree/scarlet_tree_generated");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SCARLET_TREE_GROWN = registerKey("tree/scarlet_tree_grown");

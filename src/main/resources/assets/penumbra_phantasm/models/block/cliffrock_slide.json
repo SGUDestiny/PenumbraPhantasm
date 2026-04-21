@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/orientable",
+  "textures": {
+    "top": "penumbra_phantasm:block/cliffrock_1",
+    "bottom": "penumbra_phantasm:block/cliffrock_1",
+    "front": "penumbra_phantasm:block/cliffrock_path_1",
+    "side": "penumbra_phantasm:block/cliffrock_1"
+  }
+}

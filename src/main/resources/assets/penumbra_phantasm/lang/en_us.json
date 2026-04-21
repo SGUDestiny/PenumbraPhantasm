@@ -379,6 +379,8 @@
   "biome.penumbra_phantasm.great_board.description": "'The board of grand moves'",
   "biome.penumbra_phantasm.scarlet_forest": "Scarlet Forest",
   "biome.penumbra_phantasm.scarlet_forest.description": "'The forest of eternal autumn'",
+  "biome.penumbra_phantasm.cliffs": "??????",
+  "biome.penumbra_phantasm.cliffs.description": "'In this land, only eyes blinded by darkness can see the way...'",
 
   "message.penumbra_phantasm.making_fountain_invalid_position": "Must be standing on a full block",
   "message.penumbra_phantasm.making_fountain_not_enough_key_blocks": "Not enough blocks to power your imagination...",

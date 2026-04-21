@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "penumbra_phantasm:block/cliffrock_slide",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "penumbra_phantasm:block/cliffrock_slide",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "penumbra_phantasm:block/cliffrock_slide"
+    },
+    "facing=west": {
+      "model": "penumbra_phantasm:block/cliffrock_slide",
+      "y": 90
+    }
+  }
+}
