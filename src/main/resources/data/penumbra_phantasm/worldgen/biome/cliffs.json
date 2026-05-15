@@ -1,6 +1,9 @@
 {
   "carvers": {
     "air": [
+      "penumbra_phantasm:dark_world_cave",
+      "penumbra_phantasm:dark_world_cave_extra_underground",
+      "penumbra_phantasm:dark_world_canyon"
     ]
   },
   "downfall": 0.4,
@@ -24,7 +27,7 @@
     [],
     [],
     [
-      "penumbra_phantasm:cliffs/cliffs_paths"
+
     ],
     []
   ],

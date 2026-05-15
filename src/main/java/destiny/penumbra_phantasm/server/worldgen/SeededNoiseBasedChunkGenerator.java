@@ -217,6 +217,7 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
       super.buildSurface(pLevel, pStructureManager, pRandom, pChunk);
       if (!SharedConstants.debugVoidTerrain(pChunk.getPos())) {
          this.applyGreatBoardPolishedSurface(pChunk);
+         this.applyCliffsSurface(pChunk);
       }
    }
 
@@ -259,8 +260,8 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
          }
       }
       if (!SharedConstants.debugVoidTerrain(pChunk.getPos())) {
-         this.applyCliffsSurface(pChunk);
-         this.fillCliffsAir(pChunk);
+         this.cliffsStratumState(pChunk);
+         //this.fillCliffsAir(pChunk);
       }
    }
 
@@ -349,7 +350,11 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
 
                         Holder<Biome> biomeHolder = pChunk.getNoiseBiome(QuartPos.fromBlock(l3), QuartPos.fromBlock(l2), QuartPos.fromBlock(k4));
                         if (biomeHolder.is(CLIFFS)) {
-                           blockstate = this.cliffsStateForColumn(cliffsProfiles[(k4 - j) * 16 + (l3 - i)], l2);
+                           if (blockstate.is(BlockRegistry.UMBRASTONE.get())) {
+                              blockstate = this.cliffsStratumState(l3, l2, k4);
+                           } else {
+                              blockstate = this.cliffsStateForColumn(cliffsProfiles[(k4 - j) * 16 + (l3 - i)], l2);
+                           }
                         } else if (blockstate.is(BlockRegistry.UMBRASTONE.get()) && biomeHolder.is(GREAT_BOARD)) {
                            blockstate = this.greatBoardStratumState(l3, l2, k4);
                         }
@@ -411,6 +416,38 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
       }
    }
 
+   private void applyCliffsSurface(ChunkAccess chunk) {
+      ChunkPos chunkPos = chunk.getPos();
+      int minX = chunkPos.getMinBlockX();
+      int minZ = chunkPos.getMinBlockZ();
+      BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+
+      for (int lx = 0; lx < 16; ++lx) {
+         for (int lz = 0; lz < 16; ++lz) {
+            int wx = minX + lx;
+            int wz = minZ + lz;
+            int y = chunk.getHeight(Heightmap.Types.WORLD_SURFACE_WG, lx, lz);
+
+            blockPos.set(wx, y, wz);
+            Holder<Biome> biome = chunk.getNoiseBiome(QuartPos.fromBlock(wx), QuartPos.fromBlock(y), QuartPos.fromBlock(wz));
+
+            if (!biome.is(GREAT_BOARD)) {
+               continue;
+            }
+
+            BlockState current = chunk.getBlockState(blockPos);
+
+            if (!current.is(BlockRegistry.CLIFFROCK.get()) && !current.is(BlockRegistry.CLIFFROCK_PATH.get())) {
+               continue;
+            }
+
+            BlockState path = BlockRegistry.CLIFFROCK_PATH.get().defaultBlockState();
+
+            chunk.setBlockState(blockPos, path, false);
+         }
+      }
+   }
+
    private double greatBoardLayerWarp(int x, int z) {
       double sx = x * 0.04;
       double sz = z * 0.04;
@@ -449,15 +486,15 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
          for (int lz = 0; lz < 16; ++lz) {
             int worldX = minX + lx;
             int worldZ = minZ + lz;
-            Holder<Biome> biome = chunk.getNoiseBiome(QuartPos.fromBlock(worldX), QuartPos.fromBlock(voidHeight + 8), QuartPos.fromBlock(worldZ));
-            profiles[lz * 16 + lx] = biome.is(CLIFFS) ? this.createCliffsProfile(worldX, worldZ, voidHeight) : CliffsColumnProfile.EMPTY;
+            Holder<Biome> biome = chunk.getNoiseBiome(QuartPos.fromBlock(worldX), QuartPos.fromBlock(this.getSeaLevel()), QuartPos.fromBlock(worldZ));
+            profiles[lz * 16 + lx] = biome.is(CLIFFS) ? this.createCliffsProfile(chunk, worldX, worldZ, voidHeight) : CliffsColumnProfile.EMPTY;
          }
       }
 
       return profiles;
    }
 
-   private CliffsColumnProfile createCliffsProfile(int x, int z, int voidHeight) {
+   private CliffsColumnProfile createCliffsProfile(ChunkAccess chunk, int x, int z, int voidHeight) {
       int cellSize = CLIFFS_MOUNTAIN_CELL_SIZE;
       int cellX = Mth.floorDiv(x, cellSize);
       int cellZ = Mth.floorDiv(z, cellSize);
@@ -522,20 +559,7 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
       return value;
    }
 
-   private BlockState cliffsStateForColumn(CliffsColumnProfile profile, int y) {
-      if (!profile.hasMass() || y > profile.topY()) {
-         return Blocks.AIR.defaultBlockState();
-      }
-      for (int i = 0; i < profile.layerCount(); ++i) {
-         if (profile.layerStarts()[i] == y) {
-            return i == 0 ? BlockRegistry.CLIFFROCK.get().defaultBlockState() : BlockRegistry.COBBLED_CLIFFROCK.get().defaultBlockState();
-         }
-      }
-      return BlockRegistry.CLIFFROCK.get().defaultBlockState();
-   }
-
-   private void applyCliffsSurface(ChunkAccess chunk) {
-      int voidHeight = this.getCliffsVoidHeight();
+   private void cliffsStratumState(ChunkAccess chunk) {
       ChunkPos chunkPos = chunk.getPos();
       int minX = chunkPos.getMinBlockX();
       int minZ = chunkPos.getMinBlockZ();
@@ -545,16 +569,15 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
          for (int lz = 0; lz < 16; ++lz) {
             int worldX = minX + lx;
             int worldZ = minZ + lz;
-            Holder<Biome> biome = chunk.getNoiseBiome(QuartPos.fromBlock(worldX), QuartPos.fromBlock(voidHeight + 8), QuartPos.fromBlock(worldZ));
+            Holder<Biome> biome = chunk.getNoiseBiome(QuartPos.fromBlock(worldX), QuartPos.fromBlock(this.getSeaLevel()), QuartPos.fromBlock(worldZ));
             if (!biome.is(CLIFFS)) {
                continue;
             }
 
-            for (int y = chunk.getMaxBuildHeight() - 1; y > voidHeight; --y) {
+            for (int y = chunk.getMaxBuildHeight() - 1; y > chunk.getMinBuildHeight(); --y) {
                blockPos.set(worldX, y, worldZ);
                BlockState current = chunk.getBlockState(blockPos);
-               if ((!current.is(BlockRegistry.CLIFFROCK.get()) && !current.is(BlockRegistry.COBBLED_CLIFFROCK.get()))
-                       || !chunk.getBlockState(blockPos.above()).isAir()) {
+               if ((!current.is(BlockRegistry.CLIFFROCK.get()) && !current.is(BlockRegistry.COBBLED_CLIFFROCK.get())) || !chunk.getBlockState(blockPos.above()).isAir()) {
                   continue;
                }
                chunk.setBlockState(blockPos, BlockRegistry.CLIFFROCK_PATH.get().defaultBlockState(), false);
@@ -564,32 +587,45 @@ public class SeededNoiseBasedChunkGenerator extends NoiseBasedChunkGenerator {
       }
    }
 
-   private void fillCliffsAir(ChunkAccess chunk) {
-      int voidHeight = this.getCliffsVoidHeight();
-      ChunkPos chunkPos = chunk.getPos();
-      int minX = chunkPos.getMinBlockX();
-      int minZ = chunkPos.getMinBlockZ();
-      BlockPos.MutableBlockPos blockPos = new BlockPos.MutableBlockPos();
+   private BlockState cliffsStateForColumn(CliffsColumnProfile profile, int y) {
+      Random random = new Random();
 
-      for (int lx = 0; lx < 16; ++lx) {
-         for (int lz = 0; lz < 16; ++lz) {
-            int worldX = minX + lx;
-            int worldZ = minZ + lz;
-            Holder<Biome> biome = chunk.getNoiseBiome(QuartPos.fromBlock(worldX), QuartPos.fromBlock(voidHeight + 8), QuartPos.fromBlock(worldZ));
-            if (!biome.is(CLIFFS)) {
-               continue;
-            }
+      if (y == getMinY()) {
+         return Blocks.BEDROCK.defaultBlockState();
+      }
 
-            for (int y = voidHeight; y >= chunk.getMinBuildHeight(); --y) {
-               blockPos.set(worldX, y, worldZ);
-               BlockState current = chunk.getBlockState(blockPos);
-               if (!current.isAir()) {
-                  continue;
-               }
-               chunk.setBlockState(blockPos, Blocks.AIR.defaultBlockState(), false);
-            }
+      if (y <= getMinY() + 4) {
+         if (random.nextBoolean()) {
+            return Blocks.BEDROCK.defaultBlockState();
          }
       }
+
+      if (!profile.hasMass() || y > profile.topY()) {
+         return Blocks.AIR.defaultBlockState();
+      }
+
+      for (int i = 0; i < profile.layerCount(); ++i) {
+         if (profile.layerStarts()[i] == y) {
+            return i == 0 ? BlockRegistry.CLIFFROCK.get().defaultBlockState() : BlockRegistry.COBBLED_CLIFFROCK.get().defaultBlockState();
+         }
+      }
+      return BlockRegistry.CLIFFROCK.get().defaultBlockState();
+   }
+
+   private BlockState cliffsStratumState(int x, int y, int z) {
+      Random random = new Random();
+
+      if (y == getMinY()) {
+         return Blocks.BEDROCK.defaultBlockState();
+      }
+
+      if (y <= getMinY() + 4) {
+         if (random.nextBoolean()) {
+            return Blocks.BEDROCK.defaultBlockState();
+         }
+      }
+
+      return BlockRegistry.CLIFFROCK.get().defaultBlockState();
    }
 
    private record CliffsColumnProfile(int topY, int[] layerStarts, int layerCount) {
