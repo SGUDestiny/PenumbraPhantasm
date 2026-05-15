@@ -255,6 +255,14 @@ public class CommonEvents {
     public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             rescuePlayerIfStrandedDarkWorldWithoutFountain(serverPlayer);
+            if (ServerConfig.skipIntroScreen) {
+                serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
+                    if (!cap.seenIntro) {
+                        cap.soulType = serverPlayer.level().random.nextInt(7) + 1;
+                        cap.seenIntro = true;
+                    }
+                });
+            }
         }
     }
 

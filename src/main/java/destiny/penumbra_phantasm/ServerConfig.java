@@ -47,6 +47,11 @@ public class ServerConfig {
             .comment("Default: 1024")
             .defineInRange("great_door_place_max_radius", 1024, 64, 1048576);
 
+    private static final ForgeConfigSpec.BooleanValue SKIP_INTRO_SCREEN = BUILDER
+            .comment("If true, skip the intro screen on first login and assign a random soul type")
+            .comment("Default: false")
+            .define("skip_intro_screen", false);
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean realKnifeOP;
@@ -57,6 +62,7 @@ public class ServerConfig {
     public static int fountainContactTeleportMaxRadius;
     public static int greatDoorPlaceMinRadius;
     public static int greatDoorPlaceMaxRadius;
+    public static boolean skipIntroScreen;
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
@@ -71,5 +77,6 @@ public class ServerConfig {
         fountainContactTeleportMaxRadius = FOUNTAIN_CONTACT_TELEPORT_MAX_RADIUS.get();
         greatDoorPlaceMinRadius = GREAT_DOOR_PLACE_MIN_RADIUS.get();
         greatDoorPlaceMaxRadius = GREAT_DOOR_PLACE_MAX_RADIUS.get();
+        skipIntroScreen = SKIP_INTRO_SCREEN.get();
     }
 }
