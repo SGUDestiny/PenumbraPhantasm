@@ -41,6 +41,10 @@ public class FeatureRegistry {
 
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> STARTAIL_FEATURE = FEATURES.register("startail_feature", () -> new StartailFeature(NoneFeatureConfiguration.CODEC));
 
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> CLIFFROCK_EYE_FEATURE = FEATURES.register("cliffrock_eye_feature", () -> new CliffrockEyeFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> WEEPING_EYE_FEATURE = FEATURES.register("weeping_eye_feature", () -> new WeepingEyeFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> CLIFFROCK_SLIDE_FEATURE = FEATURES.register("cliffrock_slide_feature", () -> new CliffrockSlideFeature(NoneFeatureConfiguration.CODEC));
+
     public static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(PenumbraPhantasm.MODID, name));
     }

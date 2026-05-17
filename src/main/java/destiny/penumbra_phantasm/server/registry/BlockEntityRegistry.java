@@ -15,4 +15,5 @@ public class BlockEntityRegistry {
     public static final RegistryObject<BlockEntityType<DarkMarbleDiceBlockEntity>> DARK_MARBLE_DICE_BLOCK_ENTITY = BLOCK_ENTITIES.register("dark_marble_dice", () -> BlockEntityType.Builder.of(DarkMarbleDiceBlockEntity::new, BlockRegistry.DARK_MARBLE_DICE.get()).build(null));
     public static final RegistryObject<BlockEntityType<ScarletMarbleDiceBlockEntity>> SCARLET_MARBLE_DICE_BLOCK_ENTITY = BLOCK_ENTITIES.register("scarlet_marble_dice", () -> BlockEntityType.Builder.of(ScarletMarbleDiceBlockEntity::new, BlockRegistry.SCARLET_MARBLE_DICE.get()).build(null));
     public static final RegistryObject<BlockEntityType<UmbrastoneFurnaceBlockEntity>> UMBRASTONE_FURNACE_BLOCK_ENTITY = BLOCK_ENTITIES.register("umbrastone_furnace", () -> BlockEntityType.Builder.of(UmbrastoneFurnaceBlockEntity::new, BlockRegistry.UMBRASTONE_FURNACE.get()).build(null));
+    public static final RegistryObject<BlockEntityType<DustBlockEntity>> DUST_BLOCK_ENTITY = BLOCK_ENTITIES.register("dust_block", () -> BlockEntityType.Builder.of(DustBlockEntity::new, BlockRegistry.DUST_BLOCK.get()).build(null));
 }

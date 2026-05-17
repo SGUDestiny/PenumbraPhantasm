@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm;
 
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkMarbleDiceBlockEntityRenderer;
+import destiny.penumbra_phantasm.client.render.blockentity.DustBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.ScarletMarbleDiceBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
 import destiny.penumbra_phantasm.client.render.model.*;
@@ -183,6 +184,7 @@ public class PenumbraPhantasm {
         public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
             event.registerBlockEntityRenderer(BlockEntityRegistry.DARK_MARBLE_DICE_BLOCK_ENTITY.get(), DarkMarbleDiceBlockEntityRenderer::new);
             event.registerBlockEntityRenderer(BlockEntityRegistry.SCARLET_MARBLE_DICE_BLOCK_ENTITY.get(), ScarletMarbleDiceBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(BlockEntityRegistry.DUST_BLOCK_ENTITY.get(), DustBlockEntityRenderer::new);
         }
     }
 }

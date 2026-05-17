@@ -216,5 +216,17 @@
       "penumbra_phantasm:dice_throw_2",
       "penumbra_phantasm:dice_throw_3"
     ]
+  },
+  "slide_down": {
+    "sounds":
+    [
+      "penumbra_phantasm:slide_down"
+    ]
+  },
+  "dust_break": {
+    "sounds":
+    [
+      "penumbra_phantasm:dust_break"
+    ]
   }
 }

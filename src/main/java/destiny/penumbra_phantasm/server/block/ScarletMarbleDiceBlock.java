@@ -1,6 +1,5 @@
 package destiny.penumbra_phantasm.server.block;
 
-import destiny.penumbra_phantasm.server.block.entity.DarkMarbleDiceBlockEntity;
 import destiny.penumbra_phantasm.server.block.entity.ScarletMarbleDiceBlockEntity;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;

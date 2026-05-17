@@ -1,9 +1,16 @@
 {
   "parent": "minecraft:block/orientable",
+  "loader": "fusion:model",
+  "type": "connecting",
+  "connections": {
+    "default": {
+      "type": "is_same_state"
+    }
+  },
   "textures": {
-    "top": "penumbra_phantasm:block/cliffrock_1",
+    "top": "penumbra_phantasm:block/cliffrock_slide_top",
     "bottom": "penumbra_phantasm:block/cliffrock_1",
-    "front": "penumbra_phantasm:block/cliffrock_path_1",
+    "front": "penumbra_phantasm:block/cliffrock_slide",
     "side": "penumbra_phantasm:block/cliffrock_1"
   }
 }
