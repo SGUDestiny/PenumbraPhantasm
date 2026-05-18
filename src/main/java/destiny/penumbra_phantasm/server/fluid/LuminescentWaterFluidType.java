@@ -39,11 +39,9 @@ public class LuminescentWaterFluidType extends FluidType {
     }
 
     @Override
-    public double motionScale(Entity entity) {
-        return 0.8;
+    public float getFallDistanceModifier(Entity entity) {
+        return 1;
     }
-
-
 
     public ResourceLocation getStillTexture() {
         return stillTexture;
