@@ -374,6 +374,7 @@ public class GreatDoor {
 
                 greatDoorLevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
 
+                serverPlayer.invulnerableTime = 60;
                 serverPlayer.teleportTo(destinationLevel, destVec.x, destVec.y, destVec.z, yaw, 0f);
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
 
@@ -386,7 +387,7 @@ public class GreatDoor {
 
             Vec3 destVec;
             if (lightDoorSecondLower == null) {
-                destVec = lightDoorPos.below().getCenter();
+                destVec = lightDoorPos.getCenter();
             } else {
                 Vec3 a = lightDoorPos.getCenter();
                 Vec3 b = lightDoorSecondLower.getCenter();
@@ -402,6 +403,7 @@ public class GreatDoor {
 
                 greatDoorLevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
 
+                serverPlayer.invulnerableTime = 60;
                 serverPlayer.teleportTo(destinationLevel, destVec.x, destVec.y, destVec.z, yaw, 0f);
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
 
@@ -446,6 +448,10 @@ public class GreatDoor {
 
     public static Vec3 spawnCenterInFrontOfGreatDoor(Level level, BlockPos greatDoorPos, Direction doorFacing) {
         BlockPos heightmappedPos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, greatDoorPos.relative(doorFacing, 2));
+
+        if (heightmappedPos.getY() < level.getMinBuildHeight()) {
+            heightmappedPos = greatDoorPos;
+        }
 
         return heightmappedPos.getCenter().add(Vec3.atLowerCornerOf(BlockPos.ZERO.relative(doorFacing.getClockWise(), 1)).scale(2.5).add(0, 0.5, 0));
     }

@@ -76,7 +76,7 @@ public class CliffrockSlideBlock extends HorizontalDirectionalBlock {
         Direction facing = state.getValue(FACING);
 
         double targetX = pos.getX() + 0.5;
-        double targetY = pos.getY() + 0.5;
+        double targetY = pos.above().getY() + 0.5;
         double targetZ = pos.getZ() + 0.5;
 
         double faceOffset = 0.7;
@@ -94,14 +94,7 @@ public class CliffrockSlideBlock extends HorizontalDirectionalBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        //entity.makeStuckInBlock(state, new Vec3(1.0d, 1.0d, 1.0d));
+        entity.makeStuckInBlock(state, new Vec3(1.0d, 1.0d, 1.0d));
         entity.fallDistance = 0.0F;
-
-/*        long currentTime = level.getGameTime();
-        long nextSoundTime = entity.getPersistentData().getLong(SOUND_COOLDOWN);
-        if (currentTime >= nextSoundTime) {
-            level.playSound(null, pos, SoundRegistry.SLIDE_DOWN.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
-            entity.getPersistentData().putLong(SOUND_COOLDOWN, currentTime + 22);
-        }*/
     }
 }
