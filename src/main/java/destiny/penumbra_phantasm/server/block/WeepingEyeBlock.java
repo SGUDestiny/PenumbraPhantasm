@@ -43,13 +43,13 @@ public class WeepingEyeBlock extends GenericHorizontalOrientableBlock {
 
         if (!pLevel.getBlockState(pPos.relative(facing)).isSolidRender(pLevel, pPos.relative(facing))) {
             if (leaking < 1) {
-                pLevel.setBlockAndUpdate(pPos, pState.setValue(LEAKING, leaking + 1));
+                pLevel.setBlockAndUpdate(pPos, pState.setValue(LEAKING, leaking + 1).setValue(HORIZONTAL_FACING, facing));
             } else if (leaking < 2) {
                 BlockPos futurePos = pPos.below();
 
                 if (!pLevel.getBlockState(futurePos.relative(facing)).isSolidRender(pLevel, futurePos.relative(facing)) && pLevel.getBlockState(futurePos).is(BlockRegistry.CLIFFROCK.get())) {
                     pLevel.setBlockAndUpdate(futurePos, BlockRegistry.LEAKING_ICHOR.get().defaultBlockState().setValue(HORIZONTAL_FACING, facing));
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LEAKING, leaking + 1));
+                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LEAKING, leaking + 1).setValue(HORIZONTAL_FACING, facing));
                 }
             } else {
                 int leakingBlocks = 0;
@@ -88,21 +88,28 @@ public class WeepingEyeBlock extends GenericHorizontalOrientableBlock {
         Direction interactionDirection = pHit.getDirection();
 
         if (interactionDirection == pState.getValue(HORIZONTAL_FACING) && pState.getValue(LEAKING) > 0) {
+            int leaking = pState.getValue(LEAKING);
+
             BlockPos dropPos = pPos.relative(interactionDirection);
+            int dropAmount = 1;
 
-            int leakingBlocks = 0;
+            if (leaking == 2) {
+                int leakingBlocks = 0;
 
-            BlockPos.MutableBlockPos checkPos = pPos.mutable().move(0, -1, 0);
-            while (leakingBlocks < MAX_TOTAL_LENGTH && pLevel.getBlockState(checkPos).is(BlockRegistry.LEAKING_ICHOR.get())) {
-                leakingBlocks++;
-                pLevel.setBlockAndUpdate(checkPos, BlockRegistry.CLIFFROCK.get().defaultBlockState());
-                checkPos.move(0, -1, 0);
+                BlockPos.MutableBlockPos checkPos = pPos.mutable().move(0, -1, 0);
+                while (leakingBlocks < MAX_TOTAL_LENGTH && pLevel.getBlockState(checkPos).is(BlockRegistry.LEAKING_ICHOR.get())) {
+                    leakingBlocks++;
+                    pLevel.setBlockAndUpdate(checkPos, BlockRegistry.CLIFFROCK.get().defaultBlockState());
+                    checkPos.move(0, -1, 0);
+                }
+
+                dropAmount += leakingBlocks;
             }
 
-            pLevel.addFreshEntity(new ItemEntity(pLevel, dropPos.getX(), dropPos.getY(), dropPos.getZ(), new ItemStack(ItemRegistry.ICHOR.get(), leakingBlocks)));
+            pLevel.addFreshEntity(new ItemEntity(pLevel, dropPos.getX(), dropPos.getY(), dropPos.getZ(), new ItemStack(ItemRegistry.ICHOR.get(), dropAmount)));
             pLevel.playSound(null, pPos, SoundEvents.HONEY_BLOCK_SLIDE, SoundSource.BLOCKS, 1f, 1f);
 
-            pLevel.setBlockAndUpdate(pPos, BlockRegistry.WEEPING_EYE.get().defaultBlockState());
+            pLevel.setBlockAndUpdate(pPos, pState.setValue(LEAKING, 0));
 
             return InteractionResult.SUCCESS;
         }

@@ -259,6 +259,7 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.ICHOR_LANTERN.get());
 
                 output.accept(BlockRegistry.CLIFFROCK_PATH.get());
+                output.accept(BlockRegistry.CLIFFROCK_SLIDE.get());
                 output.accept(BlockRegistry.CLIFFROCK_PILLAR.get());
                 output.accept(BlockRegistry.CHISELED_CLIFFROCK.get());
 

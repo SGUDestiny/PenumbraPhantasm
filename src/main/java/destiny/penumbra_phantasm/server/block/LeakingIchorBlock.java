@@ -45,7 +45,9 @@ public class LeakingIchorBlock extends GenericHorizontalOrientableBlock {
                if (pLevel.getBlockState(pPos.above()).getValue(LEAKING) > 0) {
                    pLevel.addFreshEntity(new ItemEntity(pLevel, dropPos.getX(), dropPos.above().getY(), dropPos.getZ(), ItemRegistry.ICHOR.get().getDefaultInstance()));
 
-                   pLevel.setBlockAndUpdate(pPos.above(), BlockRegistry.WEEPING_EYE.get().defaultBlockState().setValue(LEAKING, 0));
+                   Direction eyeFacing = pLevel.getBlockState(pPos.above()).getValue(HORIZONTAL_FACING);
+
+                   pLevel.setBlockAndUpdate(pPos.above(), BlockRegistry.WEEPING_EYE.get().defaultBlockState().setValue(LEAKING, 0).setValue(HORIZONTAL_FACING, eyeFacing));
                }
            }
 

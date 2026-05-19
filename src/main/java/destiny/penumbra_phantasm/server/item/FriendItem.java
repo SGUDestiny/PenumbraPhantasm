@@ -107,27 +107,37 @@ public class FriendItem extends Item {
                 //Disappear
                 if (fun == 5) {
                     ArrayList<Integer> slots = getTravelSlots(player);
-                    int chosenSlot = slots.get(level.random.nextInt(0, slots.size()));
-                    int currentSlot = getCurrentSlot(player, stack);
+                    if (slots.isEmpty()) {
+                        stack.getOrCreateTag().putInt("fun", 0);
+                        stack.getOrCreateTag().putBoolean("reset", false);
+                    } else {
+                        int chosenSlot = slots.get(level.random.nextInt(0, slots.size()));
+                        int currentSlot = getCurrentSlot(player, stack);
 
-                    ItemStack oldItem = player.getInventory().getItem(chosenSlot).copy();
+                        ItemStack oldItem = player.getInventory().getItem(chosenSlot).copy();
 
-                    if (!reset) {
-                        stack.getOrCreateTag().put("item", oldItem.serializeNBT());
+                        if (!reset) {
+                            if (player.getInventory().getItem(chosenSlot).getItem() == ItemRegistry.FRIEND.get()) {
+                                stack.getOrCreateTag().putInt("fun", 0);
+                                stack.getOrCreateTag().putBoolean("reset", false);
+                            } else {
+                                stack.getOrCreateTag().put("item", oldItem.serializeNBT());
 
-                        stack.getOrCreateTag().putInt("animation", 9);
-                        stack.getOrCreateTag().putBoolean("reset", true);
+                                stack.getOrCreateTag().putInt("animation", 9);
+                                stack.getOrCreateTag().putBoolean("reset", true);
 
-                        ItemStack newFriend = new ItemStack(ItemRegistry.FRIEND.get());
-                        newFriend.getOrCreateTag().putInt("animation", 0);
-                        newFriend.getOrCreateTag().putInt("fun", 1);
-                        newFriend.getOrCreateTag().putBoolean("reset", false);
+                                ItemStack newFriend = new ItemStack(ItemRegistry.FRIEND.get());
+                                newFriend.getOrCreateTag().putInt("animation", 0);
+                                newFriend.getOrCreateTag().putInt("fun", 1);
+                                newFriend.getOrCreateTag().putBoolean("reset", false);
 
-                        player.getInventory().setItem(chosenSlot, newFriend);
-                    } else if (animation >= 9 && animation < 18) {
-                        stack.getOrCreateTag().putInt("animation", animation + 1);
-                    } else if (animation == 18) {
-                        player.getInventory().setItem(currentSlot, ItemStack.of(stack.getTag().getCompound("item")));
+                                player.getInventory().setItem(chosenSlot, newFriend);
+                            }
+                        } else if (animation >= 9 && animation < 18) {
+                            stack.getOrCreateTag().putInt("animation", animation + 1);
+                        } else if (animation == 18) {
+                            player.getInventory().setItem(currentSlot, ItemStack.of(stack.getTag().getCompound("item")));
+                        }
                     }
                 }
             }
