@@ -388,7 +388,7 @@
   "sound.penumbra_phantasm.level_up": "Твой УР повысился",
   "sound.penumbra_phantasm.great_shine": "ДУША появляется",
   "sound.penumbra_phantasm.soul_break": "ДУША ломается надвое",
-  "sound.penumbra_phantasm.soul_shatter": "Душа разбивается на куски",
+  "sound.penumbra_phantasm.soul_shatter": "ДУША разбивается на куски",
   "sound.penumbra_phantasm.dark_world_fall": "Падение во тьму",
   "sound.penumbra_phantasm.dark_world_land": "Приземление во тьму",
   "sound.penumbra_phantasm.him_quick": "Вход в тёмный мир",
@@ -439,18 +439,18 @@
 
   "container.penumbra_phantasm.umbrastone_furnace": "Печь из умбрина",
 
-  "screen.penumbra_phantasm.intro.skip_notification": "НАЖМИ [ESC] ДЛЯ ПРОПУСКА СО СЛУЧАЙНЫМ ВЫБОРОМ.",
-  "screen.penumbra_phantasm.intro.skip_notification_post": "НАЖМИ [ESC] ЧТОБЫ ПРОПУСТИТЬ СО СВОИМ ВЫБОРОМ.",
+  "screen.penumbra_phantasm.intro.skip_notification": "НАЖМИТЕ [ESC] ДЛЯ ПРОПУСКА СО СЛУЧАЙНЫМ ВЫБОРОМ.",
+  "screen.penumbra_phantasm.intro.skip_notification_post": "НАЖМИТЕ [ESC] ДЛЯ ПРОПУСКА СО СВОИМ ВЫБОРОМ.",
   "screen.penumbra_phantasm.intro.line.1": "     В Ы",
   "screen.penumbra_phantasm.intro.line.2": "З Д Е С Ь ?",
-  "screen.penumbra_phantasm.intro.line.3": "       М Ы",
+  "screen.penumbra_phantasm.intro.line.3": "        М Ы",
   "screen.penumbra_phantasm.intro.line.4": "С О Е Д И Н Е Н Ы ?",
   "screen.penumbra_phantasm.intro.line.5": "П Р Е В О С Х О Д Н О .",
   "screen.penumbra_phantasm.intro.line.6": "В О И С Т И Н У",
-  "screen.penumbra_phantasm.intro.line.7": "П Р Е В О С Х О Д Н О .",
+  "screen.penumbra_phantasm.intro.line.7": " П Р Е В О С Х О Д Н О .",
   "screen.penumbra_phantasm.intro.line.8": "Т Е П Е Р Ь .",
   "screen.penumbra_phantasm.intro.line.9": "М Ы   М О Ж Е М",
-  "screen.penumbra_phantasm.intro.line.10": "  Н А Ч А Т Ь .",
+  "screen.penumbra_phantasm.intro.line.10": "   Н А Ч А Т Ь .",
   "screen.penumbra_phantasm.intro.line.11": "С П Е Р В А .",
   "screen.penumbra_phantasm.intro.line.12": "В Ы   Д О Л Ж Н Ы   В Ы Б Р А Т Ь",
   "screen.penumbra_phantasm.intro.line.13": "Д А Р .",
@@ -477,5 +477,5 @@
   "screen.penumbra_phantasm.intro.line.26": "С   С И Л О Й",
   "screen.penumbra_phantasm.intro.line.27": "< Д Е Л Ь Т А   Р У Н Ы . >",
   "screen.penumbra_phantasm.intro.line.28": "С Т У П А Й   В П Е Р Ё Д",
-  "screen.penumbra_phantasm.intro.line.29": "В   Э Т О Т   Д И В Н Ы Й   М И Р !"
+  "screen.penumbra_phantasm.intro.line.29": "             В   Э Т О Т   М И Р !"
 }
