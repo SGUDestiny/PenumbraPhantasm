@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.server.item.RosegoldLighterItem;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -23,6 +24,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import static destiny.penumbra_phantasm.server.item.RosegoldLighterItem.OPEN;
 
 public class IchorCandleBlock extends GenericHorizontalOrientableBlock{
     public static final VoxelShape SHAPE_GENERIC = ModUtil.buildShape(
@@ -69,11 +72,15 @@ public class IchorCandleBlock extends GenericHorizontalOrientableBlock{
             Item item = pPlayer.getItemInHand(pHand).getItem();
 
             if (item instanceof RosegoldLighterItem) {
-                pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, true));
-                pLevel.playSound(null, pPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                pLevel.gameEvent(pPlayer, GameEvent.BLOCK_CHANGE, pPos);
+                CompoundTag tag = pPlayer.getItemInHand(pHand).getTag();
 
-                return InteractionResult.SUCCESS;
+                if (tag != null && tag.getBoolean(OPEN)) {
+                    pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, true));
+                    pLevel.playSound(null, pPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    pLevel.gameEvent(pPlayer, GameEvent.BLOCK_CHANGE, pPos);
+
+                    return InteractionResult.SUCCESS;
+                }
             }
         }
 
