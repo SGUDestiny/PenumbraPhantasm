@@ -228,5 +228,23 @@
     [
       "penumbra_phantasm:dust_break"
     ]
+  },
+  "lighter_try": {
+    "sounds":
+    [
+      "penumbra_phantasm:lighter_try"
+    ]
+  },
+  "lighter_light": {
+    "sounds":
+    [
+      "penumbra_phantasm:lighter_light"
+    ]
+  },
+  "lighter_close": {
+    "sounds":
+    [
+      "penumbra_phantasm:lighter_close"
+    ]
   }
 }
