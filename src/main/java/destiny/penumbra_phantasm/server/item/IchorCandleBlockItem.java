@@ -6,7 +6,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class IchorCandleBlockItem extends BlockItem {
@@ -20,7 +19,8 @@ public class IchorCandleBlockItem extends BlockItem {
     }
 
     public boolean isOnBlock(Level pLevel, BlockPos pPos, Direction blockDirection) {
-        Block parentBlock = pLevel.getBlockState(pPos.relative(blockDirection)).getBlock();
-        return !parentBlock.equals(Blocks.AIR);
+        BlockState parentBlockState = pLevel.getBlockState(pPos.relative(blockDirection));
+
+        return parentBlockState.isFaceSturdy(pLevel, pPos.relative(blockDirection.getOpposite()), blockDirection);
     }
 }
