@@ -295,6 +295,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> ICHOR_TORCH = BLOCKS.register("ichor_torch", () -> new TorchBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8), ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> ICHOR_WALL_TORCH = BLOCKS.register("ichor_wall_torch", () -> new WallTorchBlock(BlockBehaviour.Properties.copy(Blocks.WALL_TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8), ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> ICHOR_LANTERN = registerBlock("ichor_lantern", () -> new LanternBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_LANTERN).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 12)));
+    public static final RegistryObject<Block> ICHOR_CANDLE = BLOCKS.register("ichor_candle", () -> new IchorCandleBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_LANTERN).mapColor(MapColor.COLOR_BLACK).lightLevel(state -> state.getValue(LIT) ? 12 : 0)));
 
     //Polished cliffrock
     public static final RegistryObject<Block> POLISHED_CLIFFROCK = registerBlock("polished_cliffrock", () -> new Block(CLIFFROCK_PROPERTIES));

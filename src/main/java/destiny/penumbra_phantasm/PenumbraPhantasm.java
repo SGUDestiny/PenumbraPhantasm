@@ -11,6 +11,7 @@ import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorClosedM
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenModel;
 import destiny.penumbra_phantasm.client.render.screen.UmbrastoneFurnaceScreen;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
+import destiny.penumbra_phantasm.server.item.property.RosegoldLighterItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.client.render.model.item.DeltashieldModel;
 import destiny.penumbra_phantasm.client.render.dimension.CardKingdomDimensionEffects;
@@ -156,6 +157,7 @@ public class PenumbraPhantasm {
                 ItemProperties.register(ItemRegistry.DELTA_SHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
                     return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F;
                 });
+                ItemProperties.register(ItemRegistry.ROSEGOLD_LIGHTER.get(), new ResourceLocation(MODID, "open"), new RosegoldLighterItemProperty());
 
                 MenuScreens.register(MenuRegistry.UMBRASTONE_FURNACE_MENU.get(), UmbrastoneFurnaceScreen::new);
             });

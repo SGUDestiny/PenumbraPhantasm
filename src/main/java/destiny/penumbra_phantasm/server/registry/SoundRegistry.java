@@ -49,6 +49,10 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> SLIDE_DOWN = registerSoundEvent("slide_down");
     public static RegistryObject<SoundEvent> DUST_BREAK = registerSoundEvent("dust_break");
 
+    public static RegistryObject<SoundEvent> LIGHTER_TRY = registerSoundEvent("lighter_try");
+    public static RegistryObject<SoundEvent> LIGHTER_LIGHT = registerSoundEvent("lighter_light");
+    public static RegistryObject<SoundEvent> LIGHTER_CLOSE = registerSoundEvent("lighter_close");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));

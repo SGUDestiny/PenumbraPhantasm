@@ -109,6 +109,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ROSEGOLD_HOE = ITEMS.register("rosegold_hoe",
             () -> new HoeItem(Tiers.DIAMOND, 0, 0.5f, new Item.Properties()));
 
+    public static final RegistryObject<Item> ROSEGOLD_LIGHTER = ITEMS.register("rosegold_lighter",
+            () -> new RosegoldLighterItem(new Item.Properties()));
+
     public static final RegistryObject<Item> DARK_CANDY_BUCKET = ITEMS.register("dark_candy_bucket",
             () -> new ScarletBucketItem(Fluids.EMPTY, new Item.Properties()));
     public static final RegistryObject<Item> LUMINESCENT_WATER_BUCKET = ITEMS.register("luminescent_water_bucket",
@@ -124,4 +127,6 @@ public class ItemRegistry {
             () -> new IchorItem(BlockRegistry.ICHOR_PUDDLE.get(), new Item.Properties(), 2400));
     public static final RegistryObject<Item> ICHOR_TORCH = ITEMS.register("ichor_torch",
             () -> new StandingAndWallBlockItem(BlockRegistry.ICHOR_TORCH.get(), BlockRegistry.ICHOR_WALL_TORCH.get(), new Item.Properties(), Direction.DOWN));
+    public static final RegistryObject<Item> ICHOR_CANDLE = ITEMS.register("ichor_candle",
+            () -> new IchorCandleBlockItem(BlockRegistry.ICHOR_CANDLE.get(), new Item.Properties()));
 }

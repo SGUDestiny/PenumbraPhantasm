@@ -69,6 +69,8 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.ROSEGOLD_SHOVEL.get());
                 output.accept(ItemRegistry.ROSEGOLD_HOE.get());
 
+                output.accept(ItemRegistry.ROSEGOLD_LIGHTER.get());
+
                 output.accept(ItemRegistry.DARK_CANDY_STICK.get());
                 output.accept(ItemRegistry.ICHOR.get());
                 output.accept(ItemRegistry.IVORY.get());
@@ -257,6 +259,7 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.ICHOR_BLOCK.get());
                 output.accept(ItemRegistry.ICHOR_TORCH.get());
                 output.accept(BlockRegistry.ICHOR_LANTERN.get());
+                output.accept(ItemRegistry.ICHOR_CANDLE.get());
 
                 output.accept(BlockRegistry.CLIFFROCK_PATH.get());
                 output.accept(BlockRegistry.CLIFFROCK_SLIDE.get());
