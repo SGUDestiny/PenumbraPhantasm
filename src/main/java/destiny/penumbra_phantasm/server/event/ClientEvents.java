@@ -87,9 +87,11 @@ public class ClientEvents {
 
 					if (!DarkWorldUtil.isDarkWorld(level)) {
 						pose.pushPose();
-						pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-						pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
-								fountain.getFountainPos().getZ());
+						pose.translate(
+								fountain.getFountainPos().getX() - camera.getPosition().x(),
+								fountain.getFountainPos().getY() - camera.getPosition().y(),
+								fountain.getFountainPos().getZ() - camera.getPosition().z()
+						);
 
 						if (renderSkyPass) {
 							if (openingTick < FountainRenderUtil.OPENING_POSTERIZE_TICK_END && openingTick >= 0) {
@@ -111,9 +113,11 @@ public class ClientEvents {
 					else if (renderSkyPass)
 					{
 						pose.pushPose();
-						pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-						pose.translate(fountain.getFountainPos().getX(), fountain.getFountainPos().getY(),
-								fountain.getFountainPos().getZ());
+						pose.translate(
+								fountain.getFountainPos().getX() - camera.getPosition().x(),
+								fountain.getFountainPos().getY() - camera.getPosition().y(),
+								fountain.getFountainPos().getZ() - camera.getPosition().z()
+						);
 
 						Vec2 fountain2dPos = new Vec2(fountain.getFountainPos().getX(), fountain.getFountainPos().getZ());
 						Vec2 camera2dPos = new Vec2((float) camera.getPosition().x, (float) camera.getPosition().z);
@@ -148,9 +152,11 @@ public class ClientEvents {
 			level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
 				for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
 					pose.pushPose();
-					pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-					pose.translate(greatDoor.greatDoorPos.getX(), greatDoor.greatDoorPos.getY(),
-							greatDoor.greatDoorPos.getZ());
+					pose.translate(
+							(double)greatDoor.greatDoorPos.getX() - camera.getPosition().x(),
+							(double)greatDoor.greatDoorPos.getY() - camera.getPosition().y(),
+							(double)greatDoor.greatDoorPos.getZ() - camera.getPosition().z()
+					);
 
 					if (Minecraft.getInstance().level.isLoaded(greatDoor.greatDoorPos)) {
 						int packedLight = LevelRenderer.getLightColor(level, greatDoor.greatDoorPos);

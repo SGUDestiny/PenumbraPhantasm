@@ -32,6 +32,7 @@ import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -180,6 +181,7 @@ public class PenumbraPhantasm {
             event.registerSpriteSet(ParticleTypeRegistry.REAL_KNIFE_HIT.get(), RealKnifeHitParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), FountainDarknessParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.LUMINESCENT_PARTICLE.get(), LuminescentParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.ICHOR_FIRE_FLAME.get(), FlameParticle.Provider::new);
         }
 
         @SubscribeEvent

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    {
+      "item": "penumbra_phantasm:rosegold_lighter"
+    },
+    {
+      "item": "penumbra_phantasm:ichor_block"
+    }
+  ],
+  "result": {
+    "item": "penumbra_phantasm:rosegold_lighter",
+    "nbt": "{uses:64}"
+  },
+  "show_notification": true
+}
