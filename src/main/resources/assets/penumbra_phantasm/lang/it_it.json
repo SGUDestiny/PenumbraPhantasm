@@ -17,7 +17,7 @@
   "item.penumbra_phantasm.item_music_medium_the_holy.desc": "Toby Fox - THE HOLY",
 
   "item.penumbra_phantasm.dark_candy_stick": "Stecco di caramella oscura",
-  "item.penumbra_phantasm.ichor": "Ichor",
+  "item.penumbra_phantasm.ichor": "Icore",
 
   "item.penumbra_phantasm.dark_candy_sword": "Spada di caramella oscura",
   "item.penumbra_phantasm.dark_candy_pickaxe": "Piccone di caramella oscura",
@@ -39,6 +39,8 @@
   "item.penumbra_phantasm.rosegold_pickaxe": "Piccone di OroRosato",
   "item.penumbra_phantasm.rosegold_shovel": "Pala di OroRosato",
   "item.penumbra_phantasm.rosegold_hoe": "Zappa di OroRosato",
+
+  "item.penumbra_phantasm.rosegold_lighter": "Accendino di OroRosato",
 
   "item.penumbra_phantasm.ivory": "Avorio",
 
@@ -181,6 +183,8 @@
   "block.penumbra_phantasm.ichor_wall_torch": "Torcia di icore al muro",
   "block.penumbra_phantasm.ichor_lantern": "Lanterna di icore",
   "block.penumbra_phantasm.dust_block": "Blocco di polvere",
+  "block.penumbra_phantasm.ichor_candle": "Candela di icore",
+  "block.penumbra_phantasm.ichor_fire": "Fuoco di icore",
 
   "block.penumbra_phantasm.polished_cliffrock": "Rocciaprecipizzio levigata",
   "block.penumbra_phantasm.polished_cliffrock_stairs": "Scalini di rocciaprecipizzio levigata",
@@ -406,6 +410,7 @@
   "tooltip.penumbra_phantasm.soul_hearth.determination": "DETERMINAZIONE: ",
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "FIDUCIA: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "L'ANIMA CHE RISIEDE DENTRO TI RIFIUTA.",
+  "message.penumbra_phantasm.rosegold_lighter_fuel": "Carburante: ",
 
   "gui.penumbra_phantasm.dark_world_inventory_title": "INVENTARIO",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "CRAFT",
