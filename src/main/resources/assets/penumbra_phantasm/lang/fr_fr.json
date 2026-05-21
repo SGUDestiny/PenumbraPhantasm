@@ -182,6 +182,8 @@
   "block.penumbra_phantasm.ichor_torch": "Torche d'ichor",
   "block.penumbra_phantasm.ichor_wall_torch": "Torche mural d'ichor",
   "block.penumbra_phantasm.ichor_lantern": "Lanterne d'ichor",
+  "block.penumbra_phantasm.ichor_candle": "Bougie d'ichor",
+  "block.penumbra_phantasm.ichor_fire": "Feu d'ichor",
   "block.penumbra_phantasm.dust_block": "Bloc de poussière",
 
   "block.penumbra_phantasm.polished_cliffrock": "Roche de falaise polie",
@@ -412,7 +414,7 @@
   "tooltip.penumbra_phantasm.soul_hearth.determination": "DÉTERMINATION: ",
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "CONFIANCE: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "L'ÂME EN SON SEIN VOUS REJETTE.",
-
+  "message.penumbra_phantasm.rosegold_lighter_fuel": "Combustible: "
   
   "gui.penumbra_phantasm.dark_world_inventory_title": "INVENTAIRE",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "FABRICATION",
