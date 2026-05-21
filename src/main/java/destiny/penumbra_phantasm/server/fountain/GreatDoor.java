@@ -110,6 +110,7 @@ public class GreatDoor {
             if (openBefore != isOpen) {
                 serverLevel.playSound(null, greatDoorPos.getX() + 0.5, greatDoorPos.getY() + 0.5, greatDoorPos.getZ() + 0.5,
                         SoundRegistry.GREAT_DOOR.get(), SoundSource.BLOCKS, 1f, 1f);
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> serverLevel.getChunkAt(greatDoorPos)), new ClientBoundSingleGreatDoorPacket(this));
             }
 
             ServerLevel teleportDestination = null;
@@ -131,8 +132,6 @@ public class GreatDoor {
                 tickVolumeTeleportation(serverLevel, teleportDestination);
             }
         }
-
-        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(greatDoorPos)), new ClientBoundSingleGreatDoorPacket(this));
     }
 
     public void maintainDoorShape(ServerLevel darkLevel) {
