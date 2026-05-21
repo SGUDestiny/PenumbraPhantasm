@@ -20,6 +20,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -446,14 +447,22 @@ public class GreatDoor {
         });
     }
 
-    public static Vec3 spawnCenterInFrontOfGreatDoor(Level level, BlockPos greatDoorPos, Direction doorFacing) {
-        BlockPos heightmappedPos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, greatDoorPos.relative(doorFacing, 2));
+    public static Vec3 spawnCenterInFrontOfGreatDoor(ServerLevel level, BlockPos greatDoorPos, Direction doorFacing) {
+        Vec3 forwardVec = Vec3.atLowerCornerOf(doorFacing.getNormal());
+        Vec3 sideVec = Vec3.atLowerCornerOf(BlockPos.ZERO.relative(doorFacing.getClockWise(), 1));
 
-        if (heightmappedPos.getY() < level.getMinBuildHeight()) {
-            heightmappedPos = greatDoorPos;
-        }
+        Vec3 targetXZ = greatDoorPos.getCenter().add(forwardVec.scale(2.0)).add(sideVec.scale(2.5));
 
-        return heightmappedPos.getCenter().add(Vec3.atLowerCornerOf(BlockPos.ZERO.relative(doorFacing.getClockWise(), 1)).scale(2.5).add(0, 0.5, 0));
+        BlockPos targetPos = new BlockPos((int) targetXZ.x, greatDoorPos.getY(), (int) targetXZ.z);
+
+        ChunkPos chunkPos = new ChunkPos(targetPos);
+        level.setChunkForced(chunkPos.x, chunkPos.z, true);
+
+        BlockPos heightmapPos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, targetPos);
+
+        level.setChunkForced(chunkPos.x, chunkPos.z, false);
+
+        return new Vec3(targetXZ.x, heightmapPos.getY(), targetXZ.z);
     }
 
     public void broadcastSync(ServerLevel darkLevel) {
