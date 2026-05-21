@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:dark_candy_stick"
+    },
+    "X": [
+      {
+        "item": "penumbra_phantasm:ichor"
+      }
+    ],
+    "I": [
+      {
+        "item": "penumbra_phantasm:ivory"
+      }
+    ]
+  },
+  "pattern": [
+    "#",
+    "X",
+    "I"
+  ],
+  "result": {
+    "item": "penumbra_phantasm:ichor_candle"
+  },
+  "show_notification": true
+}

@@ -1,12 +1,15 @@
 package destiny.penumbra_phantasm.server.block;
 
 import destiny.penumbra_phantasm.server.item.RosegoldLighterItem;
+import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -14,13 +17,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -114,6 +120,55 @@ public class IchorCandleBlock extends GenericHorizontalOrientableBlock{
     }
 
     @Override
+    public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
+        Direction direction = pState.getValue(HORIZONTAL_FACING);
+        boolean attached = pState.getValue(ATTACHED);
+        Vec3 offset = new Vec3(0, 0, 0);
+
+        if (!attached) {
+            offset = new Vec3(0.5, 0.65, 0.5);
+
+            if (pState.getValue(LIT)) {
+                addParticlesAndSound(pLevel, new Vec3(pPos.getX() + offset.x, pPos.getY() + offset.y, pPos.getZ() + offset.z), pRandom);
+                return;
+            }
+        }
+
+        switch (direction) {
+            case NORTH -> {
+                offset = new Vec3(0.5, 1, 1 - 0.125);
+            }
+            case SOUTH -> {
+                offset = new Vec3(0.5, 1, 0.125);
+            }
+            case WEST -> {
+                offset = new Vec3(1 - 0.125, 1, 0.5);
+            }
+            case EAST -> {
+                offset = new Vec3(0.125, 1, 0.5);
+            }
+        }
+
+        if (pState.getValue(LIT)) {
+            addParticlesAndSound(pLevel, new Vec3(pPos.getX() + offset.x, pPos.getY() + offset.y, pPos.getZ() + offset.z), pRandom);
+        }
+    }
+
+    private static void addParticlesAndSound(Level pLevel, Vec3 pOffset, RandomSource pRandom) {
+        float nextFloat = pRandom.nextFloat();
+
+        if (nextFloat < 0.3F) {
+            pLevel.addParticle(ParticleTypes.SMOKE, pOffset.x, pOffset.y, pOffset.z, (double)0.0F, (double)0.0F, (double)0.0F);
+
+            if (nextFloat < 0.17F) {
+                pLevel.playLocalSound(pOffset.x + (double)0.5F, pOffset.y + (double)0.5F, pOffset.z + (double)0.5F, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1.0F + pRandom.nextFloat(), pRandom.nextFloat() * 0.7F + 0.3F, false);
+            }
+        }
+
+        pLevel.addParticle(ParticleTypeRegistry.ICHOR_FIRE_FLAME.get(), pOffset.x, pOffset.y, pOffset.z, (double)0.0F, (double)0.0F, (double)0.0F);
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
         pBuilder.add(HORIZONTAL_FACING);
         pBuilder.add(LIT);
@@ -132,5 +187,26 @@ public class IchorCandleBlock extends GenericHorizontalOrientableBlock{
         }
 
         return state;
+    }
+
+    @Override
+    public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
+        if (!isOnBlock(pLevel, pPos, pState)) {
+            pLevel.destroyBlock(pPos, true);
+        }
+
+        return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
+    }
+
+    public boolean isOnBlock(LevelAccessor pLevel, BlockPos pPos, BlockState pState) {
+        Direction blockDirection = pState.getValue(HORIZONTAL_FACING);
+        boolean attached = pState.getValue(ATTACHED);
+        Block parentBlock = pLevel.getBlockState(pPos.relative(blockDirection.getOpposite())).getBlock();
+
+        if (!attached) {
+            parentBlock = pLevel.getBlockState(pPos.below()).getBlock();
+        }
+
+        return !parentBlock.equals(Blocks.AIR);
     }
 }

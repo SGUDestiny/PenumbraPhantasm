@@ -110,7 +110,7 @@ public class ItemRegistry {
             () -> new HoeItem(Tiers.DIAMOND, 0, 0.5f, new Item.Properties()));
 
     public static final RegistryObject<Item> ROSEGOLD_LIGHTER = ITEMS.register("rosegold_lighter",
-            () -> new RosegoldLighterItem(new Item.Properties()));
+            () -> new RosegoldLighterItem(new Item.Properties().stacksTo(1).durability(-1)));
 
     public static final RegistryObject<Item> DARK_CANDY_BUCKET = ITEMS.register("dark_candy_bucket",
             () -> new ScarletBucketItem(Fluids.EMPTY, new Item.Properties()));
