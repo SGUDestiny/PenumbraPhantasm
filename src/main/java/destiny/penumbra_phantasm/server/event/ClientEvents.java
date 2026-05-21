@@ -148,9 +148,9 @@ public class ClientEvents {
 			level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
 				for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
 					pose.pushPose();
-					pose.translate(-camera.getPosition().x(), -camera.getPosition().y(), -camera.getPosition().z());
-					pose.translate(greatDoor.greatDoorPos.getX(), greatDoor.greatDoorPos.getY(),
-							greatDoor.greatDoorPos.getZ());
+					pose.translate((double)-camera.getPosition().x(), (double)-camera.getPosition().y(), (double)-camera.getPosition().z());
+					pose.translate((double)greatDoor.greatDoorPos.getX(), (double)greatDoor.greatDoorPos.getY(),
+							(double)greatDoor.greatDoorPos.getZ());
 
 					if (Minecraft.getInstance().level.isLoaded(greatDoor.greatDoorPos)) {
 						int packedLight = LevelRenderer.getLightColor(level, greatDoor.greatDoorPos);
