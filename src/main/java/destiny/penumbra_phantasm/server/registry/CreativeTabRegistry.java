@@ -106,6 +106,7 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.SCARLET_TRAPDOOR.get());
                 output.accept(BlockRegistry.SCARLET_BUTTON.get());
                 output.accept(BlockRegistry.SCARLET_PRESSURE_PLATE.get());
+                output.accept(BlockRegistry.SCARLET_LADDER.get());
 
                 output.accept(ItemRegistry.DARK_CANDY.get());
                 output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());
@@ -127,6 +128,7 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.DARK_CANDY_TRAPDOOR.get());
                 output.accept(BlockRegistry.DARK_CANDY_BUTTON.get());
                 output.accept(BlockRegistry.DARK_CANDY_PRESSURE_PLATE.get());
+                output.accept(BlockRegistry.DARK_CANDY_LADDER.get());
 
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());

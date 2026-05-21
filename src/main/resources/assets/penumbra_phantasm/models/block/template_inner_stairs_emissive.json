@@ -18,10 +18,6 @@
         "block_light": 15,
         "sky_light": 15
       },
-      "forge_data": {
-        "block_light": 15,
-        "sky_light": 15
-      },
       "faces": {
         "down": {
           "uv": [

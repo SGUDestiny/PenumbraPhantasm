@@ -138,6 +138,9 @@ public class BlockRegistry {
             () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.SCARLET_SAPLING,
                     BlockBehaviour.Properties.copy(Blocks.POTTED_ACACIA_SAPLING).noOcclusion()));
 
+    public static final RegistryObject<Block> SCARLET_LADDER = registerBlock("scarlet_ladder",
+            () -> new LadderBlock(BlockBehaviour.Properties.of().forceSolidOff().strength(0.4F).sound(SoundType.CHERRY_WOOD).mapColor(MapColor.COLOR_PINK).noOcclusion().pushReaction(PushReaction.DESTROY)));
+
     //Scarlet planks
     public static final RegistryObject<Block> SCARLET_PLANKS = registerBlock("scarlet_planks", () -> new Block(SCARLET_PROPERTIES));
     public static final RegistryObject<Block> SCARLET_STAIRS = registerBlock("scarlet_stairs", () -> new StairBlock(SCARLET_PLANKS.get().defaultBlockState(), SCARLET_PROPERTIES));
@@ -173,6 +176,8 @@ public class BlockRegistry {
 
     public static final RegistryObject<Block> DARK_CANDY_CRAFTING_TABLE = registerBlock("dark_candy_crafting_table",
             () -> new GenericCraftingTableBlock(DARK_CANDY_PROPERTIES));
+    public static final RegistryObject<Block> DARK_CANDY_LADDER = registerBlock("dark_candy_ladder",
+            () -> new LadderBlock(BlockBehaviour.Properties.of().forceSolidOff().strength(0.4F).sound(SoundType.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).noOcclusion().pushReaction(PushReaction.DESTROY)));
 
     //Dark candy planks
     public static final RegistryObject<Block> DARK_CANDY_PLANKS = registerBlock("dark_candy_planks", () -> new Block(DARK_CANDY_PROPERTIES));
@@ -295,7 +300,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> ICHOR_TORCH = BLOCKS.register("ichor_torch", () -> new TorchBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8), ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> ICHOR_WALL_TORCH = BLOCKS.register("ichor_wall_torch", () -> new WallTorchBlock(BlockBehaviour.Properties.copy(Blocks.WALL_TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8), ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> ICHOR_LANTERN = registerBlock("ichor_lantern", () -> new LanternBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_LANTERN).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 12)));
-    public static final RegistryObject<Block> ICHOR_CANDLE = BLOCKS.register("ichor_candle", () -> new IchorCandleBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_LANTERN).mapColor(MapColor.COLOR_BLACK).lightLevel(state -> state.getValue(LIT) ? 12 : 0)));
+    public static final RegistryObject<Block> ICHOR_CANDLE = BLOCKS.register("ichor_candle", () -> new IchorCandleBlock(BlockBehaviour.Properties.copy(Blocks.CANDLE).mapColor(MapColor.COLOR_BLACK).sound(SoundType.LANTERN).lightLevel(state -> state.getValue(LIT) ? 12 : 0)));
+    public static final RegistryObject<Block> ICHOR_FIRE= BLOCKS.register("ichor_fire", () -> new IchorFireBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_FIRE).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(state -> 12)));
 
     //Polished cliffrock
     public static final RegistryObject<Block> POLISHED_CLIFFROCK = registerBlock("polished_cliffrock", () -> new Block(CLIFFROCK_PROPERTIES));

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "ladder",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:dark_candy_stick"
+    },
+    "P": {
+      "item": "penumbra_phantasm:scarlet_planks"
+    }
+  },
+  "pattern": [
+    "# #",
+    "#P#",
+    "# #"
+  ],
+  "result": {
+    "count": 6,
+    "item": "penumbra_phantasm:scarlet_ladder"
+  },
+  "show_notification": true
+}
