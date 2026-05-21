@@ -73,20 +73,17 @@ public class RosegoldLighterItem extends Item {
                         stack.getTag().putInt(ATTEMPTS, 0);
                     }
 
-                    level.playSound(null, pos, SoundRegistry.LIGHTER_TRY.get(), SoundSource.PLAYERS, 0.4F, 1.0F);
+                    level.playSound(null, pos, SoundRegistry.LIGHTER_TRY.get(), SoundSource.PLAYERS, 0.3F, 1.0F);
                     level.playSound(null, pos, SoundRegistry.LIGHTER_LIGHT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
-
                 } else {
                     if (!level.isClientSide()) {
                         stack.getTag().putInt(ATTEMPTS, attempts + 1);
                     }
 
                     level.playSound(null, pos, SoundRegistry.LIGHTER_TRY.get(), SoundSource.PLAYERS, 0.5F, 1.0F);
-
                 }
             } else {
-                level.playSound(null, pos, SoundRegistry.LIGHTER_TRY.get(), SoundSource.PLAYERS, 0.4F, 1.0F);
-
+                level.playSound(null, pos, SoundRegistry.LIGHTER_TRY.get(), SoundSource.PLAYERS, 0.3F, 1.0F);
             }
         }
         return InteractionResultHolder.consume(stack);
