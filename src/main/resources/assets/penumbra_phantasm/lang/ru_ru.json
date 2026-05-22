@@ -40,6 +40,8 @@
   "item.penumbra_phantasm.rosegold_shovel": "Лопата из розового золота",
   "item.penumbra_phantasm.rosegold_hoe": "Мотыга из розового золота",
 
+  "item.penumbra_phantasm.rosegold_lighter": "Зажигалка из розового золота",
+
   "item.penumbra_phantasm.ivory": "Слоновая кость",
 
   "item.penumbra_phantasm.ivory_sword": "Меч из слоновой кости",
@@ -114,6 +116,7 @@
   "block.penumbra_phantasm.scarlet_trapdoor": "Люк из алого дерева",
   "block.penumbra_phantasm.scarlet_button": "Кнопка из алого дерева",
   "block.penumbra_phantasm.scarlet_pressure_plate": "Нажимная плита из алого дерева",
+  "block.penumbra_phantasm.scarlet_ladder": "Лестница из алого дерева",
 
   "block.penumbra_phantasm.dark_candy_block": "Блок тёмной конфеты",
 
@@ -135,6 +138,7 @@
   "block.penumbra_phantasm.dark_candy_trapdoor": "Люк из тёмно-конфетного дерева",
   "block.penumbra_phantasm.dark_candy_button": "Кнопка из тёмно-конфетного дерева",
   "block.penumbra_phantasm.dark_candy_pressure_plate": "Нажимная плита из тёмно-конфетного дерева",
+  "block.penumbra_phantasm.dark_candy_ladder": "Лестница из тёмно-конфетного дерева",
 
   "block.penumbra_phantasm.scarlet_marble_pillar": "Алая мраморная колонна",
   "block.penumbra_phantasm.chiseled_scarlet_marble": "Резная алая мраморная колонна",
@@ -168,11 +172,12 @@
   "block.penumbra_phantasm.cobbled_scarlet_marble_pressure_plate": "Нажимная плита из колотого алого мрамора",
 
   "block.penumbra_phantasm.cliffrock_path": "Тропа из скального камня",
+  "block.penumbra_phantasm.cliffrock_slide": "Скальный спуск",
   "block.penumbra_phantasm.cliffrock_pillar": "Колонна из скального камня",
   "block.penumbra_phantasm.chiseled_cliffrock": "Резной скальный камень",
 
   "block.penumbra_phantasm.cliffrock_eye": "Наскальный глаз",
-  "block.penumbra_phantasm.weeping_eye": "Плачущий глаз",
+  "block.penumbra_phantasm.weeping_eye": "Плачущий наскальный глаз",
   "block.penumbra_phantasm.leaking_ichor": "Текучий ихор",
   "block.penumbra_phantasm.ichor_puddle": "Ихор",
   "block.penumbra_phantasm.ichor_block": "Блок ихора",
@@ -180,6 +185,8 @@
   "block.penumbra_phantasm.ichor_wall_torch": "Ихоровый факел на стене",
   "block.penumbra_phantasm.ichor_lantern": "Ихоровый фонарь",
   "block.penumbra_phantasm.dust_block": "Блок пыли",
+  "block.penumbra_phantasm.ichor_candle": "Ихоровая свеча",
+  "block.penumbra_phantasm.ichor_fire": "Ихоровый огонь",
 
   "block.penumbra_phantasm.polished_cliffrock": "Полированный скальный камень",
   "block.penumbra_phantasm.polished_cliffrock_stairs": "Ступеньки из полированного скального камня",
@@ -304,6 +311,7 @@
   "block.penumbra_phantasm.great_door_shape": "Великая дверь",
   "block.penumbra_phantasm.rosegold_pillar": "Колонна из розового золота",
   "block.penumbra_phantasm.chiseled_rosegold": "Резное розовое золото",
+  "block.penumbra_phantasm.cheshire_chest": "Чеширский сундук",
 
   "block.penumbra_phantasm.rosegold_block": "Блок розового золота",
   "block.penumbra_phantasm.rosegold_stairs": "Ступеньки из розового золота",
@@ -387,7 +395,7 @@
   "sound.penumbra_phantasm.level_up": "Твой УР повысился",
   "sound.penumbra_phantasm.great_shine": "ДУША появляется",
   "sound.penumbra_phantasm.soul_break": "ДУША ломается надвое",
-  "sound.penumbra_phantasm.soul_shatter": "Душа разбивается на куски",
+  "sound.penumbra_phantasm.soul_shatter": "ДУША разбивается на куски",
   "sound.penumbra_phantasm.dark_world_fall": "Падение во тьму",
   "sound.penumbra_phantasm.dark_world_land": "Приземление во тьму",
   "sound.penumbra_phantasm.him_quick": "Вход в тёмный мир",
@@ -405,10 +413,13 @@
   "tooltip.penumbra_phantasm.soul_hearth.determination": "РЕШИМОСТЬ: ",
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "ДОВЕРИЕ: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "ДУША ВНУТРИ ОТВЕРГАЕТ ВАС.",
+  "message.penumbra_phantasm.rosegold_lighter_fuel": "Топливо: ",
 
   "gui.penumbra_phantasm.dark_world_inventory_title": "ИНВЕНТАРЬ",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "СОЗДАНИЕ",
   "gui.penumbra_phantasm.dark_world_inventory_equipped": "ЭКИПИРОВКА",
+  "gui.penumbra_phantasm.cheshire_chest": "§eЧЕШИРСКИЙ§r §dСУНДУК§r",
+  "gui.penumbra_phantasm.umbrastone_furnace": "УМБРИЕВАЯ ПЕЧЬ",
 
   "location.penumbra_phantasm.dark_fountain": "Тёмный фонтан",
   "location.penumbra_phantasm.dark_fountain.description": "'Гейзер, придающий земле форму...'",
@@ -438,18 +449,18 @@
 
   "container.penumbra_phantasm.umbrastone_furnace": "Печь из умбрина",
 
-  "screen.penumbra_phantasm.intro.skip_notification": "НАЖМИ [ESC] ДЛЯ ПРОПУСКА СО СЛУЧАЙНЫМ ВЫБОРОМ.",
-  "screen.penumbra_phantasm.intro.skip_notification_post": "НАЖМИ [ESC] ЧТОБЫ ПРОПУСТИТЬ СО СВОИМ ВЫБОРОМ.",
+  "screen.penumbra_phantasm.intro.skip_notification": "НАЖМИТЕ [ESC] ДЛЯ ПРОПУСКА СО СЛУЧАЙНЫМ ВЫБОРОМ.",
+  "screen.penumbra_phantasm.intro.skip_notification_post": "НАЖМИТЕ [ESC] ДЛЯ ПРОПУСКА СО СВОИМ ВЫБОРОМ.",
   "screen.penumbra_phantasm.intro.line.1": "     В Ы",
   "screen.penumbra_phantasm.intro.line.2": "З Д Е С Ь ?",
-  "screen.penumbra_phantasm.intro.line.3": "       М Ы",
+  "screen.penumbra_phantasm.intro.line.3": "        М Ы",
   "screen.penumbra_phantasm.intro.line.4": "С О Е Д И Н Е Н Ы ?",
   "screen.penumbra_phantasm.intro.line.5": "П Р Е В О С Х О Д Н О .",
   "screen.penumbra_phantasm.intro.line.6": "В О И С Т И Н У",
-  "screen.penumbra_phantasm.intro.line.7": "П Р Е В О С Х О Д Н О .",
+  "screen.penumbra_phantasm.intro.line.7": " П Р Е В О С Х О Д Н О .",
   "screen.penumbra_phantasm.intro.line.8": "Т Е П Е Р Ь .",
   "screen.penumbra_phantasm.intro.line.9": "М Ы   М О Ж Е М",
-  "screen.penumbra_phantasm.intro.line.10": "  Н А Ч А Т Ь .",
+  "screen.penumbra_phantasm.intro.line.10": "   Н А Ч А Т Ь .",
   "screen.penumbra_phantasm.intro.line.11": "С П Е Р В А .",
   "screen.penumbra_phantasm.intro.line.12": "В Ы   Д О Л Ж Н Ы   В Ы Б Р А Т Ь",
   "screen.penumbra_phantasm.intro.line.13": "Д А Р .",
@@ -476,5 +487,5 @@
   "screen.penumbra_phantasm.intro.line.26": "С   С И Л О Й",
   "screen.penumbra_phantasm.intro.line.27": "< Д Е Л Ь Т А   Р У Н Ы . >",
   "screen.penumbra_phantasm.intro.line.28": "С Т У П А Й   В П Е Р Ё Д",
-  "screen.penumbra_phantasm.intro.line.29": "В   Э Т О Т   Д И В Н Ы Й   М И Р !"
+  "screen.penumbra_phantasm.intro.line.29": "             В   Э Т О Т   М И Р !"
 }
