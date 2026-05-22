@@ -119,6 +119,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PURE_DARKNESS_BUCKET = ITEMS.register("pure_darkness_bucket",
             () -> new ScarletBucketItem(FluidRegistry.SOURCE_PURE_DARKNESS.get(), new Item.Properties().stacksTo(1)));
 
+    //Block items
     public static final RegistryObject<Item> FALLEN_DARK_CANDY_LEAVES = ITEMS.register("fallen_dark_candy_leaves",
             () -> new ScalableHorizontalPlaneBlockItem(BlockRegistry.FALLEN_DARK_CANDY_LEAVES.get(), new Item.Properties()));
     public static final RegistryObject<Item> FALLEN_SCARLET_LEAVES = ITEMS.register("fallen_scarlet_leaves",
@@ -129,4 +130,8 @@ public class ItemRegistry {
             () -> new StandingAndWallBlockItem(BlockRegistry.ICHOR_TORCH.get(), BlockRegistry.ICHOR_WALL_TORCH.get(), new Item.Properties(), Direction.DOWN));
     public static final RegistryObject<Item> ICHOR_CANDLE = ITEMS.register("ichor_candle",
             () -> new IchorCandleBlockItem(BlockRegistry.ICHOR_CANDLE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CHESHIRE_CHEST = ITEMS.register("cheshire_chest",
+            () -> new CheshireChestItem(BlockRegistry.CHESHIRE_CHEST.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ICHOR_BLOCK = ITEMS.register("ichor_block",
+            () -> new FuelBlockItem(BlockRegistry.ICHOR_BLOCK.get(), new Item.Properties(), 2400 * 9));
 }

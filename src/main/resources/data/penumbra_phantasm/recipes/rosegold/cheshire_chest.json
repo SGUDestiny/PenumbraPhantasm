@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "penumbra_phantasm:rosegold_ingot"
+    },
+    "B": {
+      "item": "penumbra_phantasm:rosegold_block"
+    },
+    "T": {
+      "item": "penumbra_phantasm:polished_tenebralith"
+    }
+  },
+  "pattern": [
+    "IBI",
+    "BTB",
+    "IBI"
+  ],
+  "result": {
+    "count": 1,
+    "item": "penumbra_phantasm:cheshire_chest"
+  },
+  "show_notification": true
+}

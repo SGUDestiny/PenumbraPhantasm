@@ -1,10 +1,8 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
-import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
-import destiny.penumbra_phantasm.server.capability.SoulCapability;
-import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
+import destiny.penumbra_phantasm.server.capability.*;
+import destiny.penumbra_phantasm.server.capability.CheshireChestInventory;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.capabilities.CapabilityToken;
@@ -22,6 +20,8 @@ public class CapabilityRegistry {
     });
     public static final Capability<GreatDoorCapability> GREAT_DOOR = CapabilityManager.get(new CapabilityToken<>() {
     });
+    public static final Capability<CheshireChestInventory> CHESHIRE_CHEST = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event)
@@ -30,5 +30,6 @@ public class CapabilityRegistry {
         event.register(SoulCapability.class);
         event.register(ScreenAnimationCapability.class);
         event.register(GreatDoorCapability.class);
+        event.register(CheshireChestCapability.class);
     }
 }

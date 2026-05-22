@@ -311,6 +311,7 @@
   "block.penumbra_phantasm.great_door_shape": "Great Door",
   "block.penumbra_phantasm.rosegold_pillar": "Rosegold Pillar",
   "block.penumbra_phantasm.chiseled_rosegold": "Chiseled Rosegold",
+  "block.penumbra_phantasm.cheshire_chest": "Cheshire Chest",
 
   "block.penumbra_phantasm.rosegold_block": "Rosegold Block",
   "block.penumbra_phantasm.rosegold_stairs": "Rosegold Stairs",
@@ -417,6 +418,7 @@
   "gui.penumbra_phantasm.dark_world_inventory_title": "INVENTORY",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "CRAFT",
   "gui.penumbra_phantasm.dark_world_inventory_equipped": "EQUIPPED",
+  "gui.penumbra_phantasm.cheshire_chest": "§eCHESHIRE§r §dCHEST§r",
 
   "location.penumbra_phantasm.dark_fountain": "Dark Fountain",
   "location.penumbra_phantasm.dark_fountain.description": "'The geyser that gives this land form...'",

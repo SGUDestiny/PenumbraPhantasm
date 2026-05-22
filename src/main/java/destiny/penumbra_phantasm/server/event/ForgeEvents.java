@@ -2,10 +2,7 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.block.LuminescentWaterFluidBlock;
-import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
-import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
-import destiny.penumbra_phantasm.server.capability.SoulCapability;
-import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
+import destiny.penumbra_phantasm.server.capability.*;
 import destiny.penumbra_phantasm.server.fluid.PureDarknessFluidType;
 import destiny.penumbra_phantasm.server.fountain.GenericProvider;
 import destiny.penumbra_phantasm.server.item.ScarletBucketItem;
@@ -41,6 +38,7 @@ public class ForgeEvents {
         if (event.getObject() instanceof Player) {
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "soul"), new GenericProvider<>(CapabilityRegistry.SOUL, new SoulCapability()));
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "screen_animation"), new GenericProvider<>(CapabilityRegistry.SCREEN_ANIMATION, new ScreenAnimationCapability()));
+            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "cheshire_chest"), new CheshireChestCapability());
         }
     }
 

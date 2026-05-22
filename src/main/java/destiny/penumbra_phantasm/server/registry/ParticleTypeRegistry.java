@@ -17,4 +17,5 @@ public class ParticleTypeRegistry {
     public static final RegistryObject<SimpleParticleType> FOUNTAIN_DARKNESS = PARTICLE_TYPES.register("fountain_darkness", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> LUMINESCENT_PARTICLE = PARTICLE_TYPES.register("luminescent_particle", () -> new SimpleParticleType(true));
     public static final RegistryObject<SimpleParticleType> ICHOR_FIRE_FLAME = PARTICLE_TYPES.register("ichor_fire_flame", () -> new SimpleParticleType(true));
+    public static final RegistryObject<SimpleParticleType> FRIEND_DISAPPEAR = PARTICLE_TYPES.register("friend_disappear", () -> new SimpleParticleType(true));
 }

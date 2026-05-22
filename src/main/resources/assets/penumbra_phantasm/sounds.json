@@ -246,5 +246,11 @@
     [
       "penumbra_phantasm:lighter_close"
     ]
+  },
+  "cheshire_chest_laugh": {
+    "sounds":
+    [
+      "penumbra_phantasm:cheshire_chest_laugh"
+    ]
   }
 }
