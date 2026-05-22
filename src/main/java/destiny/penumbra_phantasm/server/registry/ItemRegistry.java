@@ -109,6 +109,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> ROSEGOLD_HOE = ITEMS.register("rosegold_hoe",
             () -> new HoeItem(Tiers.DIAMOND, 0, 0.5f, new Item.Properties()));
 
+    public static final RegistryObject<Item> ROSEGOLD_LIGHTER = ITEMS.register("rosegold_lighter",
+            () -> new RosegoldLighterItem(new Item.Properties().stacksTo(1).durability(-1)));
+
     public static final RegistryObject<Item> DARK_CANDY_BUCKET = ITEMS.register("dark_candy_bucket",
             () -> new ScarletBucketItem(Fluids.EMPTY, new Item.Properties()));
     public static final RegistryObject<Item> LUMINESCENT_WATER_BUCKET = ITEMS.register("luminescent_water_bucket",
@@ -116,6 +119,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> PURE_DARKNESS_BUCKET = ITEMS.register("pure_darkness_bucket",
             () -> new ScarletBucketItem(FluidRegistry.SOURCE_PURE_DARKNESS.get(), new Item.Properties().stacksTo(1)));
 
+    //Block items
     public static final RegistryObject<Item> FALLEN_DARK_CANDY_LEAVES = ITEMS.register("fallen_dark_candy_leaves",
             () -> new ScalableHorizontalPlaneBlockItem(BlockRegistry.FALLEN_DARK_CANDY_LEAVES.get(), new Item.Properties()));
     public static final RegistryObject<Item> FALLEN_SCARLET_LEAVES = ITEMS.register("fallen_scarlet_leaves",
@@ -124,4 +128,10 @@ public class ItemRegistry {
             () -> new IchorItem(BlockRegistry.ICHOR_PUDDLE.get(), new Item.Properties(), 2400));
     public static final RegistryObject<Item> ICHOR_TORCH = ITEMS.register("ichor_torch",
             () -> new StandingAndWallBlockItem(BlockRegistry.ICHOR_TORCH.get(), BlockRegistry.ICHOR_WALL_TORCH.get(), new Item.Properties(), Direction.DOWN));
+    public static final RegistryObject<Item> ICHOR_CANDLE = ITEMS.register("ichor_candle",
+            () -> new IchorCandleBlockItem(BlockRegistry.ICHOR_CANDLE.get(), new Item.Properties()));
+    public static final RegistryObject<Item> CHESHIRE_CHEST = ITEMS.register("cheshire_chest",
+            () -> new CheshireChestItem(BlockRegistry.CHESHIRE_CHEST.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ICHOR_BLOCK = ITEMS.register("ichor_block",
+            () -> new FuelBlockItem(BlockRegistry.ICHOR_BLOCK.get(), new Item.Properties(), 2400 * 9));
 }

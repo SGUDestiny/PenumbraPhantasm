@@ -48,11 +48,11 @@ public class GreatDoorRenderUtil {
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
         if (direction == Direction.EAST) {
-            pose.translate(0, 0, -1);
+            pose.translate(0d, 0d, -1d);
         } else if (direction == Direction.SOUTH) {
-            pose.translate(1, 0, -1);
+            pose.translate(1d, 0d, -1d);
         } else if (direction == Direction.WEST) {
-            pose.translate(1, 0, 0);
+            pose.translate(1d, 0d, 0d);
         }
         ResourceLocation finalTexture;
         if (greatDoor.destinationGreatDoorDimension != null && DarkWorldUtil.isDarkWorldKey(greatDoor.destinationGreatDoorDimension)) {
@@ -76,11 +76,11 @@ public class GreatDoorRenderUtil {
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
         if (direction == Direction.EAST) {
-            pose.translate(0, 0, -1);
+            pose.translate(0d, 0d, -1d);
         } else if (direction == Direction.SOUTH) {
-            pose.translate(1, 0, -1);
+            pose.translate(1d, 0d, -1d);
         } else if (direction == Direction.WEST) {
-            pose.translate(1, 0, 0);
+            pose.translate(1d, 0d, 0d);
         }
         ResourceLocation finalTexture;
         if (greatDoor.destinationGreatDoorDimension != null && DarkWorldUtil.isDarkWorldKey(greatDoor.destinationGreatDoorDimension)) {

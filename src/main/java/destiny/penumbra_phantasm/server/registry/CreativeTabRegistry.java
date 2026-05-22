@@ -35,6 +35,7 @@ public class CreativeTabRegistry {
 
                 output.accept(ItemRegistry.ITEM_MUSIC_MEDIUM_THE_HOLY.get());
 
+                output.accept(ItemRegistry.CHESHIRE_CHEST.get());
                 output.accept(BlockRegistry.GREAT_DOOR_SPAWNER.get());
             })
             .build()
@@ -68,6 +69,8 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.ROSEGOLD_PICKAXE.get());
                 output.accept(ItemRegistry.ROSEGOLD_SHOVEL.get());
                 output.accept(ItemRegistry.ROSEGOLD_HOE.get());
+
+                output.accept(ItemRegistry.ROSEGOLD_LIGHTER.get());
 
                 output.accept(ItemRegistry.DARK_CANDY_STICK.get());
                 output.accept(ItemRegistry.ICHOR.get());
@@ -104,6 +107,7 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.SCARLET_TRAPDOOR.get());
                 output.accept(BlockRegistry.SCARLET_BUTTON.get());
                 output.accept(BlockRegistry.SCARLET_PRESSURE_PLATE.get());
+                output.accept(BlockRegistry.SCARLET_LADDER.get());
 
                 output.accept(ItemRegistry.DARK_CANDY.get());
                 output.accept(BlockRegistry.DARK_CANDY_BLOCK.get());
@@ -125,6 +129,7 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.DARK_CANDY_TRAPDOOR.get());
                 output.accept(BlockRegistry.DARK_CANDY_BUTTON.get());
                 output.accept(BlockRegistry.DARK_CANDY_PRESSURE_PLATE.get());
+                output.accept(BlockRegistry.DARK_CANDY_LADDER.get());
 
                 output.accept(BlockRegistry.NIGHT_GRASS.get());
                 output.accept(BlockRegistry.NIGHT_GRASS_BLOCK.get());
@@ -257,6 +262,7 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.ICHOR_BLOCK.get());
                 output.accept(ItemRegistry.ICHOR_TORCH.get());
                 output.accept(BlockRegistry.ICHOR_LANTERN.get());
+                output.accept(ItemRegistry.ICHOR_CANDLE.get());
 
                 output.accept(BlockRegistry.CLIFFROCK_PATH.get());
                 output.accept(BlockRegistry.CLIFFROCK_SLIDE.get());

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "S": {
+      "item": "penumbra_phantasm:startail"
+    },
+    "I": {
+      "item": "penumbra_phantasm:ichor_block"
+    },
+    "R": {
+      "item": "penumbra_phantasm:rosegold_ingot"
+    }
+  },
+  "pattern": [
+    "SR ",
+    "RIR",
+    " R "
+  ],
+  "result": {
+    "item": "penumbra_phantasm:rosegold_lighter"
+  },
+  "show_notification": true
+}

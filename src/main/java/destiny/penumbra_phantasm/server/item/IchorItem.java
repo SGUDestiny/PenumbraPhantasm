@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Block;
 import javax.annotation.Nullable;
 
 public class IchorItem extends ScalableHorizontalPlaneBlockItem {
-    public int burnTicks = 0;
+    public int burnTicks;
 
     public IchorItem(Block block, Properties pProperties, int burnTicks) {
         super(block, pProperties);

@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm;
 
 import destiny.penumbra_phantasm.client.ClientConfig;
+import destiny.penumbra_phantasm.client.render.blockentity.CheshireChestBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.DarkMarbleDiceBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.DustBlockEntityRenderer;
 import destiny.penumbra_phantasm.client.render.blockentity.ScarletMarbleDiceBlockEntityRenderer;
@@ -9,8 +10,11 @@ import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorBacksideModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorClosedModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenModel;
+import destiny.penumbra_phantasm.client.render.particle.*;
+import destiny.penumbra_phantasm.client.render.screen.CheshireChestScreen;
 import destiny.penumbra_phantasm.client.render.screen.UmbrastoneFurnaceScreen;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
+import destiny.penumbra_phantasm.server.item.property.RosegoldLighterItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.client.render.model.item.DeltashieldModel;
 import destiny.penumbra_phantasm.client.render.dimension.CardKingdomDimensionEffects;
@@ -19,18 +23,13 @@ import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
 import destiny.penumbra_phantasm.client.render.overlay.DarknessLandOverlay;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
 import destiny.penumbra_phantasm.client.render.overlay.LocationTitleOverlay;
-import destiny.penumbra_phantasm.client.render.particle.FountainDarknessParticle;
-import destiny.penumbra_phantasm.client.render.particle.FountainTargetParticle;
-import destiny.penumbra_phantasm.client.render.particle.LuminescentParticle;
-import destiny.penumbra_phantasm.client.render.particle.RealKnifeHitParticle;
-import destiny.penumbra_phantasm.client.render.particle.RealKnifeSlashParticle;
 import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
-import destiny.penumbra_phantasm.client.render.particle.ScarletLeafParticle;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
@@ -63,7 +62,7 @@ import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
 @Mod(PenumbraPhantasm.MODID)
 public class PenumbraPhantasm {
     public static final String MODID = "penumbra_phantasm";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public static final ResourceLocation EMPTY_LOCATION = new ResourceLocation(MODID, "empty");
     public static final String EMPTY = EMPTY_LOCATION.toString();
 
@@ -119,6 +118,7 @@ public class PenumbraPhantasm {
             event.registerLayerDefinition(GreatDoorClosedModel.LAYER_LOCATION, GreatDoorClosedModel::createBodyLayer);
             event.registerLayerDefinition(GreatDoorOpenModel.LAYER_LOCATION, GreatDoorOpenModel::createBodyLayer);
             event.registerLayerDefinition(GreatDoorBacksideModel.LAYER_LOCATION, GreatDoorBacksideModel::createBodyLayer);
+            event.registerLayerDefinition(CheshireChestModel.LAYER_LOCATION, CheshireChestModel::createBodyLayer);
         }
 
         @SubscribeEvent
@@ -156,8 +156,10 @@ public class PenumbraPhantasm {
                 ItemProperties.register(ItemRegistry.DELTA_SHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
                     return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F;
                 });
+                ItemProperties.register(ItemRegistry.ROSEGOLD_LIGHTER.get(), new ResourceLocation(MODID, "open"), new RosegoldLighterItemProperty());
 
                 MenuScreens.register(MenuRegistry.UMBRASTONE_FURNACE_MENU.get(), UmbrastoneFurnaceScreen::new);
+                MenuScreens.register(MenuRegistry.CHESHIRE_CHEST_MENU.get(), CheshireChestScreen::new);
             });
         }
 
@@ -178,6 +180,8 @@ public class PenumbraPhantasm {
             event.registerSpriteSet(ParticleTypeRegistry.REAL_KNIFE_HIT.get(), RealKnifeHitParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), FountainDarknessParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.LUMINESCENT_PARTICLE.get(), LuminescentParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.ICHOR_FIRE_FLAME.get(), FlameParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.FRIEND_DISAPPEAR.get(), FriendDisappearParticle.Provider::new);
         }
 
         @SubscribeEvent
@@ -185,6 +189,7 @@ public class PenumbraPhantasm {
             event.registerBlockEntityRenderer(BlockEntityRegistry.DARK_MARBLE_DICE_BLOCK_ENTITY.get(), DarkMarbleDiceBlockEntityRenderer::new);
             event.registerBlockEntityRenderer(BlockEntityRegistry.SCARLET_MARBLE_DICE_BLOCK_ENTITY.get(), ScarletMarbleDiceBlockEntityRenderer::new);
             event.registerBlockEntityRenderer(BlockEntityRegistry.DUST_BLOCK_ENTITY.get(), DustBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(BlockEntityRegistry.CHESHIRE_CHEST_BLOCK_ENTITY.get(), CheshireChestBlockEntityRenderer::new);
         }
     }
 }

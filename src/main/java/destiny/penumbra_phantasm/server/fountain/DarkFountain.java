@@ -846,6 +846,7 @@ public class DarkFountain {
                     Vec3 spawn = GreatDoor.spawnCenterInFrontOfGreatDoor(destinationLevel, greatDoor.greatDoorPos, greatDoor.direction);
                     float yaw = greatDoor.direction.toYRot();
                     this.teleportedEntities.add(player.getUUID());
+                    player.invulnerableTime = 60;
                     level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
                     PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
                     PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(this.destinationPos, spawn.x, spawn.y, spawn.z, yaw, this.destinationDimension, true, greatDoor.greatDoorPos));

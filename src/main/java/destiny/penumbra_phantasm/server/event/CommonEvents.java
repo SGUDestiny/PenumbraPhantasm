@@ -241,6 +241,12 @@ public class CommonEvents {
             });
         });
 
+        original.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(oldInv -> {
+            player.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(newInv -> {
+                newInv.deserializeNBT(oldInv.serializeNBT());
+            });
+        });
+
         original.invalidateCaps();
     }
 

@@ -1,0 +1,12 @@
+{
+  "base":
+  {
+    "parent": "penumbra_phantasm:item/rosegold_lighter_closed"
+  },
+  "overrides":
+  [
+    { "predicate": { "penumbra_phantasm:open": 0.0 }, "model": "penumbra_phantasm:item/rosegold_lighter_closed"},
+    { "predicate": { "penumbra_phantasm:open": 0.5 }, "model": "penumbra_phantasm:item/rosegold_lighter_empty"},
+    { "predicate": { "penumbra_phantasm:open": 1.0 }, "model": "penumbra_phantasm:item/rosegold_lighter_open"}
+  ]
+}
