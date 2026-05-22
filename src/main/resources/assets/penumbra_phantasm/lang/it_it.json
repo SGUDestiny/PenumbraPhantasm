@@ -116,6 +116,7 @@
   "block.penumbra_phantasm.scarlet_trapdoor": "Botola scarlatta",
   "block.penumbra_phantasm.scarlet_button": "Bottone scarlatto",
   "block.penumbra_phantasm.scarlet_pressure_plate": "Piedina a pressione scarlatta",
+  "block.penumbra_phantasm.scarlet_ladder": "Scala scarlatta",
 
   "block.penumbra_phantasm.dark_candy_block": "Blocco di caramella oscura",
 
@@ -137,6 +138,7 @@
   "block.penumbra_phantasm.dark_candy_trapdoor": "Botola di caramella oscura",
   "block.penumbra_phantasm.dark_candy_button": "Bottone di caramella oscura",
   "block.penumbra_phantasm.dark_candy_pressure_plate": "Piedina a pressione di caramella oscura",
+  "block.penumbra_phantasm.dark_candy_ladder": "Scala di caramella oscura",
 
   "block.penumbra_phantasm.scarlet_marble_pillar": "Pilastro di marmo scarlatto",
   "block.penumbra_phantasm.chiseled_scarlet_marble": "Marmo scarlatto cisellato",
@@ -309,6 +311,7 @@
   "block.penumbra_phantasm.great_door_shape": "Grande Porta",
   "block.penumbra_phantasm.rosegold_pillar": "Pilastro d'OroRosato",
   "block.penumbra_phantasm.chiseled_rosegold": "OroRosato cesellato",
+  "block.penumbra_phantasm.cheshire_chest": "Baule Cheshire",
 
   "block.penumbra_phantasm.rosegold_block": "Blocco di OroRosato",
   "block.penumbra_phantasm.rosegold_stairs": "Scalini di OroRosato",
@@ -415,6 +418,8 @@
   "gui.penumbra_phantasm.dark_world_inventory_title": "INVENTARIO",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "CRAFT",
   "gui.penumbra_phantasm.dark_world_inventory_equipped": "EQUIPPED",
+  "gui.penumbra_phantasm.cheshire_chest": "§eBAULE§r §dCHESHIRE§r",
+  "gui.penumbra_phantasm.umbrastone_furnace": "FORNACE UMBRAPIETRA",
 
   "location.penumbra_phantasm.dark_fountain": "Fontana Oscura",
   "location.penumbra_phantasm.dark_fountain.description": "'Il geyser che forma questa terra...'",
