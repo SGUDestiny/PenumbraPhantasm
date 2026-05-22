@@ -132,4 +132,6 @@ public class ItemRegistry {
             () -> new IchorCandleBlockItem(BlockRegistry.ICHOR_CANDLE.get(), new Item.Properties()));
     public static final RegistryObject<Item> CHESHIRE_CHEST = ITEMS.register("cheshire_chest",
             () -> new CheshireChestItem(BlockRegistry.CHESHIRE_CHEST.get(), new Item.Properties()));
+    public static final RegistryObject<Item> ICHOR_BLOCK = ITEMS.register("ichor_block",
+            () -> new FuelBlockItem(BlockRegistry.ICHOR_BLOCK.get(), new Item.Properties(), 2400 * 9));
 }

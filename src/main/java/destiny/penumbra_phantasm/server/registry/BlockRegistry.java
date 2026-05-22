@@ -296,12 +296,12 @@ public class BlockRegistry {
     public static final RegistryObject<Block> WEEPING_EYE = registerBlock("weeping_eye", () -> new WeepingEyeBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().sound(SoundType.HONEY_BLOCK).randomTicks()));
     public static final RegistryObject<Block> LEAKING_ICHOR = registerBlock("leaking_ichor", () -> new LeakingIchorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().sound(SoundType.HONEY_BLOCK)));
     public static final RegistryObject<Block> ICHOR_PUDDLE = BLOCKS.register("ichor_puddle", () -> new ScalableHorizontalPlaneBlock(BlockBehaviour.Properties.copy(Blocks.HONEY_BLOCK).mapColor(MapColor.COLOR_BLACK).sound(SoundType.HONEY_BLOCK).noOcclusion().instabreak(), 2f));
-    public static final RegistryObject<Block> ICHOR_BLOCK = registerBlock("ichor_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.HONEY_BLOCK).mapColor(MapColor.COLOR_BLACK).sound(SoundType.HONEY_BLOCK)));
+    public static final RegistryObject<Block> ICHOR_BLOCK = BLOCKS.register("ichor_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.HONEY_BLOCK).mapColor(MapColor.COLOR_BLACK).sound(SoundType.HONEY_BLOCK)));
     public static final RegistryObject<Block> ICHOR_TORCH = BLOCKS.register("ichor_torch", () -> new TorchBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8), ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> ICHOR_WALL_TORCH = BLOCKS.register("ichor_wall_torch", () -> new WallTorchBlock(BlockBehaviour.Properties.copy(Blocks.WALL_TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8), ParticleTypes.SOUL_FIRE_FLAME));
     public static final RegistryObject<Block> ICHOR_LANTERN = registerBlock("ichor_lantern", () -> new LanternBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_LANTERN).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 12)));
     public static final RegistryObject<Block> ICHOR_CANDLE = BLOCKS.register("ichor_candle", () -> new IchorCandleBlock(BlockBehaviour.Properties.copy(Blocks.CANDLE).mapColor(MapColor.COLOR_BLACK).sound(SoundType.LANTERN).lightLevel(state -> state.getValue(LIT) ? 12 : 0)));
-    public static final RegistryObject<Block> ICHOR_FIRE= BLOCKS.register("ichor_fire", () -> new IchorFireBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_FIRE).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(state -> 12)));
+    public static final RegistryObject<Block> ICHOR_FIRE = BLOCKS.register("ichor_fire", () -> new IchorFireBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_FIRE).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(state -> 12)));
 
     //Polished cliffrock
     public static final RegistryObject<Block> POLISHED_CLIFFROCK = registerBlock("polished_cliffrock", () -> new Block(CLIFFROCK_PROPERTIES));
