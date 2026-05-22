@@ -40,6 +40,8 @@
   "item.penumbra_phantasm.rosegold_shovel": "Gülaltın Kürek",
   "item.penumbra_phantasm.rosegold_hoe": "Gülaltın Çapa",
 
+  "item.penumbra_phantasm.rosegold_lighter": "Gülaltın Çakmak",
+
   "item.penumbra_phantasm.ivory": "Fildişi",
 
   "item.penumbra_phantasm.ivory_sword": "Fildişi Kılıç",
@@ -114,6 +116,7 @@
   "block.penumbra_phantasm.scarlet_trapdoor": "Kızıl Tuzak Kapı",
   "block.penumbra_phantasm.scarlet_button": "Kızıl Düğme",
   "block.penumbra_phantasm.scarlet_pressure_plate": "Kızıl Baskı Plaka",
+  "block.penumbra_phantasm.scarlet_ladder": "Kızıl Merdiven",
 
   "block.penumbra_phantasm.dark_candy_block": "Koyu Şeker Blok",
 
@@ -135,6 +138,7 @@
   "block.penumbra_phantasm.dark_candy_trapdoor": "Koyu Şeker Tuzak Kapısı",
   "block.penumbra_phantasm.dark_candy_button": "Koyu Şeker Düğmesi",
   "block.penumbra_phantasm.dark_candy_pressure_plate": "Koyu Şeker Baskı Plakası",
+  "block.penumbra_phantasm.dark_candy_ladder": "Koyu Şeker Merdiven",
 
   "block.penumbra_phantasm.scarlet_marble_pillar": "Kızıl Mermer Sütunu",
   "block.penumbra_phantasm.chiseled_scarlet_marble": "Yontulmuş Kızıl Mermer",
@@ -181,6 +185,8 @@
   "block.penumbra_phantasm.ichor_wall_torch": "İkor Duvar Meşalesi",
   "block.penumbra_phantasm.ichor_lantern": "İkor Feneri",
   "block.penumbra_phantasm.dust_block": "Toz Blok",
+  "block.penumbra_phantasm.ichor_candle": "İkor Mum",
+  "block.penumbra_phantasm.ichor_fire": "İkor Ateşi",
 
   "block.penumbra_phantasm.polished_cliffrock": "Cilalı Sarpkaya",
   "block.penumbra_phantasm.polished_cliffrock_stairs": "Cilalı Sarpkaya Merdivenler",
@@ -305,7 +311,7 @@
   "block.penumbra_phantasm.great_door_shape": "Yüce Kapı",
   "block.penumbra_phantasm.rosegold_pillar": "Gülaltın Sütunu",
   "block.penumbra_phantasm.chiseled_rosegold": "Yontulmuş Gülaltın",
-
+  "block.penumbra_phantasm.cheshire_chest": "Sırıtan Sandık",
   "block.penumbra_phantasm.rosegold_block": "Gülaltın Blok",
   "block.penumbra_phantasm.rosegold_stairs": "Gülaltın Merdivenler",
   "block.penumbra_phantasm.rosegold_slab": "Gülaltın Levha",
@@ -406,10 +412,13 @@
   "tooltip.penumbra_phantasm.soul_hearth.determination": "AZMİ: ",
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "GÜVENİ: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "İÇİNDEKİ RUH SENİ KABUL ETMİYOR.",
+  "message.penumbra_phantasm.rosegold_lighter_fuel": "Yakıt: ",
 
   "gui.penumbra_phantasm.dark_world_inventory_title": "ENVANTER",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "İNŞA ET",
   "gui.penumbra_phantasm.dark_world_inventory_equipped": "EKİPMAN",
+  "gui.penumbra_phantasm.cheshire_chest": "§eSIRITAN§r §dSANDIK§r",
+  "gui.penumbra_phantasm.umbrastone_furnace": "UMBRATAŞ OCAĞI",
 
   "location.penumbra_phantasm.dark_fountain": "Karanlık Kaynak",
   "location.penumbra_phantasm.dark_fountain.description": "'Bu toprağa şekil veren kaynaç...'",
@@ -461,7 +470,7 @@
   "screen.penumbra_phantasm.intro.choice.5": "SEBAT",
   "screen.penumbra_phantasm.intro.choice.6": "ŞEFKAT",
   "screen.penumbra_phantasm.intro.choice.7": "ADALET",
-  "screen.penumbra_phantasm.intro.line.14": "E N   F E V K A L A D E   T E R C İ H .",
+  "screen.penumbra_phantasm.intro.line.14": "E N   F E V K A L A D E   S E Ç İ M .",
   "screen.penumbra_phantasm.intro.line.15.1": "' ",
   "screen.penumbra_phantasm.intro.line.15.2": " . '",
   "screen.penumbra_phantasm.intro.line.16": "S E N İ N   Ö N Ü N D E",
