@@ -38,6 +38,7 @@
   "item.penumbra_phantasm.raw_rosegold": "Or-Rose brut",
   "item.penumbra_phantasm.rosegold_ingot": "Lingot d'Or-Rose",
   "item.penumbra_phantasm.rosegold_lighter": "Briquet en Or-Rose",
+  "block.penumbra_phantasm.cheshire_chest": "Coffre de Chester",
 
   "item.penumbra_phantasm.rosegold_sword": "Épée en Or-Rose",
   "item.penumbra_phantasm.rosegold_axe": "Hache en Or-Rose",
@@ -421,6 +422,7 @@
   "gui.penumbra_phantasm.dark_world_inventory_title": "INVENTAIRE",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "FABRICATION",
   "gui.penumbra_phantasm.dark_world_inventory_equipped": "ÉQUIPPÉ",
+  "gui.penumbra_phantasm.cheshire_chest": "§eCOFFRE D§r§dE CHESTER§r",
 
   
   "location.penumbra_phantasm.dark_fountain": "Fontaine d'ombre",
