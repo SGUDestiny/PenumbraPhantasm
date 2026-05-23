@@ -739,7 +739,7 @@ public class IntroScreen extends Screen {
             PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
         } else {
             Random random = new Random();
-            PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(random.nextInt(1, 7)));
+            PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(random.nextInt(1, 8)));
         }
     }
 
