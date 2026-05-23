@@ -7,6 +7,7 @@ import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -54,7 +55,10 @@ public class CheshireChestBlock extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
+        if (!DarkWorldUtil.isDarkWorld(pLevel)) return;
+
         Vec3 position = pPos.getCenter();
+
         PacketHandlerRegistry.INSTANCE.send(
                 PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(position.x, position.y, position.z, 32.0, pLevel.dimension())),
                 new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.FRIEND_DISAPPEAR.get()), position.x, position.y, position.z, 0, 0, 0, 1)
@@ -66,6 +70,12 @@ public class CheshireChestBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
                                  InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
+
+        if (!DarkWorldUtil.isDarkWorld(level)) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.cheshire_chest_not_in_dark_world"), true);
+
+            return InteractionResult.FAIL;
+        }
 
         player.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(cheshireInv -> {
             MenuProvider provider = new SimpleMenuProvider(

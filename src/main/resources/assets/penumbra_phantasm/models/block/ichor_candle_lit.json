@@ -4,7 +4,8 @@
 	"render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "penumbra_phantasm:block/ichor_candle_lit"
+		"1": "penumbra_phantasm:block/ichor_candle_lit",
+		"particle": "penumbra_phantasm:block/ichor_candle_lit"
 	},
 	"elements": [
 		{

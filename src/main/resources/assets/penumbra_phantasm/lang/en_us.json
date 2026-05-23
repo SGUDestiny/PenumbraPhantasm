@@ -446,6 +446,7 @@
   "message.penumbra_phantasm.great_door_cant_open_no_light_door": "But the door wouldn't budge... (No unclaimed doors in the fountain rooms)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain": "But the door wouldn't budge... (This dark world doesn't have a fountain)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain_destination": "But the door wouldn't budge... (Destination dark world doesn't have a fountain)",
+  "message.penumbra_phantasm.cheshire_chest_not_in_dark_world": "But the lid wouldn't budge... (Not in a dark world)",
 
   "container.penumbra_phantasm.umbrastone_furnace": "Umbrastone Furnace",
 
