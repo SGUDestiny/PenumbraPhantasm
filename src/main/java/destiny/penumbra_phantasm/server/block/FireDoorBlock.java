@@ -177,21 +177,9 @@ public class FireDoorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(level, pos, state, placer, stack);
-        if (stack.hasCustomHoverName()) {
-            BlockPos lowerPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
-
-            if (level.getBlockEntity(lowerPos) instanceof FireDoorBlockEntity fireDoor) {
-                fireDoor.setCustomName(stack.getHoverName());
-            }
-        }
-    }
-
-    @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!level.isClientSide && state.getBlock() != newState.getBlock() && !movedByPiston) {
-            BlockPos lowerPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
+        if (!level.isClientSide && state.getBlock() != newState.getBlock() && !movedByPiston && state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            BlockPos lowerPos = pos;
             BlockEntity blockEntity = level.getBlockEntity(lowerPos);
 
             if (blockEntity instanceof FireDoorBlockEntity fireDoor) {
@@ -203,7 +191,7 @@ public class FireDoorBlock extends BaseEntityBlock {
                         itemStack.setHoverName(fireDoor.getCustomName());
                     }
 
-                    popResource(level, pos, itemStack);
+                    popResource(level, lowerPos, itemStack);
                 }
                 fireDoor.droppedByPlayer = false;
             }
@@ -257,11 +245,32 @@ public class FireDoorBlock extends BaseEntityBlock {
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockPos pos = pContext.getClickedPos();
         Level level = pContext.getLevel();
+
         if (pos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(pos.above()).canBeReplaced(pContext)) {
-            level.setBlockAndUpdate(pos.above(), BlockRegistry.FIRE_DOOR.get().defaultBlockState().setValue(HORIZONTAL_FACING, pContext.getHorizontalDirection().getOpposite()).setValue(HALF, DoubleBlockHalf.UPPER));
-            return this.defaultBlockState().setValue(HORIZONTAL_FACING, pContext.getHorizontalDirection().getOpposite()).setValue(HALF, DoubleBlockHalf.LOWER);
-        } else {
-            return null;
+            return this.defaultBlockState()
+                    .setValue(HORIZONTAL_FACING, pContext.getHorizontalDirection().getOpposite())
+                    .setValue(HALF, DoubleBlockHalf.LOWER);
+        }
+        return null;
+    }
+
+    @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+
+        if (!level.isClientSide() && state.getValue(HALF) == DoubleBlockHalf.LOWER) {
+            BlockPos upperPos = pos.above();
+            level.setBlock(upperPos, this.defaultBlockState()
+                    .setValue(HORIZONTAL_FACING, state.getValue(HORIZONTAL_FACING))
+                    .setValue(HALF, DoubleBlockHalf.UPPER)
+                    .setValue(OPEN, false), Block.UPDATE_ALL);
+        }
+
+        if (stack.hasCustomHoverName()) {
+            BlockPos lowerPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
+            if (level.getBlockEntity(lowerPos) instanceof FireDoorBlockEntity be) {
+                be.setCustomName(stack.getHoverName());
+            }
         }
     }
 
