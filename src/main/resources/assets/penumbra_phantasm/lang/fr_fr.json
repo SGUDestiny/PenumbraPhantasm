@@ -38,7 +38,7 @@
   "item.penumbra_phantasm.raw_rosegold": "Or-Rose brut",
   "item.penumbra_phantasm.rosegold_ingot": "Lingot d'Or-Rose",
   "item.penumbra_phantasm.rosegold_lighter": "Briquet en Or-Rose",
-  "block.penumbra_phantasm.cheshire_chest": "Coffre de Chester",
+
 
   "item.penumbra_phantasm.rosegold_sword": "Épée en Or-Rose",
   "item.penumbra_phantasm.rosegold_axe": "Hache en Or-Rose",
@@ -302,14 +302,12 @@
   "block.penumbra_phantasm.yellow_check": "Pion jaune",
 
   "block.penumbra_phantasm.hearth": "Foyer",
-
-  "block.penumbra_phantasm.umbrastone_rosegold_ore": "Minnerai d'Or-Rose",
-
-  "block.penumbra_phantasm.dark_marble_ivory_ore": "Minnerai d'ivoire sombre",
-  "block.penumbra_phantasm.scarlet_marble_ivory_ore": "Minnerai d'ivoire écarlate",
-
   "block.penumbra_phantasm.great_door_spawner": "Générateur de grande porte",
   "block.penumbra_phantasm.great_door_shape": "Grande porte",
+  "block.penumbra_phantasm.cheshire_chest": "Coffre de Chester",
+  "block.penumbra_phantasm.fire_door": "Porte de feu",
+
+  "block.penumbra_phantasm.umbrastone_rosegold_ore": "Minnerai d'Or-Rose",
   "block.penumbra_phantasm.rosegold_pillar": "Pilier en Or-Rose",
   "block.penumbra_phantasm.chiseled_rosegold": "Or-Rose sculpté",
 
@@ -326,7 +324,9 @@
   "block.penumbra_phantasm.rosegold_brick_wall": "Muret en Or-Rose taillé",
   "block.penumbra_phantasm.rosegold_brick_button": "Bouton en Or-Rose taillé",
   "block.penumbra_phantasm.rosegold_brick_pressure_plate": "Plaque de pression en Or-Rose taillé",
-
+  
+  "block.penumbra_phantasm.dark_marble_ivory_ore": "Minnerai d'ivoire sombre",
+  "block.penumbra_phantasm.scarlet_marble_ivory_ore": "Minnerai d'ivoire écarlate",
   "block.penumbra_phantasm.ivory_pillar": "Pilier en ivoire",
   "block.penumbra_phantasm.chiseled_ivory": "Ivoire sculpté",
   "block.penumbra_phantasm.dark_marble_dice": "Dé en marbre sombre",
