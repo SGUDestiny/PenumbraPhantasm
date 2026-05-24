@@ -417,7 +417,7 @@
   "tooltip.penumbra_phantasm.soul_hearth.determination": "DÉTERMINATION: ",
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "CONFIANCE: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "L'ÂME EN SON SEIN VOUS REJETTE.",
-  "message.penumbra_phantasm.rosegold_lighter_fuel": "Combustible: "
+  "tooltip.penumbra_phantasm.rosegold_lighter_fuel": "Combustible: "
   
   "gui.penumbra_phantasm.dark_world_inventory_title": "INVENTAIRE",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "FABRICATION",
@@ -454,6 +454,11 @@
   "message.penumbra_phantasm.great_door_cant_open_no_fountain": "Mais la porte ne voulais pas bouger... (Ce monde d'ombre ne possède pas de fontaine)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain_destination": "Mais la porte ne voulais pas bouger... (Monde d'ombre lié ne possède pas de fontaine)",
   "message.penumbra_phantasm.cheshire_chest_not_in_dark_world": "Mais le couvercle ne voulais pas bouger... (Pas dans un monde d'ombre)",
+  "message.penumbra_phantasm.fire_door_link": "Porte de feu sauvegardée dans vos emplacements",
+  "message.penumbra_phantasm.fire_door_unlink": "Porte de feu retirée de vos emplacements",
+  "message.penumbra_phantasm.fire_door_limit_reached": "Impossible de sauvegarder une porte de feu supplémentaire dans ce monde d'ombre...",
+  "message.penumbra_phantasm.fire_door_not_enough_doors": "Nulle part où se téléporter...",
+  "message.penumbra_phantasm.fire_door_not_in_dark_world": "Mais la poignée ne voulais pas bouger... (Pas dans un monde d'ombre)",
   
   
   "container.penumbra_phantasm.umbrastone_furnace": "Fourneau en Sombreroche",
