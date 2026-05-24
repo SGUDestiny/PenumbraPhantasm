@@ -12,6 +12,7 @@ import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -40,6 +41,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FireDoorBlock extends BaseEntityBlock {
@@ -76,60 +78,74 @@ public class FireDoorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer,
+                                 InteractionHand pHand, BlockHitResult pHit) {
         if (!DarkWorldUtil.isDarkWorld(pLevel)) {
             pPlayer.displayClientMessage(Component.translatable("message.penumbra_phantasm.fire_door_not_in_dark_world"), true);
-
             return InteractionResult.SUCCESS;
         }
 
         if (pPlayer instanceof ServerPlayer serverPlayer) {
             FireDoorsCapability cap = serverPlayer.getCapability(CapabilityRegistry.FIRE_DOORS).orElse(null);
 
-            List<FireDoor> fireDoors = cap.playerFireDoors;
-            fireDoors.removeIf(fd -> pLevel.getBlockState(fd.doorPos()).getBlock() != this);
+            List<FireDoor> allDoors = cap.playerFireDoors;
+            ResourceKey<Level> currentDim = pLevel.dimension();
+
+            List<FireDoor> sameDimDoors = new ArrayList<>();
+            List<FireDoor> invalidDoors = new ArrayList<>();
+
+            for (FireDoor fd : allDoors) {
+                if (!fd.darkWorld().equals(currentDim)) continue;
+
+                if (pLevel.getBlockState(fd.doorPos()).getBlock() == this) {
+                    sameDimDoors.add(fd);
+                } else {
+                    invalidDoors.add(fd);
+                }
+            }
+
+            allDoors.removeAll(invalidDoors);
 
             BlockPos lowerPos = pState.getValue(HALF) == DoubleBlockHalf.UPPER ? pPos.below() : pPos;
             BlockEntity be = pLevel.getBlockEntity(lowerPos);
+            if (!(be instanceof FireDoorBlockEntity fireDoorEntity)) return InteractionResult.FAIL;
 
-            if (!(be instanceof FireDoorBlockEntity fireDoor)) return InteractionResult.FAIL;
-
-            int doorIndex = cap.findDoorIndexInList(pLevel.dimension(), lowerPos);
+            int doorIndex = cap.findDoorIndexInList(currentDim, lowerPos);
             boolean hasDoor = doorIndex != -1;
 
             if (pPlayer.isCrouching()) {
                 if (hasDoor) {
                     pPlayer.displayClientMessage(Component.translatable("message.penumbra_phantasm.fire_door_unlink"), true);
-                    cap.removeFireDoor(pLevel.dimension(), lowerPos);
+                    cap.removeFireDoor(currentDim, lowerPos);
                 }
                 return InteractionResult.SUCCESS;
             }
 
             if (!hasDoor) {
-                int sameWorldDoors = (int) fireDoors.stream().filter(d -> d.darkWorld().equals(pLevel.dimension())).count();
-                if (sameWorldDoors >= 10) {
+                int sameWorldCount = sameDimDoors.size();
+                if (sameWorldCount >= 10) {
                     pPlayer.displayClientMessage(Component.translatable("message.penumbra_phantasm.fire_door_limit_reached"), true);
                 } else {
                     pPlayer.displayClientMessage(Component.translatable("message.penumbra_phantasm.fire_door_link"), true);
-
-                    Component name = fireDoor.getCustomName() != null ? fireDoor.getCustomName() : Component.translatable("block.penumbra_phantasm.fire_door");
-                    cap.addFireDoor(pLevel.dimension(), lowerPos, pState.getValue(HORIZONTAL_FACING).toYRot(), name);
+                    Component name = fireDoorEntity.getCustomName() != null ? fireDoorEntity.getCustomName() : Component.translatable("block.penumbra_phantasm.fire_door");
+                    cap.addFireDoor(currentDim, lowerPos, pState.getValue(HORIZONTAL_FACING).toYRot(), name);
                 }
                 return InteractionResult.SUCCESS;
             }
 
             FireDoor currentDoor = cap.getDoorFromIndex(doorIndex);
-            List<FireDoor> finalList = fireDoors.stream().filter(d -> !d.equals(currentDoor)).toList();
+            List<FireDoor> finalList = sameDimDoors.stream().filter(d -> !d.equals(currentDoor)).toList();
 
             if (finalList.isEmpty()) {
                 pPlayer.displayClientMessage(Component.translatable("message.penumbra_phantasm.fire_door_not_enough_doors"), true);
                 return InteractionResult.FAIL;
             }
 
-            fireDoor.setDoorState(pLevel, lowerPos, true);
-            fireDoor.incrementOpenCount();
+            fireDoorEntity.setDoorState(pLevel, lowerPos, true);
+            fireDoorEntity.incrementOpenCount();
 
-            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundFireDoorPacket(finalList, pLevel.dimension(), lowerPos));
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+                    new ClientBoundFireDoorPacket(finalList, currentDim, lowerPos));
 
             return InteractionResult.SUCCESS;
         }
