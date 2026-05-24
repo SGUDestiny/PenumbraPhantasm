@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
+import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
@@ -31,12 +32,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class CommonEvents {
     private static final Map<ResourceKey<Level>, Set<ChunkPos>> pendingGreatDoorSpawnerChunks = new HashMap<>();
@@ -275,6 +271,7 @@ public class CommonEvents {
                     }
                 });
             }
+           serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSoulBreakPacket(false, cap.soulType)));
         }
     }
 

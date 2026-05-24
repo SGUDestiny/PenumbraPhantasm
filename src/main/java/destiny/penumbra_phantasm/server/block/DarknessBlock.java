@@ -60,7 +60,11 @@ public class DarknessBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Shapes.empty();
+        if (context == CollisionContext.empty()) {
+            return Shapes.block();
+        } else {
+            return Shapes.empty();
+        }
     }
 
     @Override

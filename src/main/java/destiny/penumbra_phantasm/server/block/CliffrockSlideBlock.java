@@ -68,27 +68,25 @@ public class CliffrockSlideBlock extends HorizontalDirectionalBlock {
             return;
         }
 
+        entity.setDeltaMovement(Vec3.ZERO);
+
         if (level.getBlockState(pos.above()).is(this)) {
             super.stepOn(level, pos, state, entity);
             return;
         }
 
         Direction facing = state.getValue(FACING);
+        BlockPos targetPos = pos.relative(facing);
 
-        double targetX = pos.getX() + 0.5;
-        double targetY = pos.above().getY() + 0.5;
-        double targetZ = pos.getZ() + 0.5;
-
-        double faceOffset = 0.7;
-        targetX += facing.getStepX() * faceOffset;
-        targetZ += facing.getStepZ() * faceOffset;
+        double backOff = 0.3;
+        double targetX = targetPos.getX() + 0.5 - facing.getStepX() * backOff;
+        double targetY = targetPos.getY() + 1.0;
+        double targetZ = targetPos.getZ() + 0.5 - facing.getStepZ() * backOff;
 
         entity.teleportTo(targetX, targetY, targetZ);
         entity.fallDistance = 0.0F;
-        entity.setDeltaMovement(entity.getDeltaMovement().multiply(1, 0, 1).add(0, -0.05, 0));
 
         level.playSound(null, pos, SoundRegistry.SLIDE_DOWN.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
-
         super.stepOn(level, pos, state, entity);
     }
 

@@ -44,6 +44,9 @@ public class FireDoorBlockEntity extends BlockEntity implements Nameable {
             if (!state.getValue(BlockStateProperties.OPEN)) {
                 fireDoor.setDoorState(level, pos, true);
             }
+            if (fireDoor.doorDelay != -1) {
+                fireDoor.doorDelay = -1;
+            }
         } else if (fireDoor.doorDelay <= 0 && state.getValue(BlockStateProperties.OPEN)) {
             fireDoor.setDoorState(level, pos, false);
         }

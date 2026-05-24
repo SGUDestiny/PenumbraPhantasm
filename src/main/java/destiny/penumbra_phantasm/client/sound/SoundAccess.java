@@ -20,7 +20,7 @@ public class SoundAccess {
     protected static Minecraft minecraft = Minecraft.getInstance();
 
     public static SoundEvent getFountainMusic() {
-        return ClientConfig.alternateDarkFountainMusic ? SoundRegistry.FOUNTAIN_MUSIC_ALTERNATE.get() : SoundRegistry.FOUNTAIN_MUSIC.get();
+        return SoundRegistry.FOUNTAIN_MUSIC.get();
     }
 
     public static void playFountainWind(BlockPos fountainPos, boolean stop)

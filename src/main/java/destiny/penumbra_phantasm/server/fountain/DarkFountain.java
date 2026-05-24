@@ -241,18 +241,13 @@ public class DarkFountain {
                 this.shockwaveTickers.add(0);
             }
 
-            List<Integer> toRemove = new ArrayList<>();
-            for (int i = 0; i < this.shockwaveTickers.size(); i++) {
-                int ticker = this.shockwaveTickers.get(i);
-
+            for (int i = shockwaveTickers.size() - 1; i >= 0; i--) {
+                int ticker = shockwaveTickers.get(i);
                 if (ticker < 5) {
-                    this.shockwaveTickers.set(i, ticker + 1);
+                    shockwaveTickers.set(i, ticker + 1);
                 } else {
-                    toRemove.add(i);
+                    shockwaveTickers.remove(i);
                 }
-            }
-            for (int ticker : toRemove) {
-                this.shockwaveTickers.remove(ticker);
             }
 
             if (this.openingTick >= FILL_START_TICK) {
@@ -313,13 +308,21 @@ public class DarkFountain {
             }
             fillRate = Math.max(1, room.getPositions().size() / TRANSPORT_TICKER_DURATION);
 
-            for (int i = 0; i < fillRate && room.fillIndex < room.getPositions().size(); i++) {
+            int placed = 0;
+            while (room.fillIndex < room.getPositions().size() && placed < fillRate) {
                 BlockPos pos = room.getPositions().get(room.fillIndex);
                 BlockState current = level.getBlockState(pos);
-                if (current.is(Blocks.AIR) || current.is(Blocks.CAVE_AIR) || current.is(Blocks.VOID_AIR)) {
+                if (current.isAir()) {
                     level.setBlock(pos, BlockRegistry.DARKNESS.get().defaultBlockState(), 3);
                     if (level.getBlockEntity(pos) instanceof DarknessBlockEntity darkness) {
                         darkness.fountainPos = this.fountainPos;
+                    }
+                    placed++;
+                }
+                else if (current.getBlock() instanceof DarknessBlock) {
+                    if (level.getBlockEntity(pos) instanceof DarknessBlockEntity darkness) {
+                        darkness.fountainPos = this.fountainPos;
+                        darkness.setChanged();
                     }
                 }
                 room.fillIndex++;
@@ -601,11 +604,18 @@ public class DarkFountain {
                 room.doorPositions = result.getDoorPositions();
                 room.outsideDoors = new HashMap<>(result.getOutsideDoors());
                 room.sharedDoors = new HashMap<>(result.getSharedDoors());
+
                 int alreadyFilled = 0;
                 for (BlockPos pos : room.positions) {
                     if (level.getBlockState(pos).getBlock() instanceof DarknessBlock) alreadyFilled++;
                 }
+
                 room.fillIndex = alreadyFilled;
+
+                int totalDarkness = DarkRoom.getTotalDarknessCount(rooms);
+                int remainingVolume = ServerConfig.maxRoomVolume - totalDarkness;
+
+                RoomScanner.reclassifyDoorsWithRemainingBudget(level, room, Math.max(0, remainingVolume), otherAnchors, otherRoomCells);
             }
         }
 
@@ -680,7 +690,7 @@ public class DarkFountain {
                     if (otherFountainAnchors != null && otherFountainAnchors.contains(adjacent)) continue;
 
                     BlockState adjState = level.getBlockState(adjacent);
-                    if (!adjState.is(Blocks.AIR) && !adjState.is(Blocks.CAVE_AIR) && !adjState.is(Blocks.VOID_AIR))
+                    if (!adjState.isAir())
                         continue;
 
                     RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false, false, otherFountainAnchors, otherRoomCells);
