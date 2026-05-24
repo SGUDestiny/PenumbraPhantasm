@@ -46,12 +46,18 @@ public class FireDoorScreen extends Screen {
             FireDoor door = doors.get(i);
             int y = startY + i * (buttonHeight + gap);
 
-            FireDoorScreenButton button = new FireDoorScreenButton(x, y, Component.literal(door.name()), button1 -> {
+            FireDoorScreenButton button = new FireDoorScreenButton(x, y, door.name(), button1 -> {
                 destinationSelected = true;
                 onExternalSelect.accept(door);
             });
             this.addRenderableWidget(button);
         }
+    }
+
+    @Override
+    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(pGuiGraphics);
+        super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
     }
 
     @Override

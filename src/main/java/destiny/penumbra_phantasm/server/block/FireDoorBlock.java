@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.block;
 
 import destiny.penumbra_phantasm.client.network.ClientBoundFireDoorPacket;
-import destiny.penumbra_phantasm.server.block.entity.CheshireChestBlockEntity;
 import destiny.penumbra_phantasm.server.block.entity.FireDoorBlockEntity;
 import destiny.penumbra_phantasm.server.capability.FireDoorsCapability;
 import destiny.penumbra_phantasm.server.fountain.FireDoor;
@@ -16,7 +15,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -109,8 +111,9 @@ public class FireDoorBlock extends BaseEntityBlock {
                     pPlayer.displayClientMessage(Component.translatable("message.penumbra_phantasm.fire_door_limit_reached"), true);
                 } else {
                     pPlayer.displayClientMessage(Component.translatable("message.penumbra_phantasm.fire_door_link"), true);
-                    cap.addFireDoor(pLevel.dimension(), lowerPos,
-                            pState.getValue(HORIZONTAL_FACING).toYRot(), "Temp name");
+
+                    Component name = fireDoor.getCustomName() != null ? fireDoor.getCustomName() : Component.translatable("block.penumbra_phantasm.fire_door");
+                    cap.addFireDoor(pLevel.dimension(), lowerPos, pState.getValue(HORIZONTAL_FACING).toYRot(), name);
                 }
                 return InteractionResult.SUCCESS;
             }
@@ -174,6 +177,82 @@ public class FireDoorBlock extends BaseEntityBlock {
     }
 
     @Override
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(level, pos, state, placer, stack);
+        if (stack.hasCustomHoverName()) {
+            BlockPos lowerPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
+
+            if (level.getBlockEntity(lowerPos) instanceof FireDoorBlockEntity fireDoor) {
+                fireDoor.setCustomName(stack.getHoverName());
+            }
+        }
+    }
+
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!level.isClientSide && state.getBlock() != newState.getBlock() && !movedByPiston) {
+            BlockPos lowerPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
+            BlockEntity blockEntity = level.getBlockEntity(lowerPos);
+
+            if (blockEntity instanceof FireDoorBlockEntity fireDoor) {
+                if (!fireDoor.droppedByPlayer) {
+                    ItemStack itemStack = new ItemStack(this.asItem());
+                    fireDoor.saveToItem(itemStack);
+
+                    if (fireDoor.hasCustomName()) {
+                        itemStack.setHoverName(fireDoor.getCustomName());
+                    }
+
+                    popResource(level, pos, itemStack);
+                }
+                fireDoor.droppedByPlayer = false;
+            }
+        }
+
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    @Override
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        BlockPos lowerPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
+        BlockEntity blockEntity = level.getBlockEntity(lowerPos);
+
+        if (blockEntity instanceof FireDoorBlockEntity fireDoor) {
+            if (!level.isClientSide() && !player.isCreative()) {
+                fireDoor.droppedByPlayer = true;
+
+                ItemStack itemStack = new ItemStack(this.asItem());
+                blockEntity.saveToItem(itemStack);
+
+                if (fireDoor.hasCustomName()) {
+                    itemStack.setHoverName(fireDoor.getCustomName());
+                }
+
+                ItemEntity itemEntity = new ItemEntity(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, itemStack);
+                itemEntity.setDefaultPickUpDelay();
+
+                level.addFreshEntity(itemEntity);
+            }
+        }
+
+        super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    public void playerDestroy(Level pLevel, Player pPlayer, BlockPos pPos, BlockState pState, @Nullable BlockEntity pBlockEntity, ItemStack pTool) {
+        if (pPlayer instanceof ServerPlayer serverPlayer) {
+            FireDoorsCapability cap = serverPlayer.getCapability(CapabilityRegistry.FIRE_DOORS).orElse(null);
+            if (pState.getValue(HALF) == DoubleBlockHalf.UPPER) {
+                cap.removeFireDoor(pLevel.dimension(), pPos.below());
+            } else {
+                cap.removeFireDoor(pLevel.dimension(), pPos);
+            }
+        }
+
+        super.playerDestroy(pLevel, pPlayer, pPos, pState, pBlockEntity, pTool);
+    }
+
+    @Override
     @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext pContext) {
         BlockPos pos = pContext.getClickedPos();
@@ -184,6 +263,15 @@ public class FireDoorBlock extends BaseEntityBlock {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getCloneItemStack(level, pos, state);
+        if (level.getBlockEntity(pos) instanceof FireDoorBlockEntity be && be.getCustomName() != null) {
+            stack.setHoverName(be.getCustomName());
+        }
+        return stack;
     }
 
     @Override

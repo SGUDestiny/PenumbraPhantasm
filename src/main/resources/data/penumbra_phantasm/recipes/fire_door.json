@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "I": {
+      "item": "penumbra_phantasm:ivory"
+    },
+    "T": {
+      "item": "penumbra_phantasm:pure_darkness_bucket"
+    },
+    "D": {
+      "item": "penumbra_phantasm:dark_candy_door"
+    }
+  },
+  "pattern": [
+    "III",
+    "IDI",
+    "ITI"
+  ],
+  "result": {
+    "count": 1,
+    "item": "penumbra_phantasm:fire_door"
+  },
+  "show_notification": true
+}
