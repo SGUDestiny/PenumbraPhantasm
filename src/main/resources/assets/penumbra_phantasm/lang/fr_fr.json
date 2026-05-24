@@ -453,6 +453,7 @@
   "message.penumbra_phantasm.great_door_cant_open_no_light_door": "Mais la porte ne voulais pas bouger... (Pas de porte disponible dans la salle de la fontaine)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain": "Mais la porte ne voulais pas bouger... (Ce monde d'ombre ne possède pas de fontaine)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain_destination": "Mais la porte ne voulais pas bouger... (Monde d'ombre lié ne possède pas de fontaine)",
+  "message.penumbra_phantasm.great_door_cant_open_not_fountain_door": "Mais la porte ne voulais pas bouger... (Porte du monde de lumière n'est pas contenu dans l'envellope de la fontaine )",
   "message.penumbra_phantasm.cheshire_chest_not_in_dark_world": "Mais le couvercle ne voulais pas bouger... (Pas dans un monde d'ombre)",
   "message.penumbra_phantasm.fire_door_link": "Porte de feu sauvegardée dans vos emplacements",
   "message.penumbra_phantasm.fire_door_unlink": "Porte de feu retirée de vos emplacements",
