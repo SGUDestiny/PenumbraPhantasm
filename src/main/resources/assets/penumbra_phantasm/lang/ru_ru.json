@@ -447,6 +447,7 @@
   "message.penumbra_phantasm.great_door_cant_open_no_light_door": "Дверь не поддаётся... (Нет непривязанных дверей в комнатах с фонтаном)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain": "Дверь не поддаётся... (У этого тёмного мира нет фонтана)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain_destination": "Дверь не поддаётся... (У целевого тёмного мира нет фонтана)",
+  "message.penumbra_phantasm.great_door_cant_open_not_fountain_door": "Дверь не поддаётся... (Дверь в светлом мире не в оболочке фонтана)",
   "message.penumbra_phantasm.cheshire_chest_not_in_dark_world": "Крышка не поддаётся... (Сундук не в тёмном мире)",
   "message.penumbra_phantasm.fire_door_link": "Огненная дверь была сохранена в список локаций",
   "message.penumbra_phantasm.fire_door_unlink": "Огненная дверь была убрана из списка локаций",
