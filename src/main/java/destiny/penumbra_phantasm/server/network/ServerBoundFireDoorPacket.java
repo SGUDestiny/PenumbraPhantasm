@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -58,33 +59,36 @@ public class ServerBoundFireDoorPacket {
 
             ServerLevel originLevel = player.getServer().getLevel(originDarkWorld);
             if (originLevel != null && originLevel.isLoaded(originPos)) {
-                if (originLevel.getBlockEntity(originPos) instanceof FireDoorBlockEntity originFireDoor) {
-                    originFireDoor.setDoorState(originLevel, originPos, false);
-                    originFireDoor.decrementOpenCount();
+                if (originLevel.getBlockEntity(originPos) instanceof FireDoorBlockEntity originBE) {
+                    originBE.setDoorState(originLevel, originPos, false);
+                    originBE.decrementOpenCount();
                 }
             }
 
             ServerLevel targetLevel = player.getServer().getLevel(darkWorld);
-            if (targetLevel != null && targetLevel.isLoaded(doorPos)) {
-                BlockState destState = targetLevel.getBlockState(doorPos);
-
-                if (destState.getBlock() instanceof FireDoorBlock && !destState.getValue(BlockStateProperties.OPEN)) {
-                    targetLevel.setBlock(doorPos, destState.setValue(BlockStateProperties.OPEN, true), Block.UPDATE_ALL);
-                    targetLevel.playSound(null, doorPos, SoundRegistry.FIRE_DOOR_OPEN.get(), SoundSource.BLOCKS, 1f, 1f);
-                }
-
-                if (targetLevel.getBlockEntity(doorPos) instanceof FireDoorBlockEntity targetFireDoor) {
-                    targetFireDoor.doorDelay = 20;
-                    targetFireDoor.setChanged();
-                }
-            }
+            if (targetLevel == null) return;
 
             double x = doorPos.getX() + 0.5;
             double y = doorPos.getY();
             double z = doorPos.getZ() + 0.5;
 
             player.teleportTo(targetLevel, x, y, z, facingAngle, player.getXRot());
+
+            targetLevel.getServer().tell(new TickTask(targetLevel.getServer().getTickCount() + 2, () -> {
+                if (targetLevel.isLoaded(doorPos)) {
+                    BlockState destState = targetLevel.getBlockState(doorPos);
+
+                    if (destState.getBlock() instanceof FireDoorBlock && !destState.getValue(BlockStateProperties.OPEN)) {
+                        if (targetLevel.getBlockEntity(doorPos) instanceof FireDoorBlockEntity fireDoor) {
+                            fireDoor.setDoorState(targetLevel, doorPos, true);
+                            fireDoor.doorDelay = 40;
+                            fireDoor.setChanged();
+                        }
+                    }
+                }
+            }));
         });
+
         return true;
     }
 }

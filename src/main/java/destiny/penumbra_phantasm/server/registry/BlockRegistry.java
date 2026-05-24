@@ -443,9 +443,9 @@ public class BlockRegistry {
     public static final RegistryObject<Block> GREAT_DOOR_SPAWNER = registerBlock("great_door_spawner",
             () -> new GreatDoorSpawnerBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)));
     public static final RegistryObject<Block> CHESHIRE_CHEST = BLOCKS.register("cheshire_chest",
-            () -> new CheshireChestBlock(BlockBehaviour.Properties.copy(Blocks.ENDER_CHEST).noOcclusion().sound(SoundType.COPPER).strength(5F)));
+            () -> new CheshireChestBlock(BlockBehaviour.Properties.copy(Blocks.ENDER_CHEST).noOcclusion().sound(SoundType.COPPER).strength(5F).lightLevel(state -> 0)));
     public static final RegistryObject<Block> FIRE_DOOR = registerBlock("fire_door",
-            () -> new FireDoorBlock(BlockBehaviour.Properties.copy(Blocks.IRON_DOOR).noOcclusion().sound(SoundType.COPPER)));
+            () -> new FireDoorBlock(BlockBehaviour.Properties.copy(Blocks.IRON_DOOR).noOcclusion().sound(SoundType.COPPER).noLootTable()));
 
     public static final RegistryObject<Block> HEARTH = registerBlock("hearth",
             () -> new HearthBlock(BlockBehaviour.Properties.copy(Blocks.LANTERN)

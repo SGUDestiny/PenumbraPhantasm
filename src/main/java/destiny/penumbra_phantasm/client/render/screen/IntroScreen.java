@@ -739,7 +739,7 @@ public class IntroScreen extends Screen {
             PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(currentChoice));
         } else {
             Random random = new Random();
-            PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(random.nextInt(1, 7)));
+            PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundSoulPacket(random.nextInt(1, 8)));
         }
     }
 
@@ -809,7 +809,6 @@ public class IntroScreen extends Screen {
                 nativeimage.resizeSubRectTo(k, l, i, j, nativeimage1);
                 nativeimage1.writeToFile(pPath);
             } catch (IOException ioexception) {
-                //LOGGER.warn("Couldn't save auto screenshot", (Throwable)ioexception);
             } finally {
                 nativeimage.close();
             }

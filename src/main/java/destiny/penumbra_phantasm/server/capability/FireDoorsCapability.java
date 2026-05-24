@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -46,7 +47,7 @@ public class FireDoorsCapability implements INBTSerializable<CompoundTag> {
         this.playerFireDoors = playerFireDoors;
     }
 
-    public void addFireDoor(ResourceKey<Level> darkWorld, BlockPos doorPos, float facingAngle, String name) {
+    public void addFireDoor(ResourceKey<Level> darkWorld, BlockPos doorPos, float facingAngle, Component name) {
         this.playerFireDoors.add(new FireDoor(darkWorld, doorPos, facingAngle, name));
     }
 
