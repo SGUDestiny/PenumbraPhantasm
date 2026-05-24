@@ -115,5 +115,29 @@ public class PacketHandlerRegistry {
                 .decoder(ClientBoundSingleGreatDoorPacket::decode)
                 .consumerMainThread(ClientBoundSingleGreatDoorPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(ClientBoundFireDoorPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundFireDoorPacket::encode)
+                .decoder(ClientBoundFireDoorPacket::decode)
+                .consumerMainThread(ClientBoundFireDoorPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ServerBoundFireDoorPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ServerBoundFireDoorPacket::encode)
+                .decoder(ServerBoundFireDoorPacket::decode)
+                .consumerMainThread(ServerBoundFireDoorPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ServerBoundFireDoorScreenPacket.class, index++, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(ServerBoundFireDoorScreenPacket::encode)
+                .decoder(ServerBoundFireDoorScreenPacket::decode)
+                .consumerMainThread(ServerBoundFireDoorScreenPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ClientBoundFireDoorSyncPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundFireDoorSyncPacket::encode)
+                .decoder(ClientBoundFireDoorSyncPacket::decode)
+                .consumerMainThread(ClientBoundFireDoorSyncPacket::handle)
+                .add();
     }
 }

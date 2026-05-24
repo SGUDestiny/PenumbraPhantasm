@@ -100,12 +100,14 @@ public class StartailBlock extends DoublePlantBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pMovedByPiston) {
-        if (!pState.is(pNewState.getBlock()) && pNewState.isAir() && pState.getValue(HALF) == DoubleBlockHalf.LOWER && pState.getValue(WATERLOGGED)) {
-            pLevel.setBlock(pPos, BlockRegistry.LUMINESCENT_WATER.get().defaultBlockState(), 3);
+    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+        if (!pState.is(pNewState.getBlock())) {
+            if (pState.getValue(HALF) == DoubleBlockHalf.LOWER) {
+                pLevel.destroyBlock(pPos.above(), false);
+            } else {
+                pLevel.destroyBlock(pPos.below(), true);
+            }
         }
-
-        super.onRemove(pState, pLevel, pPos, pNewState, pMovedByPiston);
     }
 
     @Override

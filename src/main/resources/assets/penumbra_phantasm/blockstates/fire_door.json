@@ -1,0 +1,67 @@
+{
+  "variants": {
+    "facing=north,half=lower,open=false": {
+      "model": "penumbra_phantasm:block/fire_door_lower_closed"
+    },
+    "facing=north,half=lower,open=true": {
+      "model": "penumbra_phantasm:block/fire_door_lower_open"
+    },
+    "facing=north,half=upper,open=false": {
+      "model": "penumbra_phantasm:block/fire_door_upper_closed"
+    },
+    "facing=north,half=upper,open=true": {
+      "model": "penumbra_phantasm:block/fire_door_upper_open"
+    },
+
+    "facing=south,half=lower,open=false": {
+      "model": "penumbra_phantasm:block/fire_door_lower_closed",
+      "y": 180
+    },
+    "facing=south,half=lower,open=true": {
+      "model": "penumbra_phantasm:block/fire_door_lower_open",
+      "y": 180
+    },
+    "facing=south,half=upper,open=false": {
+      "model": "penumbra_phantasm:block/fire_door_upper_closed",
+      "y": 180
+    },
+    "facing=south,half=upper,open=true": {
+      "model": "penumbra_phantasm:block/fire_door_upper_open",
+      "y": 180
+    },
+
+    "facing=west,half=lower,open=false": {
+      "model": "penumbra_phantasm:block/fire_door_lower_closed",
+      "y": 270
+    },
+    "facing=west,half=lower,open=true": {
+      "model": "penumbra_phantasm:block/fire_door_lower_open",
+      "y": 270
+    },
+    "facing=west,half=upper,open=false": {
+      "model": "penumbra_phantasm:block/fire_door_upper_closed",
+      "y": 270
+    },
+    "facing=west,half=upper,open=true": {
+      "model": "penumbra_phantasm:block/fire_door_upper_open",
+      "y": 270
+    },
+
+    "facing=east,half=lower,open=false": {
+      "model": "penumbra_phantasm:block/fire_door_lower_closed",
+      "y": 90
+    },
+    "facing=east,half=lower,open=true": {
+      "model": "penumbra_phantasm:block/fire_door_lower_open",
+      "y": 90
+    },
+    "facing=east,half=upper,open=false": {
+      "model": "penumbra_phantasm:block/fire_door_upper_closed",
+      "y": 90
+    },
+    "facing=east,half=upper,open=true": {
+      "model": "penumbra_phantasm:block/fire_door_upper_open",
+      "y": 90
+    }
+  }
+}

@@ -34,7 +34,15 @@ public class PureDarknessFluidType extends FluidType {
 
     @Override
     public float getFallDistanceModifier(Entity entity) {
-        return 1;
+        return 0.0f;
+    }
+
+    @Override
+    public double motionScale(Entity entity) {
+        if (entity.onGround()) {
+            return 0.01;
+        }
+        return 0.014D;
     }
 
     public ResourceLocation getStillTexture() {

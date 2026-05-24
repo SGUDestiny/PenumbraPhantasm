@@ -4,7 +4,7 @@
       "model": "penumbra_phantasm:block/ivory_slab"
     },
     "type=double": {
-      "model": "penumbra_phantasm:block/ivory"
+      "model": "penumbra_phantasm:block/ivory_block"
     },
     "type=top": {
       "model": "penumbra_phantasm:block/ivory_slab_top"

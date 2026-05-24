@@ -1,0 +1,74 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"render_type": "minecraft:cutout",
+	"texture_size": [128, 128],
+	"textures": {
+		"0": "penumbra_phantasm:block/fire_door",
+		"1": "penumbra_phantasm:block/fire_door_flame",
+		"particle": "penumbra_phantasm:block/fire_door"
+	},
+	"elements": [
+		{
+			"from": [-2, 0.025, 13],
+			"to": [0, 16.025, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, -1.975, 14]},
+			"faces": {
+				"north": {"uv": [2.625, 2.625, 2.875, 4.625], "texture": "#0"},
+				"south": {"uv": [3.25, 2.625, 3.5, 4.625], "texture": "#0"},
+				"west": {"uv": [2.875, 2.625, 3.25, 4.625], "texture": "#0"},
+				"down": {"uv": [5.375, 0, 5.125, 0.375], "texture": "#0"}
+			}
+		},
+		{
+			"from": [16, 0.025, 13],
+			"to": [18, 16.025, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, -1.975, 14]},
+			"faces": {
+				"north": {"uv": [2.875, 2.625, 2.625, 4.625], "texture": "#0"},
+				"east": {"uv": [3.25, 2.625, 2.875, 4.625], "texture": "#0"},
+				"south": {"uv": [3.5, 2.625, 3.25, 4.625], "texture": "#0"},
+				"down": {"uv": [5.125, 0, 5.375, 0.375], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 0.025, 13],
+			"to": [16, 16.025, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, -1.975, 14]},
+			"faces": {
+				"north": {"uv": [0.625, 2.625, 2.625, 4.625], "texture": "#0"},
+				"south": {"uv": [3.5, 2.625, 5.5, 4.625], "texture": "#0"},
+				"down": {"uv": [5.125, 0, 3.125, 0.375], "texture": "#0"}
+			}
+		},
+		{
+			"name": "door",
+			"from": [0, 0.025, 13],
+			"to": [16, 16.025, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, -1.975, 14]},
+			"faces": {
+				"north": {"uv": [0.625, 2.625, 2.625, 4.625], "texture": "#0"},
+				"down": {"uv": [5.125, 0, 3.125, 0.375], "texture": "#0"}
+			}
+		},
+		{
+			"name": "fire",
+			"from": [0, 0.05, -3],
+			"to": [16, 0.05, 13],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, -1.95, 11]},
+			"faces": {
+				"up": {"uv": [0, 16, 16, 0], "texture": "#1"},
+				"down": {"uv": [16, 0, 0, 16], "texture": "#1"}
+			}
+		}
+	]
+}

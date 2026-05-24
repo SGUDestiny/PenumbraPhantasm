@@ -4,7 +4,8 @@
 	"render_type": "minecraft:cutout",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "penumbra_phantasm:block/ichor_candle_lit"
+		"1": "penumbra_phantasm:block/ichor_candle_lit",
+		"particle": "penumbra_phantasm:block/ichor_candle_lit"
 	},
 	"elements": [
 		{
@@ -63,6 +64,10 @@
 			"name": "emissive",
 			"from": [7, 1, 7],
 			"to": [9, 7, 9],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 4, 8]},
 			"faces": {
 				"north": {"uv": [10, 2, 11, 5], "texture": "#1"},

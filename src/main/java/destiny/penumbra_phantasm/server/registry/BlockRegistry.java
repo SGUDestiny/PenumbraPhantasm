@@ -379,12 +379,8 @@ public class BlockRegistry {
 
 
     //Rosegold misc
-    public static final RegistryObject<Block> GREAT_DOOR_SPAWNER = registerBlock("great_door_spawner",
-            () -> new GreatDoorSpawnerBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)));
     public static final RegistryObject<Block> ROSEGOLD_PILLAR = registerBlock("rosegold_pillar", () -> new RotatedPillarBlock(ROSEGOLD_PROPERTIES));
     public static final RegistryObject<Block> UMBRASTONE_ROSEGOLD_ORE = registerBlock("umbrastone_rosegold_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.GOLD_ORE).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().sound(SoundType.STONE)));
-    public static final RegistryObject<Block> CHESHIRE_CHEST = BLOCKS.register("cheshire_chest",
-            () -> new CheshireChestBlock(BlockBehaviour.Properties.copy(Blocks.ENDER_CHEST).noOcclusion().sound(SoundType.COPPER).strength(5F)));
 
     //Rosegold
     public static final RegistryObject<Block> ROSEGOLD_BLOCK = registerBlock("rosegold_block", () -> new Block(ROSEGOLD_PROPERTIES));
@@ -443,6 +439,14 @@ public class BlockRegistry {
     public static final RegistryObject<LiquidBlock> PURE_DARKNESS = BLOCKS.register("pure_darkness",
             () -> new LiquidBlock(FluidRegistry.SOURCE_PURE_DARKNESS, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
 
+    //Common
+    public static final RegistryObject<Block> GREAT_DOOR_SPAWNER = registerBlock("great_door_spawner",
+            () -> new GreatDoorSpawnerBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)));
+    public static final RegistryObject<Block> CHESHIRE_CHEST = BLOCKS.register("cheshire_chest",
+            () -> new CheshireChestBlock(BlockBehaviour.Properties.copy(Blocks.ENDER_CHEST).noOcclusion().sound(SoundType.COPPER).strength(5F)));
+    public static final RegistryObject<Block> FIRE_DOOR = registerBlock("fire_door",
+            () -> new FireDoorBlock(BlockBehaviour.Properties.copy(Blocks.IRON_DOOR).noOcclusion().sound(SoundType.COPPER)));
+
     public static final RegistryObject<Block> HEARTH = registerBlock("hearth",
             () -> new HearthBlock(BlockBehaviour.Properties.copy(Blocks.LANTERN)
                     .mapColor(MapColor.COLOR_GRAY).sound(SoundType.LANTERN).noOcclusion().lightLevel(state -> 0)));
@@ -451,7 +455,6 @@ public class BlockRegistry {
             () -> new DarknessBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLACK).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
                     .noOcclusion()));
-
     public static final RegistryObject<Block> GREAT_DOOR_SHAPE = BLOCKS.register("great_door_shape",
             () -> new GreatDoorShapeBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.NONE).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)

@@ -22,6 +22,8 @@ public class CapabilityRegistry {
     });
     public static final Capability<CheshireChestInventory> CHESHIRE_CHEST = CapabilityManager.get(new CapabilityToken<>() {
     });
+    public static final Capability<FireDoorsCapability> FIRE_DOORS = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event)
@@ -31,5 +33,6 @@ public class CapabilityRegistry {
         event.register(ScreenAnimationCapability.class);
         event.register(GreatDoorCapability.class);
         event.register(CheshireChestCapability.class);
+        event.register(FireDoorsCapability.class);
     }
 }
