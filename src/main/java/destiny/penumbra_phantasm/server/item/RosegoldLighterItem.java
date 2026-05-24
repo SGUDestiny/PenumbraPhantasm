@@ -139,7 +139,7 @@ public class RosegoldLighterItem extends Item {
             level.setBlock(clickedPos, clickedState.setValue(BlockStateProperties.LIT, true), 11);
             level.gameEvent(player, GameEvent.BLOCK_CHANGE, clickedPos);
 
-            if (!level.isClientSide()) {
+            if (!level.isClientSide() && !player.isCreative()) {
                 itemStack.getOrCreateTag().putInt(USES, uses - 1);
             }
 
