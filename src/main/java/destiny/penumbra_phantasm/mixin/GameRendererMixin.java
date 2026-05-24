@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.mixin;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexSorting;
+import destiny.penumbra_phantasm.client.render.FountainHueShiftRenderer;
 import destiny.penumbra_phantasm.client.render.FountainOpeningPosterizeRenderer;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
@@ -28,6 +29,7 @@ public class GameRendererMixin {
 
 		if (!minecraft.isPaused() && minecraft.level != null) {
 			FountainOpeningPosterizeRenderer.render(minecraft, (GameRenderer) (Object) this, partialTick);
+			FountainHueShiftRenderer.render(minecraft, (GameRenderer) (Object) this, partialTick);
 		}
 
 		if (minecraft.isPaused())

@@ -5,6 +5,7 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
@@ -34,5 +35,9 @@ public class FireDoorScreenButton extends Button {
         int textColor = 0xFFFFFF;
         guiGraphics.drawCenteredString(Minecraft.getInstance().font, this.getMessage(), this.getX() + this.width / 2,
                 this.getY() + (this.height - 8) / 2, textColor);
+    }
+
+    @Override
+    public void playDownSound(SoundManager pHandler) {
     }
 }

@@ -371,7 +371,7 @@ public class FountainRenderUtil {
 			float tintGreen = 1f + (middleGreen - 1f) * tintDelta;
 			float tintBlue = 1f + (middleBlue - 1f) * tintDelta;
 
-			RenderSystem.setShaderColor(tintRed, tintGreen, tintBlue, 1F);
+			// Global tint is now handled by FountainHueShiftRenderer, so setShaderColor is removed.
 			if (shaderInstance != null) {
 				shaderInstance.safeGetUniform("TintColor").set(
 						tintRed,
@@ -390,7 +390,7 @@ public class FountainRenderUtil {
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
 		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
-				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha);
+				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 		poseStack.popPose();
 
 		poseStack.pushPose();
@@ -399,19 +399,19 @@ public class FountainRenderUtil {
 		poseStack.scale(1.0f, 1.0f, 1.0f);
 		VertexConsumer bottomVertexConsumer = buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureBottom, imageDepth, depthWrite));
 		getMiddleModel().renderToBuffer(poseStack, bottomVertexConsumer,
-				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha);
+				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 		getMiddleModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomEdges)),
-				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha);
+				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 		poseStack.popPose();
 
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.74f, 0.5f);
 		poseStack.scale(1.0f, 1.0f, 1.0f);
 		renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureMiddle, imageDepth, depthWrite)),
-				middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, alpha,
+				middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.1f, middleUvOffset);
 		renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-				middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, alpha,
+				middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.1f, middleUvOffset);
 		poseStack.popPose();
 
@@ -420,10 +420,10 @@ public class FountainRenderUtil {
 		poseStack.scale(1.0f, 1.0f, 1.0f);
 		poseStack.scale(pulse, 1.0f, pulse);
 		renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureMiddle, imageDepth, depthWrite)),
-				backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, alpha,
+				backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.0f, middleUvOffset);
 		renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-				backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, alpha,
+				backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.0f, middleUvOffset);
 		poseStack.popPose();
 
@@ -432,10 +432,10 @@ public class FountainRenderUtil {
 		poseStack.scale(1.0f, 1.0f, 1.0f);
 		poseStack.scale(pulse_front, 1.0f, pulse_front);
 		renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureMiddle, imageDepth, depthWrite)),
-				frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha,
+				frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.2f, middleUvOffset);
 		renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-				frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha,
+				frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.2f, middleUvOffset);
 		poseStack.popPose();
 	}
@@ -556,7 +556,7 @@ public class FountainRenderUtil {
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
 		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureCrack)),
-				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha);
+				LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 		poseStack.popPose();
 
 		if (fountain.sealingTick < DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY) {
@@ -566,9 +566,9 @@ public class FountainRenderUtil {
 			poseStack.scale(1.0f, 1.0f, 1.0f);
 			VertexConsumer bottomVertexConsumer = buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureBottom, imageDepth, depthWrite));
 			getMiddleModel().renderToBuffer(poseStack, bottomVertexConsumer,
-					LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha);
+					LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 			getMiddleModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypes.fountain(textureBottomEdges)),
-					LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha);
+					LightTexture.FULL_BRIGHT, overlay, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 			poseStack.popPose();
 		}
 
@@ -681,10 +681,10 @@ public class FountainRenderUtil {
 		poseStack.scale(1.0f, 1.0f, 1.0f);
 		if (fountain.sealingTick < DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY) {
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureMiddle, imageDepth, depthWrite)),
-					middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, alpha,
+					middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.1f, middleUvOffset);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-					middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getGreen() / 255f, alpha,
+					middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.1f, middleUvOffset);
 		}
 		poseStack.popPose();
@@ -695,10 +695,10 @@ public class FountainRenderUtil {
 		poseStack.scale(pulse, 1.0f, pulse);
 		if (fountain.sealingTick < DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY) {
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureMiddle, imageDepth, depthWrite)),
-					backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, alpha,
+					backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.0f, middleUvOffset);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-					backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getGreen() / 255f, alpha,
+					backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.0f, middleUvOffset);
 		}
 		poseStack.popPose();
@@ -709,10 +709,10 @@ public class FountainRenderUtil {
 		poseStack.scale(pulseFront, 1.0f, pulseFront);
 		if (fountain.sealingTick < DarkFountain.SEAL_DURATION + DarkFountain.SEAL_FLASH_DELAY) {
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountainMaskedPortal(textureMiddle, imageDepth, depthWrite)),
-					frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha,
+					frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.2f, middleUvOffset);
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypes.fountain(textureMiddleEdges)),
-					frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getGreen() / 255f, alpha,
+					frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.2f, middleUvOffset);
 		}
 		poseStack.popPose();

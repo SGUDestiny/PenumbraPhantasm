@@ -423,6 +423,39 @@ public class DarkWorldUtil
 				&& !g.isDestinationDarkWorld;
 	}
 
+	public static boolean isLightDoorValidForFountain(ServerLevel darkLevel, BlockPos lightDoorAnyPart, ResourceKey<Level> lightDimension) {
+		if (lightDoorAnyPart == null || lightDimension == null) return false;
+
+		BlockPos darkFountainPos = findDarkFountainAnchor(darkLevel);
+		if (darkFountainPos == null) return false;
+
+		DarkFountain darkFountain = darkLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).map(cap -> cap.darkFountains.get(darkFountainPos)).orElse(null);
+		if (darkFountain == null) return false;
+
+		ResourceKey<Level> lightFountainDim = darkFountain.destinationDimension;
+		BlockPos lightFountainPos = darkFountain.destinationPos;
+
+		if (!lightFountainDim.equals(lightDimension)) return false;
+
+		ServerLevel lightLevel = darkLevel.getServer().getLevel(lightFountainDim);
+		if (lightLevel == null) return false;
+
+		DarkFountain lightFountain = lightLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
+				.map(cap -> cap.darkFountains.get(lightFountainPos)).orElse(null);
+		if (lightFountain == null) return false;
+
+		BlockPos canonicalLower = canonicalLowerDoorFoot(lightLevel, lightDoorAnyPart);
+
+		for (DarkRoom room : lightFountain.rooms) {
+			if (room.isDissipating()) continue;
+			if (room.getOutsideDoors().containsKey(canonicalLower) ||
+					room.getSharedDoors().containsKey(canonicalLower)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private static boolean tryBindOutsideDoorsForUnlinked(ServerLevel darkLevel, GreatDoor door, ServerLevel lightLevel, DarkFountain fountain) {
 		for (DarkRoom room : fountain.rooms) {
 			for (Map.Entry<BlockPos, DarkRoom.OutsideDoorExit> e : room.getOutsideDoors().entrySet()) {

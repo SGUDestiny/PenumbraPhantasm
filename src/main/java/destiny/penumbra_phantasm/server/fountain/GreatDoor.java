@@ -108,6 +108,12 @@ public class GreatDoor {
             boolean openBefore = isOpen;
             refreshOpenFromLinkedLightDoor(serverLevel);
 
+            if (!isDestinationDarkWorld && lightDoorPos != null && lightDoorDimension != null) {
+                if (!DarkWorldUtil.isLightDoorValidForFountain(serverLevel, lightDoorPos, lightDoorDimension)) {
+                    isOpen = false;
+                }
+            }
+
             if (openBefore != isOpen) {
                 serverLevel.playSound(null, greatDoorPos.getX() + 0.5, greatDoorPos.getY() + 0.5, greatDoorPos.getZ() + 0.5,
                         SoundRegistry.GREAT_DOOR.get(), SoundSource.BLOCKS, 1f, 1f);
