@@ -301,17 +301,18 @@
   "block.penumbra_phantasm.yellow_check": "Жёлтая фишка",
 
   "block.penumbra_phantasm.hearth": "Горнило",
+  "block.penumbra_phantasm.great_door_spawner": "Спавнер Великой двери",
+  "block.penumbra_phantasm.great_door_shape": "Великая дверь",
+  "block.penumbra_phantasm.fire_door": "Огненная дверь",
+  "block.penumbra_phantasm.cheshire_chest": "Чеширский сундук",
 
   "block.penumbra_phantasm.umbrastone_rosegold_ore": "Умбровая розовая золотая руда",
 
   "block.penumbra_phantasm.dark_marble_ivory_ore": "Тёмная мраморная руда слоновой кости",
   "block.penumbra_phantasm.scarlet_marble_ivory_ore": "Алая мраморная руда слоновой кости",
 
-  "block.penumbra_phantasm.great_door_spawner": "Спавнер Великой двери",
-  "block.penumbra_phantasm.great_door_shape": "Великая дверь",
   "block.penumbra_phantasm.rosegold_pillar": "Колонна из розового золота",
   "block.penumbra_phantasm.chiseled_rosegold": "Резное розовое золото",
-  "block.penumbra_phantasm.cheshire_chest": "Чеширский сундук",
 
   "block.penumbra_phantasm.rosegold_block": "Блок розового золота",
   "block.penumbra_phantasm.rosegold_stairs": "Ступеньки из розового золота",
@@ -413,7 +414,7 @@
   "tooltip.penumbra_phantasm.soul_hearth.determination": "РЕШИМОСТЬ: ",
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "ДОВЕРИЕ: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "ДУША ВНУТРИ ОТВЕРГАЕТ ВАС.",
-  "message.penumbra_phantasm.rosegold_lighter_fuel": "Топливо: ",
+  "tooltip.penumbra_phantasm.rosegold_lighter_fuel": "Топливо: ",
 
   "gui.penumbra_phantasm.dark_world_inventory_title": "ИНВЕНТАРЬ",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "КРАФТ",
@@ -446,6 +447,12 @@
   "message.penumbra_phantasm.great_door_cant_open_no_light_door": "Дверь не поддаётся... (Нет непривязанных дверей в комнатах с фонтаном)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain": "Дверь не поддаётся... (У этого тёмного мира нет фонтана)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain_destination": "Дверь не поддаётся... (У целевого тёмного мира нет фонтана)",
+  "message.penumbra_phantasm.cheshire_chest_not_in_dark_world": "Крышка не поддаётся... (Сундук не в тёмном мире)",
+  "message.penumbra_phantasm.fire_door_link": "Огненная дверь была сохранена в список локаций",
+  "message.penumbra_phantasm.fire_door_unlink": "Огненная дверь была убрана из списка локаций",
+  "message.penumbra_phantasm.fire_door_limit_reached": "Достигнут лимит огненных дверей в этом тёмном мире...",
+  "message.penumbra_phantasm.fire_door_not_enough_doors": "Некуда телепортироваться...",
+  "message.penumbra_phantasm.fire_door_not_in_dark_world": "Ручка не поддаётся... (Дверь не в тёмном мире)",
 
   "container.penumbra_phantasm.umbrastone_furnace": "Печь из умбрия",
 
