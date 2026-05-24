@@ -51,7 +51,11 @@ public class GreatDoorShapeBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return pState.getValue(IS_DOOR_OPEN) ? Shapes.empty() : Shapes.block();
+        if (pContext == CollisionContext.empty()) {
+            return Shapes.block();
+        } else {
+            return pState.getValue(IS_DOOR_OPEN) ? Shapes.empty() : Shapes.block();
+        }
     }
 
     @Override
