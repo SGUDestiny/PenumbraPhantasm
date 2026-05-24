@@ -43,6 +43,8 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.Map;
 
+import static org.lwjgl.opengl.GL32C.GL_DEPTH_CLAMP;
+
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEvents {
 	private static final BufferBuilder FOUNTAIN_BUFFER = new BufferBuilder(65536);
@@ -68,7 +70,7 @@ public class ClientEvents {
 			PoseStack pose = event.getPoseStack();
 			MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(FOUNTAIN_BUFFER);
 
-			GL11.glEnable(0x864F);
+			GL11.glEnable(GL_DEPTH_CLAMP);
 
 			if (renderSkyPass && CardKingdomDimensionEffects.isCardKingdomDarkWorld(level)) {
 				CardKingdomDimensionEffects cardKingdomDimensionEffects = CardKingdomDimensionEffects.getInstance();
@@ -176,7 +178,7 @@ public class ClientEvents {
 
 			buffer.endBatch();
 
-			GL11.glDisable(0x864F);
+			GL11.glDisable(GL_DEPTH_CLAMP);
 		}
 	}
 

@@ -413,7 +413,7 @@
   "tooltip.penumbra_phantasm.soul_hearth.determination": "DETERMINATION: ",
   "tooltip.penumbra_phantasm.soul_hearth.trust_level": "TRUST: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "THE SOUL WITHIN REJECTS YOU.",
-  "message.penumbra_phantasm.rosegold_lighter_fuel": "Fuel: ",
+  "tooltip.penumbra_phantasm.rosegold_lighter_fuel": "Fuel: ",
 
   "gui.penumbra_phantasm.dark_world_inventory_title": "INVENTORY",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "CRAFT",
@@ -447,6 +447,11 @@
   "message.penumbra_phantasm.great_door_cant_open_no_fountain": "But the door wouldn't budge... (This dark world doesn't have a fountain)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain_destination": "But the door wouldn't budge... (Destination dark world doesn't have a fountain)",
   "message.penumbra_phantasm.cheshire_chest_not_in_dark_world": "But the lid wouldn't budge... (Not in a dark world)",
+  "message.penumbra_phantasm.fire_door_link": "Saved this Fire Door to your locations",
+  "message.penumbra_phantasm.fire_door_unlink": "Removed this fire door from your locations",
+  "message.penumbra_phantasm.fire_door_limit_reached": "Can't save any more fire doors in this dark world...",
+  "message.penumbra_phantasm.fire_door_not_enough_doors": "Nowhere to warp to...",
+  "message.penumbra_phantasm.fire_door_not_in_dark_world": "But the handle wouldn't budge... (Not in a dark world)",
 
   "container.penumbra_phantasm.umbrastone_furnace": "Umbrastone Furnace",
 

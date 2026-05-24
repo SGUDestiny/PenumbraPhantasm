@@ -48,7 +48,6 @@ public class DarknessBlockEntity extends BlockEntity {
                 darkness.removalEarliestGameTime = level.getGameTime() + 200L;
             }
             if (level.getGameTime() < darkness.removalEarliestGameTime) {
-                //Get light fountain capability
                 DarkFountainCapability fountainCapability = null;
                 LazyOptional<DarkFountainCapability> lazyOptional = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
                 if (lazyOptional.isPresent() && lazyOptional.resolve().isPresent())

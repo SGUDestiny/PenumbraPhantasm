@@ -55,6 +55,9 @@ public class SoundRegistry {
 
     public static RegistryObject<SoundEvent> CHESHIRE_CHEST_LAUGH = registerSoundEvent("cheshire_chest_laugh");
 
+    public static RegistryObject<SoundEvent> FIRE_DOOR_OPEN = registerSoundEvent("fire_door_open");
+    public static RegistryObject<SoundEvent> FIRE_DOOR_CLOSE = registerSoundEvent("fire_door_close");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));

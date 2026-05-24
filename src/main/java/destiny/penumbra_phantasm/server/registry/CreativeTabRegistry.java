@@ -35,6 +35,7 @@ public class CreativeTabRegistry {
 
                 output.accept(ItemRegistry.ITEM_MUSIC_MEDIUM_THE_HOLY.get());
 
+                output.accept(BlockRegistry.FIRE_DOOR.get());
                 output.accept(ItemRegistry.CHESHIRE_CHEST.get());
                 output.accept(BlockRegistry.GREAT_DOOR_SPAWNER.get());
             })

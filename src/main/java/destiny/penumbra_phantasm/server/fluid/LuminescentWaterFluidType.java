@@ -43,6 +43,14 @@ public class LuminescentWaterFluidType extends FluidType {
         return 0.0f;
     }
 
+    @Override
+    public double motionScale(Entity entity) {
+        if (entity.onGround()) {
+            return 0.0;
+        }
+        return 0.014D;
+    }
+
     public ResourceLocation getStillTexture() {
         return stillTexture;
     }

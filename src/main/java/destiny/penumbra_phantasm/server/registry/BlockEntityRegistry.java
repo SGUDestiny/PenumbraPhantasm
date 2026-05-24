@@ -17,4 +17,5 @@ public class BlockEntityRegistry {
     public static final RegistryObject<BlockEntityType<UmbrastoneFurnaceBlockEntity>> UMBRASTONE_FURNACE_BLOCK_ENTITY = BLOCK_ENTITIES.register("umbrastone_furnace", () -> BlockEntityType.Builder.of(UmbrastoneFurnaceBlockEntity::new, BlockRegistry.UMBRASTONE_FURNACE.get()).build(null));
     public static final RegistryObject<BlockEntityType<DustBlockEntity>> DUST_BLOCK_ENTITY = BLOCK_ENTITIES.register("dust_block", () -> BlockEntityType.Builder.of(DustBlockEntity::new, BlockRegistry.DUST_BLOCK.get()).build(null));
     public static final RegistryObject<BlockEntityType<CheshireChestBlockEntity>> CHESHIRE_CHEST_BLOCK_ENTITY = BLOCK_ENTITIES.register("cheshire_chest", () -> BlockEntityType.Builder.of(CheshireChestBlockEntity::new, BlockRegistry.CHESHIRE_CHEST.get()).build(null));
+    public static final RegistryObject<BlockEntityType<FireDoorBlockEntity>> FIRE_DOOR_BLOCK_ENTITY = BLOCK_ENTITIES.register("fire_door", () -> BlockEntityType.Builder.of(FireDoorBlockEntity::new, BlockRegistry.FIRE_DOOR.get()).build(null));
 }

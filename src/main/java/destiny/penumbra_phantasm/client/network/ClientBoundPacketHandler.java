@@ -1,9 +1,10 @@
 package destiny.penumbra_phantasm.client.network;
 
-import com.zigythebird.playeranimatorapi.API.PlayerAnimAPIClient;
-import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.screen.DarknessFallScreen;
+import destiny.penumbra_phantasm.client.render.screen.FireDoorScreen;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
+import destiny.penumbra_phantasm.server.fountain.FireDoor;
+import destiny.penumbra_phantasm.server.network.ServerBoundFireDoorPacket;
 import destiny.penumbra_phantasm.server.network.ServerBoundIntroPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
@@ -22,8 +23,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.registries.ForgeRegistries;
+
+import java.util.List;
 
 public class ClientBoundPacketHandler
 {
@@ -34,6 +36,15 @@ public class ClientBoundPacketHandler
 		minecraft.setScreen(new IntroScreen(() -> {
 			minecraft.setScreen(null);
 			PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundIntroPacket(pos, dim));
+		}));
+	}
+
+	public static void openFireDoorScreen(List<FireDoor> fireDoors, ResourceKey<Level> originDarkWorld, BlockPos originPos) {
+		Minecraft minecraft = Minecraft.getInstance();
+		minecraft.setScreen(new FireDoorScreen(fireDoors, originDarkWorld, originPos, chosenDoor -> {
+			minecraft.setScreen(null);
+			PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundFireDoorPacket(chosenDoor.darkWorld(), chosenDoor.doorPos(), chosenDoor.facingAngle(),
+					originDarkWorld, originPos));
 		}));
 	}
 

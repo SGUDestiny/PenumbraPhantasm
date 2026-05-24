@@ -252,5 +252,17 @@
     [
       "penumbra_phantasm:cheshire_chest_laugh"
     ]
+  },
+  "fire_door_open": {
+    "sounds":
+    [
+      "penumbra_phantasm:fire_door_open"
+    ]
+  },
+  "fire_door_close": {
+    "sounds":
+    [
+      "penumbra_phantasm:fire_door_close"
+    ]
   }
 }
