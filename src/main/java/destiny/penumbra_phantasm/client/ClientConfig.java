@@ -10,11 +10,6 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class ClientConfig {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
-    private static final ForgeConfigSpec.BooleanValue ALTERNATE_DARK_FOUNTAIN_MUSIC = BUILDER
-            .comment("Should an alternate version of THE HOLY be played instead? (Has extended Penumbra Phantasm motif)")
-            .comment("Default: true")
-            .define("alternate_dark_fountain_music", true);
-
     private static final ForgeConfigSpec.BooleanValue ALWAYS_SHOW_LOCATION_TITLES = BUILDER
             .comment("Should the location titles appear every time the location is changed and not only once per world login?")
             .comment("Default: false")
@@ -42,7 +37,6 @@ public class ClientConfig {
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
-    public static boolean alternateDarkFountainMusic;
     public static boolean always_show_location_titles;
     public static double fountainLodDistance;
     public static boolean biomeMusicLoop;
@@ -54,7 +48,6 @@ public class ClientConfig {
         if (event.getConfig().getSpec() != SPEC) {
             return;
         }
-        alternateDarkFountainMusic = ALTERNATE_DARK_FOUNTAIN_MUSIC.get();
         always_show_location_titles = ALWAYS_SHOW_LOCATION_TITLES.get();
         fountainLodDistance = FOUNTAIN_LOD_DISTANCE.get();
         biomeMusicLoop = BIOME_MUSIC_LOOP.get();

@@ -7,9 +7,13 @@
     "bottom": "penumbra_phantasm:block/cliffrock_1",
     "side": "penumbra_phantasm:block/cliffrock_path_side"
   },
-  "connections": {
-    "default": {
+  "connections": [
+    {
       "type": "is_same_block"
+    },
+    {
+      "type": "match_block",
+      "block": "penumbra_phantasm:cliffrock_slide"
     }
-  }
+  ]
 }

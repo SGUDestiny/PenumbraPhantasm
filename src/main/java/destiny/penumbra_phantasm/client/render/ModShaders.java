@@ -20,6 +20,7 @@ public class ModShaders {
 
     public static ShaderInstance FOUNTAIN_MASKED;
     public static ShaderInstance OPENING_POSTERIZE;
+    public static ShaderInstance HUE_SHIFT;
 
     @SubscribeEvent
     public static void registerShaders(RegisterShadersEvent event) throws IOException {
@@ -40,6 +41,15 @@ public class ModShaders {
                         DefaultVertexFormat.POSITION_TEX
                 ),
                 s -> OPENING_POSTERIZE = s
+        );
+
+        event.registerShader(
+                new ShaderInstance(
+                        event.getResourceProvider(),
+                        new ResourceLocation("penumbra_phantasm", "hue_shift"),
+                        DefaultVertexFormat.POSITION_TEX
+                ),
+                s -> HUE_SHIFT = s
         );
 
     }

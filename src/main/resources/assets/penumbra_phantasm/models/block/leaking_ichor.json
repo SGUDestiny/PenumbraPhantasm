@@ -13,11 +13,14 @@
   },
   "connections": [
     {
-       "type": "is_same_block"
+      "type": "is_same_block"
     },
     {
-       "type": "match_block",
-       "block": "penumbra_phantasm:weeping_eye"
+      "type": "match_state",
+      "block": "penumbra_phantasm:weeping_eye",
+      "properties": {
+        "leaking": "2"
+      }
     }
   ]
 }

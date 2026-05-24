@@ -89,6 +89,11 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
             return InteractionResult.FAIL;
         }
 
+        if (!DarkWorldUtil.isLightDoorValidForFountain(serverLevel, greatDoor.lightDoorPos, greatDoor.lightDoorDimension)) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.great_door_cant_open_not_fountain_door"), true);
+            return InteractionResult.FAIL;
+        }
+
         if (!GreatDoor.toggleLinkedLightDoor(serverLevel, greatDoor, player)) {
             return InteractionResult.FAIL;
         }
@@ -96,7 +101,6 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
         serverLevel.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
                 SoundRegistry.GREAT_DOOR.get(), SoundSource.BLOCKS, 1f, 1f);
 
-        //greatDoor.broadcastSync(serverLevel);
         markUpdated();
 
         return InteractionResult.SUCCESS;

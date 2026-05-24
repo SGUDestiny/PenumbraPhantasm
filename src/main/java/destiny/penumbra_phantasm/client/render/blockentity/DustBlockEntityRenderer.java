@@ -27,6 +27,7 @@ public class DustBlockEntityRenderer implements BlockEntityRenderer<DustBlockEnt
         if (level == null) return;
 
         BlockState state = blockEntity.getBlockState();
+        RandomSource localRandom = RandomSource.create(blockEntity.getBlockPos().asLong());
 
         if (state.hasProperty(ANIMATION_OFFSET) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
             int offset = state.getValue(ANIMATION_OFFSET);
@@ -60,7 +61,7 @@ public class DustBlockEntityRenderer implements BlockEntityRenderer<DustBlockEnt
                 BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(state);
                 for (net.minecraft.client.renderer.RenderType rt : model.getRenderTypes(state, RandomSource.create(42), ModelData.EMPTY)) {
                     Minecraft.getInstance().getBlockRenderer().renderBatched(state, blockEntity.getBlockPos(), level, poseStack,
-                            bufferSource.getBuffer(rt), true, level.getRandom(), ModelData.EMPTY, rt);
+                            bufferSource.getBuffer(rt), true, localRandom, ModelData.EMPTY, rt);
                 }
 
                 poseStack.popPose();
@@ -73,7 +74,7 @@ public class DustBlockEntityRenderer implements BlockEntityRenderer<DustBlockEnt
         BakedModel model = Minecraft.getInstance().getBlockRenderer().getBlockModel(state);
         for (net.minecraft.client.renderer.RenderType rt : model.getRenderTypes(state, RandomSource.create(42), ModelData.EMPTY)) {
             Minecraft.getInstance().getBlockRenderer().renderBatched(state, blockEntity.getBlockPos(), level, poseStack,
-                    bufferSource.getBuffer(rt), true, level.getRandom(), ModelData.EMPTY, rt);
+                    bufferSource.getBuffer(rt), true, localRandom, ModelData.EMPTY, rt);
         }
     }
 

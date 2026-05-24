@@ -81,7 +81,7 @@ public class ServerBoundFireDoorPacket {
                     if (destState.getBlock() instanceof FireDoorBlock && !destState.getValue(BlockStateProperties.OPEN)) {
                         if (targetLevel.getBlockEntity(doorPos) instanceof FireDoorBlockEntity fireDoor) {
                             fireDoor.setDoorState(targetLevel, doorPos, true);
-                            fireDoor.doorDelay = 40;
+                            fireDoor.doorDelay = 20;
                             fireDoor.setChanged();
                         }
                     }
