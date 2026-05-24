@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -67,14 +68,13 @@ public class CheshireChestBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player,
-                                 InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
 
         if (!DarkWorldUtil.isDarkWorld(level)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.cheshire_chest_not_in_dark_world"), true);
 
-            return InteractionResult.FAIL;
+            return InteractionResult.SUCCESS;
         }
 
         player.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(cheshireInv -> {

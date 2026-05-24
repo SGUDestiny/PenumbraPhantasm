@@ -43,6 +43,7 @@ public class ForgeEvents {
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "soul"), new GenericProvider<>(CapabilityRegistry.SOUL, new SoulCapability()));
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "screen_animation"), new GenericProvider<>(CapabilityRegistry.SCREEN_ANIMATION, new ScreenAnimationCapability()));
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "cheshire_chest"), new CheshireChestCapability());
+            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "fire_doors"), new GenericProvider<>(CapabilityRegistry.FIRE_DOORS, new FireDoorsCapability()));
         }
     }
 

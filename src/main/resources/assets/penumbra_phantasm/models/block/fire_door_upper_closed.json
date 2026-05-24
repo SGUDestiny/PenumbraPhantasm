@@ -1,0 +1,67 @@
+{
+	"format_version": "1.21.11",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"render_type": "minecraft:cutout",
+	"texture_size": [128, 128],
+	"textures": {
+		"0": "penumbra_phantasm:block/fire_door",
+		"particle": "penumbra_phantasm:block/fire_door"
+	},
+	"elements": [
+		{
+			"from": [16, 0, 13],
+			"to": [18, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, -2, 14]},
+			"faces": {
+				"north": {"uv": [2.875, 0.625, 2.625, 2.625], "texture": "#0"},
+				"east": {"uv": [3.25, 0.625, 2.875, 2.625], "texture": "#0"},
+				"south": {"uv": [3.5, 0.625, 3.25, 2.625], "texture": "#0"}
+			}
+		},
+		{
+			"from": [-2, 0, 13],
+			"to": [0, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, -2, 14]},
+			"faces": {
+				"north": {"uv": [2.625, 0.625, 2.875, 2.625], "texture": "#0"},
+				"south": {"uv": [3.25, 0.625, 3.5, 2.625], "texture": "#0"},
+				"west": {"uv": [2.875, 0.625, 3.25, 2.625], "texture": "#0"}
+			}
+		},
+		{
+			"from": [-2, 16, 13],
+			"to": [18, 18, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, -2, 14]},
+			"faces": {
+				"north": {"uv": [0.375, 0.375, 2.875, 0.625], "texture": "#0"},
+				"east": {"uv": [0, 0.375, 0.375, 0.625], "texture": "#0"},
+				"south": {"uv": [3.25, 0.375, 5.75, 0.625], "texture": "#0"},
+				"west": {"uv": [2.875, 0.375, 3.25, 0.625], "texture": "#0"},
+				"up": {"uv": [2.875, 0.375, 0.375, 0], "texture": "#0"}
+			}
+		},
+		{
+			"from": [0, 0, 13],
+			"to": [16, 16, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, -2, 14]},
+			"faces": {
+				"north": {"uv": [0.625, 0.625, 2.625, 2.625], "texture": "#0"},
+				"south": {"uv": [3.5, 0.625, 5.5, 2.625], "texture": "#0"}
+			}
+		},
+		{
+			"name": "door",
+			"from": [0, 0, 13],
+			"to": [16, 16, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, -2, 14]},
+			"faces": {
+				"north": {"uv": [0.625, 0.625, 2.625, 2.625], "texture": "#0"}
+			}
+		}
+	]
+}

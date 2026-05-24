@@ -1,0 +1,41 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"render_type": "minecraft:cutout",
+	"texture_size": [128, 128],
+	"textures": {
+		"0": "penumbra_phantasm:block/fire_door",
+		"particle": "penumbra_phantasm:block/fire_door"
+	},
+	"elements": [
+		{
+			"from": [-2, 0, 13],
+			"to": [18, 18, 16],
+			"rotation": {"angle": 0, "axis": "y", "origin": [15, -2, 14]},
+			"faces": {
+				"north": {"uv": [6.75, 0.375, 9.25, 2.625], "texture": "#0"},
+				"east": {"uv": [6.375, 0.375, 6.75, 2.625], "texture": "#0"},
+				"south": {"uv": [9.625, 0.375, 12.125, 2.625], "texture": "#0"},
+				"west": {"uv": [9.25, 0.375, 9.625, 2.625], "texture": "#0"},
+				"up": {"uv": [9.25, 0.375, 6.75, 0], "texture": "#0"}
+			}
+		},
+		{
+			"name": "door",
+			"from": [13, 0, 0],
+			"to": [16, 16, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"rotation": {"angle": 0, "axis": "y", "origin": [14.5, 8, 15]},
+			"faces": {
+				"north": {"uv": [2.375, 5, 2.75, 7], "texture": "#0"},
+				"east": {"uv": [0.375, 5, 2.375, 7], "texture": "#0"},
+				"west": {"uv": [2.75, 5, 4.75, 7], "texture": "#0"},
+				"up": {"uv": [2.375, 5, 0.375, 4.625], "rotation": 90, "texture": "#0"}
+			}
+		}
+	]
+}

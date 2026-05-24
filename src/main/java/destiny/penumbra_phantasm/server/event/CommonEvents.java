@@ -247,6 +247,12 @@ public class CommonEvents {
             });
         });
 
+        original.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(cap -> {
+            player.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(copyCap -> {
+                copyCap.sync(cap);
+            });
+        });
+
         original.invalidateCaps();
     }
 
