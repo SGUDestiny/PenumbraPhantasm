@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
@@ -42,25 +43,31 @@ public final class FountainHueShiftRenderer {
         }
 
         ClientLevel level = minecraft.level;
-
-        if (!DarkWorldUtil.isDarkWorld(level)) return;
-
         Vec3 camPos = gameRenderer.getMainCamera().getPosition();
         DarkFountain fountain = getClosestFountain(level, camPos);
         if (fountain == null) {
             return;
         }
 
+        if (!DarkWorldUtil.isDarkWorld(level)) return;
+
         float distance = (float) Math.sqrt(camPos.distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos())));
         float fadeRange = FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_START - FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_END;
-        float fade = (FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_START - distance) / fadeRange;
-        fade = Math.max(0.0F, Math.min(1.0F, fade));
-        if (fade <= 0.0F) {
+        float distanceFade = (FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_START - distance) / fadeRange;
+        distanceFade = Math.max(0.0F, Math.min(1.0F, distanceFade));
+
+        float sealingFade = 1.0F;
+        if (fountain.sealingTick >= 0) {
+            float sealDelta = Mth.clamp((fountain.sealingTick + partialTick) / (float) DarkFountain.SEAL_DURATION, 0.0F, 1.0F);
+            sealingFade = 1.0F - sealDelta;
+        }
+
+        float finalStrength = distanceFade * sealingFade;
+        if (finalStrength <= 0.0F) {
             return;
         }
 
         float fountainHue = ((level.getGameTime() + partialTick) * 0.003F) % 1.0F;
-        float strengthUniform = fade;
 
         RenderTarget main = minecraft.getMainRenderTarget();
         ensureScratch(main);
@@ -105,7 +112,7 @@ public final class FountainHueShiftRenderer {
 
             Uniform uStrength = shader.getUniform("Strength");
             if (uStrength != null) {
-                uStrength.set(strengthUniform);
+                uStrength.set(finalStrength);
             }
 
             shader.apply();

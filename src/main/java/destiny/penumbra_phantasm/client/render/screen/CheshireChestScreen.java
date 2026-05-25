@@ -1,18 +1,25 @@
 package destiny.penumbra_phantasm.client.render.screen;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.menu.CheshireChestMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
 public class CheshireChestScreen extends AbstractContainerScreen<CheshireChestMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/cheshire_chest.png");
+    private static final ResourceLocation TEXTURE_GLOW = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/cheshire_chest_glow.png");
+
+    public static final int GLOW_TICKER_UPPER_BOUND = 5 * 20;
 
     public Component inventoryLabel = Component.translatable("gui.penumbra_phantasm.dark_world_inventory_title");
     public Component chestLabel = Component.translatable("gui.penumbra_phantasm.cheshire_chest");
+
+    private int glowTicker = 0;
 
     public CheshireChestScreen(CheshireChestMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
@@ -28,6 +35,16 @@ public class CheshireChestScreen extends AbstractContainerScreen<CheshireChestMe
     protected void init() {
         this.leftPos = (this.width - this.imageWidth) / 2;
         this.topPos = (this.height - this.imageHeight) / 2;
+        this.glowTicker = this.minecraft.level.random.nextInt(0, 21);
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        this.glowTicker++;
+        if (this.glowTicker >= GLOW_TICKER_UPPER_BOUND) {
+            this.glowTicker = 0;
+        }
     }
 
     @Override
@@ -39,7 +56,11 @@ public class CheshireChestScreen extends AbstractContainerScreen<CheshireChestMe
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+        float t = (float) this.glowTicker / (float) GLOW_TICKER_UPPER_BOUND;
+        float glow = Mth.sin(t * Mth.PI);
+
         graphics.blit(TEXTURE, this.leftPos - 6, this.topPos + 4, 0, 0, this.imageWidth, this.imageHeight);
+        RenderBlitUtil.blitGui(graphics, TEXTURE_GLOW, this.leftPos - 6, this.topPos + 4, 0, 0, this.imageWidth, this.imageHeight, glow, glow, glow, 1);
     }
 
     @Override

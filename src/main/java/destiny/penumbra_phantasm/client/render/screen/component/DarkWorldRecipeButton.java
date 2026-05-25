@@ -25,7 +25,7 @@ public class DarkWorldRecipeButton extends AbstractWidget {
     private static final float ANIMATION_TIME = 15.0F;
     private static final int BACKGROUND_SIZE = 25;
     public static final int TICKS_TO_SWAP = 30;
-    private static final Component MORE_RECIPES_TOOLTIP = Component.translatable("gui.recipebook.moreRecipes");
+    private static final Component MORE_RECIPES_TOOLTIP = Component.translatable("container.penumbra_phantasm.dark_world_inventory.recipe_book.more_recipes");
     private RecipeBookMenu<?> menu;
     private RecipeBook book;
     private RecipeCollection collection;
@@ -115,11 +115,11 @@ public class DarkWorldRecipeButton extends AbstractWidget {
 
     public Recipe<?> getRecipe() {
         List<Recipe<?>> $$0 = this.getOrderedRecipes();
-        return (Recipe)$$0.get(this.currentIndex);
+        return $$0.get(this.currentIndex);
     }
 
     public List<Component> getTooltipText() {
-        ItemStack $$0 = ((Recipe)this.getOrderedRecipes().get(this.currentIndex)).getResultItem(this.collection.registryAccess());
+        ItemStack $$0 = (this.getOrderedRecipes().get(this.currentIndex)).getResultItem(this.collection.registryAccess());
         List<Component> $$1 = Lists.newArrayList(Screen.getTooltipFromItem(Minecraft.getInstance(), $$0));
         if (this.collection.getRecipes(this.book.isFiltering(this.menu)).size() > 1) {
             $$1.add(MORE_RECIPES_TOOLTIP);
@@ -129,12 +129,12 @@ public class DarkWorldRecipeButton extends AbstractWidget {
     }
 
     public void updateWidgetNarration(NarrationElementOutput pNarrationElementOutput) {
-        ItemStack $$1 = ((Recipe)this.getOrderedRecipes().get(this.currentIndex)).getResultItem(this.collection.registryAccess());
-        pNarrationElementOutput.add(NarratedElementType.TITLE, Component.translatable("narration.recipe", new Object[]{$$1.getHoverName()}));
+        ItemStack $$1 = (this.getOrderedRecipes().get(this.currentIndex)).getResultItem(this.collection.registryAccess());
+        pNarrationElementOutput.add(NarratedElementType.TITLE, Component.translatable("narration.penumbra_phantasm.dark_world_inventory.recipe", $$1.getHoverName()));
         if (this.collection.getRecipes(this.book.isFiltering(this.menu)).size() > 1) {
-            pNarrationElementOutput.add(NarratedElementType.USAGE, new Component[]{Component.translatable("narration.button.usage.hovered"), Component.translatable("narration.recipe.usage.more")});
+            pNarrationElementOutput.add(NarratedElementType.USAGE, Component.translatable("narration.penumbra_phantasm.dark_world_inventory.button.usage.hovered"), Component.translatable("narration.recipe.usage.more"));
         } else {
-            pNarrationElementOutput.add(NarratedElementType.USAGE, Component.translatable("narration.button.usage.hovered"));
+            pNarrationElementOutput.add(NarratedElementType.USAGE, Component.translatable("narration.penumbra_phantasm.dark_world_inventory.button.usage.hovered"));
         }
 
     }

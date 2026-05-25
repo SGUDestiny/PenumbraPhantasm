@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.client.render.screen.component;
 
 import com.google.common.collect.Lists;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.minecraft.ChatFormatting;
@@ -25,6 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundRecipeBookChangeSettingsPacket;
 import net.minecraft.recipebook.PlaceRecipe;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.RecipeBookMenu;
 import net.minecraft.world.inventory.RecipeBookType;
@@ -43,6 +45,9 @@ import java.util.Locale;
 @OnlyIn(Dist.CLIENT)
 public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements PlaceRecipe<Ingredient>, Renderable, GuiEventListener, NarratableEntry, RecipeShownListener {
     protected static final ResourceLocation RECIPE_BOOK_LOCATION = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/recipe_book.png");
+    protected static final ResourceLocation RECIPE_BOOK_GLOW_LOCATION = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/recipe_book_glow.png");
+    public static final int GLOW_TICKER_UPPER_BOUND = 5 * 20;
+
     private static final Component SEARCH_HINT;
     public static final int IMAGE_WIDTH = 147;
     public static final int IMAGE_HEIGHT = 166;
@@ -53,9 +58,9 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
     private int width;
     private int height;
     protected final GhostRecipe ghostRecipe = new GhostRecipe();
-    private final List<RecipeBookTabButton> tabButtons = Lists.newArrayList();
+    private final List<DarkWorldRecipeBookTabButton> tabButtons = Lists.newArrayList();
     @Nullable
-    private RecipeBookTabButton selectedTab;
+    private DarkWorldRecipeBookTabButton selectedTab;
     protected StateSwitchingButton filterButton;
     protected RecipeBookMenu<?> menu;
     protected Minecraft minecraft;
@@ -69,6 +74,8 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
     private boolean ignoreTextInput;
     private boolean visible;
     private boolean widthTooNarrow;
+
+    private int glowTicker = 0;
 
     public DarkWorldRecipeBookComponent() {
     }
@@ -87,7 +94,7 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
         if (this.visible) {
             this.initVisuals();
         }
-
+        this.glowTicker = pMinecraft.level.random.nextInt(0, 21);
     }
 
     @Override
@@ -113,15 +120,15 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
         this.tabButtons.clear();
 
         for (RecipeBookCategories recipebookcategories : this.menu.getRecipeBookCategories()) {
-            this.tabButtons.add(new RecipeBookTabButton(recipebookcategories));
+            this.tabButtons.add(new DarkWorldRecipeBookTabButton(recipebookcategories));
         }
 
         if (this.selectedTab != null) {
-            this.selectedTab = (RecipeBookTabButton) this.tabButtons.stream().filter((p_100329_) -> p_100329_.getCategory().equals(this.selectedTab.getCategory())).findFirst().orElse((RecipeBookTabButton) null);
+            this.selectedTab = (DarkWorldRecipeBookTabButton) this.tabButtons.stream().filter((p_100329_) -> p_100329_.getCategory().equals(this.selectedTab.getCategory())).findFirst().orElse((DarkWorldRecipeBookTabButton) null);
         }
 
         if (this.selectedTab == null) {
-            this.selectedTab = (RecipeBookTabButton) this.tabButtons.get(0);
+            this.selectedTab = (DarkWorldRecipeBookTabButton) this.tabButtons.get(0);
         }
 
         this.selectedTab.setStateTriggered(true);
@@ -215,7 +222,7 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
         int k = 27;
         int l = 0;
 
-        for (RecipeBookTabButton recipebooktabbutton : this.tabButtons) {
+        for (DarkWorldRecipeBookTabButton recipebooktabbutton : this.tabButtons) {
             RecipeBookCategories recipebookcategories = recipebooktabbutton.getCategory();
             if (recipebookcategories != RecipeBookCategories.CRAFTING_SEARCH && recipebookcategories != RecipeBookCategories.FURNACE_SEARCH) {
                 if (recipebooktabbutton.updateVisibility(this.book)) {
@@ -246,6 +253,10 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
             this.searchBox.tick();
         }
 
+        this.glowTicker++;
+        if (this.glowTicker >= GLOW_TICKER_UPPER_BOUND) {
+            this.glowTicker = 0;
+        }
     }
 
     private void updateStackedContents() {
@@ -258,14 +269,18 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
     @Override
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         if (this.isVisible()) {
+            float t = (float) this.glowTicker / (float) GLOW_TICKER_UPPER_BOUND;
+            float glow = Mth.sin(t * Mth.PI);
+
             pGuiGraphics.pose().pushPose();
             pGuiGraphics.pose().translate(0.0F, 0.0F, 100.0F);
-            int i = (this.width - 147) / 2 - this.xOffset;
-            int j = (this.height - 166) / 2;
-            pGuiGraphics.blit(RECIPE_BOOK_LOCATION, i, j, 1, 1, 147, 166);
+            int i = (this.width - 151) / 2 - (this.xOffset + 2);
+            int j = (this.height - 174) / 2;
+            pGuiGraphics.blit(RECIPE_BOOK_LOCATION, i, j, 0, 0, 151, 174);
+            RenderBlitUtil.blitGui(pGuiGraphics, RECIPE_BOOK_GLOW_LOCATION, i, j, 0, 0, 151, 174, glow, glow, glow, 1);
             this.searchBox.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
 
-            for (RecipeBookTabButton recipebooktabbutton : this.tabButtons) {
+            for (DarkWorldRecipeBookTabButton recipebooktabbutton : this.tabButtons) {
                 recipebooktabbutton.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
             }
 
@@ -345,7 +360,7 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
                     this.updateCollections(false);
                     return true;
                 } else {
-                    for (RecipeBookTabButton recipebooktabbutton : this.tabButtons) {
+                    for (DarkWorldRecipeBookTabButton recipebooktabbutton : this.tabButtons) {
                         if (recipebooktabbutton.mouseClicked(pMouseX, pMouseY, pButton)) {
                             if (this.selectedTab != recipebooktabbutton) {
                                 if (this.selectedTab != null) {
@@ -551,8 +566,8 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
     }
 
     static {
-        SEARCH_HINT = Component.translatable("gui.recipebook.search_hint").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
-        ONLY_CRAFTABLES_TOOLTIP = Component.translatable("gui.recipebook.toggleRecipes.craftable");
-        ALL_RECIPES_TOOLTIP = Component.translatable("gui.recipebook.toggleRecipes.all");
+        SEARCH_HINT = Component.translatable("container.penumbra_phantasm.dark_world_inventory.recipe_book.search_hint").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY);
+        ONLY_CRAFTABLES_TOOLTIP = Component.translatable("container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.craftable");
+        ALL_RECIPES_TOOLTIP = Component.translatable("container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.all");
     }
 }
