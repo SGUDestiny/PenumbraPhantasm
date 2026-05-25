@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.screen.component.DarkWorldRecipeBookComponent;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -12,13 +13,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
-import net.minecraft.client.gui.screens.recipebook.RecipeBookComponent;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -37,11 +38,14 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
     private static final ResourceLocation RECIPE_BUTTON_LOCATION = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/recipe_button.png");
     private static final int NARROW_SCREEN_WIDTH = 379;
     public static final ResourceLocation DARK_WORLD_INVENTORY_LOCATION = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/inventory.png");
+    public static final ResourceLocation DARK_WORLD_INVENTORY_GLOW_LOCATION = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/inventory_glow.png");
     private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_1 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_1.png");
     private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_2 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_2.png");
     private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_3 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_3.png");
     private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_4 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_4.png");
     private static final ResourceLocation EMPTY_EQUIPMENT_SLOT_5 = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/container/empty_equipment_slot_5.png");
+    public static final int GLOW_TICKER_UPPER_BOUND = 5 * 20;
+
     private float xMouse;
     private float yMouse;
     private final DarkWorldRecipeBookComponent recipeBookComponent = new DarkWorldRecipeBookComponent();
@@ -54,6 +58,8 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
     public Component equippedLabel = Component.translatable("gui.penumbra_phantasm.dark_world_inventory_equipped");
     public int equippedLabelX = 57;
     public int equippedLabelY = 4;
+
+    private int glowTicker = 0;
 
     public DarkWorldInventoryScreen(Player pPlayer) {
         super(new DarkWorldInventoryMenu(pPlayer.getInventory(), pPlayer), pPlayer.getInventory(), Component.translatable("container.crafting"));
@@ -73,6 +79,11 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
             this.minecraft.setScreen(new CreativeModeInventoryScreen(this.minecraft.player, this.minecraft.player.connection.enabledFeatures(), this.minecraft.options.operatorItemsTab().get()));
         } else {
             this.recipeBookComponent.tick();
+        }
+
+        this.glowTicker++;
+        if (this.glowTicker >= GLOW_TICKER_UPPER_BOUND) {
+            this.glowTicker = 0;
         }
     }
 
@@ -94,6 +105,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
             }));
             this.addWidget(this.recipeBookComponent);
             this.setInitialFocus(this.recipeBookComponent);
+            this.glowTicker = this.minecraft.level.random.nextInt(0, 21);
         }
     }
 
@@ -124,9 +136,12 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
 
     @Override
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
+        float t = (float) this.glowTicker / (float) GLOW_TICKER_UPPER_BOUND;
+        float glow = Mth.sin(t * Mth.PI);
         int i = this.leftPos;
         int j = this.topPos;
         pGuiGraphics.blit(DARK_WORLD_INVENTORY_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        RenderBlitUtil.blitGui(pGuiGraphics, DARK_WORLD_INVENTORY_GLOW_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight, glow, glow, glow, 1);
         renderEntityInInventoryFollowsMouse(pGuiGraphics, i + 57, j + 81, 30, (float)(i + 57) - this.xMouse, (float)(j + 81 - 50) - this.yMouse, this.minecraft.player);
     }
 

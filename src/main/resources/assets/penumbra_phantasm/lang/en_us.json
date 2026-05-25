@@ -456,6 +456,12 @@
   "message.penumbra_phantasm.fire_door_not_in_dark_world": "But the handle wouldn't budge... (Not in a dark world)",
 
   "container.penumbra_phantasm.umbrastone_furnace": "Umbrastone Furnace",
+  "container.penumbra_phantasm.dark_world_inventory.narration.button.usage.hover": "LEFT CLICK TO SWITCH TO %s",
+  "container.penumbra_phantasm.dark_world_inventory.narration.recipe": "RECIPE FOR %s",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.more_recipes": "RIGHT CLICK FOR MORE",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.search_hint": "SEARCH...",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.craftable": "SHOWING CRAFTABLE",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.all": "SHOWING ALL",
 
   "screen.penumbra_phantasm.intro.skip_notification": "PRESS [ESC] TO SKIP WITH A RANDOM CHOICE.",
   "screen.penumbra_phantasm.intro.skip_notification_post": "PRESS [ESC] TO SKIP WITH YOUR CHOICE.",
