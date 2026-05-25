@@ -65,7 +65,7 @@
 
   "block.penumbra_phantasm.umbrastone_pillar": "Pilier de Sombreroche",
   "block.penumbra_phantasm.chiseled_umbrastone": "Sombreroche sculptée",
-  "block.penumbra_phantasm.umbrastone_furnace": "Fourneau en Sombreroche",
+  "block.penumbra_phantasm.umbrastone_furnace": "Fourneau sombre",
 
   "block.penumbra_phantasm.polished_umbrastone": "Sombreroche polie",
   "block.penumbra_phantasm.polished_umbrastone_stairs": "Escalier en Sombreroche polie",
@@ -462,7 +462,13 @@
   "message.penumbra_phantasm.fire_door_not_in_dark_world": "Mais la poignée ne voulais pas bouger... (Pas dans un monde d'ombre)",
   
   
-  "container.penumbra_phantasm.umbrastone_furnace": "Fourneau en Sombreroche",
+  "container.penumbra_phantasm.umbrastone_furnace": "Fourneau sombre",
+    "container.penumbra_phantasm.dark_world_inventory.narration.button.usage.hover": "Faites un clic gauche pour activer %s",
+  "container.penumbra_phantasm.dark_world_inventory.narration.recipe": "Recette de %s",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.more_recipes": "Clic droit pour plus",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.search_hint": "Rechercher...",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.craftable": "Fabrications réalisables",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.all": "Toutes les recettes",
 
   
   "screen.penumbra_phantasm.intro.skip_notification": "APPUYEZ SUR [Échap] POUR PASSER AVEC UN CHOIX ALÉATOIRE.",
