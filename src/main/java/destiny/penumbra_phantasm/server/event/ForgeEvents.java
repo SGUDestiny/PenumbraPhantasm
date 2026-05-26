@@ -82,9 +82,13 @@ public class ForgeEvents {
         LivingEntity entity = event.getEntity();
         DamageSource source = event.getSource();
         Block block = entity.level().getBlockState(entity.blockPosition()).getBlock();
+        Block blockUp = entity.level().getBlockState(entity.blockPosition().above()).getBlock();
 
         if (source.equals(entity.damageSources().inWall())) {
             if (block instanceof DarknessBlock || block instanceof GreatDoorShapeBlock) {
+                event.setCanceled(true);
+            }
+            if (blockUp instanceof DarknessBlock || blockUp instanceof GreatDoorShapeBlock) {
                 event.setCanceled(true);
             }
         }
