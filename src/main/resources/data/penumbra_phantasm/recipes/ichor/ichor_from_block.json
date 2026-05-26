@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "penumbra_phantasm:ichor_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "penumbra_phantasm:ichor"
+  }
+}

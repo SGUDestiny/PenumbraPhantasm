@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "penumbra_phantasm:ivory_block"
+    },
+    {
+      "tag": "minecraft:pickaxes"
+    }
+  ],
+  "result": {
+    "count": 4,
+    "item": "penumbra_phantasm:ivory"
+  }
+}
