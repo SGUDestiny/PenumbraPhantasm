@@ -52,13 +52,11 @@ void main() {
     vec3 rgb = clamp(base.rgb, 0.0, 1.0);
     vec3 hsl = rgb2hsl(rgb);
 
-    // Force the hue to the target and saturate at least as much as the original tint (0.8)
     hsl.x = HueTarget;
     hsl.y = max(hsl.y, 0.8);
 
     vec3 shifted = hsl2rgb(hsl);
 
-    // Fade the effect by blending toward the original pixel
     fragColor.rgb = mix(base.rgb, shifted, Strength);
     fragColor.a = base.a;
 }
