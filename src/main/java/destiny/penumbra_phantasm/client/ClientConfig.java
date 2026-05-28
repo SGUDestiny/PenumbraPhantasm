@@ -10,6 +10,16 @@ import net.minecraftforge.fml.event.config.ModConfigEvent;
 public class ClientConfig {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
+    private static final ForgeConfigSpec.BooleanValue FOUNTAIN_MAKING_POSTERIZATION = BUILDER
+            .comment("When a fountain is made, should the screen be posterized to black and white?")
+            .comment("Default: true")
+            .define("fountain_making_posterization", true);
+
+    private static final ForgeConfigSpec.BooleanValue FOUNTAIN_PROXIMITY_RAINBOW = BUILDER
+            .comment("Should dark world fountains apply rainbow tint when nearby?")
+            .comment("Default: true")
+            .define("fountain_proximity_rainbow", true);
+
     private static final ForgeConfigSpec.BooleanValue ALWAYS_SHOW_LOCATION_TITLES = BUILDER
             .comment("Should the location titles appear every time the location is changed and not only once per world login?")
             .comment("Default: false")
@@ -37,6 +47,8 @@ public class ClientConfig {
 
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
+    public static boolean fountainMakingPosterization;
+    public static boolean fountainProximityRainbow;
     public static boolean always_show_location_titles;
     public static double fountainLodDistance;
     public static boolean biomeMusicLoop;
@@ -48,6 +60,8 @@ public class ClientConfig {
         if (event.getConfig().getSpec() != SPEC) {
             return;
         }
+        fountainMakingPosterization = FOUNTAIN_MAKING_POSTERIZATION.get();
+        fountainProximityRainbow = FOUNTAIN_PROXIMITY_RAINBOW.get();
         always_show_location_titles = ALWAYS_SHOW_LOCATION_TITLES.get();
         fountainLodDistance = FOUNTAIN_LOD_DISTANCE.get();
         biomeMusicLoop = BIOME_MUSIC_LOOP.get();

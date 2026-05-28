@@ -43,13 +43,14 @@ public final class FountainHueShiftRenderer {
         }
 
         ClientLevel level = minecraft.level;
+
+        if (!DarkWorldUtil.isDarkWorld(level)) return;
+
         Vec3 camPos = gameRenderer.getMainCamera().getPosition();
         DarkFountain fountain = getClosestFountain(level, camPos);
         if (fountain == null) {
             return;
         }
-
-        if (!DarkWorldUtil.isDarkWorld(level)) return;
 
         float distance = (float) Math.sqrt(camPos.distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos())));
         float fadeRange = FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_START - FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_END;
@@ -59,7 +60,8 @@ public final class FountainHueShiftRenderer {
         float sealingFade = 1.0F;
         if (fountain.sealingTick >= 0) {
             float sealDelta = Mth.clamp((fountain.sealingTick + partialTick) / (float) DarkFountain.SEAL_DURATION, 0.0F, 1.0F);
-            sealingFade = 1.0F - sealDelta;
+
+            sealingFade = 1.0F - (sealDelta * sealDelta);
         }
 
         float finalStrength = distanceFade * sealingFade;

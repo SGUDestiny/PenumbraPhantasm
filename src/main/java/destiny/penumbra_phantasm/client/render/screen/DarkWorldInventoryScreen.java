@@ -32,6 +32,7 @@ import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
 import javax.annotation.Nullable;
+import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
 public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<DarkWorldInventoryMenu> implements RecipeUpdateListener {
@@ -59,7 +60,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
     public int equippedLabelX = 57;
     public int equippedLabelY = 4;
 
-    private int glowTicker = 0;
+    private int glowTicker;
 
     public DarkWorldInventoryScreen(Player pPlayer) {
         super(new DarkWorldInventoryMenu(pPlayer.getInventory(), pPlayer), pPlayer.getInventory(), Component.translatable("container.crafting"));
@@ -105,7 +106,9 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
             }));
             this.addWidget(this.recipeBookComponent);
             this.setInitialFocus(this.recipeBookComponent);
-            this.glowTicker = this.minecraft.level.random.nextInt(0, 21);
+
+            Random random = new Random();
+            this.glowTicker = random.nextInt(0, 21);
         }
     }
 
@@ -121,9 +124,9 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
         this.renderBackground(pGuiGraphics);
         if (this.recipeBookComponent.isVisible() && this.widthTooNarrow) {
             this.renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
-            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick, 0);
         } else {
-            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick, 0);
             super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
             this.recipeBookComponent.renderGhostRecipe(pGuiGraphics, this.leftPos, this.topPos, true, pPartialTick);
         }

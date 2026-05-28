@@ -421,6 +421,7 @@
   "gui.penumbra_phantasm.dark_world_inventory_equipped": "EQUIPPED",
   "gui.penumbra_phantasm.cheshire_chest": "§eCHESHIRE§r §dCHEST§r",
   "gui.penumbra_phantasm.umbrastone_furnace": "UMBRASTONE FURNACE",
+  "gui.penumbra_phantasm.dark_candy_crafting_table": "DARK CANDY CRAFTING TABLE",
 
   "location.penumbra_phantasm.dark_fountain": "Dark Fountain",
   "location.penumbra_phantasm.dark_fountain.description": "'The geyser that gives this land form...'",
