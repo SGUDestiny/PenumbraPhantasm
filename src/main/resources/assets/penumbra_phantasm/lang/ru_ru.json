@@ -421,6 +421,7 @@
   "gui.penumbra_phantasm.dark_world_inventory_equipped": "СНАРЯЖ.",
   "gui.penumbra_phantasm.cheshire_chest": "§eЧЕШИР.§r §dСУНДУК§r",
   "gui.penumbra_phantasm.umbrastone_furnace": " УМБРОВАЯ ПЕЧЬ",
+  "gui.penumbra_phantasm.dark_candy_crafting_table": "ВЕРСТАК ИЗ Т. К.",
 
   "location.penumbra_phantasm.dark_fountain": "Тёмный фонтан",
   "location.penumbra_phantasm.dark_fountain.description": "'Гейзер, придающий земле форму...'",
@@ -456,6 +457,12 @@
   "message.penumbra_phantasm.fire_door_not_in_dark_world": "Ручка не поддаётся... (Дверь не в тёмном мире)",
 
   "container.penumbra_phantasm.umbrastone_furnace": "Умбровая печь",
+  "container.penumbra_phantasm.dark_world_inventory.narration.button.usage.hover": "ЛЕВЫЙ КЛИК ДЛЯ ПЕРЕКЛЮЧЕНИЯ К %s",
+  "container.penumbra_phantasm.dark_world_inventory.narration.recipe": "РЕЦЕПТ ДЛЯ %s",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.more_recipes": "ЕЩЁ ВАРИАНТЫ - ПРАВЫЙ КЛИК",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.search_hint": "ПОИСК...",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.craftable": "ДОСТУПНО К СОЗДАНИЮ",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.all": "ВСЕ РЕЦЕПТЫ",
 
   "screen.penumbra_phantasm.intro.skip_notification": "НАЖМИТЕ [ESC] ДЛЯ ПРОПУСКА СО СЛУЧАЙНЫМ ВЫБОРОМ.",
   "screen.penumbra_phantasm.intro.skip_notification_post": "НАЖМИТЕ [ESC] ДЛЯ ПРОПУСКА СО СВОИМ ВЫБОРОМ.",
