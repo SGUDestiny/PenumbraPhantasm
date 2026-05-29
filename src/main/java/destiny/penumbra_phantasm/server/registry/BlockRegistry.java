@@ -175,7 +175,7 @@ public class BlockRegistry {
                     BlockBehaviour.Properties.copy(Blocks.POTTED_ACACIA_SAPLING).noOcclusion()));
 
     public static final RegistryObject<Block> DARK_CANDY_CRAFTING_TABLE = registerBlock("dark_candy_crafting_table",
-            () -> new GenericCraftingTableBlock(DARK_CANDY_PROPERTIES));
+            () -> new DarkCandyCraftingTableBlock(DARK_CANDY_PROPERTIES));
     public static final RegistryObject<Block> DARK_CANDY_LADDER = registerBlock("dark_candy_ladder",
             () -> new LadderBlock(BlockBehaviour.Properties.of().forceSolidOff().strength(0.4F).sound(SoundType.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).noOcclusion().pushReaction(PushReaction.DESTROY)));
 

@@ -2,8 +2,10 @@ package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.menu.CheshireChestMenu;
+import destiny.penumbra_phantasm.client.render.menu.DarkCandyCraftingTableMenu;
 import destiny.penumbra_phantasm.client.render.menu.UmbrastoneFurnaceMenu;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -21,4 +23,6 @@ public class MenuRegistry {
                         BlockPos pos = data.readBlockPos();
                         return new CheshireChestMenu(windowId, inv, pos);
                     }));
+    public static final RegistryObject<MenuType<DarkCandyCraftingTableMenu>> DARK_CANDY_CRAFTING_TABLE = MENUS.register("dark_candy_crafting_table",
+            () -> IForgeMenuType.create((windowId, inv, data) -> new DarkCandyCraftingTableMenu(windowId, inv)));
 }

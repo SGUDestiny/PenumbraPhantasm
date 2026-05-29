@@ -168,7 +168,7 @@ public final class BlocksetRegistry {
                     "rosegold",
                     "rosegold",
                     "",
-                    1,
+                    2,
                     false,
                     false,
                     false
@@ -241,7 +241,7 @@ public final class BlocksetRegistry {
                     "rosegold_bricks",
                     "rosegold/bricks",
                     "",
-                    1,
+                    2,
                     false,
                     false,
                     false
