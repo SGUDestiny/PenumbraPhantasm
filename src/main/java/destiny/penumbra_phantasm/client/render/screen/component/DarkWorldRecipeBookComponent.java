@@ -41,6 +41,7 @@ import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 @OnlyIn(Dist.CLIENT)
 public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements PlaceRecipe<Ingredient>, Renderable, GuiEventListener, NarratableEntry, RecipeShownListener {
@@ -75,7 +76,7 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
     private boolean visible;
     private boolean widthTooNarrow;
 
-    private int glowTicker = 0;
+    private int glowTicker;
 
     public DarkWorldRecipeBookComponent() {
     }
@@ -94,7 +95,9 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
         if (this.visible) {
             this.initVisuals();
         }
-        this.glowTicker = pMinecraft.level.random.nextInt(0, 21);
+
+        Random random = new Random();
+        this.glowTicker = random.nextInt(0, 21);
     }
 
     @Override
@@ -266,16 +269,15 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
         this.updateCollections(false);
     }
 
-    @Override
-    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick, int yOffset) {
         if (this.isVisible()) {
             float t = (float) this.glowTicker / (float) GLOW_TICKER_UPPER_BOUND;
             float glow = Mth.sin(t * Mth.PI);
 
             pGuiGraphics.pose().pushPose();
             pGuiGraphics.pose().translate(0.0F, 0.0F, 100.0F);
-            int i = (this.width - 151) / 2 - (this.xOffset + 2);
-            int j = (this.height - 174) / 2;
+            int i = (this.width - 151) / 2 - xOffset - 2;
+            int j = (this.height - 174) / 2 - yOffset;
             pGuiGraphics.blit(RECIPE_BOOK_LOCATION, i, j, 0, 0, 151, 174);
             RenderBlitUtil.blitGui(pGuiGraphics, RECIPE_BOOK_GLOW_LOCATION, i, j, 0, 0, 151, 174, glow, glow, glow, 1);
             this.searchBox.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
@@ -288,7 +290,10 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
             this.recipeBookPage.render(pGuiGraphics, i, j, pMouseX, pMouseY, pPartialTick);
             pGuiGraphics.pose().popPose();
         }
+    }
 
+    @Override
+    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
     }
 
     @Override

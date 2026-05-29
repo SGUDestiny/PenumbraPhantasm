@@ -12,6 +12,7 @@ import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorClosedM
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenModel;
 import destiny.penumbra_phantasm.client.render.particle.*;
 import destiny.penumbra_phantasm.client.render.screen.CheshireChestScreen;
+import destiny.penumbra_phantasm.client.render.screen.DarkCandyCraftingTableScreen;
 import destiny.penumbra_phantasm.client.render.screen.UmbrastoneFurnaceScreen;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.item.property.RosegoldLighterItemProperty;
@@ -158,6 +159,7 @@ public class PenumbraPhantasm {
                 });
                 ItemProperties.register(ItemRegistry.ROSEGOLD_LIGHTER.get(), new ResourceLocation(MODID, "open"), new RosegoldLighterItemProperty());
 
+                MenuScreens.register(MenuRegistry.DARK_CANDY_CRAFTING_TABLE.get(), DarkCandyCraftingTableScreen::new);
                 MenuScreens.register(MenuRegistry.UMBRASTONE_FURNACE_MENU.get(), UmbrastoneFurnaceScreen::new);
                 MenuScreens.register(MenuRegistry.CHESHIRE_CHEST_MENU.get(), CheshireChestScreen::new);
             });
