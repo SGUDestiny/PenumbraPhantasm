@@ -17,6 +17,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -79,7 +80,7 @@ public class CheshireChestBlock extends BaseEntityBlock {
 
         player.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(cheshireInv -> {
             MenuProvider provider = new SimpleMenuProvider(
-                    (windowId, playerInventory, p) -> new CheshireChestMenu(windowId, playerInventory, cheshireInv, pos, p),
+                    (windowId, playerInventory, p) -> new CheshireChestMenu(windowId, playerInventory, cheshireInv, pos, p, ContainerLevelAccess.create(level, pos)),
                     Component.translatable("container.cheshire_chest"));
             NetworkHooks.openScreen((ServerPlayer) player, provider, buf -> buf.writeBlockPos(pos));
         });
