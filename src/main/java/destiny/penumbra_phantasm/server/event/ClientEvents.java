@@ -11,6 +11,7 @@ import destiny.penumbra_phantasm.client.render.dimension.CardKingdomDimensionEff
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.GreatDoorRenderUtil;
 import destiny.penumbra_phantasm.client.render.screen.DarkWorldInventoryScreen;
+import destiny.penumbra_phantasm.client.render.screen.DarkWorldLanScreen;
 import destiny.penumbra_phantasm.client.render.screen.DarkWorldPauseScreen;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
@@ -21,6 +22,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.ShareToLanScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.tags.FluidTags;
@@ -323,6 +325,9 @@ public class ClientEvents {
 			}
 			if (newScreen instanceof PauseScreen) {
 				event.setNewScreen(new DarkWorldPauseScreen(true));
+			}
+			if (newScreen instanceof ShareToLanScreen) {
+				event.setNewScreen(new DarkWorldLanScreen(event.getCurrentScreen()));
 			}
 		}
 	}

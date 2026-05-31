@@ -79,7 +79,7 @@ public class DarkWorldPauseScreen extends PauseScreen {
             this.minecraft.setScreen(null);
             this.minecraft.mouseHandler.grabMouse();}
                 ).texture(WIDGETS)
-                .textureRegion(45, 132, 208, 84, 28, 3)
+                .textureRegion(44, 132, 208, 84, 28, 3)
                 .size(220, 28)
                 .build(), 2, gridlayout.newCellSettings().paddingTop(50));
         gridlayout$rowhelper.addChild(this.openScreenButton(ADVANCEMENTS, () -> new AdvancementsScreen(this.minecraft.player.connection.getAdvancements())));
@@ -96,7 +96,7 @@ public class DarkWorldPauseScreen extends PauseScreen {
         gridlayout$rowhelper.addChild(DarkWorldButton.builder(MODS, (button) ->
                 this.minecraft.setScreen(new ModListScreen(this)))
                 .texture(WIDGETS)
-                .textureRegion(45, 132, 208, 84, 28, 3)
+                .textureRegion(44, 132, 208, 84, 28, 3)
                 .size(220, 28)
                 .build(), 2);
         Component component = this.minecraft.isLocalServer() ? RETURN_TO_MENU : DISCONNECT;
@@ -104,7 +104,7 @@ public class DarkWorldPauseScreen extends PauseScreen {
             button.active = false;
             this.minecraft.getReportingContext().draftReportHandled(this.minecraft, this, this::onDisconnect, true);}
                 ).texture(WIDGETS)
-                .textureRegion(45, 132, 208, 84, 28, 3)
+                .textureRegion(44, 132, 208, 84, 28, 3)
                 .size(220, 28)
                 .build(), 2);
         gridlayout.arrangeElements();
@@ -151,7 +151,7 @@ public class DarkWorldPauseScreen extends PauseScreen {
         return DarkWorldButton.builder(pMessage, (p_280817_) ->
                 this.minecraft.setScreen(pScreenSupplier.get()))
                 .texture(WIDGETS)
-                .textureRegion(45, 132, 208, 84, 28, 3)
+                .textureRegion(44, 132, 208, 84, 28, 3)
                 .nineSlice(13,  28)
                 .size(106, 28)
                 .build();
