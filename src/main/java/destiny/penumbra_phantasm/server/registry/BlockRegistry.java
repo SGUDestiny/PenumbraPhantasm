@@ -124,7 +124,7 @@ public class BlockRegistry {
                     BlockBehaviour.Properties.copy(Blocks.POTTED_POPPY).noOcclusion()));
     public static final RegistryObject<Block> SCARLET_LEAVES = registerBlock("scarlet_leaves",
             () -> new ScarletLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES)));
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES).isSuffocating((state, level, pos) -> false).isRedstoneConductor((state, level, pos) -> false).isViewBlocking((state, level, pos) -> false)));
     public static final RegistryObject<Block> FALLEN_SCARLET_LEAVES = BLOCKS.register("fallen_scarlet_leaves",
             () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak(), 1));
@@ -160,7 +160,7 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission().noOcclusion().instabreak().randomTicks()));
     public static final RegistryObject<Block> DARK_CANDY_LEAVES = registerBlock("dark_candy_leaves",
             () -> new DarkCandyLeaves(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()));
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks().noOcclusion().isSuffocating((state, level, pos) -> false).isRedstoneConductor((state, level, pos) -> false).isViewBlocking((state, level, pos) -> false)));
     public static final RegistryObject<Block> FALLEN_DARK_CANDY_LEAVES = BLOCKS.register("fallen_dark_candy_leaves",
             () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak(), 1f));
