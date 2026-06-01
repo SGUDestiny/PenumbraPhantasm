@@ -332,7 +332,7 @@ public class DarkWorldUtil
 				case 2 -> Rotation.CLOCKWISE_180;
 				default -> Rotation.COUNTERCLOCKWISE_90;
 			};
-			Optional<GreatDoorStructureResult> placed = placeGreatDoorStructureTemplate(level, template, origin, rot, random);
+			Optional<GreatDoorStructureResult> placed = placeGreatDoorStructureTemplate(level, template, origin, rot.getRotated(Rotation.CLOCKWISE_180), random);
 			if (placed.isPresent()) {
 				return placed;
 			}
