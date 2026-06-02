@@ -431,6 +431,7 @@
   "message.penumbra_phantasm.pushed_away_by_fountain": "Поток тьмы отталкивает вас...",
   "message.penumbra_phantasm.sealing_fountain_no_fountain_nearby": "Рядом нет фонтана...",
   "message.penumbra_phantasm.sealing_fountain_already_being_sealed": "Фонтан уже запечатывается...",
+  "message.penumbra_phantasm.sealing_fountain_cannot_sleep": "Нельзя спать во время запечатывания фонтана.",
   "message.penumbra_phantasm.dark_world_without_fountain": "В тёмном мире, в котором вы были, нет активного фонтана",
   "message.penumbra_phantasm.great_door_cant_open_no_light_door": "Дверь не поддаётся... (Нет непривязанных дверей в комнатах с фонтаном)",
   "message.penumbra_phantasm.great_door_cant_open_no_fountain": "Дверь не поддаётся... (У этого тёмного мира нет фонтана)",

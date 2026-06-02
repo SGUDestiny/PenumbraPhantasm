@@ -24,6 +24,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -288,6 +289,33 @@ public class CommonEvents {
     public void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             rescuePlayerIfStrandedDarkWorldWithoutFountain(serverPlayer);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerSleepInBed(PlayerSleepInBedEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer player)) {
+            return;
+        }
+        Level level = player.level();
+        if (!DarkWorldUtil.isDarkWorld(level)) {
+            return;
+        }
+        boolean sealingInProgress = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
+                .map(cap -> {
+                    for (DarkFountain fountain : cap.darkFountains.values()) {
+                        if (fountain.sealingTick >= 0) {
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .orElse(false);
+        if (sealingInProgress) {
+            player.displayClientMessage(
+                    Component.translatable("message.penumbra_phantasm.sealing_fountain_cannot_sleep"),
+                    true);
+            event.setResult(Player.BedSleepingProblem.OTHER_PROBLEM);
         }
     }
 

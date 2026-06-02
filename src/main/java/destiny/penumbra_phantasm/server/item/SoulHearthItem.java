@@ -123,6 +123,11 @@ public class SoulHearthItem extends Item {
             return InteractionResultHolder.pass(stack);
         }
 
+        if (player.isSleeping()) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.sealing_fountain_cannot_sleep"), true);
+            return InteractionResultHolder.pass(stack);
+        }
+
         if (!level.isClientSide()) {
             SealingSoulEntity soulEntity = new SealingSoulEntity(EntityRegistry.SEALING_SOUL.get(), level);
             soulEntity.setSoulType(stack.getTag().getInt(SOUL_TYPE));

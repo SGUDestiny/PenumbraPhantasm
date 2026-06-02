@@ -7,6 +7,7 @@ import destiny.penumbra_phantasm.server.block.DarknessBlock;
 import destiny.penumbra_phantasm.server.block.entity.DarknessBlockEntity;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.registry.*;
+import destiny.penumbra_phantasm.server.util.BedUtil;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
@@ -366,14 +367,12 @@ public class DarkFountain {
             //Teleport all players to light fountain
             for (Player player : new ArrayList<>(soulLevel.players())) {
                 if (player instanceof ServerPlayer serverPlayer) {
-
+                    BedUtil.releaseSleepingPlayer(serverPlayer);
                     Vec3 lightPos = destinationPos.getCenter();
-
                     serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
                         cap.sealShineTicker = -1;
                         cap.syncToClient(serverPlayer);
                     });
-
                     serverPlayer.teleportTo(lightLevel, lightPos.x, lightPos.y,
                             lightPos.z, player.getYHeadRot(), player.getXRot());
                     serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(player));
