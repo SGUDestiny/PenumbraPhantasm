@@ -265,6 +265,9 @@ public class CommonEvents {
     public void playerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             ChangedDimensionContainsTrigger.INSTANCE.trigger(serverPlayer, event.getFrom(), event.getTo());
+            serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap ->
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSoulBreakPacket(false, cap.soulType))
+            );
         }
     }
 
@@ -288,6 +291,9 @@ public class CommonEvents {
     public void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             rescuePlayerIfStrandedDarkWorldWithoutFountain(serverPlayer);
+            serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap ->
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSoulBreakPacket(false, cap.soulType))
+            );
         }
     }
 
