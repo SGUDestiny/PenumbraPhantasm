@@ -138,6 +138,10 @@ public class SoulHearthItem extends Item {
             double forwardZ = Mth.cos(yawRad);
             soulEntity.setPos(playerPos.x + forwardX, playerPos.y + 1, playerPos.z + (forwardZ * 2));
 
+            //1 tick gap fix
+            darkFountain.sealingTick = 0;
+            darkFountain.sealingFrameTick = darkFountain.getFrameTick();
+
             level.addFreshEntity(soulEntity);
         }
 
