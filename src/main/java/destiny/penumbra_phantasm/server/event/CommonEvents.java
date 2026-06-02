@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundSoulSyncPacket;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
@@ -266,7 +267,10 @@ public class CommonEvents {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             ChangedDimensionContainsTrigger.INSTANCE.trigger(serverPlayer, event.getFrom(), event.getTo());
             serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap ->
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSoulBreakPacket(false, cap.soulType))
+                    PacketHandlerRegistry.INSTANCE.send(
+                            PacketDistributor.PLAYER.with(() -> serverPlayer),
+                            new ClientBoundSoulSyncPacket(cap.soulType)
+                    )
             );
         }
     }
@@ -292,10 +296,11 @@ public class CommonEvents {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             rescuePlayerIfStrandedDarkWorldWithoutFountain(serverPlayer);
             serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap ->
-                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSoulBreakPacket(false, cap.soulType))
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSoulSyncPacket(cap.soulType))
             );
         }
     }
+
 
     @SubscribeEvent
     public void playerTick(TickEvent.PlayerTickEvent event) {

@@ -68,6 +68,15 @@ public class ClientBoundPacketHandler
 				});
 	}
 
+	public static void syncSoulType(int soulType)
+	{
+		Minecraft minecraft = Minecraft.getInstance();
+		Player player = minecraft.player;
+		if (player != null) {
+			player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> cap.soulType = soulType);
+		}
+	}
+
 	public static void sendParticle(ResourceLocation particleId, double x, double y, double z, double vx, double vy, double vz, int count) {
 		Level level = Minecraft.getInstance().level;
 
