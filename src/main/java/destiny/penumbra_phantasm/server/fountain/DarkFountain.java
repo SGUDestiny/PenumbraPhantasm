@@ -604,13 +604,7 @@ public class DarkFountain {
                 room.doorPositions = result.getDoorPositions();
                 room.outsideDoors = new HashMap<>(result.getOutsideDoors());
                 room.sharedDoors = new HashMap<>(result.getSharedDoors());
-
-                int alreadyFilled = 0;
-                for (BlockPos pos : room.positions) {
-                    if (level.getBlockState(pos).getBlock() instanceof DarknessBlock) alreadyFilled++;
-                }
-
-                room.fillIndex = alreadyFilled;
+                room.fillIndex = 0;
 
                 int totalDarkness = DarkRoom.getTotalDarknessCount(rooms);
                 int remainingVolume = ServerConfig.maxRoomVolume - totalDarkness;

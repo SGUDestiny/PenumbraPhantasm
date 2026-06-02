@@ -41,8 +41,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FireDoorBlock extends BaseEntityBlock {
     public static final VoxelShape SOUTH_AABB = Block.box(0.0F, 0.0F, 0.0F, 16.0F, 16.0F, 3.0F);
@@ -87,28 +89,66 @@ public class FireDoorBlock extends BaseEntityBlock {
 
         if (pPlayer instanceof ServerPlayer serverPlayer) {
             FireDoorsCapability cap = serverPlayer.getCapability(CapabilityRegistry.FIRE_DOORS).orElse(null);
-
             List<FireDoor> allDoors = cap.playerFireDoors;
             ResourceKey<Level> currentDim = pLevel.dimension();
 
-            List<FireDoor> sameDimDoors = new ArrayList<>();
+            //Validate doors
             List<FireDoor> invalidDoors = new ArrayList<>();
+            List<Map.Entry<FireDoor, FireDoor>> doorsToUpdate = new ArrayList<>();
+            for (FireDoor fireDoor : allDoors) {
+                if (!fireDoor.darkWorld().equals(currentDim)) continue;
 
-            for (FireDoor fd : allDoors) {
-                if (!fd.darkWorld().equals(currentDim)) continue;
+                BlockPos doorPos = fireDoor.doorPos();
+                BlockState stateAtPos = pLevel.getBlockState(doorPos);
 
-                if (pLevel.getBlockState(fd.doorPos()).getBlock() == this) {
-                    sameDimDoors.add(fd);
+                if (stateAtPos.getBlock() != this) {
+                    invalidDoors.add(fireDoor);
+                    continue;
+                }
+
+                float currentYRot = stateAtPos.getValue(HORIZONTAL_FACING).toYRot();
+
+                Component currentName;
+                if (pLevel.getBlockEntity(doorPos) instanceof FireDoorBlockEntity be && be.hasCustomName()) {
+                    currentName = be.getCustomName();
                 } else {
-                    invalidDoors.add(fd);
+                    currentName = Component.translatable("block.penumbra_phantasm.fire_door");
+                }
+
+                boolean angleChanged = fireDoor.facingAngle() != currentYRot;
+                boolean nameChanged = !fireDoor.name().equals(currentName);
+
+                if (angleChanged || nameChanged) {
+                    FireDoor updated = new FireDoor(fireDoor.darkWorld(), doorPos, currentYRot, currentName);
+                    doorsToUpdate.add(new AbstractMap.SimpleEntry<>(fireDoor, updated));
                 }
             }
 
-            allDoors.removeAll(invalidDoors);
+            //Remove invalid doors from capability
+            for (FireDoor invalid : invalidDoors) {
+                cap.removeFireDoor(invalid.darkWorld(), invalid.doorPos());
+            }
 
+            //Update changed doors in capability
+            for (Map.Entry<FireDoor, FireDoor> entry : doorsToUpdate) {
+                FireDoor oldDoor = entry.getKey();
+                FireDoor newDoor = entry.getValue();
+                cap.removeFireDoor(oldDoor.darkWorld(), oldDoor.doorPos());
+                cap.addFireDoor(newDoor.darkWorld(), newDoor.doorPos(), newDoor.facingAngle(), newDoor.name());
+            }
+
+            //Populate list of same dark world doors
+            List<FireDoor> sameDimDoors = new ArrayList<>();
+            for (FireDoor fireDoor : cap.playerFireDoors) {
+                if (fireDoor.darkWorld().equals(currentDim)) {
+                    sameDimDoors.add(fireDoor);
+                }
+            }
+
+            //If not a block entity, pass
             BlockPos lowerPos = pState.getValue(HALF) == DoubleBlockHalf.UPPER ? pPos.below() : pPos;
-            BlockEntity be = pLevel.getBlockEntity(lowerPos);
-            if (!(be instanceof FireDoorBlockEntity fireDoorEntity)) return InteractionResult.FAIL;
+            BlockEntity blockEntity = pLevel.getBlockEntity(lowerPos);
+            if (!(blockEntity instanceof FireDoorBlockEntity fireDoorEntity)) return InteractionResult.FAIL;
 
             int doorIndex = cap.findDoorIndexInList(currentDim, lowerPos);
             boolean hasDoor = doorIndex != -1;

@@ -11,7 +11,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.recipebook.RecipeUpdateListener;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -77,7 +76,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
     @Override
     public void containerTick() {
         if (this.minecraft.gameMode.hasInfiniteItems()) {
-            this.minecraft.setScreen(new CreativeModeInventoryScreen(this.minecraft.player, this.minecraft.player.connection.enabledFeatures(), this.minecraft.options.operatorItemsTab().get()));
+            this.minecraft.setScreen(new DarkWorldCreativeModeInventoryScreen(this.minecraft.player, this.minecraft.player.connection.enabledFeatures(), this.minecraft.options.operatorItemsTab().get()));
         } else {
             this.recipeBookComponent.tick();
         }
@@ -91,7 +90,7 @@ public class DarkWorldInventoryScreen extends EffectRenderingInventoryScreen<Dar
     @Override
     protected void init() {
         if (this.minecraft.gameMode.hasInfiniteItems()) {
-            this.minecraft.setScreen(new CreativeModeInventoryScreen(this.minecraft.player, this.minecraft.player.connection.enabledFeatures(), this.minecraft.options.operatorItemsTab().get()));
+            this.minecraft.setScreen(new DarkWorldCreativeModeInventoryScreen(this.minecraft.player, this.minecraft.player.connection.enabledFeatures(), this.minecraft.options.operatorItemsTab().get()));
         } else {
             this.player.containerMenu = this.menu;
             super.init();

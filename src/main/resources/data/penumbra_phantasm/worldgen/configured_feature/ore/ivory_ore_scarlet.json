@@ -10,7 +10,7 @@
         },
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "penumbra_phantasm:dark_world_ore_replaceables"
+          "tag": "penumbra_phantasm:dark_world_scarlet_marble_replaceables"
         }
       }
     ]
