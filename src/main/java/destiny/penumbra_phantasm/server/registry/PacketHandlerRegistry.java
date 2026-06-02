@@ -62,10 +62,10 @@ public class PacketHandlerRegistry {
                 .consumerMainThread(ServerBoundSoulPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(ClientBoundSoulBreakPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(ClientBoundSoulBreakPacket::encode)
-                .decoder(ClientBoundSoulBreakPacket::decode)
-                .consumerMainThread(ClientBoundSoulBreakPacket::handle)
+        INSTANCE.messageBuilder(ClientBoundSoulSyncPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundSoulSyncPacket::encode)
+                .decoder(ClientBoundSoulSyncPacket::decode)
+                .consumerMainThread(ClientBoundSoulSyncPacket::handle)
                 .add();
 
         INSTANCE.messageBuilder(ClientBoundTransportTickerPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
@@ -138,6 +138,12 @@ public class PacketHandlerRegistry {
                 .encoder(ClientBoundFireDoorSyncPacket::encode)
                 .decoder(ClientBoundFireDoorSyncPacket::decode)
                 .consumerMainThread(ClientBoundFireDoorSyncPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(ClientBoundSoulSyncPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundSoulSyncPacket::encode)
+                .decoder(ClientBoundSoulSyncPacket::decode)
+                .consumerMainThread(ClientBoundSoulSyncPacket::handle)
                 .add();
     }
 }

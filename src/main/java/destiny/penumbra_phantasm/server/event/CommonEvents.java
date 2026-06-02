@@ -2,11 +2,11 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
-import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.core.BlockPos;
@@ -218,8 +218,7 @@ public class CommonEvents {
         if(living instanceof ServerPlayer serverPlayer)
         {
             serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
-				cap.diedWithSoulHearth = serverPlayer.getInventory()
-													 .hasAnyMatching(stack -> stack.is(ItemRegistry.SOUL_HEARTH.get()));
+				cap.diedWithSoulHearth = SoulCapability.hasOwnSoulHearth(serverPlayer);
 
                 PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
                         new ClientBoundSoulBreakPacket(cap.diedWithSoulHearth, cap.soulType));
@@ -281,7 +280,6 @@ public class CommonEvents {
                     }
                 });
             }
-           serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSoulBreakPacket(false, cap.soulType)));
         }
     }
 

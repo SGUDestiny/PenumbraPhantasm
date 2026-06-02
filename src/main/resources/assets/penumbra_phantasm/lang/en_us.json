@@ -412,7 +412,7 @@
   "tooltip.penumbra_phantasm.soul_hearth.soul_type.6": "KINDNESS",
   "tooltip.penumbra_phantasm.soul_hearth.soul_type.7": "JUSTICE",
   "tooltip.penumbra_phantasm.soul_hearth.determination": "DETERMINATION: ",
-  "tooltip.penumbra_phantasm.soul_hearth.trust_level": "TRUST: ",
+  "tooltip.penumbra_phantasm.soul_hearth.connection_level": "CONNECTION: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "THE SOUL WITHIN REJECTS YOU.",
   "tooltip.penumbra_phantasm.rosegold_lighter_fuel": "Fuel: ",
 
@@ -435,6 +435,8 @@
   "biome.penumbra_phantasm.cliffs": "??????",
   "biome.penumbra_phantasm.cliffs.description": "'Only eyes blinded by darkness can see the way...'",
 
+  "message.penumbra_phantasm.making_fountain_no_soul_hearth": "No SOUL Hearth...",
+  "message.penumbra_phantasm.making_fountain_not_enough_determination": "Not enough DETERMINATION to pierce...",
   "message.penumbra_phantasm.making_fountain_invalid_position": "Must be standing on a full block",
   "message.penumbra_phantasm.making_fountain_not_enough_key_blocks": "Not enough blocks to power your imagination...",
   "message.penumbra_phantasm.making_fountain_inside_dark_world": "You feel like that's not a good idea...",
@@ -442,7 +444,9 @@
   "message.penumbra_phantasm.making_fountain_room_has_active_fountain": "A fountain is already in this room",
   "message.penumbra_phantasm.making_fountain_critical_error": "Couldn't make a fountain due to an error, please reach out to the developer!",
   "message.penumbra_phantasm.pushed_away_by_fountain": "The flow of darkness pushes you away...",
+  "message.penumbra_phantasm.soul_hearth_reject": "The SOUL within rejects you.",
   "message.penumbra_phantasm.sealing_fountain_no_fountain_nearby": "But there was no fountain nearby...",
+  "message.penumbra_phantasm.sealing_fountain_not_enough_determination": "But you weren't DETERMINED enough...",
   "message.penumbra_phantasm.sealing_fountain_already_being_sealed": "But the fountain was already being sealed...",
   "message.penumbra_phantasm.sealing_fountain_cannot_sleep": "You can't sleep while sealing the fountain.",
   "message.penumbra_phantasm.dark_world_without_fountain": "The dark world you were in didn't have an active fountain",

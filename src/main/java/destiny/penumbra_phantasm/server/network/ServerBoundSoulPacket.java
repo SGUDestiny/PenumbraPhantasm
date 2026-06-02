@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.network;
 
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundSoulSyncPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import net.minecraft.network.FriendlyByteBuf;
