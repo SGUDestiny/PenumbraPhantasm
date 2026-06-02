@@ -367,7 +367,6 @@ public class DarkFountain {
             //Teleport all players to light fountain
             for (Player player : new ArrayList<>(soulLevel.players())) {
                 if (player instanceof ServerPlayer serverPlayer) {
-
                     BedUtil.releaseSleepingPlayer(serverPlayer);
                     Vec3 lightPos = destinationPos.getCenter();
 
