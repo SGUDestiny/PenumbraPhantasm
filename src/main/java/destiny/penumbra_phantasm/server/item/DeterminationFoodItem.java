@@ -3,10 +3,13 @@ package destiny.penumbra_phantasm.server.item;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
@@ -19,10 +22,12 @@ import java.util.List;
 
 public class DeterminationFoodItem extends Item {
     int determinationGain;
+    SoundEvent consumeSound;
 
-    public DeterminationFoodItem(Properties pProperties, int determinationGain) {
+    public DeterminationFoodItem(Properties pProperties, int determinationGain, SoundEvent consumeSound) {
         super(pProperties);
         this.determinationGain = determinationGain;
+        this.consumeSound = consumeSound;
     }
 
     @Override
@@ -30,6 +35,8 @@ public class DeterminationFoodItem extends Item {
         if (pLivingEntity instanceof ServerPlayer player) {
             SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
             soulCap.determination = Mth.clamp(soulCap.determination + determinationGain, 0, 100);
+
+            pLevel.playSound(null, player.getOnPos(), consumeSound, SoundSource.PLAYERS, 0.5f, 1);
         }
 
         return super.finishUsingItem(pStack, pLevel, pLivingEntity);

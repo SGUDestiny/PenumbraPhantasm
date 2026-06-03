@@ -257,5 +257,11 @@
     [
       "penumbra_phantasm:fire_door_close"
     ]
+  },
+  "heal": {
+    "sounds":
+    [
+      "penumbra_phantasm:heal"
+    ]
   }
 }
