@@ -412,7 +412,7 @@
   "tooltip.penumbra_phantasm.soul_hearth.soul_type.6": "ДОБРОТА",
   "tooltip.penumbra_phantasm.soul_hearth.soul_type.7": "СПРАВЕДЛИВОСТЬ",
   "tooltip.penumbra_phantasm.soul_hearth.determination": "РЕШИМОСТЬ: ",
-  "tooltip.penumbra_phantasm.soul_hearth.trust_level": "ДОВЕРИЕ: ",
+  "tooltip.penumbra_phantasm.soul_hearth.connection_level": "СВЯЗЬ: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "ДУША ВНУТРИ ОТВЕРГАЕТ ВАС.",
   "tooltip.penumbra_phantasm.rosegold_lighter_fuel": "Топливо: ",
 
@@ -435,6 +435,8 @@
   "biome.penumbra_phantasm.cliffs": "??????",
   "biome.penumbra_phantasm.cliffs.description": "'Только глаза, ослепленные тьмой, могут увидеть путь....'",
 
+  "message.penumbra_phantasm.making_fountain_no_soul_hearth": "Нет горнила ДУШИ...",
+  "message.penumbra_phantasm.making_fountain_not_enough_determination": "Для пронзания недостаточно РЕШИМОСТИ...",
   "message.penumbra_phantasm.making_fountain_invalid_position": "Должен стоять на полном блоке",
   "message.penumbra_phantasm.making_fountain_not_enough_key_blocks": "Не хватает блоков для воображения...",
   "message.penumbra_phantasm.making_fountain_inside_dark_world": "Вы чувствуете, что это плохая идея...",
@@ -442,7 +444,9 @@
   "message.penumbra_phantasm.making_fountain_room_has_active_fountain": "Фонтан уже открыт в этой комнате",
   "message.penumbra_phantasm.making_fountain_critical_error": "Не получилось создать фонтан из-за ошибки, пожалуйста, обратитесь к разработчику!",
   "message.penumbra_phantasm.pushed_away_by_fountain": "Поток тьмы отталкивает вас...",
+  "message.penumbra_phantasm.soul_hearth_reject": "ДУША внутри отвергает вас.",
   "message.penumbra_phantasm.sealing_fountain_no_fountain_nearby": "Рядом нет фонтана...",
+  "message.penumbra_phantasm.sealing_fountain_not_enough_determination": "Вы недостаточно РЕШИТЕЛЬНЫ...",
   "message.penumbra_phantasm.sealing_fountain_already_being_sealed": "Фонтан уже запечатывается...",
   "message.penumbra_phantasm.dark_world_without_fountain": "В тёмном мире, в котором вы были, нет активного фонтана",
   "message.penumbra_phantasm.great_door_cant_open_no_light_door": "Дверь не поддаётся... (Нет непривязанных дверей в комнатах с фонтаном)",
