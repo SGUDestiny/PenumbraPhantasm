@@ -541,7 +541,7 @@ public class KnifeItem extends SwordItem {
 
         //Break knife if single use
         if (isSingleUse) {
-            stack.hurtAndBreak(stack.getMaxDamage(), player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(stack.getMaxDamage() / 3, player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
 
         resetMakingState(tag);
