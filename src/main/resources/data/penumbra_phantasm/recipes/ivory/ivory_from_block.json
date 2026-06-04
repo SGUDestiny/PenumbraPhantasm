@@ -6,11 +6,11 @@
       "item": "penumbra_phantasm:ivory_block"
     },
     {
-      "tag": "minecraft:pickaxes"
+      "item": "penumbra_phantasm:ivory"
     }
   ],
   "result": {
-    "count": 4,
+    "count": 5,
     "item": "penumbra_phantasm:ivory"
   }
 }
