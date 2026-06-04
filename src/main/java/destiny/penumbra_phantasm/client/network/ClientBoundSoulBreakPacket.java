@@ -5,34 +5,31 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ClientBoundSoulBreakPacket
-{
-	public boolean diedWithSoulHearth;
-	public int soulType;
-	public ClientBoundSoulBreakPacket(boolean diedWithSoulHearth, int soulType)
-	{
-		this.diedWithSoulHearth = diedWithSoulHearth;
-		this.soulType = soulType;
-	}
+public class ClientBoundSoulBreakPacket {
+    public boolean diedWithSoulHearth;
+    public int soulType;
 
-	public void encode(FriendlyByteBuf buffer)
-	{
-		buffer.writeBoolean(this.diedWithSoulHearth);
-		buffer.writeInt(this.soulType);
-	}
+    public ClientBoundSoulBreakPacket(boolean diedWithSoulHearth, int soulType) {
+        this.diedWithSoulHearth = diedWithSoulHearth;
+        this.soulType = soulType;
+    }
 
-	public static ClientBoundSoulBreakPacket decode(FriendlyByteBuf buffer)
-	{
-		boolean diedWithSoulHearth = buffer.readBoolean();
-		int soulType = buffer.readInt();
-		return new ClientBoundSoulBreakPacket(diedWithSoulHearth, soulType);
-	}
+    public void encode(FriendlyByteBuf buffer) {
+        buffer.writeBoolean(this.diedWithSoulHearth);
+        buffer.writeInt(this.soulType);
+    }
 
-	public boolean handle(Supplier<NetworkEvent.Context> ctx)
-	{
-		ctx.get().enqueueWork(() -> {
-			ClientBoundPacketHandler.syncSoulBreak(diedWithSoulHearth, soulType);
-		});
-		return true;
-	}
+    public static ClientBoundSoulBreakPacket decode(FriendlyByteBuf buffer) {
+        boolean diedWithSoulHearth = buffer.readBoolean();
+        int soulType = buffer.readInt();
+        return new ClientBoundSoulBreakPacket(diedWithSoulHearth, soulType);
+    }
+
+    public boolean handle(Supplier<NetworkEvent.Context> ctx)
+    {
+        ctx.get().enqueueWork(() -> {
+            ClientBoundPacketHandler.syncSoulBreak(diedWithSoulHearth, soulType);
+        });
+        return true;
+    }
 }

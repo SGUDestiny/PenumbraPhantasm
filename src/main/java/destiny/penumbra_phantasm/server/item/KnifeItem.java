@@ -8,6 +8,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import destiny.penumbra_phantasm.ServerConfig;
+import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import org.jetbrains.annotations.NotNull;
 
 import com.google.common.collect.ImmutableMultimap;
@@ -117,6 +118,20 @@ public class KnifeItem extends SwordItem {
         if (DarkWorldUtil.isDarkWorld(level)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_inside_dark_world"), true);
             return InteractionResultHolder.fail(stack);
+        }
+
+        if (!SoulCapability.hasOwnSoulHearth(player)) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_no_soul_hearth"), true);
+            return InteractionResultHolder.pass(stack);
+        }
+
+        //If player doesn't have enough determination, cancel
+        SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
+        int determination = soulCap.determination;
+
+        if (determination < 100) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_not_enough_determination"), true);
+            return InteractionResultHolder.pass(stack);
         }
 
         //If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
@@ -510,9 +525,14 @@ public class KnifeItem extends SwordItem {
 
         darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), fountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
-        //If player is not creative, put cooldown on knife
+        //If player is not creative, put cooldown on knife and drain determination
         if (!player.isCreative()) {
             player.getCooldowns().addCooldown(stack.getItem(), 30 * 20);
+
+            if (player instanceof ServerPlayer) {
+                SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
+                soulCap.determination = 0;
+            }
         }
 
         TriggerCriterions.DARK_FOUNTAIN_MAKE.trigger((ServerPlayer) player);
@@ -521,7 +541,7 @@ public class KnifeItem extends SwordItem {
 
         //Break knife if single use
         if (isSingleUse) {
-            stack.hurtAndBreak(stack.getMaxDamage(), player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
+            stack.hurtAndBreak(stack.getMaxDamage() / 3, player, (user) -> user.broadcastBreakEvent(EquipmentSlot.MAINHAND));
         }
 
         resetMakingState(tag);

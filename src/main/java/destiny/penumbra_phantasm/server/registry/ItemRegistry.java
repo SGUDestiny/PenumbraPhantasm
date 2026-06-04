@@ -44,7 +44,7 @@ public class ItemRegistry {
             () -> new SwordItem(Tiers.NETHERITE, 5, -2, basicItem()));
 
     public static final RegistryObject<Item> DARK_CANDY = ITEMS.register("dark_candy",
-            () -> new Item(new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationMod(0.5f).fast().alwaysEat().build())));
+            () -> new DeterminationFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationMod(0.5f).fast().alwaysEat().build()), 6, SoundRegistry.HEAL.get()));
 
     public static final RegistryObject<Item> FRIEND = ITEMS.register("friend",
             () -> new FriendItem(basicItem()));

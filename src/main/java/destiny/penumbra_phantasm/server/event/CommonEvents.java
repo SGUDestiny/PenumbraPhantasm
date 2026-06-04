@@ -2,11 +2,11 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
-import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.core.BlockPos;
@@ -103,6 +103,9 @@ public class CommonEvents {
     @SubscribeEvent
     public void attackEntity(AttackEntityEvent event) {
         Level level = event.getEntity().level();
+
+        if (level.isClientSide()) return;
+
         Entity target = event.getTarget();
         Player player = event.getEntity();
         ItemStack stack = player.getMainHandItem();
@@ -113,7 +116,7 @@ public class CommonEvents {
 
         if (stack.getItem() == ItemRegistry.REAL_KNIFE.get()) {
             PacketHandlerRegistry.INSTANCE.send(
-                    PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(vec.x, vec.y, vec.z, 32.0, event.getEntity().level().dimension())),
+                    PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(vec.x, vec.y, vec.z, 32.0, target.level().dimension())),
                     new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.REAL_KNIFE_SLASH.get()), vec.x, vec.y, vec.z, 0, 0, 0, 1)
             );
 
@@ -123,7 +126,7 @@ public class CommonEvents {
 
             for (int i = 0; i < level.random.nextInt(3, 6) + addition; i++) {
                 PacketHandlerRegistry.INSTANCE.send(
-                        PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(vec.x, vec.y, vec.z, 32.0, event.getEntity().level().dimension())),
+                        PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(vec.x, vec.y, vec.z, 32.0, target.level().dimension())),
                         new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.REAL_KNIFE_HIT.get()), target.getX(), target.getY() + 1, target.getZ(), -0.15 + level.random.nextDouble() * 0.3, 0.3, -0.15 + level.random.nextDouble() * 0.3, 1)
                 );
             }
@@ -217,8 +220,7 @@ public class CommonEvents {
         if(living instanceof ServerPlayer serverPlayer)
         {
             serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
-				cap.diedWithSoulHearth = serverPlayer.getInventory()
-													 .hasAnyMatching(stack -> stack.is(ItemRegistry.SOUL_HEARTH.get()));
+				cap.diedWithSoulHearth = SoulCapability.hasOwnSoulHearth(serverPlayer);
 
                 PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
                         new ClientBoundSoulBreakPacket(cap.diedWithSoulHearth, cap.soulType));
@@ -280,7 +282,6 @@ public class CommonEvents {
                     }
                 });
             }
-           serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSoulBreakPacket(false, cap.soulType)));
         }
     }
 

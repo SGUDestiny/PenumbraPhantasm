@@ -139,5 +139,11 @@ public class PacketHandlerRegistry {
                 .decoder(ClientBoundFireDoorSyncPacket::decode)
                 .consumerMainThread(ClientBoundFireDoorSyncPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(ClientBoundSoulSyncPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundSoulSyncPacket::encode)
+                .decoder(ClientBoundSoulSyncPacket::decode)
+                .consumerMainThread(ClientBoundSoulSyncPacket::handle)
+                .add();
     }
 }

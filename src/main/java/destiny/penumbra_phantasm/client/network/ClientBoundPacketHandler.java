@@ -68,6 +68,21 @@ public class ClientBoundPacketHandler
 				});
 	}
 
+	public static void syncSoulStuff(boolean seenIntro, boolean diedWithSoulHearth, int soulType, int determination, int connectionLevel) {
+		Minecraft minecraft = Minecraft.getInstance();
+		Player player = minecraft.player;
+
+		if(player != null) {
+			player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
+				cap.seenIntro = seenIntro;
+				cap.diedWithSoulHearth = diedWithSoulHearth;
+				cap.soulType = soulType;
+				cap.determination = determination;
+				cap.connectionLevel = connectionLevel;
+			});
+		}
+	}
+
 	public static void sendParticle(ResourceLocation particleId, double x, double y, double z, double vx, double vy, double vz, int count) {
 		Level level = Minecraft.getInstance().level;
 

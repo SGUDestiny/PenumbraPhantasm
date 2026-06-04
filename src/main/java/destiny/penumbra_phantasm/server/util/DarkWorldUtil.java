@@ -707,4 +707,13 @@ public class DarkWorldUtil
 		return darkWorlds;
 	}
 
+	public static boolean isDepths(Level level)
+	{
+		return level.dimension().location().getPath().contains("the_depths");
+	}
+
+	public static boolean isDepthsKey(ResourceKey<Level> levelResourceKey)
+	{
+		return levelResourceKey.location().getPath().contains("the_depths");
+	}
 }

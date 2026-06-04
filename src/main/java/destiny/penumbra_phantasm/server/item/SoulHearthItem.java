@@ -3,13 +3,13 @@ package destiny.penumbra_phantasm.server.item;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.advancement.TriggerCriterions;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
+import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.entity.SealingSoulEntity;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.EntityRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -43,14 +43,11 @@ import java.util.function.Consumer;
 
 public class SoulHearthItem extends Item {
     public static final String OWNER_UUID = "owner_uuid";
+    public static final String CURRENT_UUID = "current_uuid";
     public static final String SOUL_TYPE = "soul_type";
-    public static final String DETERMINATION = "determination";
-    public static final String TRUST_LEVEL = "trust_level";
 
     public UUID ownerUuid = null;
     public int soulType = 1;
-    public float determination = 0;
-    public int trustLevel = 0;
 
     public SoulHearthItem(Properties properties) {
         super(properties);
@@ -83,6 +80,15 @@ public class SoulHearthItem extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
+
+        if (stack.getTag() == null) return InteractionResultHolder.fail(stack);
+
+        UUID ownerUuid = stack.getTag().getUUID(OWNER_UUID);
+
+        if (!player.getUUID().equals(ownerUuid)) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.soul_hearth_reject"), true);
+            return InteractionResultHolder.fail(stack);
+        }
 
         if (!DarkWorldUtil.isDarkWorld(level)) return InteractionResultHolder.pass(stack);
 
@@ -118,29 +124,44 @@ public class SoulHearthItem extends Item {
             return InteractionResultHolder.pass(stack);
         }
 
-        if (darkFountain.sealingFrameTick >= 0){
-            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.sealing_fountain_already_being_sealed"), true);
-            return InteractionResultHolder.pass(stack);
+        if (player instanceof ServerPlayer) {
+            SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
+            int soulType = soulCap.soulType;
+            int determination = soulCap.determination;
+
+            if (determination < 100) {
+                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.sealing_fountain_not_enough_determination"), true);
+                return InteractionResultHolder.pass(stack);
+            }
+
+            if (darkFountain.sealingFrameTick >= 0){
+                player.displayClientMessage(Component.translatable("message.penumbra_phantasm.sealing_fountain_already_being_sealed"), true);
+                return InteractionResultHolder.pass(stack);
+            }
+
+            if (!level.isClientSide()) {
+                SealingSoulEntity soulEntity = new SealingSoulEntity(EntityRegistry.SEALING_SOUL.get(), level);
+                soulEntity.setSoulType(soulType);
+
+                float yawRad = player.getYRot() * Mth.DEG_TO_RAD;
+                Vec3 playerPos = player.position();
+                double forwardX = -Mth.sin(yawRad);
+                double forwardZ = Mth.cos(yawRad);
+                soulEntity.setPos(playerPos.x + forwardX, playerPos.y + 1, playerPos.z + (forwardZ * 2));
+
+                level.addFreshEntity(soulEntity);
+            }
+
+            if (player instanceof ServerPlayer serverPlayer) {
+                TriggerCriterions.DARK_FOUNTAIN_SEAL.trigger(serverPlayer);
+            }
+
+            player.getCooldowns().addCooldown(stack.getItem(), 10 * 20);
+
+            if (!player.isCreative()) {
+                soulCap.determination = 0;
+            }
         }
-
-        if (!level.isClientSide()) {
-            SealingSoulEntity soulEntity = new SealingSoulEntity(EntityRegistry.SEALING_SOUL.get(), level);
-            soulEntity.setSoulType(stack.getTag().getInt(SOUL_TYPE));
-
-            float yawRad = player.getYRot() * Mth.DEG_TO_RAD;
-            Vec3 playerPos = player.position();
-            double forwardX = -Mth.sin(yawRad);
-            double forwardZ = Mth.cos(yawRad);
-            soulEntity.setPos(playerPos.x + forwardX, playerPos.y + 1, playerPos.z + (forwardZ * 2));
-
-            level.addFreshEntity(soulEntity);
-        }
-
-        if (player instanceof ServerPlayer serverPlayer) {
-            TriggerCriterions.DARK_FOUNTAIN_SEAL.trigger(serverPlayer);
-        }
-
-        player.getCooldowns().addCooldown(stack.getItem(), 10 * 20);
 
         return InteractionResultHolder.consume(stack);
     }
@@ -150,44 +171,42 @@ public class SoulHearthItem extends Item {
         if (level.isClientSide()) return;
 
         if (entity instanceof Player player) {
-            if (!player.getCapability(CapabilityRegistry.SOUL).isPresent()) return;
+            SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
+            int soulType = soulCap.soulType;
 
             if (stack.getTag() == null || stack.getTag().get(OWNER_UUID) == null) {
                 stack.getOrCreateTag().putUUID(OWNER_UUID, player.getUUID());
-
-                player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> soulType = cap.soulType);
                 stack.getOrCreateTag().putInt(SOUL_TYPE, soulType);
-                stack.getOrCreateTag().putFloat(DETERMINATION, determination);
-                stack.getOrCreateTag().putInt(TRUST_LEVEL, trustLevel);
             }
 
-            UUID ownerUuid = stack.getTag().getUUID(OWNER_UUID);
-            if (player.getUUID().equals(ownerUuid)) {
-                float determination = stack.getTag().getFloat(DETERMINATION);
+            if(!stack.getOrCreateTag().contains(CURRENT_UUID) || !stack.getOrCreateTag().getUUID(CURRENT_UUID).equals(player.getUUID()))
+                stack.getOrCreateTag().putUUID(CURRENT_UUID, player.getUUID());
 
-                if (determination < 1) {
-                    if (level.getGameTime() % (5 * 20) == 0) {
-                        determination = determination + 0.01f;
-                    }
-                }
-
-                stack.getOrCreateTag().putFloat(DETERMINATION, determination);
+            if (stack.getTag().getInt(SOUL_TYPE) != soulType) {
+                stack.getOrCreateTag().putInt(SOUL_TYPE, soulType);
             }
         }
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag isAdvanced) {
-        if (stack.getTag() == null) return;
+        if (stack.getTag() == null || level == null) return;
 
         UUID ownerUuid = stack.getTag().getUUID(OWNER_UUID);
-        if (!Minecraft.getInstance().player.getUUID().equals(ownerUuid)) {
+        UUID currentUUID = stack.getTag().getUUID(CURRENT_UUID);
+        Player player = level.getPlayerByUUID(currentUUID);
+        if(player == null)
+            return;
+
+        if (!player.getUUID().equals(ownerUuid)) {
             components.add(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.not_owner")
                             .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))));
         } else {
-            int soulType = stack.getTag().getInt(SOUL_TYPE);
-            int determination = (int) (100 * stack.getTag().getFloat(DETERMINATION));
-            int trustLevel = stack.getTag().getInt(TRUST_LEVEL);
+            SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
+
+            int soulType = soulCap.soulType;
+            int determination = soulCap.determination;
+            int connectionLevel = soulCap.connectionLevel;
 
             components.add(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.soul_type")
                     .append(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.soul_type." + soulType))
@@ -197,8 +216,8 @@ public class SoulHearthItem extends Item {
                     .append(Component.literal(determination + "%"))
                     .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator")))
             );
-            components.add(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.trust_level")
-                    .append(Component.literal(trustLevel + ""))
+            components.add(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.connection_level")
+                    .append(Component.literal(connectionLevel + ""))
                     .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator")))
             );
         }
