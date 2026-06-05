@@ -44,13 +44,21 @@ public class ItemRegistry {
             () -> new SwordItem(Tiers.NETHERITE, 5, -2, basicItem()));
 
     public static final RegistryObject<Item> DARK_CANDY = ITEMS.register("dark_candy",
-            () -> new DeterminationFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationMod(0.5f).fast().alwaysEat().build()), 6));
+            () -> new DeterminationFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(4).saturationMod(0.5f).fast().alwaysEat().build()), 6, SoundRegistry.HEAL.get()));
 
     public static final RegistryObject<Item> FRIEND = ITEMS.register("friend",
             () -> new FriendItem(basicItem()));
 
     public static final RegistryObject<Item> SOUL_HEARTH = ITEMS.register("soul_hearth",
             () -> new SoulHearthItem(basicItem()));
+    public static final RegistryObject<Item> DETERMINATION_INJECTION = ITEMS.register("determination_injection",
+            () -> new DeterminationInjectionItem(basicItem()));
+    public static final RegistryObject<Item> EMPTY_INJECTION = ITEMS.register("empty_injection",
+            () -> new EmptyInjectionItem(new Item.Properties()));
+    public static final RegistryObject<Item> DETERMINATION_CANISTER = ITEMS.register("determination_canister",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> HEARTH_SOUL = ITEMS.register("hearth_soul",
+            () -> new HearthSoulItem(basicItem()));
 
     public static final RegistryObject<Item> ITEM_MUSIC_MEDIUM_THE_HOLY = ITEMS.register("item_music_medium_the_holy",
             () -> new MusicMediumItem(6, SoundRegistry.FOUNTAIN_MUSIC_DISC, basicItem(), (int) (53.333 * 20)));

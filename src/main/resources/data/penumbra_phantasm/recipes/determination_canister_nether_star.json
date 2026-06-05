@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "N": {
+      "item": "minecraft:nether_star"
+    }
+  },
+  "pattern": [
+    " I ",
+    "BNB",
+    " I "
+  ],
+  "result": {
+    "count": 8,
+    "item": "penumbra_phantasm:determination_canister"
+  },
+  "show_notification": true
+}

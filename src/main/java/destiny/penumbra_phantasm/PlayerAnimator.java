@@ -21,19 +21,30 @@ public class PlayerAnimator {
                 new ResourceLocation(MODID, "fountain_make"),
                 1500,
                 PlayerAnimator::registerPlayerAnimation);
-
         PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
                 new ResourceLocation(MODID, "fountain_make_jump"),
                 1500,
                 PlayerAnimator::registerPlayerAnimation);
-
         PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
                 new ResourceLocation(MODID, "fountain_make_stab"),
                 1500,
                 PlayerAnimator::registerPlayerAnimation);
-
         PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
                 new ResourceLocation(MODID, "fountain_make_cancel"),
+                1500,
+                PlayerAnimator::registerPlayerAnimation);
+
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                new ResourceLocation(MODID, "injection_use"),
+                1500,
+                PlayerAnimator::registerPlayerAnimation);
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                new ResourceLocation(MODID, "injection_use_alt"),
+                1500,
+                PlayerAnimator::registerPlayerAnimation);
+
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                new ResourceLocation(MODID, "soul_rip"),
                 1500,
                 PlayerAnimator::registerPlayerAnimation);
     }

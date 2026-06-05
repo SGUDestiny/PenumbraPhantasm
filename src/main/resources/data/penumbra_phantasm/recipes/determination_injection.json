@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "penumbra_phantasm:empty_injection"
+    },
+    {
+      "item": "penumbra_phantasm:determination_canister"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "item": "penumbra_phantasm:determination_injection"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "penumbra_phantasm:determination_injection",
+  "display": {
+    "icon": {
+      "item": "penumbra_phantasm:empty_injection"
+    },
+    "title": {
+      "translate": "advancement.penumbra_phantasm.determination_injection_steal.title"
+    },
+    "description": {
+      "translate": "advancement.penumbra_phantasm.determination_injection_steal.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "determination_injection_steal": {
+      "trigger": "penumbra_phantasm:determination_injection_steal"
+    }
+  },
+  "requirements": [
+    [
+      "determination_injection_steal"
+    ]
+  ],
+  "rewards": {
+    "experience": 0
+  },
+  "sends_telemetry_event": false
+}

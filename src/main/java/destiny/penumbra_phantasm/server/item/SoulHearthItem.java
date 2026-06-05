@@ -10,7 +10,6 @@ import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.EntityRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -36,7 +35,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -45,6 +43,7 @@ import java.util.function.Consumer;
 
 public class SoulHearthItem extends Item {
     public static final String OWNER_UUID = "owner_uuid";
+    public static final String CURRENT_UUID = "current_uuid";
     public static final String SOUL_TYPE = "soul_type";
 
     public UUID ownerUuid = null;
@@ -180,6 +179,9 @@ public class SoulHearthItem extends Item {
                 stack.getOrCreateTag().putInt(SOUL_TYPE, soulType);
             }
 
+            if(!stack.getOrCreateTag().contains(CURRENT_UUID) || !stack.getOrCreateTag().getUUID(CURRENT_UUID).equals(player.getUUID()))
+                stack.getOrCreateTag().putUUID(CURRENT_UUID, player.getUUID());
+
             if (stack.getTag().getInt(SOUL_TYPE) != soulType) {
                 stack.getOrCreateTag().putInt(SOUL_TYPE, soulType);
             }
@@ -188,10 +190,13 @@ public class SoulHearthItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, @NotNull List<Component> components, @NotNull TooltipFlag isAdvanced) {
-        if (stack.getTag() == null) return;
+        if (stack.getTag() == null || level == null) return;
 
         UUID ownerUuid = stack.getTag().getUUID(OWNER_UUID);
-        Player player = Minecraft.getInstance().player;
+        UUID currentUUID = stack.getTag().getUUID(CURRENT_UUID);
+        Player player = level.getPlayerByUUID(currentUUID);
+        if(player == null)
+            return;
 
         if (!player.getUUID().equals(ownerUuid)) {
             components.add(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.not_owner")

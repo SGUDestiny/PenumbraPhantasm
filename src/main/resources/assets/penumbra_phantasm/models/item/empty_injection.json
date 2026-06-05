@@ -1,0 +1,6 @@
+{
+  "parent": "penumbra_phantasm:item/handheld_injection",
+  "textures": {
+    "layer0": "penumbra_phantasm:item/empty_injection"
+  }
+}

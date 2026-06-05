@@ -62,10 +62,10 @@ public class PacketHandlerRegistry {
                 .consumerMainThread(ServerBoundSoulPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(ClientBoundSoulSyncPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(ClientBoundSoulSyncPacket::encode)
-                .decoder(ClientBoundSoulSyncPacket::decode)
-                .consumerMainThread(ClientBoundSoulSyncPacket::handle)
+        INSTANCE.messageBuilder(ClientBoundSoulBreakPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundSoulBreakPacket::encode)
+                .decoder(ClientBoundSoulBreakPacket::decode)
+                .consumerMainThread(ClientBoundSoulBreakPacket::handle)
                 .add();
 
         INSTANCE.messageBuilder(ClientBoundTransportTickerPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)

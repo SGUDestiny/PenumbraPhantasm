@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "I": {
+      "tag": "forge:ingots/iron"
+    },
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "N": {
+      "tag": "forge:nuggets/iron"
+    }
+  },
+  "pattern": [
+    " NB",
+    " IN",
+    "N  "
+  ],
+  "result": {
+    "count": 1,
+    "item": "penumbra_phantasm:empty_injection"
+  },
+  "show_notification": true
+}

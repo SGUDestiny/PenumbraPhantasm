@@ -51,9 +51,11 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
         }
 
         if (!DarkWorldUtil.isDepths(level)) {
-            if (hasOwnSoulHearth(player) && determination < 100) {
-                if (level.getGameTime() % (5 * 20) == 0) {
-                    determination = determination + 1;
+            if (hasOwnSoulHearth(player)) {
+                if (determination < 100) {
+                    if (level.getGameTime() % (5 * 20) == 0) {
+                        determination = determination + 1;
+                    }
                 }
             }
         } else {
