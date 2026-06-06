@@ -455,6 +455,8 @@
   "biome.penumbra_phantasm.cliffs.description": "'Seuls les yeux aveuglés par les ténèbres discernent la voie...'",
 
   
+  "message.penumbra_phantasm.making_fountain_no_soul_hearth": "Pas de foyez d'ÂME...",
+  "message.penumbra_phantasm.making_fountain_not_enough_determination": "Pas assez de DÉTERMINATION pour transpercer...",
   "message.penumbra_phantasm.making_fountain_invalid_position": "Doit être sur un bloc entier.",
   "message.penumbra_phantasm.making_fountain_not_enough_key_blocks": "Pas assez de blocs pour animer votre imagination...",
   "message.penumbra_phantasm.making_fountain_inside_dark_world": "Vous sentez que ce n'est pas une bonne idée...",
@@ -462,7 +464,9 @@
   "message.penumbra_phantasm.making_fountain_room_has_active_fountain": "Une fontaine est déjà dans cette pièce.",
   "message.penumbra_phantasm.making_fountain_critical_error": "Une erreur empêche sa création, veuillez contacter le développeur!",
   "message.penumbra_phantasm.pushed_away_by_fountain": "Le flux de ténèbres vous repousse...",
+  "message.penumbra_phantasm.soul_hearth_reject": "L'ÂME en son sein vous rejette.",
   "message.penumbra_phantasm.sealing_fountain_no_fountain_nearby": "Mais il n'y avais pas de fontaine aux alentours...",
+  "message.penumbra_phantasm.sealing_fountain_not_enough_determination": "Mais vous n'etiez pas assez DÉTERMINÉ...",
   "message.penumbra_phantasm.sealing_fountain_already_being_sealed": "Mais la fontaine se faisait déjà sceller...",
   "message.penumbra_phantasm.dark_world_without_fountain": "Le monde sombre dans lequel vous étiez ne contenait pas de fontaine",
   "message.penumbra_phantasm.great_door_cant_open_no_light_door": "Mais la porte ne voulais pas bouger... (Pas de porte disponible dans la salle de la fontaine)",
