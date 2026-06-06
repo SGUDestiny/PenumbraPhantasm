@@ -154,6 +154,7 @@ public class PenumbraPhantasm {
 
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());
                 ItemProperties.register(ItemRegistry.SOUL_HEARTH.get(), new ResourceLocation(MODID, SOUL_TYPE), new SoulHearthItemProperty());
+                ItemProperties.register(ItemRegistry.HEARTH_SOUL.get(), new ResourceLocation(MODID, SOUL_TYPE), new SoulHearthItemProperty());
                 ItemProperties.register(ItemRegistry.DELTA_SHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
                     return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F;
                 });

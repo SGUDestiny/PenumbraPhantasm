@@ -263,5 +263,17 @@
     [
       "penumbra_phantasm:heal"
     ]
+  },
+  "soul_grab": {
+    "sounds":
+    [
+      "penumbra_phantasm:soul_grab"
+    ]
+  },
+  "soul_hurt": {
+    "sounds":
+    [
+      "penumbra_phantasm:soul_hurt"
+    ]
   }
 }

@@ -1,0 +1,32 @@
+{
+  "parent": "penumbra_phantasm:soul_hearth",
+  "display": {
+    "icon": {
+      "item": "penumbra_phantasm:determination_injection"
+    },
+    "title": {
+      "translate": "advancement.penumbra_phantasm.determination_injection.title"
+    },
+    "description": {
+      "translate": "advancement.penumbra_phantasm.determination_injection.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "determination_injection": {
+      "trigger": "penumbra_phantasm:determination_injection"
+    }
+  },
+  "requirements": [
+    [
+      "determination_injection"
+    ]
+  ],
+  "rewards": {
+    "experience": 0
+  },
+  "sends_telemetry_event": false
+}

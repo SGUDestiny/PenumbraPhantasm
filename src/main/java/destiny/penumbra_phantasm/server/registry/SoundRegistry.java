@@ -59,6 +59,9 @@ public class SoundRegistry {
 
     public static RegistryObject<SoundEvent> HEAL = registerSoundEvent("heal");
 
+    public static RegistryObject<SoundEvent> SOUL_GRAB = registerSoundEvent("soul_grab");
+    public static RegistryObject<SoundEvent> SOUL_HURT = registerSoundEvent("soul_hurt");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));

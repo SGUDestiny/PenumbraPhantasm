@@ -1,0 +1,7 @@
+{
+	"parent": "penumbra_phantasm:block/hearth_determination",
+	"textures": {
+		"0": "penumbra_phantasm:item/soul_hearth_justice",
+		"particle": "penumbra_phantasm:item/soul_hearth_justice"
+	}
+}

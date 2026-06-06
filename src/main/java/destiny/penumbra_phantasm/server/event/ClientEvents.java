@@ -44,6 +44,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
 import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.event.sound.PlaySoundEvent;
 import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import org.lwjgl.opengl.GL11;
@@ -772,6 +773,5 @@ public class ClientEvents {
 			pGuiGraphics.drawString(minecraft.font, s, i1, j1, 0xFF7F27, false);
 			minecraft.getProfiler().pop();
 		}
-
 	}
 }

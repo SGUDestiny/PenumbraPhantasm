@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.advancement.TriggerCriterions;
 import destiny.penumbra_phantasm.server.block.DarknessBlock;
 import destiny.penumbra_phantasm.server.block.GreatDoorShapeBlock;
 import destiny.penumbra_phantasm.server.block.LuminescentWaterFluidBlock;
@@ -8,12 +9,14 @@ import destiny.penumbra_phantasm.server.capability.*;
 import destiny.penumbra_phantasm.server.fluid.PureDarknessFluidType;
 import destiny.penumbra_phantasm.server.fountain.GenericProvider;
 import destiny.penumbra_phantasm.server.item.ScarletBucketItem;
-import destiny.penumbra_phantasm.server.registry.BlockRegistry;
-import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
-import destiny.penumbra_phantasm.server.registry.FluidRegistry;
-import destiny.penumbra_phantasm.server.registry.ItemRegistry;
+import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,6 +35,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -51,6 +55,82 @@ public class ForgeEvents {
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "cheshire_chest"), new CheshireChestCapability());
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "fire_doors"), new GenericProvider<>(CapabilityRegistry.FIRE_DOORS, new FireDoorsCapability()));
         }
+    }
+
+    @SubscribeEvent
+    public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
+        //emptySyringeInteraction(event);
+        //determinationSyringeInteraction(event);
+    }
+
+    public static void emptySyringeInteraction(PlayerInteractEvent.EntityInteract event) {
+        Level level = event.getLevel();
+        if (level.isClientSide()) return;
+
+        if (event.getHand() != InteractionHand.MAIN_HAND) return;
+
+        Entity target = event.getTarget();
+        if (!(target instanceof Player targetPlayer)) return;
+
+        Player player = event.getEntity();
+        ItemStack stack = event.getItemStack();
+
+        if(stack.getItem() == ItemRegistry.EMPTY_INJECTION.get()) {
+            SoulCapability soulCap = targetPlayer.getCapability(CapabilityRegistry.SOUL).orElse(null);
+
+            if (soulCap.determination < 100) return;
+
+            targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_DRAIN), targetPlayer.getMaxHealth() / 2);
+            soulCap.determination = 0;
+
+            level.playSound(null, targetPlayer.getOnPos(), SoundEvents.PLAYER_BIG_FALL, SoundSource.PLAYERS, 1, 1);
+
+            if (stack.getCount() > 1) {
+                stack.shrink(1);
+                player.addItem(new ItemStack(ItemRegistry.DETERMINATION_INJECTION.get()));
+            } else {
+                player.setItemInHand(event.getHand(), new ItemStack(ItemRegistry.DETERMINATION_INJECTION.get()));
+            }
+
+            TriggerCriterions.DETERMINATION_INJECTION_STEAL.trigger((ServerPlayer) player);
+        }
+
+        event.setCanceled(true);
+    }
+
+    public static void determinationSyringeInteraction(PlayerInteractEvent.EntityInteract event) {
+        Level level = event.getLevel();
+        if (level.isClientSide()) return;
+
+        if (event.getHand() != InteractionHand.MAIN_HAND) return;
+
+        Player player = event.getEntity();
+
+        Entity target = event.getTarget();
+        if (!(target instanceof Player targetPlayer)) return;
+
+        ItemStack stack = event.getItemStack();
+
+        if(stack.getItem() == ItemRegistry.DETERMINATION_INJECTION.get()) {
+            SoulCapability soulCap = targetPlayer.getCapability(CapabilityRegistry.SOUL).orElse(null);
+
+            if (soulCap.determination >= 100) {
+                TriggerCriterions.DETERMINATION_INJECTION_CAUSE_OVERDOSE.trigger((ServerPlayer) player);
+
+                targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_OVERDOSE), targetPlayer.getMaxHealth());
+            } else {
+                targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_PRICK), targetPlayer.getMaxHealth() / 2);
+                soulCap.determination = 100;
+            }
+
+            level.playSound(null, targetPlayer.getOnPos(), SoundEvents.PLAYER_BIG_FALL, SoundSource.PLAYERS, 1, 1);
+
+            if (!player.isCreative()) {
+                player.setItemInHand(event.getHand(), new ItemStack(ItemRegistry.EMPTY_INJECTION.get()));
+            }
+        }
+
+        event.setCanceled(true);
     }
 
     @SubscribeEvent

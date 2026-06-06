@@ -1,0 +1,32 @@
+{
+  "parent": "penumbra_phantasm:determination_injection_death",
+  "display": {
+    "icon": {
+      "item": "penumbra_phantasm:determination_canister"
+    },
+    "title": {
+      "translate": "advancement.penumbra_phantasm.determination_injection_overdose.title"
+    },
+    "description": {
+      "translate": "advancement.penumbra_phantasm.determination_injection_overdose.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "determination_injection_overdose": {
+      "trigger": "penumbra_phantasm:determination_injection_overdose"
+    }
+  },
+  "requirements": [
+    [
+      "determination_injection_overdose"
+    ]
+  ],
+  "rewards": {
+    "experience": 0
+  },
+  "sends_telemetry_event": false
+}

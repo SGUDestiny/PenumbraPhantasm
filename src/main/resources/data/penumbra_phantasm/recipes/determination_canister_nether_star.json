@@ -7,18 +7,18 @@
     "B": {
       "item": "minecraft:iron_bars"
     },
-    "C": {
-      "item": "minecraft:chain"
+    "N": {
+      "item": "minecraft:nether_star"
     }
   },
   "pattern": [
-    "ICI",
-    "B B",
-    "III"
+    " I ",
+    "BNB",
+    " I "
   ],
   "result": {
-    "count": 1,
-    "item": "penumbra_phantasm:soul_hearth"
+    "count": 8,
+    "item": "penumbra_phantasm:determination_canister"
   },
   "show_notification": true
 }

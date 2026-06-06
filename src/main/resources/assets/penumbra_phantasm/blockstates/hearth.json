@@ -1,7 +1,28 @@
 {
   "variants": {
-    "": {
+    "soul_type=0": {
       "model": "penumbra_phantasm:block/hearth"
+    },
+    "soul_type=1": {
+      "model": "penumbra_phantasm:block/hearth_determination"
+    },
+    "soul_type=2": {
+      "model": "penumbra_phantasm:block/hearth_patience"
+    },
+    "soul_type=3": {
+      "model": "penumbra_phantasm:block/hearth_bravery"
+    },
+    "soul_type=4": {
+      "model": "penumbra_phantasm:block/hearth_integrity"
+    },
+    "soul_type=5": {
+      "model": "penumbra_phantasm:block/hearth_perseverance"
+    },
+    "soul_type=6": {
+      "model": "penumbra_phantasm:block/hearth_kindness"
+    },
+    "soul_type=7": {
+      "model": "penumbra_phantasm:block/hearth_justice"
     }
   }
 }
