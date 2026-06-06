@@ -52,6 +52,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static destiny.penumbra_phantasm.server.item.SoulHearthItem.SOUL_TYPE;
+import static net.minecraft.world.level.block.CampfireBlock.LIT;
 
 public class HearthBlock extends BaseEntityBlock {
     public static final IntegerProperty SOUL_TYPE_HEARTH = IntegerProperty.create("soul_type", 0, 7);
@@ -131,16 +132,24 @@ public class HearthBlock extends BaseEntityBlock {
 
                 stack.shrink(1);
 
-                double x = pPos.getX() + 0.5;
-                double y = pPos.getY() + 1.5;
-                double z = pPos.getZ() + 0.5;
+                int particleAmount = pLevel.random.nextInt(3, 6);
 
-                PacketHandlerRegistry.INSTANCE.send(
-                        PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, pLevel.dimension())),
-                        new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypes.SOUL), x, y, z, 0, 0, 0, 3)
-                );
+                for (int i = 0; i < particleAmount; i++) {
+                    double x = pPos.getX() + (pLevel.random.nextDouble() - 0.5);
+                    double y = pPos.getY() + 1.5;
+                    double z = pPos.getZ() + (pLevel.random.nextDouble() - 0.5);
 
-                pLevel.playSound(null, pPos, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, 1f, 1);
+                    PacketHandlerRegistry.INSTANCE.send(
+                            PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(x, y, z, 32.0, pLevel.dimension())),
+                            new ClientBoundParticlePacket(
+                                    ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypes.SOUL),
+                                    x, y, z, 0, 0, 0, 1
+                            )
+                    );
+                }
+
+                pLevel.setBlockAndUpdate(pPos.below(), Blocks.SOUL_CAMPFIRE.defaultBlockState().setValue(LIT, false));
+                pLevel.playSound(null, pPos, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, 1f, 1f);
 
                 TriggerCriterions.SOUL_HEARTH.trigger((ServerPlayer) pPlayer);
 

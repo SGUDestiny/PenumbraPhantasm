@@ -146,10 +146,4 @@ public class HearthBlockEntity extends BlockEntity {
             load(tag);
         }
     }
-
-    private void markUpdated() {
-        super.setChanged();
-        if (level != null)
-            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
-    }
 }
