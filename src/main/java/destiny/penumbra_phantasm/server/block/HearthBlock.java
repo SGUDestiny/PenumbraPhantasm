@@ -122,7 +122,7 @@ public class HearthBlock extends BaseEntityBlock {
 
         if (!(pLevel.getBlockEntity(pPos) instanceof HearthBlockEntity hearthBlockEntity)) return InteractionResult.FAIL;
 
-        if (pLevel.getBiome(pPos).is(Biomes.SOUL_SAND_VALLEY) && pLevel.getBlockState(pPos.below()).is(Blocks.SOUL_CAMPFIRE)) {
+        if (pLevel.getBiome(pPos).is(Biomes.SOUL_SAND_VALLEY) && pLevel.getBlockState(pPos.below()).is(Blocks.SOUL_CAMPFIRE) && pLevel.getBlockState(pPos.below()).getValue(LIT)) {
             ItemStack stack = pPlayer.getItemInHand(pHand);
 
             if (stack.getItem() instanceof HearthSoulItem && pState.getValue(SOUL_TYPE_HEARTH) == 0) {
