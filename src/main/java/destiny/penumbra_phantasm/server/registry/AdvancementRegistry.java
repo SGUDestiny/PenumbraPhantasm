@@ -14,5 +14,6 @@ public class AdvancementRegistry {
         CriteriaTriggers.register(TriggerCriterions.DETERMINATION_INJECTION_OVERDOSE);
         CriteriaTriggers.register(TriggerCriterions.DETERMINATION_INJECTION_CAUSE_OVERDOSE);
         CriteriaTriggers.register(TriggerCriterions.DETERMINATION_INJECTION_STEAL);
+        CriteriaTriggers.register(TriggerCriterions.SOUL_HEARTH);
     }
 }

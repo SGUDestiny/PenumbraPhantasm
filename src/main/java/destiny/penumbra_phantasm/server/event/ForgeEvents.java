@@ -74,7 +74,7 @@ public class ForgeEvents {
         ItemStack stack = event.getItemStack();
 
         if(stack.getItem() == ItemRegistry.EMPTY_INJECTION.get()) {
-            SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
+            SoulCapability soulCap = targetPlayer.getCapability(CapabilityRegistry.SOUL).orElse(null);
 
             if (soulCap.determination < 100) return;
 

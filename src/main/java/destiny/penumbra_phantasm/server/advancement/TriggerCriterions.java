@@ -12,4 +12,5 @@ public class TriggerCriterions {
     public static final PlayerTrigger DETERMINATION_INJECTION_OVERDOSE = new PlayerTrigger(new ResourceLocation(PenumbraPhantasm.MODID, "determination_injection_overdose"));
     public static final PlayerTrigger DETERMINATION_INJECTION_CAUSE_OVERDOSE = new PlayerTrigger(new ResourceLocation(PenumbraPhantasm.MODID, "determination_injection_cause_overdose"));
     public static final PlayerTrigger DETERMINATION_INJECTION_STEAL = new PlayerTrigger(new ResourceLocation(PenumbraPhantasm.MODID, "determination_injection_steal"));
+    public static final PlayerTrigger SOUL_HEARTH = new PlayerTrigger(new ResourceLocation(PenumbraPhantasm.MODID, "soul_hearth"));
 }

@@ -22,16 +22,19 @@ public class HearthSoulItem extends Item {
 
         if (stack.getTag() == null) {
             stack.shrink(stack.getCount());
+            return;
         }
 
         if (stack.getTag().get(HEARTH_POS) == null) {
             stack.shrink(stack.getCount());
+            return;
         }
 
         BlockPos hearthPos = NbtUtils.readBlockPos(stack.getTag().getCompound(HEARTH_POS));
 
         if (!level.getBlockState(hearthPos).is(BlockRegistry.HEARTH.get())) {
             stack.shrink(stack.getCount());
+            return;
         }
 
         if (entity.getOnPos().getCenter().distanceTo(hearthPos.getCenter()) > 8) {

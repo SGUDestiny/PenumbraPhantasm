@@ -1,0 +1,45 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "penumbra_phantasm:hearth",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "soul_type": "0"
+              }
+            }
+          ],
+          "name": "penumbra_phantasm:hearth"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "condition": "minecraft:inverted",
+              "term": {
+                "condition": "minecraft:block_state_property",
+                "block": "penumbra_phantasm:hearth",
+                "properties": {
+                  "soul_type": "0"
+                }
+              }
+            }
+          ],
+          "name": "penumbra_phantasm:soul_hearth"
+        }
+      ],
+      "rolls": 1
+    }
+  ]
+}
