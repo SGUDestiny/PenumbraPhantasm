@@ -136,7 +136,7 @@ public class HearthBlock extends BaseEntityBlock {
 
                 for (int i = 0; i < particleAmount; i++) {
                     double x = pPos.getX() + (pLevel.random.nextDouble() - 0.5);
-                    double y = pPos.getY() + 1.5;
+                    double y = pPos.getY() + 1;
                     double z = pPos.getZ() + (pLevel.random.nextDouble() - 0.5);
 
                     PacketHandlerRegistry.INSTANCE.send(

@@ -59,13 +59,15 @@ public class ForgeEvents {
 
     @SubscribeEvent
     public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
-        emptySyringeInteraction(event);
-        determinationSyringeInteraction(event);
+        //emptySyringeInteraction(event);
+        //determinationSyringeInteraction(event);
     }
 
     public static void emptySyringeInteraction(PlayerInteractEvent.EntityInteract event) {
         Level level = event.getLevel();
         if (level.isClientSide()) return;
+
+        if (event.getHand() != InteractionHand.MAIN_HAND) return;
 
         Entity target = event.getTarget();
         if (!(target instanceof Player targetPlayer)) return;
@@ -92,6 +94,8 @@ public class ForgeEvents {
 
             TriggerCriterions.DETERMINATION_INJECTION_STEAL.trigger((ServerPlayer) player);
         }
+
+        event.setCanceled(true);
     }
 
     public static void determinationSyringeInteraction(PlayerInteractEvent.EntityInteract event) {
@@ -101,7 +105,6 @@ public class ForgeEvents {
         if (event.getHand() != InteractionHand.MAIN_HAND) return;
 
         Player player = event.getEntity();
-        if (!player.isCrouching()) return;
 
         Entity target = event.getTarget();
         if (!(target instanceof Player targetPlayer)) return;
@@ -109,7 +112,7 @@ public class ForgeEvents {
         ItemStack stack = event.getItemStack();
 
         if(stack.getItem() == ItemRegistry.DETERMINATION_INJECTION.get()) {
-            SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
+            SoulCapability soulCap = targetPlayer.getCapability(CapabilityRegistry.SOUL).orElse(null);
 
             if (soulCap.determination >= 100) {
                 TriggerCriterions.DETERMINATION_INJECTION_CAUSE_OVERDOSE.trigger((ServerPlayer) player);
@@ -126,6 +129,8 @@ public class ForgeEvents {
                 player.setItemInHand(event.getHand(), new ItemStack(ItemRegistry.EMPTY_INJECTION.get()));
             }
         }
+
+        event.setCanceled(true);
     }
 
     @SubscribeEvent
