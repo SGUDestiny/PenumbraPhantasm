@@ -1,14 +1,12 @@
 package destiny.penumbra_phantasm.server.block;
 
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
-import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -16,6 +14,8 @@ import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +43,7 @@ public class ScarletBushBlock extends Block implements SimpleWaterloggedBlock {
 
     public ScarletBushBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(TALL, false).setValue(HOLE, HoleStates.NONE));
+        this.registerDefaultState(this.defaultBlockState().setValue(TALL, false).setValue(HOLE, HoleStates.NONE).setValue(BlockStateProperties.WATERLOGGED, false));
 
     }
 
@@ -80,6 +80,13 @@ public class ScarletBushBlock extends Block implements SimpleWaterloggedBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> blockStateBuilder) {
         blockStateBuilder.add(TALL);
         blockStateBuilder.add(HOLE);
+        blockStateBuilder.add(BlockStateProperties.WATERLOGGED);
         super.createBlockStateDefinition(blockStateBuilder);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state)
+    {
+        return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 }
