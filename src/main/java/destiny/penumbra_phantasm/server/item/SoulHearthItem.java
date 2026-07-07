@@ -125,6 +125,11 @@ public class SoulHearthItem extends Item {
             return InteractionResultHolder.pass(stack);
         }
 
+        if (player.isSleeping()) {
+            player.displayClientMessage(Component.translatable("message.penumbra_phantasm.sealing_fountain_cannot_sleep"), true);
+            return InteractionResultHolder.pass(stack);
+        }
+
         if (player instanceof ServerPlayer) {
             SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
             int soulType = soulCap.soulType;
@@ -141,6 +146,9 @@ public class SoulHearthItem extends Item {
             }
 
             if (!level.isClientSide()) {
+                darkFountain.sealingTick = 0;
+                darkFountain.sealingFrameTick = darkFountain.getFrameTick();
+
                 SealingSoulEntity soulEntity = new SealingSoulEntity(EntityRegistry.SEALING_SOUL.get(), level);
                 soulEntity.setSoulType(soulType);
 
