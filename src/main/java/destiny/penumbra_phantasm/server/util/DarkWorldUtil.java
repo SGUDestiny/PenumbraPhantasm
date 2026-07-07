@@ -186,7 +186,9 @@ public class DarkWorldUtil
 	}
 
 	private static int resolveGreatDoorFootY(ServerLevel level, BlockPos fountainAnchor, int bx, int bz) {
-		BlockPos column = new BlockPos(bx, level.getMaxBuildHeight() - 1, bz);
+		BlockPos column = new BlockPos(bx+27, level.getMaxBuildHeight() - 1, bz-14);
+		long chunk = ChunkPos.asLong(column);
+		level.setChunkForced(ChunkPos.getX(chunk), ChunkPos.getZ(chunk), true);
 		int y = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, column).getY();
 		int minY = level.getMinBuildHeight() + 5;
 		int steps = 64;
@@ -198,6 +200,7 @@ public class DarkWorldUtil
 				continue;
 			}
 			if (!isUnsuitableGreatDoorFooting(level, test)) {
+				level.setChunkForced(ChunkPos.getX(chunk), ChunkPos.getZ(chunk), false);
 				return y;
 			}
 			y--;
@@ -212,6 +215,7 @@ public class DarkWorldUtil
 				continue;
 			}
 			if (!isUnsuitableGreatDoorFooting(level, anchorTest)) {
+				level.setChunkForced(ChunkPos.getX(chunk), ChunkPos.getZ(chunk), false);
 				return y;
 			}
 			y--;
@@ -317,21 +321,43 @@ public class DarkWorldUtil
 			double dist = minR + random.nextDouble() * (maxR - minR);
 			int bx = fountainAnchor.getX() + Mth.floor(Mth.cos((float) angle) * dist);
 			int bz = fountainAnchor.getZ() + Mth.floor(Mth.sin((float) angle) * dist);
-			int footY = resolveGreatDoorFootY(level, fountainAnchor, bx, bz);
-			if (footY == Integer.MIN_VALUE) {
-				continue;
-			}
-			int originY = footY - 1;
-			if (originY <= level.getMinBuildHeight()) {
-				continue;
-			}
-			BlockPos origin = new BlockPos(bx, originY, bz);
 			Rotation rot = switch (random.nextInt(4)) {
 				case 0 -> Rotation.NONE;
 				case 1 -> Rotation.CLOCKWISE_90;
 				case 2 -> Rotation.CLOCKWISE_180;
 				default -> Rotation.COUNTERCLOCKWISE_90;
 			};
+			int xDoorOffset = 0;
+			int zDoorOffset = 0;
+			if(rot == Rotation.NONE)
+			{
+				xDoorOffset -= 14;
+				zDoorOffset -= 27;
+			}
+			if(rot == Rotation.CLOCKWISE_90)
+			{
+				xDoorOffset += 27;
+				zDoorOffset += 14;
+			}
+			if(rot == Rotation.CLOCKWISE_180)
+			{
+				xDoorOffset += 14;
+				zDoorOffset += 27;
+			}
+			if(rot == Rotation.COUNTERCLOCKWISE_90)
+			{
+				xDoorOffset -= 27;
+				zDoorOffset += 14;
+			}
+			int footY = resolveGreatDoorFootY(level, fountainAnchor, bx+xDoorOffset, bz+zDoorOffset);
+			if (footY == Integer.MIN_VALUE) {
+				continue;
+			}
+			int originY = footY;
+			if (originY <= level.getMinBuildHeight()) {
+				continue;
+			}
+			BlockPos origin = new BlockPos(bx, originY, bz);
 			Optional<GreatDoorStructureResult> placed = placeGreatDoorStructureTemplate(level, template, origin, rot.getRotated(Rotation.CLOCKWISE_180), random);
 			if (placed.isPresent()) {
 				return placed;
