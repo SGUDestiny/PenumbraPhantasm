@@ -68,10 +68,10 @@ public class MusicManager {
                     new ResourceLocation(PenumbraPhantasm.MODID, "scarlet_forest"),
                     new BiomeMusic(() -> SoundRegistry.EVERLASTING_AUTUMN.get(), ClientConfig.biomeMusicLoop, ClientConfig.biomeMusicMinDelay * 20, ClientConfig.biomeMusicMaxDelay * 20)
             );
-/*            biomeMusicMap.put(
+            biomeMusicMap.put(
                     new ResourceLocation(PenumbraPhantasm.MODID, "great_board"),
-                    new BiomeMusic(() -> SoundRegistry.FIELD_OF_HOPES_AND_DREAMS.get(), ClientConfig.biomeMusicLoop, 60 * 20, 15 * 60 * 20)
-            );*/
+                    new BiomeMusic(() -> SoundRegistry.AN_OUTSTANDING_MOVE.get(), ClientConfig.biomeMusicLoop, ClientConfig.biomeMusicMinDelay * 20, ClientConfig.biomeMusicMaxDelay * 20)
+            );
         }
     }
 

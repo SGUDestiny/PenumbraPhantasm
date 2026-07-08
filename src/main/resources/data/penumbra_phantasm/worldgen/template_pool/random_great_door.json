@@ -7,7 +7,7 @@
         "element_type": "minecraft:single_pool_element",
         "location": "penumbra_phantasm:great_door",
         "processors": "minecraft:empty",
-        "projection": "terrain_matching"
+        "projection": "rigid"
       }
     }
   ]

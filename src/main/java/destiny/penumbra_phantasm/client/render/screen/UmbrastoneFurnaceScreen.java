@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.menu.UmbrastoneFurnaceMenu;
 import destiny.penumbra_phantasm.client.render.screen.component.DarkWorldRecipeBookComponent;
+import destiny.penumbra_phantasm.client.render.screen.component.DarkWorldSmeltingRecipeBookComponent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractFurnaceScreen;
@@ -18,11 +19,11 @@ import net.minecraft.world.inventory.Slot;
 
 import java.util.Random;
 
-public class UmbrastoneFurnaceScreen extends AbstractFurnaceScreen<UmbrastoneFurnaceMenu> {
+public class UmbrastoneFurnaceScreen extends AbstractDarkWorldFurnaceScreen<UmbrastoneFurnaceMenu> {
     private static final ResourceLocation TEXTURE = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/umbrastone_furnace.png");
     private static final ResourceLocation TEXTURE_GLOW = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/umbrastone_furnace_glow.png");
     private static final ResourceLocation RECIPE_BUTTON_LOCATION = new ResourceLocation(PenumbraPhantasm.MODID,"textures/gui/dark_world/recipe_button.png");
-    private final DarkWorldRecipeBookComponent recipeBookComponent = new DarkWorldRecipeBookComponent();
+    private final DarkWorldSmeltingRecipeBookComponent recipeBookComponent = new DarkWorldSmeltingRecipeBookComponent();
     private boolean widthTooNarrow;
 
     public static final int GLOW_TICKER_UPPER_BOUND = 5 * 20;
@@ -33,7 +34,7 @@ public class UmbrastoneFurnaceScreen extends AbstractFurnaceScreen<UmbrastoneFur
     private int glowTicker;
 
     public UmbrastoneFurnaceScreen(UmbrastoneFurnaceMenu menu, Inventory playerInventory, Component title) {
-        super(menu, new SmeltingRecipeBookComponent(), playerInventory, title, TEXTURE);
+        super(menu, new DarkWorldSmeltingRecipeBookComponent(), playerInventory, title, TEXTURE);
         this.imageHeight = 178;
         this.imageWidth = 188;
         this.inventoryLabelX = this.inventoryLabelX + 17;
@@ -55,6 +56,9 @@ public class UmbrastoneFurnaceScreen extends AbstractFurnaceScreen<UmbrastoneFur
         }));
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
 
+        this.addWidget(this.recipeBookComponent);
+        this.setInitialFocus(this.recipeBookComponent);
+
         Random random = new Random();
         this.glowTicker = random.nextInt(0, 21);
     }
@@ -66,6 +70,21 @@ public class UmbrastoneFurnaceScreen extends AbstractFurnaceScreen<UmbrastoneFur
         if (this.glowTicker >= GLOW_TICKER_UPPER_BOUND) {
             this.glowTicker = 0;
         }
+    }
+
+    public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+        this.renderBackground(pGuiGraphics);
+        if (this.recipeBookComponent.isVisible() && this.widthTooNarrow) {
+            this.renderBg(pGuiGraphics, pPartialTick, pMouseX, pMouseY);
+            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick, 4);
+        } else {
+            this.recipeBookComponent.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick, 4);
+            super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
+            this.recipeBookComponent.renderGhostRecipe(pGuiGraphics, this.leftPos, this.topPos, true, pPartialTick);
+        }
+
+        this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
+        this.recipeBookComponent.renderTooltip(pGuiGraphics, this.leftPos, this.topPos, pMouseX, pMouseY);
     }
 
     @Override

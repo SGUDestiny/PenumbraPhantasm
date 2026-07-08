@@ -275,5 +275,11 @@
     [
       "penumbra_phantasm:soul_hurt"
     ]
+  },
+  "an_outstanding_move": {
+    "sounds":
+    [
+      "penumbra_phantasm:an_outstanding_move"
+    ]
   }
 }
