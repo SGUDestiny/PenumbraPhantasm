@@ -14,6 +14,8 @@ import destiny.penumbra_phantasm.client.render.particle.*;
 import destiny.penumbra_phantasm.client.render.screen.CheshireChestScreen;
 import destiny.penumbra_phantasm.client.render.screen.DarkCandyCraftingTableScreen;
 import destiny.penumbra_phantasm.client.render.screen.UmbrastoneFurnaceScreen;
+import destiny.penumbra_phantasm.server.datapack.DarkWorldEntityTransforms;
+import destiny.penumbra_phantasm.server.datapack.DarkWorldItemTransforms;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.item.property.RosegoldLighterItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
@@ -29,6 +31,7 @@ import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
+import destiny.penumbra_phantasm.server.transformations.inventory.StorageManager;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
@@ -91,12 +94,23 @@ public class PenumbraPhantasm {
         PacketHandlerRegistry.register();
         AdvancementRegistry.register();
 
-        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) -> event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null));
+        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) ->
+            {
+                event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null);
+                event.dataPackRegistry(DarkWorldItemTransforms.REGISTRY_KEY, DarkWorldItemTransforms.CODEC, null);
+                event.dataPackRegistry(DarkWorldEntityTransforms.REGISTRY_KEY, DarkWorldEntityTransforms.CODEC, null);
+            });
+        modEventBus.addListener(PenumbraPhantasm::commonSetup);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
+    }
+
+    public static void commonSetup(FMLCommonSetupEvent event)
+    {
+        event.enqueueWork(StorageManager::init);
     }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

@@ -1,0 +1,16 @@
+{
+  "persistent_items":
+  [
+    "penumbra_phantasm:soul_hearth",
+    "penumbra_phantasm:black_knife",
+    "penumbra_phantasm:black_shard",
+    "penumbra_phantasm:shadow_crystal"
+  ],
+  "converting_items":
+  [
+    {
+      "light_world": "penumbra_phantasm:iron_knife",
+      "dark_world": "penumbra_phantasm:familiar_sword"
+    }
+  ]
+}
