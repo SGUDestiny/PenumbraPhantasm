@@ -141,7 +141,7 @@ public class DarkWorldInventoryMenu extends RecipeBookMenu<CraftingContainer> {
     }
 
     public boolean recipeMatches(Recipe<? super CraftingContainer> pRecipe) {
-        if(DarkWorldUtil.getAllDarkWorldRecipes(this.owner.level().registryAccess()).contains(pRecipe.getId()))
+        if(DarkWorldUtil.canUseRecipe(this.owner.level().registryAccess(), pRecipe.getId()))
             return pRecipe.matches(this.craftSlots, this.owner.level());
         else return false;
     }
@@ -262,7 +262,7 @@ public class DarkWorldInventoryMenu extends RecipeBookMenu<CraftingContainer> {
             Optional<CraftingRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, pContainer, pLevel);
             if (optional.isPresent()) {
                 CraftingRecipe craftingrecipe = optional.get();
-                if (pResult.setRecipeUsed(pLevel, serverplayer, craftingrecipe)) {
+                if (pResult.setRecipeUsed(pLevel, serverplayer, craftingrecipe) && DarkWorldUtil.canUseRecipe(pLevel.registryAccess(), craftingrecipe.getId())) {
                     ItemStack itemstack1 = craftingrecipe.assemble(pContainer, pLevel.registryAccess());
                     if (itemstack1.isItemEnabled(pLevel.enabledFeatures())) {
                         itemstack = itemstack1;
@@ -275,4 +275,6 @@ public class DarkWorldInventoryMenu extends RecipeBookMenu<CraftingContainer> {
             serverplayer.connection.send(new ClientboundContainerSetSlotPacket(pMenu.containerId, pMenu.incrementStateId(), 0, itemstack));
         }
     }
+
+
 }

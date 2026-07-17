@@ -1,5 +1,9 @@
 {
-  "dark_world_recipes":
+  "dark_world_allowed":
+          [
+
+          ],
+  "dark_world_blocked":
           [
 
           ]

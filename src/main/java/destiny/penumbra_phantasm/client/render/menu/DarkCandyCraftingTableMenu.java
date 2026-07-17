@@ -69,7 +69,7 @@ public class DarkCandyCraftingTableMenu extends RecipeBookMenu<CraftingContainer
             Optional<CraftingRecipe> $$7 = pLevel.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, pContainer, pLevel);
             if ($$7.isPresent()) {
                 CraftingRecipe $$8 = (CraftingRecipe)$$7.get();
-                if (pResult.setRecipeUsed(pLevel, $$5, $$8)) {
+                if (pResult.setRecipeUsed(pLevel, $$5, $$8) && DarkWorldUtil.canUseRecipe(pPlayer.level().registryAccess(), $$8.getId())) {
                     ItemStack $$9 = $$8.assemble(pContainer, pLevel.registryAccess());
                     if ($$9.isItemEnabled(pLevel.enabledFeatures())) {
                         $$6 = $$9;
@@ -98,12 +98,12 @@ public class DarkCandyCraftingTableMenu extends RecipeBookMenu<CraftingContainer
 
     public void handlePlacement(boolean pPlaceAll, Recipe<?> pRecipe, ServerPlayer pPlayer)
     {
-        if(DarkWorldUtil.getAllDarkWorldRecipes(pPlayer.level().registryAccess()).contains(pRecipe.getId()))
+        if(DarkWorldUtil.canUseRecipe(pPlayer.level().registryAccess(), pRecipe.getId()))
             super.handlePlacement(pPlaceAll, pRecipe, pPlayer);
     }
 
     public boolean recipeMatches(Recipe<? super CraftingContainer> pRecipe) {
-        if(DarkWorldUtil.getAllDarkWorldRecipes(this.player.level().registryAccess()).contains(pRecipe.getId()))
+        if(DarkWorldUtil.canUseRecipe(this.player.level().registryAccess(), pRecipe.getId()))
             return pRecipe.matches(this.craftSlots, this.player.level());
         else return false;
     }

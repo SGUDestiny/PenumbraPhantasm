@@ -743,14 +743,36 @@ public class DarkWorldUtil
 		return levelResourceKey.location().getPath().contains("the_depths");
 	}
 
-	public static List<ResourceLocation> getAllDarkWorldRecipes(RegistryAccess registryAccess)
+	public static List<ResourceLocation> getAllDarkWorldAllowedRecipes(RegistryAccess registryAccess)
 	{
 		List<ResourceLocation> locations = new ArrayList<>();
 		Registry<DarkWorldRecipeSeparation> registry = registryAccess.registryOrThrow(DarkWorldRecipeSeparation.REGISTRY_KEY);
 
 		for(Map.Entry<ResourceKey<DarkWorldRecipeSeparation>, DarkWorldRecipeSeparation> entry : registry.entrySet())
-			locations.addAll(entry.getValue().darkWorldRecipes());
+			locations.addAll(entry.getValue().darkWorldAllowed());
 
 		return locations;
+	}
+
+	public static List<ResourceLocation> getAllDarkWorldBlockedRecipes(RegistryAccess registryAccess)
+	{
+		List<ResourceLocation> locations = new ArrayList<>();
+		Registry<DarkWorldRecipeSeparation> registry = registryAccess.registryOrThrow(DarkWorldRecipeSeparation.REGISTRY_KEY);
+
+		for(Map.Entry<ResourceKey<DarkWorldRecipeSeparation>, DarkWorldRecipeSeparation> entry : registry.entrySet())
+			locations.addAll(entry.getValue().darkWorldBlocked());
+
+		return locations;
+	}
+
+	public static boolean canUseRecipe(RegistryAccess registryAccess, ResourceLocation recipeID)
+	{
+		List<ResourceLocation> allowedRecipes = getAllDarkWorldAllowedRecipes(registryAccess);
+		if(recipeID.getNamespace().equals(PenumbraPhantasm.MODID))
+			allowedRecipes.add(recipeID);
+
+		List<ResourceLocation> blockedRecipes = getAllDarkWorldBlockedRecipes(registryAccess);
+
+		return allowedRecipes.contains(recipeID) && !blockedRecipes.contains(recipeID);
 	}
 }
