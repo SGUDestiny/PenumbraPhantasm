@@ -2,6 +2,8 @@ package destiny.penumbra_phantasm.client.render.screen;
 
 import com.mojang.datafixers.util.Pair;
 import java.util.Optional;
+
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceLocation;
@@ -139,7 +141,9 @@ public class DarkWorldInventoryMenu extends RecipeBookMenu<CraftingContainer> {
     }
 
     public boolean recipeMatches(Recipe<? super CraftingContainer> pRecipe) {
-        return pRecipe.matches(this.craftSlots, this.owner.level());
+        if(DarkWorldUtil.getAllDarkWorldRecipes(this.owner.level().registryAccess()).contains(pRecipe.getId()))
+            return pRecipe.matches(this.craftSlots, this.owner.level());
+        else return false;
     }
 
     public void slotsChanged(Container pInventory) {

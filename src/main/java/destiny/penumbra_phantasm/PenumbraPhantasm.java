@@ -16,6 +16,7 @@ import destiny.penumbra_phantasm.client.render.screen.DarkCandyCraftingTableScre
 import destiny.penumbra_phantasm.client.render.screen.UmbrastoneFurnaceScreen;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldEntityTransforms;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldItemTransforms;
+import destiny.penumbra_phantasm.server.datapack.DarkWorldRecipeSeparation;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.item.property.RosegoldLighterItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
@@ -100,6 +101,7 @@ public class PenumbraPhantasm {
                 event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null);
                 event.dataPackRegistry(DarkWorldItemTransforms.REGISTRY_KEY, DarkWorldItemTransforms.CODEC, null);
                 event.dataPackRegistry(DarkWorldEntityTransforms.REGISTRY_KEY, DarkWorldEntityTransforms.CODEC, null);
+                event.dataPackRegistry(DarkWorldRecipeSeparation.REGISTRY_KEY, DarkWorldRecipeSeparation.CODEC, null);
             });
         modEventBus.addListener(PenumbraPhantasm::commonSetup);
 

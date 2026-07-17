@@ -1,7 +1,9 @@
 package destiny.penumbra_phantasm.client.render.menu;
 
+import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.MenuRegistry;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -94,8 +96,16 @@ public class DarkCandyCraftingTableMenu extends RecipeBookMenu<CraftingContainer
         this.resultSlots.clearContent();
     }
 
+    public void handlePlacement(boolean pPlaceAll, Recipe<?> pRecipe, ServerPlayer pPlayer)
+    {
+        if(DarkWorldUtil.getAllDarkWorldRecipes(pPlayer.level().registryAccess()).contains(pRecipe.getId()))
+            super.handlePlacement(pPlaceAll, pRecipe, pPlayer);
+    }
+
     public boolean recipeMatches(Recipe<? super CraftingContainer> pRecipe) {
-        return pRecipe.matches(this.craftSlots, this.player.level());
+        if(DarkWorldUtil.getAllDarkWorldRecipes(this.player.level().registryAccess()).contains(pRecipe.getId()))
+            return pRecipe.matches(this.craftSlots, this.player.level());
+        else return false;
     }
 
     public void removed(Player pPlayer) {

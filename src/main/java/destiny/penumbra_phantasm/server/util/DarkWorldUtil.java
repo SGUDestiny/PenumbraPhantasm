@@ -6,6 +6,7 @@ import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
+import destiny.penumbra_phantasm.server.datapack.DarkWorldRecipeSeparation;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkRoom;
@@ -13,9 +14,7 @@ import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.worldgen.SeededNoiseBasedChunkGenerator;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +24,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -741,5 +741,16 @@ public class DarkWorldUtil
 	public static boolean isDepthsKey(ResourceKey<Level> levelResourceKey)
 	{
 		return levelResourceKey.location().getPath().contains("the_depths");
+	}
+
+	public static List<ResourceLocation> getAllDarkWorldRecipes(RegistryAccess registryAccess)
+	{
+		List<ResourceLocation> locations = new ArrayList<>();
+		Registry<DarkWorldRecipeSeparation> registry = registryAccess.registryOrThrow(DarkWorldRecipeSeparation.REGISTRY_KEY);
+
+		for(Map.Entry<ResourceKey<DarkWorldRecipeSeparation>, DarkWorldRecipeSeparation> entry : registry.entrySet())
+			locations.addAll(entry.getValue().darkWorldRecipes());
+
+		return locations;
 	}
 }
