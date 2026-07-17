@@ -117,7 +117,7 @@ public class PenumbraPhantasm {
                 throw new RuntimeException("Incorrect Fusion mod installed! Install Fusion (Connected Textures) instead of just Fusion!");
             }
             }, () -> {
-                    throw new RuntimeException("Incorrect Fusion mod installed! Install Fusion (Connected Textures) instead of just Fusion!");
+                    throw new RuntimeException("Fusion (Connected Textures) is not installed!");
                 }
         );
     }
