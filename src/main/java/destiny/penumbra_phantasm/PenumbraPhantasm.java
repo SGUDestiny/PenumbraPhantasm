@@ -110,14 +110,13 @@ public class PenumbraPhantasm {
 
         MinecraftForge.EVENT_BUS.register(this);
 
-        ModList.get().getModContainerById("fusion").ifPresentOrElse(container -> {
-            try {
-                Class.forName("com.supermartijn642.fusion.Fusion");
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException("Incorrect Fusion mod installed! Install Fusion (Connected Textures) instead of just Fusion!");
-            }
-            }, () -> {
-                    throw new RuntimeException("Fusion (Connected Textures) is not installed!");
+        ModList.get().getModContainerById("fusion").ifPresent(container ->
+                {
+                    try {
+                        Class.forName("com.supermartijn642.fusion.Fusion");
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException("Incorrect Fusion mod installed! Install Fusion (Connected Textures) instead of just Fusion!");
+                    }
                 }
         );
     }
