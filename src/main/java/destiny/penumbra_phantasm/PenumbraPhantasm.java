@@ -37,6 +37,7 @@ import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -106,6 +107,17 @@ public class PenumbraPhantasm {
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        ModList.get().getModContainerById("fusion").ifPresentOrElse(container -> {
+            try {
+                Class.forName("com.supermartijn642.fusion.Fusion");
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException("Incorrect Fusion mod installed! Install Fusion (Connected Textures) instead of just Fusion!");
+            }
+            }, () -> {
+                    throw new RuntimeException("Incorrect Fusion mod installed! Install Fusion (Connected Textures) instead of just Fusion!");
+                }
+        );
     }
 
     public static void commonSetup(FMLCommonSetupEvent event)
