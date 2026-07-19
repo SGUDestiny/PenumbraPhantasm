@@ -16,6 +16,7 @@ public class CreativeTabRegistry {
             .displayItems((parameters, output) -> {
                 output.accept(ItemRegistry.SOUL_HEARTH.get());
                 output.accept(BlockRegistry.HEARTH.get());
+                output.accept(ItemRegistry.FRACTAL_MIRROR.get());
                 output.accept(ItemRegistry.DETERMINATION_INJECTION.get());
                 output.accept(ItemRegistry.EMPTY_INJECTION.get());
                 output.accept(ItemRegistry.DETERMINATION_CANISTER.get());

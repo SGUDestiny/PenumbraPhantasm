@@ -59,6 +59,8 @@ public class ItemRegistry {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> HEARTH_SOUL = ITEMS.register("hearth_soul",
             () -> new HearthSoulItem(basicItem()));
+    public static final RegistryObject<Item> FRACTAL_MIRROR = ITEMS.register("fractal_mirror",
+            () -> new FractalMirrorItem(basicItem()));
 
     public static final RegistryObject<Item> ITEM_MUSIC_MEDIUM_THE_HOLY = ITEMS.register("item_music_medium_the_holy",
             () -> new MusicMediumItem(6, SoundRegistry.FOUNTAIN_MUSIC_DISC, basicItem(), (int) (53.333 * 20)));

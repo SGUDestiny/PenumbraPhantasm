@@ -7,6 +7,7 @@ import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrig
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldItemTransforms;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.item.FractalMirrorItem;
 import destiny.penumbra_phantasm.server.transformations.inventory.StorageData;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
@@ -275,6 +276,9 @@ public class CommonEvents {
             ResourceKey<Level> sourceDim = original.level().dimension();
             ResourceKey<Level> targetDim = serverPlayer.level().dimension();
 
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
+                return;
+
             if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
             {
                 StorageData data = StorageData.get(level);
@@ -296,6 +300,9 @@ public class CommonEvents {
             ResourceKey<Level> sourceDim = event.getFrom();
             ResourceKey<Level> targetDim = event.getTo();
 
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
+                return;
+
             if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
             {
                 StorageData data = StorageData.get(level);
@@ -313,6 +320,9 @@ public class CommonEvents {
             Level level = serverPlayer.level();
             ResourceKey<Level> sourceDim = serverPlayer.level().dimension();
             ResourceKey<Level> targetDim = event.getDimension();
+
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
+                return;
 
             if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
             {
