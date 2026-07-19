@@ -60,7 +60,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
             {
                 ServerLevel targetLevel = serverPlayer.getServer().getLevel(serverPlayer.getRespawnDimension());
                 BlockPos pos = serverPlayer.getRespawnPosition();
-                if(targetLevel != null && pos != null && !serverPlayer.isCreative())
+                if(targetLevel != null && pos != null && !serverPlayer.isCreative() && !serverPlayer.level().dimension().equals(serverPlayer.getRespawnDimension()))
                 {
                     serverPlayer.teleportTo(targetLevel, pos.getX(), pos.getY(), pos.getZ(), player.getYHeadRot(),
                             player.getXRot());
