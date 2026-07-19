@@ -13,15 +13,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.RecipeBookMenu;
-import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.world.inventory.ResultContainer;
-import net.minecraft.world.inventory.ResultSlot;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -255,7 +247,7 @@ public class DarkWorldInventoryMenu extends RecipeBookMenu<CraftingContainer> {
         return pSlotIndex != this.getResultSlotIndex();
     }
 
-    private static void slotChangedCraftingGrid(DarkWorldInventoryMenu pMenu, Level pLevel, Player pPlayer, CraftingContainer pContainer, ResultContainer pResult) {
+    public static void slotChangedCraftingGrid(AbstractContainerMenu pMenu, Level pLevel, Player pPlayer, CraftingContainer pContainer, ResultContainer pResult) {
         if (!pLevel.isClientSide) {
             ServerPlayer serverplayer = (ServerPlayer)pPlayer;
             ItemStack itemstack = ItemStack.EMPTY;
