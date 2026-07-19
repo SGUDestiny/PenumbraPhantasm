@@ -38,10 +38,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
+import java.util.*;
 
 @OnlyIn(Dist.CLIENT)
 public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements PlaceRecipe<Ingredient>, Renderable, GuiEventListener, NarratableEntry, RecipeShownListener {
@@ -55,28 +52,28 @@ public class DarkWorldRecipeBookComponent extends RecipeBookComponent implements
     private static final int OFFSET_X_POSITION = 86;
     private static final Component ONLY_CRAFTABLES_TOOLTIP;
     private static final Component ALL_RECIPES_TOOLTIP;
-    private int xOffset;
-    private int width;
-    private int height;
+    protected int xOffset;
+    protected int width;
+    protected int height;
     protected final GhostRecipe ghostRecipe = new GhostRecipe();
-    private final List<DarkWorldRecipeBookTabButton> tabButtons = Lists.newArrayList();
+    protected final List<DarkWorldRecipeBookTabButton> tabButtons = Lists.newArrayList();
     @Nullable
     private DarkWorldRecipeBookTabButton selectedTab;
     protected StateSwitchingButton filterButton;
     protected RecipeBookMenu<?> menu;
     protected Minecraft minecraft;
     @Nullable
-    private EditBox searchBox;
+	protected EditBox searchBox;
     private String lastSearch = "";
     private ClientRecipeBook book;
-    private final DarkWorldRecipeBookPage recipeBookPage = new DarkWorldRecipeBookPage();
+    protected final DarkWorldRecipeBookPage recipeBookPage = new DarkWorldRecipeBookPage();
     private final StackedContents stackedContents = new StackedContents();
     private int timesInventoryChanged;
     private boolean ignoreTextInput;
     private boolean visible;
     private boolean widthTooNarrow;
 
-    private int glowTicker;
+    protected int glowTicker;
 
     public DarkWorldRecipeBookComponent() {
     }

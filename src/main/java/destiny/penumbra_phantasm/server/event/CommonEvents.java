@@ -5,15 +5,20 @@ import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
+import destiny.penumbra_phantasm.server.datapack.DarkWorldItemTransforms;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.item.FractalMirrorItem;
+import destiny.penumbra_phantasm.server.transformations.inventory.StorageData;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.sounds.SoundSource;
@@ -24,6 +29,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -33,6 +40,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
+import top.theillusivec4.curios.api.CuriosApi;
 
 import java.util.*;
 
@@ -261,6 +269,23 @@ public class CommonEvents {
         });
 
         original.invalidateCaps();
+
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
+            Level level = serverPlayer.level();
+            ResourceKey<Level> sourceDim = original.level().dimension();
+            ResourceKey<Level> targetDim = serverPlayer.level().dimension();
+
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
+                return;
+
+            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
+            {
+                StorageData data = StorageData.get(level);
+                data.getInventory(serverPlayer.getUUID()).swap(serverPlayer);
+                data.setDirty();
+            }
+        }
     }
 
     @SubscribeEvent
@@ -268,6 +293,45 @@ public class CommonEvents {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             ChangedDimensionContainsTrigger.INSTANCE.trigger(serverPlayer, event.getFrom(), event.getTo());
         }
+
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
+            Level level = serverPlayer.level();
+            ResourceKey<Level> sourceDim = event.getFrom();
+            ResourceKey<Level> targetDim = event.getTo();
+
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
+                return;
+
+            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
+            {
+                StorageData data = StorageData.get(level);
+                data.getInventory(serverPlayer.getUUID()).swap(serverPlayer, true, true);
+                data.setDirty();
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void entityChangedDimension(EntityTravelToDimensionEvent event)
+    {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
+            Level level = serverPlayer.level();
+            ResourceKey<Level> sourceDim = serverPlayer.level().dimension();
+            ResourceKey<Level> targetDim = event.getDimension();
+
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
+                return;
+
+            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
+            {
+                StorageData data = StorageData.get(level);
+                data.getInventory(serverPlayer.getUUID()).swap(serverPlayer, true, false);
+                data.setDirty();
+            }
+        }
+        //TODO - Hook in Entity transforms
     }
 
     @SubscribeEvent

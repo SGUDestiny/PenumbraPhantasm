@@ -6,13 +6,19 @@ import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.client.network.ClientBoundAnimationPacket;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
+import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.SetWorldSpawnCommand;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.network.PacketDistributor;
@@ -21,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static destiny.penumbra_phantasm.client.sound.MusicManager.FOUNTAIN_MUSIC_RANGE;
 
@@ -45,6 +52,22 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     public int sealShineTicker = -1;
 
     public void tick(Level level, Player player) {
+        if(player instanceof ServerPlayer serverPlayer)
+        {
+            AtomicBoolean hasFountain = new AtomicBoolean(false);
+            serverPlayer.level().getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> hasFountain.set(!cap.darkFountains.isEmpty()));
+            if(DarkWorldUtil.isDarkWorldKey(serverPlayer.level().dimension()) && !hasFountain.get())
+            {
+                ServerLevel targetLevel = serverPlayer.getServer().getLevel(serverPlayer.getRespawnDimension());
+                BlockPos pos = serverPlayer.getRespawnPosition();
+                if(targetLevel != null && pos != null && !serverPlayer.isCreative() && !serverPlayer.level().dimension().equals(serverPlayer.getRespawnDimension()))
+                {
+                    serverPlayer.teleportTo(targetLevel, pos.getX(), pos.getY(), pos.getZ(), player.getYHeadRot(),
+                            player.getXRot());
+                    serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(player));
+                }
+            }
+        }
         if (darknessLandTicker >= 40) {
             darknessLandTicker = -1;
         }

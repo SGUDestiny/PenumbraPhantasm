@@ -6,6 +6,7 @@ import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.capability.GreatDoorCapability;
+import destiny.penumbra_phantasm.server.datapack.DarkWorldRecipeSeparation;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkRoom;
@@ -13,9 +14,7 @@ import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.worldgen.SeededNoiseBasedChunkGenerator;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
+import net.minecraft.core.*;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -25,6 +24,7 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -186,7 +186,9 @@ public class DarkWorldUtil
 	}
 
 	private static int resolveGreatDoorFootY(ServerLevel level, BlockPos fountainAnchor, int bx, int bz) {
-		BlockPos column = new BlockPos(bx, level.getMaxBuildHeight() - 1, bz);
+		BlockPos column = new BlockPos(bx+27, level.getMaxBuildHeight() - 1, bz-14);
+		long chunk = ChunkPos.asLong(column);
+		level.setChunkForced(ChunkPos.getX(chunk), ChunkPos.getZ(chunk), true);
 		int y = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, column).getY();
 		int minY = level.getMinBuildHeight() + 5;
 		int steps = 64;
@@ -198,6 +200,7 @@ public class DarkWorldUtil
 				continue;
 			}
 			if (!isUnsuitableGreatDoorFooting(level, test)) {
+				level.setChunkForced(ChunkPos.getX(chunk), ChunkPos.getZ(chunk), false);
 				return y;
 			}
 			y--;
@@ -212,6 +215,7 @@ public class DarkWorldUtil
 				continue;
 			}
 			if (!isUnsuitableGreatDoorFooting(level, anchorTest)) {
+				level.setChunkForced(ChunkPos.getX(chunk), ChunkPos.getZ(chunk), false);
 				return y;
 			}
 			y--;
@@ -317,21 +321,43 @@ public class DarkWorldUtil
 			double dist = minR + random.nextDouble() * (maxR - minR);
 			int bx = fountainAnchor.getX() + Mth.floor(Mth.cos((float) angle) * dist);
 			int bz = fountainAnchor.getZ() + Mth.floor(Mth.sin((float) angle) * dist);
-			int footY = resolveGreatDoorFootY(level, fountainAnchor, bx, bz);
-			if (footY == Integer.MIN_VALUE) {
-				continue;
-			}
-			int originY = footY - 1;
-			if (originY <= level.getMinBuildHeight()) {
-				continue;
-			}
-			BlockPos origin = new BlockPos(bx, originY, bz);
 			Rotation rot = switch (random.nextInt(4)) {
 				case 0 -> Rotation.NONE;
 				case 1 -> Rotation.CLOCKWISE_90;
 				case 2 -> Rotation.CLOCKWISE_180;
 				default -> Rotation.COUNTERCLOCKWISE_90;
 			};
+			int xDoorOffset = 0;
+			int zDoorOffset = 0;
+			if(rot == Rotation.NONE)
+			{
+				xDoorOffset -= 14;
+				zDoorOffset -= 27;
+			}
+			if(rot == Rotation.CLOCKWISE_90)
+			{
+				xDoorOffset += 27;
+				zDoorOffset += 14;
+			}
+			if(rot == Rotation.CLOCKWISE_180)
+			{
+				xDoorOffset += 14;
+				zDoorOffset += 27;
+			}
+			if(rot == Rotation.COUNTERCLOCKWISE_90)
+			{
+				xDoorOffset -= 27;
+				zDoorOffset += 14;
+			}
+			int footY = resolveGreatDoorFootY(level, fountainAnchor, bx+xDoorOffset, bz+zDoorOffset);
+			if (footY == Integer.MIN_VALUE) {
+				continue;
+			}
+			int originY = footY;
+			if (originY <= level.getMinBuildHeight()) {
+				continue;
+			}
+			BlockPos origin = new BlockPos(bx, originY, bz);
 			Optional<GreatDoorStructureResult> placed = placeGreatDoorStructureTemplate(level, template, origin, rot.getRotated(Rotation.CLOCKWISE_180), random);
 			if (placed.isPresent()) {
 				return placed;
@@ -715,5 +741,41 @@ public class DarkWorldUtil
 	public static boolean isDepthsKey(ResourceKey<Level> levelResourceKey)
 	{
 		return levelResourceKey.location().getPath().contains("the_depths");
+	}
+
+	public static List<ResourceLocation> getAllDarkWorldAllowedRecipes(RegistryAccess registryAccess)
+	{
+		List<ResourceLocation> locations = new ArrayList<>();
+		Registry<DarkWorldRecipeSeparation> registry = registryAccess.registryOrThrow(DarkWorldRecipeSeparation.REGISTRY_KEY);
+
+		for(Map.Entry<ResourceKey<DarkWorldRecipeSeparation>, DarkWorldRecipeSeparation> entry : registry.entrySet())
+			locations.addAll(entry.getValue().darkWorldAllowed());
+
+		return locations;
+	}
+
+	public static List<ResourceLocation> getAllDarkWorldBlockedRecipes(RegistryAccess registryAccess)
+	{
+		List<ResourceLocation> locations = new ArrayList<>();
+		Registry<DarkWorldRecipeSeparation> registry = registryAccess.registryOrThrow(DarkWorldRecipeSeparation.REGISTRY_KEY);
+
+		for(Map.Entry<ResourceKey<DarkWorldRecipeSeparation>, DarkWorldRecipeSeparation> entry : registry.entrySet())
+			locations.addAll(entry.getValue().darkWorldBlocked());
+
+		return locations;
+	}
+
+	public static boolean canUseRecipe(RegistryAccess registryAccess, ResourceLocation recipeID)
+	{
+		List<ResourceLocation> allowedRecipes = getAllDarkWorldAllowedRecipes(registryAccess);
+		if(recipeID.getNamespace().equals(PenumbraPhantasm.MODID))
+			allowedRecipes.add(recipeID);
+
+		List<ResourceLocation> blockedRecipes = getAllDarkWorldBlockedRecipes(registryAccess);
+
+		System.out.println(recipeID);
+		System.out.println(allowedRecipes.contains(recipeID));
+		System.out.println("------------");
+		return allowedRecipes.contains(recipeID) && !blockedRecipes.contains(recipeID);
 	}
 }

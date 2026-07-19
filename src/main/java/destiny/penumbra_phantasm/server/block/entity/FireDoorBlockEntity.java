@@ -12,6 +12,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Nameable;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -124,6 +126,20 @@ public class FireDoorBlockEntity extends BlockEntity implements Nameable {
 
     protected Component getDefaultName() {
         return Component.translatable("block.penumbra_phantasm.fire_door");
+    }
+
+    @Override
+    public void saveToItem(ItemStack stack)
+    {
+        BlockItem.setBlockEntityData(stack, this.getType(), saveItemData());
+    }
+
+    protected CompoundTag saveItemData()
+    {
+        CompoundTag tag = this.saveWithoutMetadata();
+        tag.remove(DOOR_DELAY);
+        tag.remove(OPEN_COUNT);
+        return tag;
     }
 
     @Override
