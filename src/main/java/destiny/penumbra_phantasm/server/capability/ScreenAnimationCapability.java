@@ -13,6 +13,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.SetWorldSpawnCommand;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -59,7 +60,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
             {
                 ServerLevel targetLevel = serverPlayer.getServer().getLevel(serverPlayer.getRespawnDimension());
                 BlockPos pos = serverPlayer.getRespawnPosition();
-                if(targetLevel != null && pos != null)
+                if(targetLevel != null && pos != null && !serverPlayer.isCreative())
                 {
                     serverPlayer.teleportTo(targetLevel, pos.getX(), pos.getY(), pos.getZ(), player.getYHeadRot(),
                             player.getXRot());
