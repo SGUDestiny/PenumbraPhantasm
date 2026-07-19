@@ -17,6 +17,7 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
+import java.util.List;
 import java.util.Optional;
 
 public class DarkCandyCraftingTableMenu extends RecipeBookMenu<CraftingContainer> {
@@ -62,24 +63,27 @@ public class DarkCandyCraftingTableMenu extends RecipeBookMenu<CraftingContainer
 
     }
 
-    protected static void slotChangedCraftingGrid(AbstractContainerMenu pMenu, Level pLevel, Player pPlayer, CraftingContainer pContainer, ResultContainer pResult) {
+    public static void slotChangedCraftingGrid(AbstractContainerMenu pMenu, Level pLevel, Player pPlayer, CraftingContainer pContainer, ResultContainer pResult) {
         if (!pLevel.isClientSide) {
-            ServerPlayer $$5 = (ServerPlayer)pPlayer;
-            ItemStack $$6 = ItemStack.EMPTY;
-            Optional<CraftingRecipe> $$7 = pLevel.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, pContainer, pLevel);
-            if ($$7.isPresent()) {
-                CraftingRecipe $$8 = (CraftingRecipe)$$7.get();
-                if (pResult.setRecipeUsed(pLevel, $$5, $$8) && DarkWorldUtil.canUseRecipe(pPlayer.level().registryAccess(), $$8.getId())) {
-                    ItemStack $$9 = $$8.assemble(pContainer, pLevel.registryAccess());
-                    if ($$9.isItemEnabled(pLevel.enabledFeatures())) {
-                        $$6 = $$9;
+            ServerPlayer serverPlayer = (ServerPlayer)pPlayer;
+            ItemStack stack = ItemStack.EMPTY;
+            List<CraftingRecipe> recipes = pLevel.getServer().getRecipeManager().getRecipesFor(RecipeType.CRAFTING, pContainer, pLevel);
+            for(CraftingRecipe recipe : recipes)
+            {
+                if(DarkWorldUtil.canUseRecipe(pPlayer.level().registryAccess(), recipe.getId()) && pResult.setRecipeUsed(pLevel, serverPlayer, recipe))
+                {
+                    ItemStack result = recipe.assemble(pContainer, pLevel.registryAccess());
+                    if(result.isItemEnabled(pLevel.enabledFeatures()))
+                    {
+                        stack = result;
+                        break;
                     }
                 }
             }
 
-            pResult.setItem(0, $$6);
-            pMenu.setRemoteSlot(0, $$6);
-            $$5.connection.send(new ClientboundContainerSetSlotPacket(pMenu.containerId, pMenu.incrementStateId(), 0, $$6));
+            pResult.setItem(0, stack);
+            pMenu.setRemoteSlot(0, stack);
+            serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(pMenu.containerId, pMenu.incrementStateId(), 0, stack));
         }
     }
 

@@ -1,6 +1,8 @@
 package destiny.penumbra_phantasm.client.render.screen;
 
 import com.mojang.datafixers.util.Pair;
+
+import java.util.List;
 import java.util.Optional;
 
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
@@ -249,24 +251,26 @@ public class DarkWorldInventoryMenu extends RecipeBookMenu<CraftingContainer> {
 
     public static void slotChangedCraftingGrid(AbstractContainerMenu pMenu, Level pLevel, Player pPlayer, CraftingContainer pContainer, ResultContainer pResult) {
         if (!pLevel.isClientSide) {
-            ServerPlayer serverplayer = (ServerPlayer)pPlayer;
-            ItemStack itemstack = ItemStack.EMPTY;
-            Optional<CraftingRecipe> optional = pLevel.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, pContainer, pLevel);
-            if (optional.isPresent()) {
-                CraftingRecipe craftingrecipe = optional.get();
-                if (pResult.setRecipeUsed(pLevel, serverplayer, craftingrecipe) && DarkWorldUtil.canUseRecipe(pLevel.registryAccess(), craftingrecipe.getId())) {
-                    ItemStack itemstack1 = craftingrecipe.assemble(pContainer, pLevel.registryAccess());
-                    if (itemstack1.isItemEnabled(pLevel.enabledFeatures())) {
-                        itemstack = itemstack1;
+            ServerPlayer serverPlayer = (ServerPlayer)pPlayer;
+            ItemStack stack = ItemStack.EMPTY;
+            List<CraftingRecipe> recipes = pLevel.getServer().getRecipeManager().getRecipesFor(RecipeType.CRAFTING, pContainer, pLevel);
+            for(CraftingRecipe recipe : recipes)
+            {
+                if(DarkWorldUtil.canUseRecipe(pPlayer.level().registryAccess(), recipe.getId()) && pResult.setRecipeUsed(pLevel, serverPlayer, recipe))
+                {
+                    ItemStack result = recipe.assemble(pContainer, pLevel.registryAccess());
+                    if(result.isItemEnabled(pLevel.enabledFeatures()))
+                    {
+                        stack = result;
+                        break;
                     }
                 }
             }
 
-            pResult.setItem(0, itemstack);
-            pMenu.setRemoteSlot(0, itemstack);
-            serverplayer.connection.send(new ClientboundContainerSetSlotPacket(pMenu.containerId, pMenu.incrementStateId(), 0, itemstack));
+            pResult.setItem(0, stack);
+            pMenu.setRemoteSlot(0, stack);
+            serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(pMenu.containerId, pMenu.incrementStateId(), 0, stack));
         }
     }
-
 
 }

@@ -14,10 +14,7 @@ import destiny.penumbra_phantasm.client.render.particle.*;
 import destiny.penumbra_phantasm.client.render.screen.CheshireChestScreen;
 import destiny.penumbra_phantasm.client.render.screen.DarkCandyCraftingTableScreen;
 import destiny.penumbra_phantasm.client.render.screen.UmbrastoneFurnaceScreen;
-import destiny.penumbra_phantasm.server.datapack.DarkWorldEntityTransforms;
-import destiny.penumbra_phantasm.server.datapack.DarkWorldItemTransforms;
-import destiny.penumbra_phantasm.server.datapack.DarkWorldRecipeSeparation;
-import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
+import destiny.penumbra_phantasm.server.datapack.*;
 import destiny.penumbra_phantasm.server.item.property.RosegoldLighterItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.client.render.model.item.DeltashieldModel;
@@ -102,6 +99,7 @@ public class PenumbraPhantasm {
                 event.dataPackRegistry(DarkWorldItemTransforms.REGISTRY_KEY, DarkWorldItemTransforms.CODEC, null);
                 event.dataPackRegistry(DarkWorldEntityTransforms.REGISTRY_KEY, DarkWorldEntityTransforms.CODEC, null);
                 event.dataPackRegistry(DarkWorldRecipeSeparation.REGISTRY_KEY, DarkWorldRecipeSeparation.CODEC, DarkWorldRecipeSeparation.CODEC);
+                event.dataPackRegistry(BiomeMusicType.REGISTRY_KEY, BiomeMusicType.CODEC, BiomeMusicType.CODEC);
             });
         modEventBus.addListener(PenumbraPhantasm::commonSetup);
 

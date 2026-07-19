@@ -773,6 +773,9 @@ public class DarkWorldUtil
 
 		List<ResourceLocation> blockedRecipes = getAllDarkWorldBlockedRecipes(registryAccess);
 
+		System.out.println(recipeID);
+		System.out.println(allowedRecipes.contains(recipeID));
+		System.out.println("------------");
 		return allowedRecipes.contains(recipeID) && !blockedRecipes.contains(recipeID);
 	}
 }
