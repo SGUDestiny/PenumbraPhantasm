@@ -75,7 +75,7 @@ public class MusicManager {
                 for(Map.Entry<ResourceKey<BiomeMusicType>, BiomeMusicType> entry : registry.entrySet())
                 {
                     BiomeMusicType type = entry.getValue();
-                    SoundEvent event = ForgeRegistries.SOUND_EVENTS.getValue(type.sound());
+                    SoundEvent event = SoundEvent.createVariableRangeEvent(type.sound());
                     BiomeMusic music = new BiomeMusic(() -> event, type.looping(), type.minDelay(), type.maxDelay());
                     biomeMusicMap.put(type.biome(), music);
                 }
