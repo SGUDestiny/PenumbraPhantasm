@@ -14,7 +14,7 @@ import destiny.penumbra_phantasm.client.render.particle.*;
 import destiny.penumbra_phantasm.client.render.screen.CheshireChestScreen;
 import destiny.penumbra_phantasm.client.render.screen.DarkCandyCraftingTableScreen;
 import destiny.penumbra_phantasm.client.render.screen.UmbrastoneFurnaceScreen;
-import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
+import destiny.penumbra_phantasm.server.datapack.*;
 import destiny.penumbra_phantasm.server.item.property.RosegoldLighterItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.client.render.model.item.DeltashieldModel;
@@ -29,11 +29,13 @@ import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
 import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
 import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
+import destiny.penumbra_phantasm.server.transformations.inventory.StorageManager;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -91,12 +93,35 @@ public class PenumbraPhantasm {
         PacketHandlerRegistry.register();
         AdvancementRegistry.register();
 
-        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) -> event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null));
+        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) ->
+            {
+                event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null);
+                event.dataPackRegistry(DarkWorldItemTransforms.REGISTRY_KEY, DarkWorldItemTransforms.CODEC, null);
+                event.dataPackRegistry(DarkWorldEntityTransforms.REGISTRY_KEY, DarkWorldEntityTransforms.CODEC, null);
+                event.dataPackRegistry(DarkWorldRecipeSeparation.REGISTRY_KEY, DarkWorldRecipeSeparation.CODEC, DarkWorldRecipeSeparation.CODEC);
+                event.dataPackRegistry(BiomeMusicType.REGISTRY_KEY, BiomeMusicType.CODEC, BiomeMusicType.CODEC);
+            });
+        modEventBus.addListener(PenumbraPhantasm::commonSetup);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
+
+        ModList.get().getModContainerById("fusion").ifPresent(container ->
+                {
+                    try {
+                        Class.forName("com.supermartijn642.fusion.Fusion");
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException("Incorrect Fusion mod installed! Install Fusion (Connected Textures) instead of just Fusion!");
+                    }
+                }
+        );
+    }
+
+    public static void commonSetup(FMLCommonSetupEvent event)
+    {
+        event.enqueueWork(StorageManager::init);
     }
 
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

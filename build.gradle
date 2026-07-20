@@ -25,6 +25,11 @@ buildscript {
             url = "https://api.modrinth.com/maven"
         }
 
+        maven {
+            name = "Illusive Soulworks maven"
+            url = "https://maven.theillusivec4.top/"
+        }
+
         mavenCentral()
     }
 }
@@ -179,6 +184,11 @@ repositories {
     maven {
         url = "https://api.modrinth.com/maven"
     }
+
+    maven {
+        name = "Illusive Soulworks maven"
+        url = "https://maven.theillusivec4.top/"
+    }
 }
 
 dependencies {
@@ -202,6 +212,8 @@ dependencies {
     compileOnly(fg.deobf("curse.maven:jei-238222:6600311"))
     // at runtime, use the full JEI jar for Forge
     runtimeOnly(fg.deobf("curse.maven:jei-238222:6600311"))
+
+    compileOnly(fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api"))
 
     runtimeOnly(fg.deobf("curse.maven:xaeros-world-map-317780:8042194"))
 
@@ -244,7 +256,7 @@ tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
             minecraft_version: minecraft_version, minecraft_version_range: minecraft_version_range,
             forge_version: forge_version, forge_version_range: forge_version_range,
-            loader_version_range: loader_version_range,
+            loader_version_range: loader_version_range, curios_version: curios_version,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors: mod_authors, mod_description: mod_description,
     ]

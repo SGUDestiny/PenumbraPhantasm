@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.client.sound;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
+import destiny.penumbra_phantasm.server.datapack.BiomeMusicType;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
@@ -12,6 +13,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -20,9 +25,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MusicManager {
@@ -58,20 +66,21 @@ public class MusicManager {
     }
 
     private void ensureInitialized() {
-        if (!initialized) {
+        if (!initialized)
+        {
+            if(minecraft.level != null)
+            {
+                RegistryAccess access = minecraft.level.registryAccess();
+                Registry<BiomeMusicType> registry = access.registryOrThrow(BiomeMusicType.REGISTRY_KEY);
+                for(Map.Entry<ResourceKey<BiomeMusicType>, BiomeMusicType> entry : registry.entrySet())
+                {
+                    BiomeMusicType type = entry.getValue();
+                    SoundEvent event = SoundEvent.createVariableRangeEvent(type.sound());
+                    BiomeMusic music = new BiomeMusic(() -> event, type.looping(), type.minDelay(), type.maxDelay());
+                    biomeMusicMap.put(type.biome(), music);
+                }
+            }
             initialized = true;
-            biomeMusicMap.put(
-                    new ResourceLocation(PenumbraPhantasm.MODID, "field_of_hopes_and_dreams"),
-                    new BiomeMusic(() -> SoundRegistry.FIELD_OF_HOPES_AND_DREAMS.get(), ClientConfig.biomeMusicLoop, ClientConfig.biomeMusicMinDelay * 20, ClientConfig.biomeMusicMaxDelay * 20)
-            );
-            biomeMusicMap.put(
-                    new ResourceLocation(PenumbraPhantasm.MODID, "scarlet_forest"),
-                    new BiomeMusic(() -> SoundRegistry.EVERLASTING_AUTUMN.get(), ClientConfig.biomeMusicLoop, ClientConfig.biomeMusicMinDelay * 20, ClientConfig.biomeMusicMaxDelay * 20)
-            );
-            biomeMusicMap.put(
-                    new ResourceLocation(PenumbraPhantasm.MODID, "great_board"),
-                    new BiomeMusic(() -> SoundRegistry.AN_OUTSTANDING_MOVE.get(), ClientConfig.biomeMusicLoop, ClientConfig.biomeMusicMinDelay * 20, ClientConfig.biomeMusicMaxDelay * 20)
-            );
         }
     }
 
@@ -319,7 +328,8 @@ public class MusicManager {
         ResourceLocation biomeId = biomeHolder.unwrapKey()
                 .map(ResourceKey::location)
                 .orElse(null);
-        if (biomeId == null) return null;
+        if (biomeId == null)
+            return null;
         return biomeMusicMap.get(biomeId);
     }
 
