@@ -138,7 +138,7 @@ public class ClientEvents {
 
 						if (renderSkyPass) {
 							if (openingTick < FountainRenderUtil.OPENING_POSTERIZE_TICK_END && openingTick >= 0) {
-								FountainRenderUtil.renderOpeningFoutain(openingTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
+								FountainRenderUtil.renderOpeningFountain(openingTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 							} else {
 								double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
