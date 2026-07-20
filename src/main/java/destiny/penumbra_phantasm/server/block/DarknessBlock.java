@@ -30,6 +30,8 @@ public class DarknessBlock extends BaseEntityBlock {
         super(properties);
     }
 
+
+
     public static boolean getDoorOpenState(Level level, BlockPos doorPos, BlockState doorState) {
         if (!(doorState.getBlock() instanceof DoorBlock)) return false;
         if (doorState.getValue(DoorBlock.OPEN)) return true;
@@ -65,6 +67,10 @@ public class DarknessBlock extends BaseEntityBlock {
         } else {
             return Shapes.empty();
         }
+    }
+    @Override
+    public VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return Shapes.empty();
     }
 
     @Override
