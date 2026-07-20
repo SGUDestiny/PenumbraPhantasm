@@ -80,6 +80,7 @@ public class MusicManager {
                     biomeMusicMap.put(type.biome(), music);
                 }
             }
+            initialized = true;
         }
     }
 
@@ -327,7 +328,8 @@ public class MusicManager {
         ResourceLocation biomeId = biomeHolder.unwrapKey()
                 .map(ResourceKey::location)
                 .orElse(null);
-        if (biomeId == null) return null;
+        if (biomeId == null)
+            return null;
         return biomeMusicMap.get(biomeId);
     }
 
