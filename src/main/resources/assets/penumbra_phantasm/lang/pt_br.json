@@ -4,20 +4,25 @@
   "item.penumbra_phantasm.diamond_knife": "Faca de Diamante",
   "item.penumbra_phantasm.netherite_knife": "Faca de Netherita",
   "item.penumbra_phantasm.real_knife": "§4Faca Real§r",
-  "item.penumbra_phantasm.black_knife": "Faca Escura",
+  "item.penumbra_phantasm.black_knife": "Faca Sombria",
   "item.penumbra_phantasm.dark_candy": "Doce das Trevas",
   "item.penumbra_phantasm.friend": "§eITEM_A§r§dMIGO§r",
   "item.penumbra_phantasm.soul_hearth": "Lamparina de ALMA",
+  "item.penumbra_phantasm.fractal_mirror": "Espelho Fractal",
+  "item.penumbra_phantasm.determination_injection": "Injeção de §4DETERMINAÇÃO§r",
+  "item.penumbra_phantasm.empty_injection": "Injeção Vazia",
+  "item.penumbra_phantasm.determination_canister": "Receptáculo de §4DETERMINAÇÃO§r",
+  "item.penumbra_phantasm.hearth_soul": "ALMA",
   "item.penumbra_phantasm.familiar_sword": "Espada Familiar",
-  "item.penumbra_phantasm.familiar_ax": "Machado Familiar",
+  "item.penumbra_phantasm.familiar_ax": "Maxado Familiar",
   "item.penumbra_phantasm.delta_shield": "ESCUDO DELTA",
   "item.penumbra_phantasm.shadow_crystal": "Cristal Sombrio",
-  "item.penumbra_phantasm.black_shard": "Fragmento Escuro",
-  "item.penumbra_phantasm.item_music_medium_the_holy": "ITEM_MUSIC_MEDIUM",
+  "item.penumbra_phantasm.black_shard": "Fragmento Sombrio",
+  "item.penumbra_phantasm.item_music_medium_the_holy": "ITEM_MUSICA_MEDIUM",
   "item.penumbra_phantasm.item_music_medium_the_holy.desc": "Toby Fox - THE HOLY",
 
   "item.penumbra_phantasm.dark_candy_stick": "Graveto de Doce das Trevas",
-  "item.penumbra_phantasm.ichor": "Icor",
+  "item.penumbra_phantasm.ichor": "Ícor",
 
   "item.penumbra_phantasm.dark_candy_sword": "Espada de Doce das Trevas",
   "item.penumbra_phantasm.dark_candy_pickaxe": "Picareta de Doce das Trevas",
@@ -40,7 +45,9 @@
   "item.penumbra_phantasm.rosegold_shovel": "Pá de Ouro-Rosè",
   "item.penumbra_phantasm.rosegold_hoe": "Enxada de Ouro-Rosè",
 
-  "item.penumbra_phantasm.ivory": "Marfim",
+  "item.penumbra_phantasm.rosegold_lighter": "Isqueiro de Ouro-Rosè",
+
+ "item.penumbra_phantasm.ivory": "Marfim",
 
   "item.penumbra_phantasm.ivory_sword": "Espada de Marfim",
   "item.penumbra_phantasm.ivory_axe": "Machado de Marfim",
@@ -51,6 +58,8 @@
   "item.penumbra_phantasm.dark_candy_bucket": "Balde de Doce das Trevas",
   "item.penumbra_phantasm.luminescent_water_bucket": "Balde de Agua Luminescente",
   "item.penumbra_phantasm.pure_darkness_bucket": "Balde de Escuridão Pura",
+
+  "item.penumbra_phantasm.egg": "Ovo",
 
   "block.penumbra_phantasm.twilight_grass": "Grama do Crepúsculo",
   "block.penumbra_phantasm.twilight_grass_block": "Bloco de Grama do Crepúsculo",
@@ -114,6 +123,7 @@
   "block.penumbra_phantasm.scarlet_trapdoor": "Alçapão Escarlate",
   "block.penumbra_phantasm.scarlet_button": "Botão Escarlate",
   "block.penumbra_phantasm.scarlet_pressure_plate": "Placa de Pressão Escarlate",
+  "block.penumbra_phantasm.scarlet_ladder": "Escada de Mão Escarlate",
 
   "block.penumbra_phantasm.dark_candy_block": "Bloco de Doce das Trevas",
 
@@ -135,6 +145,7 @@
   "block.penumbra_phantasm.dark_candy_trapdoor": "Alçapão de Doce das Trevas",
   "block.penumbra_phantasm.dark_candy_button": "Botão de Doce das Trevas",
   "block.penumbra_phantasm.dark_candy_pressure_plate": "Placa de Pressão de Doce das Trevas",
+  "block.penumbra_phantasm.dark_candy_ladder": "Escada de Mão de Doce das Trevas",
 
   "block.penumbra_phantasm.scarlet_marble_pillar": "Pilar de Mármore Escarlate",
   "block.penumbra_phantasm.chiseled_scarlet_marble": "Pilar de Mármore Escarlate Talhado",
@@ -168,6 +179,7 @@
   "block.penumbra_phantasm.cobbled_scarlet_marble_pressure_plate": "Placa de Pressão",
 
   "block.penumbra_phantasm.cliffrock_path": "Caminho de Rocha-do-Penhasco",
+  "block.penumbra_phantasm.cliffrock_slide": "Deslize de Rocha-do-Penhasco",
   "block.penumbra_phantasm.cliffrock_pillar": "Pilar de Rocha-do-Penhasco",
   "block.penumbra_phantasm.chiseled_cliffrock": "Rocha-do-Penhasco Talhado",
 
@@ -180,6 +192,8 @@
   "block.penumbra_phantasm.ichor_wall_torch": "Tocha de Icor de Parede",
   "block.penumbra_phantasm.ichor_lantern": "Lanterna de Icor",
   "block.penumbra_phantasm.dust_block": "Bloco de Poeira",
+  "block.penumbra_phantasm.ichor_candle": "Vela de Ícor",
+  "block.penumbra_phantasm.ichor_fire": "Fogo de Ícor",
 
   "block.penumbra_phantasm.polished_cliffrock": "Rocha-do-Penhasco Polida",
   "block.penumbra_phantasm.polished_cliffrock_stairs": "Escada de Rocha-do-Penhasco Polida",
@@ -294,14 +308,16 @@
   "block.penumbra_phantasm.yellow_check": "Ficha Amarela",
 
   "block.penumbra_phantasm.hearth": "Lamparina",
+  "block.penumbra_phantasm.great_door_spawner": "Invocador de Grande Portão",
+  "block.penumbra_phantasm.great_door_shape": "Grande Portão",
+  "block.penumbra_phantasm.fire_door": "Porta Flamejante",
+  "block.penumbra_phantasm.cheshire_chest": "Baú Cheshire",
 
   "block.penumbra_phantasm.umbrastone_rosegold_ore": "Minério de Ouro-Rosè de Rocha-Umbral",
 
   "block.penumbra_phantasm.dark_marble_ivory_ore": "Minério de Marfim de Mármore Escuro",
   "block.penumbra_phantasm.scarlet_marble_ivory_ore": "Minério de Marfim de Mármore Escarlate",
 
-  "block.penumbra_phantasm.great_door_spawner": "Invocador de Grande Portão",
-  "block.penumbra_phantasm.great_door_shape": "Grande Portão",
   "block.penumbra_phantasm.rosegold_pillar": "Pilar de Ouro-Rosè",
   "block.penumbra_phantasm.chiseled_rosegold": "Ouro-Rosè Talhado",
 
@@ -338,16 +354,36 @@
   "block.penumbra_phantasm.ivory_brick_button": "Botão de Tijolos de Marfim",
   "block.penumbra_phantasm.ivory_brick_pressure_plate": "Placa de Pressão de Tijolos de Marfim",
 
+  "block.penumbra_phantasm.scarlet_log_mysterious_door": "Porta Misteriosa",
+  "block.penumbra_phantasm.unbreakable_darkness": "Escuridão",
+
+  "liquid.penumbra_phantasm.pure_darkness": "Escuridão Pura",
+  "liquid.penumbra_phantasm.luminescent_water": "Água Luminescente",
+
   "itemGroup.penumbra_phantasm.main": "PENUMBRA PHANTASM",
   "itemGroup.penumbra_phantasm.card_kingdom": "REINO DAS CARTAS",
   "itemGroup.penumbra_phantasm.the_depths": "AS PROFUNDEZAS",
 
+  "entity.penumbra_phantasm.sealing_soul": "ALMA",
+
   "advancement.penumbra_phantasm.soul_hearth.title": "Seu Poder",
   "advancement.penumbra_phantasm.soul_hearth.description": "Desperte uma Lamparina de ALMA",
+  "advancement.penumbra_phantasm.determination_injection.title": "Preenchido de DETERMINAÇÃO",
+  "advancement.penumbra_phantasm.determination_injection.description": "Use uma injeção de DETERMINAÇÃO. Ler esse texto te enche de DETERMINAÇÃO",
+  "advancement.penumbra_phantasm.determination_injection_death.title": "Á uma Picada de Distância",
+  "advancement.penumbra_phantasm.determination_injection_death.description": "Morra ao injetar DETERMINAÇÃO com menos de 50% de vida",
+  "advancement.penumbra_phantasm.determination_injection_overdose.title": "Preço Real",
+  "advancement.penumbra_phantasm.determination_injection_overdose.description": "Morra ao injetar DETERMINAÇÃO ao já estar em 100%",
+  "advancement.penumbra_phantasm.determination_injection_cause_overdose.title": "Nem tão Imortal agora",
+  "advancement.penumbra_phantasm.determination_injection_cause_overdose.description": "Faça alguem morrer de overdose de DETERMINAÇÃO",
+  "advancement.penumbra_phantasm.determination_injection_steal.title": "desDETERMINADO",
+  "advancement.penumbra_phantasm.determination_injection_steal.description": "Roube a DETERMINAÇÃO de outra pessoa com uma Injeção Vazia",
   "advancement.penumbra_phantasm.dark_fountain_make.title": "Devaneio do Crepúsculo",
   "advancement.penumbra_phantasm.dark_fountain_make.description": "Faça uma Fonte das Trevas",
   "advancement.penumbra_phantasm.card_kingdom_visit.title": "Full House",
   "advancement.penumbra_phantasm.card_kingdom_visit.description": "Visite o Mundo das Trevas Reino das Cartas",
+  "advancement.penumbra_phantasm.egg_room_card_kingdom.title": "Ele está Atrás da Árvore",
+  "advancement.penumbra_phantasm.egg_room_card_kingdom.description": "Encontre uma Sala do Ovo",
   "advancement.penumbra_phantasm.scarlet_tree.title": "Atrás da Árvore",
   "advancement.penumbra_phantasm.scarlet_tree.description": "Encontre uma Árvore Escarlate",
   "advancement.penumbra_phantasm.dark_candy.title": "Desintegrantemente Doce",
@@ -371,7 +407,7 @@
   "advancement.penumbra_phantasm.dark_fountain_seal.title": "A Luz Dentro de Sua ALMA",
   "advancement.penumbra_phantasm.dark_fountain_seal.description": "Sele uma Fonte das Trevas",
   "advancement.penumbra_phantasm.depths.title": "Escuro, Mais Escuro, Cada Vez Mais Escuro",
-  "advancement.penumbra_phantasm.depths.description": "Visite as PROFUNDEZAS",
+  "advancement.penumbra_phantasm.depths.description": "Caia nas PROFUNDEZAS",
   "advancement.penumbra_phantasm.erosion_death.title": "Escuridão Esmagadora",
   "advancement.penumbra_phantasm.erosion_death.description": "Morra de Erosão",
 
@@ -403,12 +439,19 @@
   "tooltip.penumbra_phantasm.soul_hearth.soul_type.6": "GENTILEZA",
   "tooltip.penumbra_phantasm.soul_hearth.soul_type.7": "JUSTIÇA",
   "tooltip.penumbra_phantasm.soul_hearth.determination": "DETERMINAÇÃO: ",
-  "tooltip.penumbra_phantasm.soul_hearth.trust_level": "CONFIANÇA: ",
+  "tooltip.penumbra_phantasm.soul_hearth.connection_level": "CONEXÃO: ",
   "tooltip.penumbra_phantasm.soul_hearth.not_owner": "A ALMA ADENTRO TE REJEITA.",
+  "tooltip.penumbra_phantasm.rosegold_lighter_fuel": "Combustível: ",
 
   "gui.penumbra_phantasm.dark_world_inventory_title": "INVENTÁRIO",
   "gui.penumbra_phantasm.dark_world_inventory_crafting": "CRAFT",
   "gui.penumbra_phantasm.dark_world_inventory_equipped": "EQUIPADO",
+  "gui.penumbra_phantasm.cheshire_chest": "§eBAÚ§r §CHESHIRE§r",
+  "gui.penumbra_phantasm.umbrastone_furnace": "FORNALHA DE ROCHA-UMBRAL",
+  "gui.penumbra_phantasm.dark_candy_crafting_table": "BANCADA DE TRABALHO DE DOCE DAS TREVAS",
+
+  "gui.penumbra_phantasm.textbox.yes": "Sim",
+  "gui.penumbra_phantasm.textbox.no": "Não",
 
   "location.penumbra_phantasm.dark_fountain": "Fonte das Trevas",
   "location.penumbra_phantasm.dark_fountain.description": "'O Gêiser que da forma a esta terra...'",
@@ -421,22 +464,42 @@
   "biome.penumbra_phantasm.scarlet_forest.description": "'A floresta do eterno outono'",
   "biome.penumbra_phantasm.cliffs": "??????",
   "biome.penumbra_phantasm.cliffs.description": "'Somente olhos cegos pela escuridão conseguem ver o caminho...'",
+  "biome.penumbra_phantasm.challenger_dark": "ESCURIDÃO DESAFIANTE",
+  "biome.penumbra_phantasm.challenger_dark.description": "'Um reino de íra sombria, com fantasia como disfarçe...'",
 
+  "biome.penumbra_phantasm.egg_room_card_kingdom": "Sala do Ovo",
+
+  "message.penumbra_phantasm.making_fountain_no_soul_hearth": "Sem Lamparina de ALMA...",
+  "message.penumbra_phantasm.making_fountain_not_enough_determination": "DETERMINAÇÃO insuficiente para perfurar...",
   "message.penumbra_phantasm.making_fountain_invalid_position": "Precisa estar em um bloco solido",
   "message.penumbra_phantasm.making_fountain_not_enough_key_blocks": "Blocos insuficientes para empoderar sua imaginação...",
-  "message.penumbra_phantasm.making_fountain_inside_dark_world": "Você sente que isso não é uma boa ideia...",
   "message.penumbra_phantasm.making_fountain_unsealed_or_too_big": "A sala não está selada ou é grande demais",
   "message.penumbra_phantasm.making_fountain_room_has_active_fountain": "Uma fonte já está nessa sala",
+  "message.penumbra_phantasm.making_fountain_depths_conflict": "Uma fonte nessa posição já flue em outro lugar...",
   "message.penumbra_phantasm.making_fountain_critical_error": "Incapaz de fazer uma fonte devido a um erro, por favor contate o desenvolvedor!",
-  "message.penumbra_phantasm.pushed_away_by_fountain": "O fluxo de escuridão te empurra para longe...",
-  "message.penumbra_phantasm.sealing_fountain_no_fountain_nearby": "mas não havia fontes próximas...",
-  "message.penumbra_phantasm.sealing_fountain_already_being_sealed": "Mas a fonte já estava sendo selada...",
+
+  "message.penumbra_phantasm.hearth_wrong_biome": "As redondezas não são cabíveis... (Deve estar em Vale das Almas)",
+  "message.penumbra_phantasm.hearth_no_campfire": "A Lamparina não tem calor suficiente. (Deve ser colocado em uma Fogueira das almas)",
   "message.penumbra_phantasm.dark_world_without_fountain": "O mundo das trevas em que você estrava não tinha uma fonte ativa",
-  "message.penumbra_phantasm.great_door_cant_open_no_light_door": "Mas a porta não se moveu... (Sem portas livres nas salas de fonte)",
-  "message.penumbra_phantasm.great_door_cant_open_no_fountain": "Mas a porta não se moveu... (Esse mundo das trevas não tem uma fonte)",
-  "message.penumbra_phantasm.great_door_cant_open_no_fountain_destination": "Mas a porta não se moveu... (O mundo das trevas de destino não tem fonte)",
+  "message.penumbra_phantasm.cheshire_chest_not_in_dark_world": "Mas a tampa não de moveu... (Não está em um mundo das trevas)",
+  "message.penumbra_phantasm.fire_door_not_in_dark_world": "Mas a maçaneta não se moveu... (Não está em um mundo das trevas)",
+
+  "death.attack.penumbra_phantasm.injection_prick": "%1$s não sobreviveu a uma injeção",
+  "death.attack.penumbra_phantasm.injection_prick.player": "%1$s foi injetado até a morte por %2$s",
+  "death.attack.penumbra_phantasm.injection_drain": "%1$s sucumbiu a sua DETERMINAÇÃO sendo drenada",
+  "death.attack.penumbra_phantasm.injection_drain.player": "%1$s sucumbiu a sua DETERMINAÇÃO sendo drenada por %2$s",
+  "death.attack.penumbra_phantasm.injection_overdose": "%1$s ficou DETERMINADO demais e derreteu em gosma",
+  "death.attack.penumbra_phantasm.injection_overdose.player": "%1$s ficou DETERMINADO demais por %2$s e derreteu em gosma",
+  "death.attack.penumbra_phantasm.soul_damage": "%1$s não conseguiu arrancar sua ALMA",
+  "death.attack.penumbra_phantasm.erosion": "a DETERMINAÇÃO de %1$s's foi destruída pela escuridão",
 
   "container.penumbra_phantasm.umbrastone_furnace": "Fornalha de Rocha-Umbral",
+  "container.penumbra_phantasm.dark_world_inventory.narration.button.usage.hover": "CLIQUE ESQUERDO PARA TROCAR POR %s",
+  "container.penumbra_phantasm.dark_world_inventory.narration.recipe": "RECEITA DE %s",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.more_recipes": "CLIQUE ESQUERDO PARA MAIS",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.search_hint": "BUSCAR...",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.craftable": "MOSTRANDO CRAFTÁVEIS",
+  "container.penumbra_phantasm.dark_world_inventory.recipe_book.toggle_recipes.all": "MOSTRANDO TODOS",
 
   "screen.penumbra_phantasm.intro.skip_notification": "PRESSIONE [ESC] PARA PULAR COM UMA ESCOLHA ALEATÓRIA.",
   "screen.penumbra_phantasm.intro.skip_notification_post": "PRESSIONE [ESC] PARA PULAR COM SUA ESCOLHA.",
@@ -477,4 +540,45 @@
   "screen.penumbra_phantasm.intro.line.27": "D E   < D E L T A R U N E . >",
   "screen.penumbra_phantasm.intro.line.28": "P I S E   A D I A N T E",
   "screen.penumbra_phantasm.intro.line.29": "Á   E S T E   M U N D O !"
+
+  "key.categories.penumbra_phantasm": "PENUMBRA PHANTASM",
+  "key.penumbra_phantasm.confirm": "Confirmar",
+  "key.penumbra_phantasm.confirm_alt": "Confirmar (Alt)",
+  "key.penumbra_phantasm.cancel": "Cancelar",
+  "key.penumbra_phantasm.cancel_alt": "Cancelar (Alt)",
+
+  "message.penumbra_phantasm.making_fountain_inside_dark_world": "Você sente que isso não é uma boa ideia...",
+  "textbox.penumbra_phantasm.making_fountain.inside_depths": "...Mas perfurar para onde?",
+
+  "textbox.penumbra_phantasm.soul_hearth.reject": "A ALMA adentro te rejeita.",
+  "textbox.penumbra_phantasm.soul_hearth.sealing_fountain.depths": "Porém sua ALMA não conseguiu brilhar na escuridão...",
+  "textbox.penumbra_phantasm.soul_hearth.sealing_fountain.not_enough_determination": "Mas você não estava DETERMINADO o suficiente...",
+  "textbox.penumbra_phantasm.soul_hearth.sealing_fountain.already_being_sealed": "Mas a fonte já estava sendo selada...",
+  "textbox.penumbra_phantasm.soul_hearth.sealing_fountain": "O gêiser que da forma a esta terra...",
+  "textbox.penumbra_phantasm.soul_hearth.sealing_fountain.choice": "Selar a FONTE DAS TREVAS?",
+  "textbox.penumbra_phantasm.soul_hearth.sealing_fountain.choice.deny": "E então, a esuridão continuou fluindo...",
+  "textbox.penumbra_phantasm.soul_hearth.sealing_fountain.choice.confirm": "(Foi como se sua própria ALMA estivesse brilhando.)",
+
+  "textbox.penumbra_phantasm.dark_fountain.push_away": "O fluxo de escuridão te empurra para longe...",
+
+  "textbox.penumbra_phantasm.great_door.no_light_door": "Mas a porta não se moveu... (Sem portas livres nas salas de fonte)",
+  "textbox.penumbra_phantasm.great_door.no_fountain": "Mas a porta não se moveu... (Esse mundo das trevas não tem uma fonte)",
+  "textbox.penumbra_phantasm.great_door.no_fountain_destination": "Mas a porta não se moveu... (O mundo das trevas de destino não tem fonte)",
+  "textbox.penumbra_phantasm.great_door.not_fountain_door": "Mas a porta não se moveu... (A porta do mundo da luz não está no casco da fonte)",
+
+  "textbox.penumbra_phantasm.fire_door.link": "Esta porta flamejante foi salva ás suas localizações",
+  "textbox.penumbra_phantasm.fire_door.unlink": "Esta porta flamejante foi removida das suas localizações",
+  "textbox.penumbra_phantasm.fire_door.limit_reached": "Impossível salvar mais portas nesse mundo das trevas...",
+  "textbox.penumbra_phantasm.fire_door.not_enough_doors": "Nenhum lugar para se teleportar...",
+  "textbox.penumbra_phantasm.fire_door.depths": "Mas a maçaneta não se mexeu... (Não pode ser usado nas profundezas)",
+
+  "textbox.penumbra_phantasm.card_kingdom_egg_room.tree_front": "(Ele está atrás da árvore.)",
+  "textbox.penumbra_phantasm.card_kingdom_egg_room.tree_front.gone": "(É uma árvore.)",
+  "textbox.penumbra_phantasm.card_kingdom_egg_room.tree_behind.1": "(Bem, tem um homem aqui.)",
+  "textbox.penumbra_phantasm.card_kingdom_egg_room.tree_behind.2": "(Ele te ofereceu algo.)",
+  "textbox.penumbra_phantasm.card_kingdom_egg_room.tree_behind.gone": "(Bem, não tem um homem aqui.)",
+  "textbox.penumbra_phantasm.card_kingdom_egg_room.choice_deny": "(Então ele não precisa estar aqui.)",
+  "textbox.penumbra_phantasm.egg_room.received_egg": "(Você recebeu um Ovo.)",
+
+  "textbox.penumbra_phantasm.use.egg": "(Você usou o Ovo.)"
 }
