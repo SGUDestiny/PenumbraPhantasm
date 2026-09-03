@@ -134,6 +134,23 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
 
         for (int i = 0; i < count; i++) {
             float azimuth = random.nextFloat() * ((float) (Math.PI * 2));
+            int textureIndex = random.nextInt(TITAN_TEXTURES.length);
+
+            Vec3 center = new Vec3(Mth.cos(azimuth) * CYLINDER_RADIUS, HORIZON_OFFSET + SPRITE_SIZE, Mth.sin(azimuth) * CYLINDER_RADIUS);
+
+            placed.add(new Sprite(center, SPRITE_SIZE, SPRITE_SIZE, true, textureIndex));
+        }
+
+        return placed;
+    }
+
+    private List<Sprite> createTitanSpritesNew(long seed) {
+        RandomSource random = RandomSource.create(seed);
+        int count = Mth.nextInt(random, MIN_TITAN_COUNT, MAX_TITAN_COUNT);
+        List<Sprite> placed = new ArrayList<>(count);
+
+        for (int i = 0; i < count; i++) {
+            float azimuth = random.nextFloat() * ((float) (Math.PI * 2));
 
             int textureIndex = random.nextInt(TITAN_TEXTURES.length);
 
