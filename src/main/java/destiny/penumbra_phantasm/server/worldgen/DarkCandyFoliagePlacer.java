@@ -27,7 +27,8 @@ public class DarkCandyFoliagePlacer extends FoliagePlacer {
     }
 
     @Override
-    protected void createFoliage(LevelSimulatedReader level, FoliageSetter foliageSetter, RandomSource randomSource, TreeConfiguration treeConfiguration, int i, FoliageAttachment foliageAttachment, int foliageHeight, int foliageRadius, int offset) {
+    protected void createFoliage(LevelSimulatedReader level, FoliageSetter foliageSetter, RandomSource randomSource, TreeConfiguration treeConfiguration,
+                                 int i, FoliageAttachment foliageAttachment, int foliageHeight, int foliageRadius, int offset) {
         this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos(), 1, offset + 1, false);
         this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos(), 1, offset, false);
         this.placeLeavesRow(level, foliageSetter, randomSource, treeConfiguration, foliageAttachment.pos(), 1, offset - 1, false);

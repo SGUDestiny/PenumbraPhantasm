@@ -26,14 +26,11 @@ public class SoundAccess {
         return SoundRegistry.FOUNTAIN_MUSIC_DEPTHS.get();
     }
 
-    public static void playFountainWind(BlockPos fountainPos, boolean stop)
-    {
+    public static void playFountainWind(BlockPos fountainPos, boolean stop) {
         DarkFountain fountain = getFountain(fountainPos);
 
-        if(fountain != null)
-        {
-            if(fountain.windSound == null)
-            {
+        if(fountain != null) {
+            if(fountain.windSound == null) {
                 fountain.windSound = new DarkFountainSoundWrapper.DarkFountainWind(fountain);
             }
 
@@ -48,14 +45,11 @@ public class SoundAccess {
         return SoundRegistry.FOUNTAIN_WIND.get();
     }
 
-    public static void playFountainWindDepths(BlockPos fountainPos, boolean stop)
-    {
+    public static void playFountainWindDepths(BlockPos fountainPos, boolean stop) {
         DarkFountain fountain = getFountain(fountainPos);
 
-        if(fountain != null)
-        {
-            if(fountain.windSound == null)
-            {
+        if(fountain != null) {
+            if(fountain.windSound == null) {
                 fountain.windSound = new DarkFountainSoundWrapper.DarkFountainWindDepths(fountain);
             }
 
@@ -70,14 +64,11 @@ public class SoundAccess {
         return SoundRegistry.FOUNTAIN_WIND_DEPTHS.get();
     }
 
-    public static void playFountainDarkness(BlockPos fountainPos, boolean stop)
-    {
+    public static void playFountainDarkness(BlockPos fountainPos, boolean stop) {
         DarkFountain fountain = getFountain(fountainPos);
 
-        if(fountain != null)
-        {
-            if(fountain.darknessSound == null)
-            {
+        if(fountain != null) {
+            if(fountain.darknessSound == null) {
                 fountain.darknessSound = new DarkFountainSoundWrapper.DarkFountainDarkness(fountain);
             }
 

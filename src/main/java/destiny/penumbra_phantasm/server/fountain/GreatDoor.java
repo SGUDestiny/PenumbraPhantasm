@@ -70,8 +70,8 @@ public class GreatDoor {
     public boolean lightDoorForceClosedWithoutFountain;
 
     public GreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, List<BlockPos> volumePositions, @Nullable BlockPos lightDoorPos,
-                     @Nullable BlockPos lightDoorSecondLower, @Nullable ResourceKey<Level> lightDoorDimension, @Nullable Direction lightDoorExitDirection, boolean isDestinationDarkWorld,
-                     @Nullable BlockPos destinationGreatDoorPos, @Nullable ResourceKey<Level> destinationGreatDoorDimension) {
+                     @Nullable BlockPos lightDoorSecondLower, @Nullable ResourceKey<Level> lightDoorDimension, @Nullable Direction lightDoorExitDirection,
+                     boolean isDestinationDarkWorld, @Nullable BlockPos destinationGreatDoorPos, @Nullable ResourceKey<Level> destinationGreatDoorDimension) {
         this.greatDoorPos = greatDoorPos;
         this.direction = direction;
         this.isOpen = isOpen;
@@ -86,17 +86,14 @@ public class GreatDoor {
     }
 
     public void tick(Level level) {
-        if (level.isClientSide() || !DarkWorldUtil.isDarkWorld(level)) {
-            return;
-        }
+        if (level.isClientSide() || !DarkWorldUtil.isDarkWorld(level)) return;
 
         if (level instanceof ServerLevel serverLevel) {
             boolean localFountain = DarkWorldUtil.levelHasDarkFountain(serverLevel);
 
             if (localFountain) {
                 lightDoorForceClosedWithoutFountain = false;
-            } else if (!isDestinationDarkWorld
-                    && lightDoorPos != null && lightDoorDimension != null && lightDoorExitDirection != null) {
+            } else if (!isDestinationDarkWorld && lightDoorPos != null && lightDoorDimension != null && lightDoorExitDirection != null) {
                 if (!lightDoorForceClosedWithoutFountain) {
                     forceCloseLinkedLightDoor(serverLevel, this);
                     lightDoorForceClosedWithoutFountain = true;
@@ -143,19 +140,19 @@ public class GreatDoor {
     }
 
     public void maintainDoorShape(ServerLevel darkLevel) {
-        for (BlockPos pos : volumePositions) {
-            if (!(darkLevel.getBlockState(pos).getBlock() instanceof GreatDoorShapeBlock)) {
+        for (BlockPos volumePos : volumePositions) {
+            if (!(darkLevel.getBlockState(volumePos).getBlock() instanceof GreatDoorShapeBlock)) {
                 if (isOpen) {
-                    darkLevel.setBlock(pos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState().setValue(IS_DOOR_OPEN, true), 3);
+                    darkLevel.setBlock(volumePos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState().setValue(IS_DOOR_OPEN, true), 3);
                 } else {
-                    darkLevel.setBlock(pos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState().setValue(IS_DOOR_OPEN, false), 3);
+                    darkLevel.setBlock(volumePos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState().setValue(IS_DOOR_OPEN, false), 3);
                 }
             } else {
-                if (darkLevel.getBlockState(pos).getValue(IS_DOOR_OPEN) != isOpen) {
-                    darkLevel.setBlock(pos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState().setValue(IS_DOOR_OPEN, isOpen), 3);
+                if (darkLevel.getBlockState(volumePos).getValue(IS_DOOR_OPEN) != isOpen) {
+                    darkLevel.setBlock(volumePos, BlockRegistry.GREAT_DOOR_SHAPE.get().defaultBlockState().setValue(IS_DOOR_OPEN, isOpen), 3);
                 }
 
-                if (darkLevel.getBlockEntity(pos) instanceof GreatDoorShapeBlockEntity shapeBlockEntity) {
+                if (darkLevel.getBlockEntity(volumePos) instanceof GreatDoorShapeBlockEntity shapeBlockEntity) {
                     if (shapeBlockEntity.greatDoorPos != greatDoorPos) {
                         shapeBlockEntity.greatDoorPos = greatDoorPos;
                     }
@@ -165,9 +162,8 @@ public class GreatDoor {
     }
 
     public static void prepareDarkWorldGreatDoorsAfterPlayerTravel(ServerLevel darkLevel, @Nullable BlockPos onlyGreatDoorAnchor) {
-        if (!DarkWorldUtil.isDarkWorld(darkLevel)) {
-            return;
-        }
+        if (!DarkWorldUtil.isDarkWorld(darkLevel)) return;
+
         darkLevel.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
             if (onlyGreatDoorAnchor != null) {
                 GreatDoor door = cap.greatDoors.get(onlyGreatDoorAnchor);
@@ -175,6 +171,7 @@ public class GreatDoor {
                     door.refreshOpenFromLinkedLightDoor(darkLevel);
                     door.maintainDoorShape(darkLevel);
                 }
+
                 return;
             }
             for (GreatDoor door : new ArrayList<>(cap.greatDoors.values())) {
@@ -226,6 +223,7 @@ public class GreatDoor {
         if (lightDoorSecondLower != null) {
             BlockPos lower2 = lightDoorSecondLower;
             BlockState doorState2 = lightLevel.getBlockState(lower2);
+
             if (doorState2.getBlock() instanceof DoorBlock && doorState2.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
                 lower2 = lightDoorSecondLower.below();
                 doorState2 = lightLevel.getBlockState(lower2);
@@ -236,32 +234,31 @@ public class GreatDoor {
         }
     }
 
-    private static BlockPos resolveLowerDoorFoot(ServerLevel lightLevel, BlockPos doorPart) {
-        BlockState s = lightLevel.getBlockState(doorPart);
-        if (!(s.getBlock() instanceof DoorBlock)) {
+    private static BlockPos resolveLowerDoor(ServerLevel lightLevel, BlockPos doorPart) {
+        BlockState doorState = lightLevel.getBlockState(doorPart);
+        if (!(doorState.getBlock() instanceof DoorBlock)) {
             return doorPart;
         }
-        return s.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER ? doorPart.below() : doorPart;
+        return doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER ? doorPart.below() : doorPart;
     }
 
     private static void setLowerDoorPhysicalOpen(ServerLevel lightLevel, BlockPos lowerFoot, @Nullable Entity causedBy, boolean targetOpen) {
         BlockState doorState = lightLevel.getBlockState(lowerFoot);
-        if (!(doorState.getBlock() instanceof DoorBlock doorBlock) || doorState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) {
-            return;
-        }
-        if (doorState.getValue(DoorBlock.OPEN) == targetOpen) {
-            return;
-        }
+
+        if (!(doorState.getBlock() instanceof DoorBlock doorBlock) || doorState.getValue(DoorBlock.HALF) != DoubleBlockHalf.LOWER) return;
+        if (doorState.getValue(DoorBlock.OPEN) == targetOpen) return;
+
         doorBlock.setOpen(causedBy, lightLevel, doorState, lowerFoot, targetOpen);
     }
 
     private static boolean physicalOpenForVisualFromRoom(BlockState lowerDoorState, Direction fromDoorToRoom, boolean visuallyOpenFromRoom) {
         Direction facing = lowerDoorState.getValue(DoorBlock.FACING);
         boolean parallel = facing.getAxis() == fromDoorToRoom.getAxis();
+
         return parallel ? visuallyOpenFromRoom : !visuallyOpenFromRoom;
     }
 
-    public static boolean toggleLinkedLightDoor(ServerLevel darkLevel, GreatDoor door, @Nullable Entity causedBy) {
+    public static boolean toggleLinkedLightDoor(ServerLevel darkLevel, GreatDoor door, @Nullable Entity togglingEntity) {
         if (door.lightDoorPos == null || door.lightDoorDimension == null || door.lightDoorExitDirection == null) {
             return false;
         }
@@ -271,7 +268,7 @@ public class GreatDoor {
             return false;
         }
 
-        BlockPos primaryLower = resolveLowerDoorFoot(lightLevel, door.lightDoorPos);
+        BlockPos primaryLower = resolveLowerDoor(lightLevel, door.lightDoorPos);
         BlockState doorState = lightLevel.getBlockState(primaryLower);
 
         if (!(doorState.getBlock() instanceof DoorBlock)) {
@@ -280,22 +277,22 @@ public class GreatDoor {
 
         Direction fromDoorToRoom = door.lightDoorExitDirection.getOpposite();
         boolean passageVisuallyOpen = DarknessBlock.isDoorVisuallyOpenFromSide(lightLevel, primaryLower, doorState, fromDoorToRoom);
-        BlockPos secondLower = null;
-        BlockState secondState = null;
+        BlockPos doubleLower = null;
+        BlockState doubleLowerState = null;
+
         if (door.lightDoorSecondLower != null) {
-            secondLower = resolveLowerDoorFoot(lightLevel, door.lightDoorSecondLower);
-            secondState = lightLevel.getBlockState(secondLower);
-            if (secondState.getBlock() instanceof DoorBlock) {
-                passageVisuallyOpen = passageVisuallyOpen
-                        || DarknessBlock.isDoorVisuallyOpenFromSide(lightLevel, secondLower, secondState, fromDoorToRoom);
+            doubleLower = resolveLowerDoor(lightLevel, door.lightDoorSecondLower);
+            doubleLowerState = lightLevel.getBlockState(doubleLower);
+
+            if (doubleLowerState.getBlock() instanceof DoorBlock) {
+                passageVisuallyOpen = passageVisuallyOpen || DarknessBlock.isDoorVisuallyOpenFromSide(lightLevel, doubleLower, doubleLowerState, fromDoorToRoom);
             }
         }
         boolean targetPassageOpen = !passageVisuallyOpen;
 
-        setLowerDoorPhysicalOpen(lightLevel, primaryLower, causedBy, physicalOpenForVisualFromRoom(doorState, fromDoorToRoom, targetPassageOpen));
-        if (secondLower != null && secondState != null && secondState.getBlock() instanceof DoorBlock) {
-            setLowerDoorPhysicalOpen(lightLevel, secondLower, causedBy,
-                    physicalOpenForVisualFromRoom(secondState, fromDoorToRoom, targetPassageOpen));
+        setLowerDoorPhysicalOpen(lightLevel, primaryLower, togglingEntity, physicalOpenForVisualFromRoom(doorState, fromDoorToRoom, targetPassageOpen));
+        if (doubleLower != null && doubleLowerState.getBlock() instanceof DoorBlock) {
+            setLowerDoorPhysicalOpen(lightLevel, doubleLower, togglingEntity, physicalOpenForVisualFromRoom(doubleLowerState, fromDoorToRoom, targetPassageOpen));
         }
 
         door.refreshOpenFromLinkedLightDoor(darkLevel);
@@ -314,7 +311,7 @@ public class GreatDoor {
             return;
         }
 
-        BlockPos primaryLower = resolveLowerDoorFoot(lightLevel, door.lightDoorPos);
+        BlockPos primaryLower = resolveLowerDoor(lightLevel, door.lightDoorPos);
         BlockState doorState = lightLevel.getBlockState(primaryLower);
 
         if (!(doorState.getBlock() instanceof DoorBlock)) {
@@ -323,7 +320,7 @@ public class GreatDoor {
 
         boolean anyWasOpen = doorState.getValue(DoorBlock.OPEN);
         if (door.lightDoorSecondLower != null) {
-            BlockPos sl = resolveLowerDoorFoot(lightLevel, door.lightDoorSecondLower);
+            BlockPos sl = resolveLowerDoor(lightLevel, door.lightDoorSecondLower);
             BlockState s2 = lightLevel.getBlockState(sl);
             if (s2.getBlock() instanceof DoorBlock && s2.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER) {
                 anyWasOpen = anyWasOpen || s2.getValue(DoorBlock.OPEN);
@@ -338,7 +335,7 @@ public class GreatDoor {
 
         setLowerDoorPhysicalOpen(lightLevel, primaryLower, null, false);
         if (door.lightDoorSecondLower != null) {
-            setLowerDoorPhysicalOpen(lightLevel, resolveLowerDoorFoot(lightLevel, door.lightDoorSecondLower), null, false);
+            setLowerDoorPhysicalOpen(lightLevel, resolveLowerDoor(lightLevel, door.lightDoorSecondLower), null, false);
         }
 
         door.refreshOpenFromLinkedLightDoor(darkLevel);
@@ -360,7 +357,7 @@ public class GreatDoor {
         if (isDestinationDarkWorld) {
             GreatDoor peer = resolvePeerGreatDoor(destinationLevel);
             if (peer == null) {
-                DarkWorldUtil.ensurePeerGreatDoor(this, greatDoorLevel, destinationLevel);
+                DarkWorldUtil.ensureGreatDoorToGreatDoor(this, greatDoorLevel, destinationLevel);
                 peer = resolvePeerGreatDoor(destinationLevel);
             }
 
@@ -400,8 +397,9 @@ public class GreatDoor {
                 Vec3 b = lightDoorSecondLower.getCenter();
                 destVec = new Vec3((a.x + b.x) * 0.5, (a.y + b.y) * 0.5, (a.z + b.z) * 0.5);
             }
+
             float yaw = lightDoorExitDirection.toYRot();
-            BlockPos darkAnchor = DarkWorldUtil.findDarkFountainAnchor(greatDoorLevel);
+            BlockPos darkAnchor = DarkWorldUtil.findDarkFountainPos(greatDoorLevel);
 
             for (ServerPlayer serverPlayer : greatDoorLevel.getEntitiesOfClass(ServerPlayer.class, volumeBox)) {
                 if (serverPlayer.isSpectator()) {
@@ -431,10 +429,7 @@ public class GreatDoor {
         if (destinationGreatDoorPos == null) {
             return null;
         }
-        return destWorld.getCapability(CapabilityRegistry.GREAT_DOOR)
-                .resolve()
-                .map(cap -> cap.greatDoors.get(destinationGreatDoorPos))
-                .orElse(null);
+        return destWorld.getCapability(CapabilityRegistry.GREAT_DOOR).resolve().map(cap -> cap.greatDoors.get(destinationGreatDoorPos)).orElse(null);
     }
 
     public boolean isUnlinkedForAutoBinding() {
@@ -444,9 +439,10 @@ public class GreatDoor {
 
     private static void addPlayerToLightFountain(ServerLevel lightLevel, ResourceKey<Level> darkDim, BlockPos darkFountainAnchor, UUID playerId) {
         lightLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-            for (DarkFountain lf : cap.darkFountains.values()) {
-                if (darkDim.equals(lf.destinationDimension) && darkFountainAnchor.equals(lf.destinationPos)) {
-                    lf.teleportedEntities.add(playerId);
+            for (DarkFountain fountain : cap.darkFountains.values()) {
+                if (darkDim.equals(fountain.destinationDimension) && darkFountainAnchor.equals(fountain.destinationPos)) {
+                    fountain.teleportedEntities.add(playerId);
+
                     return;
                 }
             }
@@ -457,7 +453,7 @@ public class GreatDoor {
         Vec3 forwardVec = Vec3.atLowerCornerOf(doorFacing.getNormal());
         Vec3 sideVec = Vec3.atLowerCornerOf(BlockPos.ZERO.relative(doorFacing.getClockWise(), 1));
 
-        Vec3 targetXZ = greatDoorPos.getCenter().add(forwardVec.scale(2.0)).add(sideVec.scale(2.5));
+        Vec3 targetXZ = greatDoorPos.getCenter().add(forwardVec.scale(2)).add(sideVec.scale(2.5));
 
         BlockPos targetPos = new BlockPos((int) targetXZ.x, greatDoorPos.getY(), (int) targetXZ.z);
 
@@ -481,11 +477,13 @@ public class GreatDoor {
         tag.put(GREAT_DOOR_POS, NbtUtils.writeBlockPos(greatDoorPos));
         tag.putString(DIRECTION, direction.getName());
         tag.putBoolean(IS_OPEN, isOpen);
+
         ListTag volumePositionsTag = new ListTag();
         for (BlockPos pos : volumePositions) {
             volumePositionsTag.add(NbtUtils.writeBlockPos(pos));
         }
         tag.put(VOLUME_POSITIONS, volumePositionsTag);
+
         boolean hasLightLink = lightDoorPos != null && lightDoorDimension != null && lightDoorExitDirection != null;
         tag.putBoolean("has_light_link", hasLightLink);
         if (hasLightLink) {
@@ -496,6 +494,7 @@ public class GreatDoor {
             tag.putString(LIGHT_DOOR_DIMENSION, lightDoorDimension.location().toString());
             tag.putString(LIGHT_DOOR_EXIT_DIRECTION, lightDoorExitDirection.getName());
         }
+
         tag.putBoolean(IS_DESTINATION_DARK_WORLD, isDestinationDarkWorld);
         if (isDestinationDarkWorld && destinationGreatDoorPos != null && destinationGreatDoorDimension != null) {
             tag.put(DESTINATION_GREAT_DOOR_POS, NbtUtils.writeBlockPos(destinationGreatDoorPos));
@@ -517,7 +516,7 @@ public class GreatDoor {
         }
 
         BlockPos lightDoorPos = null;
-        BlockPos lightDoorSecondLower = null;
+        BlockPos lightDoorDoubleLower = null;
         ResourceKey<Level> lightDoorDimension = null;
         Direction lightDoorExitDirection = null;
 
@@ -525,10 +524,12 @@ public class GreatDoor {
             if (tag.getBoolean("has_light_link") && tag.contains(LIGHT_DOOR_POS, Tag.TAG_COMPOUND)) {
                 lightDoorPos = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_POS));
                 if (tag.contains(LIGHT_DOOR_SECOND_POS, Tag.TAG_COMPOUND)) {
-                    lightDoorSecondLower = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_SECOND_POS));
+                    lightDoorDoubleLower = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_SECOND_POS));
                 }
+
                 lightDoorDimension = ModUtil.stringToDimension(tag.getString(LIGHT_DOOR_DIMENSION));
-                lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING) ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION)) : Direction.NORTH;
+                lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING) ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION))
+                        : Direction.NORTH;
 
                 if (lightDoorExitDirection == null) {
                     lightDoorExitDirection = Direction.NORTH;
@@ -537,8 +538,9 @@ public class GreatDoor {
         } else if (tag.contains(LIGHT_DOOR_POS, Tag.TAG_COMPOUND)) {
             lightDoorPos = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_POS));
             if (tag.contains(LIGHT_DOOR_SECOND_POS, Tag.TAG_COMPOUND)) {
-                lightDoorSecondLower = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_SECOND_POS));
+                lightDoorDoubleLower = NbtUtils.readBlockPos(tag.getCompound(LIGHT_DOOR_SECOND_POS));
             }
+
             lightDoorDimension = ModUtil.stringToDimension(tag.getString(LIGHT_DOOR_DIMENSION));
             lightDoorExitDirection = tag.contains(LIGHT_DOOR_EXIT_DIRECTION, Tag.TAG_STRING) ? Direction.byName(tag.getString(LIGHT_DOOR_EXIT_DIRECTION)) : null;
 
@@ -572,7 +574,7 @@ public class GreatDoor {
             }
         }
 
-        return new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorSecondLower, lightDoorDimension,
+        return new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorDoubleLower, lightDoorDimension,
                 lightDoorExitDirection, isDestinationDarkWorld, destinationGreatDoorPos, destinationGreatDoorDimension);
     }
 

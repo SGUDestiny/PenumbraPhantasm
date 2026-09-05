@@ -18,10 +18,10 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class DarkRoom {
-    public record OutsideDoorExit(Direction exitFromInterior, @Nullable BlockPos secondLowerHalf) {
+    public record OutsideDoorExit(Direction exitFromInterior, @Nullable BlockPos doubleLowerHalf) {
     }
 
-    public record SharedDoorLink(ResourceKey<Level> otherDarkWorld, @Nullable BlockPos secondLowerHalf) {
+    public record SharedDoorLink(ResourceKey<Level> otherDarkWorld, @Nullable BlockPos doubleLowerHalf) {
     }
 
     public static final String SEED_POS = "seedPos";
@@ -30,7 +30,7 @@ public class DarkRoom {
     public static final String OUTSIDE_DOORS = "outsideDoors";
     public static final String SHARED_DOORS = "sharedDoors";
     public static final String ENTRY_POS = "pos";
-    public static final String ENTRY_SECOND_LOWER = "secondLower";
+    public static final String ENTRY_DOUBLE_LOWER = "doubleLower";
     public static final String ENTRY_DIR = "dir";
     public static final String ENTRY_DIM = "dim";
     public static final String ACTIVE = "active";
@@ -46,7 +46,8 @@ public class DarkRoom {
     boolean active;
     List<BlockPos> dissipationQueue;
 
-    public DarkRoom(BlockPos seedPos, List<BlockPos> positions, Set<BlockPos> doorPositions, Map<BlockPos, OutsideDoorExit> outsideDoors, Map<BlockPos, SharedDoorLink> sharedDoors) {
+    public DarkRoom(BlockPos seedPos, List<BlockPos> positions, Set<BlockPos> doorPositions, Map<BlockPos, OutsideDoorExit> outsideDoors, Map<BlockPos,
+            SharedDoorLink> sharedDoors) {
         this.seedPos = seedPos;
         this.positions = positions;
         this.doorPositions = doorPositions;
@@ -87,19 +88,22 @@ public class DarkRoom {
         transportTickers.clear();
     }
 
-    public static boolean sharesAnOpenDoor(ServerLevel level, DarkRoom a, DarkRoom b) {
-        Set<BlockPos> aPositions = new HashSet<>(a.getPositions());
-        for (BlockPos doorPos : a.getDoorPositions()) {
-            if (!b.getDoorPositions().contains(doorPos)) continue;
+    public static boolean sharesAnOpenDoor(ServerLevel level, DarkRoom firstDarkRoom, DarkRoom secondDarkRoom) {
+        Set<BlockPos> firstRoomPositions = new HashSet<>(firstDarkRoom.getPositions());
+        for (BlockPos doorPos : firstDarkRoom.getDoorPositions()) {
+            if (!secondDarkRoom.getDoorPositions().contains(doorPos)) continue;
+
             BlockState state = level.getBlockState(doorPos);
-            for (Direction dir : Direction.values()) {
-                if (!aPositions.contains(doorPos.relative(dir))) continue;
-                if (DarknessBlock.isDoorVisuallyOpenFromSide(level, doorPos, state, dir)) {
-                    return true;
-                }
+
+            for (Direction direction : Direction.values()) {
+                if (!firstRoomPositions.contains(doorPos.relative(direction))) continue;
+
+                if (DarknessBlock.isDoorVisuallyOpenFromSide(level, doorPos, state, direction)) return true;
+
                 break;
             }
         }
+
         return false;
     }
 
@@ -110,6 +114,7 @@ public class DarkRoom {
                 total += room.getPositions().size();
             }
         }
+
         return total;
     }
 
@@ -134,26 +139,32 @@ public class DarkRoom {
         tag.put(DOOR_POSITIONS, doorsTag);
 
         ListTag outsideList = new ListTag();
-        for (Map.Entry<BlockPos, OutsideDoorExit> e : outsideDoors.entrySet()) {
-            CompoundTag entry = new CompoundTag();
-            entry.put(ENTRY_POS, NbtUtils.writeBlockPos(e.getKey()));
-            entry.putString(ENTRY_DIR, e.getValue().exitFromInterior().getName());
-            if (e.getValue().secondLowerHalf() != null) {
-                entry.put(ENTRY_SECOND_LOWER, NbtUtils.writeBlockPos(e.getValue().secondLowerHalf()));
+        for (Map.Entry<BlockPos, OutsideDoorExit> entry : outsideDoors.entrySet()) {
+            CompoundTag entryTag = new CompoundTag();
+
+            entryTag.put(ENTRY_POS, NbtUtils.writeBlockPos(entry.getKey()));
+            entryTag.putString(ENTRY_DIR, entry.getValue().exitFromInterior().getName());
+
+            if (entry.getValue().doubleLowerHalf() != null) {
+                entryTag.put(ENTRY_DOUBLE_LOWER, NbtUtils.writeBlockPos(entry.getValue().doubleLowerHalf()));
             }
-            outsideList.add(entry);
+
+            outsideList.add(entryTag);
         }
         tag.put(OUTSIDE_DOORS, outsideList);
 
         ListTag sharedList = new ListTag();
-        for (Map.Entry<BlockPos, SharedDoorLink> e : sharedDoors.entrySet()) {
-            CompoundTag entry = new CompoundTag();
-            entry.put(ENTRY_POS, NbtUtils.writeBlockPos(e.getKey()));
-            entry.putString(ENTRY_DIM, e.getValue().otherDarkWorld().location().toString());
-            if (e.getValue().secondLowerHalf() != null) {
-                entry.put(ENTRY_SECOND_LOWER, NbtUtils.writeBlockPos(e.getValue().secondLowerHalf()));
+        for (Map.Entry<BlockPos, SharedDoorLink> entry : sharedDoors.entrySet()) {
+            CompoundTag entryTag = new CompoundTag();
+
+            entryTag.put(ENTRY_POS, NbtUtils.writeBlockPos(entry.getKey()));
+            entryTag.putString(ENTRY_DIM, entry.getValue().otherDarkWorld().location().toString());
+
+            if (entry.getValue().doubleLowerHalf() != null) {
+                entryTag.put(ENTRY_DOUBLE_LOWER, NbtUtils.writeBlockPos(entry.getValue().doubleLowerHalf()));
             }
-            sharedList.add(entry);
+
+            sharedList.add(entryTag);
         }
         tag.put(SHARED_DOORS, sharedList);
 
@@ -163,75 +174,97 @@ public class DarkRoom {
         return tag;
     }
 
-    public static DarkRoom load(CompoundTag tag) {
-        BlockPos seedPos = NbtUtils.readBlockPos(tag.getCompound(SEED_POS));
+    public static DarkRoom load(CompoundTag compoundTag) {
+        BlockPos seedPos = NbtUtils.readBlockPos(compoundTag.getCompound(SEED_POS));
 
         List<BlockPos> positions = new ArrayList<>();
-        ListTag positionsTag = tag.getList(POSITIONS, Tag.TAG_COMPOUND);
-        for (Tag t : positionsTag) {
-            positions.add(NbtUtils.readBlockPos((CompoundTag) t));
+        ListTag positionsTag = compoundTag.getList(POSITIONS, Tag.TAG_COMPOUND);
+        for (Tag tag : positionsTag) {
+            positions.add(NbtUtils.readBlockPos((CompoundTag) tag));
         }
 
         Set<BlockPos> doorPositions = new HashSet<>();
-        ListTag doorsTag = tag.getList(DOOR_POSITIONS, Tag.TAG_COMPOUND);
-        for (Tag t : doorsTag) {
-            doorPositions.add(NbtUtils.readBlockPos((CompoundTag) t));
+        ListTag doorsTag = compoundTag.getList(DOOR_POSITIONS, Tag.TAG_COMPOUND);
+        for (Tag tag : doorsTag) {
+            doorPositions.add(NbtUtils.readBlockPos((CompoundTag) tag));
         }
 
         Map<BlockPos, OutsideDoorExit> outsideDoors = new HashMap<>();
-        if (tag.contains(OUTSIDE_DOORS)) {
-            ListTag outsideList = tag.getList(OUTSIDE_DOORS, Tag.TAG_COMPOUND);
-            for (Tag t : outsideList) {
-                CompoundTag entry = (CompoundTag) t;
-                BlockPos pos = NbtUtils.readBlockPos(entry.getCompound(ENTRY_POS));
-                Direction dir = Direction.byName(entry.getString(ENTRY_DIR));
-                BlockPos secondLower = entry.contains(ENTRY_SECOND_LOWER, Tag.TAG_COMPOUND)
-                        ? NbtUtils.readBlockPos(entry.getCompound(ENTRY_SECOND_LOWER))
-                        : null;
-                if (dir != null) {
-                    outsideDoors.put(pos, new OutsideDoorExit(dir, secondLower));
+        if (compoundTag.contains(OUTSIDE_DOORS)) {
+            ListTag outsideList = compoundTag.getList(OUTSIDE_DOORS, Tag.TAG_COMPOUND);
+
+            for (Tag tag : outsideList) {
+                CompoundTag entryTag = (CompoundTag) tag;
+
+                BlockPos blockPos = NbtUtils.readBlockPos(entryTag.getCompound(ENTRY_POS));
+                Direction direction = Direction.byName(entryTag.getString(ENTRY_DIR));
+                BlockPos secondLower = entryTag.contains(ENTRY_DOUBLE_LOWER, Tag.TAG_COMPOUND) ? NbtUtils.readBlockPos(entryTag.getCompound(ENTRY_DOUBLE_LOWER)) : null;
+
+                if (direction != null) {
+                    outsideDoors.put(blockPos, new OutsideDoorExit(direction, secondLower));
                 }
             }
         }
 
         Map<BlockPos, SharedDoorLink> sharedDoors = new HashMap<>();
-        if (tag.contains(SHARED_DOORS)) {
-            ListTag sharedList = tag.getList(SHARED_DOORS, Tag.TAG_COMPOUND);
-            for (Tag t : sharedList) {
-                CompoundTag entry = (CompoundTag) t;
-                BlockPos pos = NbtUtils.readBlockPos(entry.getCompound(ENTRY_POS));
-                ResourceKey<Level> dim = ModUtil.stringToDimension(entry.getString(ENTRY_DIM));
-                BlockPos secondLower = entry.contains(ENTRY_SECOND_LOWER, Tag.TAG_COMPOUND)
-                        ? NbtUtils.readBlockPos(entry.getCompound(ENTRY_SECOND_LOWER))
-                        : null;
-                if (dim != null) {
-                    sharedDoors.put(pos, new SharedDoorLink(dim, secondLower));
+        if (compoundTag.contains(SHARED_DOORS)) {
+            ListTag sharedList = compoundTag.getList(SHARED_DOORS, Tag.TAG_COMPOUND);
+            for (Tag tag : sharedList) {
+                CompoundTag entryTag = (CompoundTag) tag;
+
+                BlockPos blockPos = NbtUtils.readBlockPos(entryTag.getCompound(ENTRY_POS));
+                ResourceKey<Level> dimensionKey = ModUtil.stringToDimension(entryTag.getString(ENTRY_DIM));
+                BlockPos doubleLower = entryTag.contains(ENTRY_DOUBLE_LOWER, Tag.TAG_COMPOUND) ? NbtUtils.readBlockPos(entryTag.getCompound(ENTRY_DOUBLE_LOWER)) : null;
+
+                if (dimensionKey != null) {
+                    sharedDoors.put(blockPos, new SharedDoorLink(dimensionKey, doubleLower));
                 }
             }
         }
 
         DarkRoom room = new DarkRoom(seedPos, positions, doorPositions, outsideDoors, sharedDoors);
-        room.active = tag.getBoolean(ACTIVE);
-        room.fillIndex = tag.getInt(FILL_INDEX);
+        room.active = compoundTag.getBoolean(ACTIVE);
+        room.fillIndex = compoundTag.getInt(FILL_INDEX);
+
         return room;
     }
 
-    public BlockPos getSeedPos() { return seedPos; }
-    public List<BlockPos> getPositions() { return positions; }
-    public Set<BlockPos> getDoorPositions() { return doorPositions; }
-    public Map<BlockPos, OutsideDoorExit> getOutsideDoors() { return Collections.unmodifiableMap(outsideDoors); }
-    public Map<BlockPos, SharedDoorLink> getSharedDoors() { return Collections.unmodifiableMap(sharedDoors); }
+    public BlockPos getSeedPos() {
+        return seedPos;
+    }
 
-    public Optional<Direction> interiorHorizontalDirectionTowardDoor(BlockPos doorLowerFoot) {
-        for (BlockPos p : positions) {
-            for (Direction dir : Direction.Plane.HORIZONTAL) {
-                if (p.relative(dir).equals(doorLowerFoot)) {
-                    return Optional.of(dir);
+    public List<BlockPos> getPositions() {
+        return positions;
+    }
+
+    public Set<BlockPos> getDoorPositions() {
+        return doorPositions;
+    }
+
+    public Map<BlockPos, OutsideDoorExit> getOutsideDoors() {
+        return Collections.unmodifiableMap(outsideDoors);
+    }
+
+    public Map<BlockPos, SharedDoorLink> getSharedDoors() {
+        return Collections.unmodifiableMap(sharedDoors);
+    }
+
+    public Optional<Direction> insideHorizontalDirectionTowardDoor(BlockPos doorLowerFoot) {
+        for (BlockPos blockPos : positions) {
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                if (blockPos.relative(direction).equals(doorLowerFoot)) {
+                    return Optional.of(direction);
                 }
             }
         }
         return Optional.empty();
     }
-    public Map<UUID, Integer> getTransportTickers() { return transportTickers; }
-    public int getFillIndex() { return fillIndex; }
+
+    public Map<UUID, Integer> getTransportTickers() {
+        return transportTickers;
+    }
+
+    public int getFillIndex() {
+        return fillIndex;
+    }
 }

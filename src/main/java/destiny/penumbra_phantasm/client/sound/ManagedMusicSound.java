@@ -6,37 +6,37 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
 public class ManagedMusicSound extends AbstractTickableSoundInstance {
-    private float targetVolume = 0.0F;
+    private float targetVolume = 0;
 
     public ManagedMusicSound(SoundEvent soundEvent, boolean looping) {
         super(soundEvent, SoundSource.MUSIC, SoundInstance.createUnseededRandom());
         this.looping = looping;
-        this.volume = 0.0F;
+        this.volume = 0;
         this.relative = true;
     }
 
     @Override
     public void tick() {
         if (this.volume < targetVolume) {
-            this.volume = Math.min(this.volume + 0.005F, targetVolume);
+            this.volume = Math.min(this.volume + 0.005f, targetVolume);
         } else if (this.volume > targetVolume) {
-            this.volume = Math.max(this.volume - 0.005F, targetVolume);
+            this.volume = Math.max(this.volume - 0.005f, targetVolume);
         }
 
-        if (this.volume <= 0.0F && targetVolume <= 0.0F && !this.looping) {
+        if (this.volume <= 0 && targetVolume <= 0 && !this.looping) {
             this.stop();
         }
     }
 
     @Override
     public float getVolume() {
-        if (this.sound == null) return 0.0F;
+        if (this.sound == null) return 0;
         return super.getVolume();
     }
 
     @Override
     public float getPitch() {
-        if (this.sound == null) return 1.0F;
+        if (this.sound == null) return 1;
         return super.getPitch();
     }
 
@@ -58,7 +58,7 @@ public class ManagedMusicSound extends AbstractTickableSoundInstance {
     }
 
     public boolean isFadedOut() {
-        return this.volume <= 0.0F && this.targetVolume <= 0.0F;
+        return this.volume <= 0 && this.targetVolume <= 0;
     }
 
     public void forceVolume(float vol) {

@@ -98,8 +98,7 @@ public class DarknessFallScreen extends Screen {
 
         for (float frameTick : sortedFrames) {
             float frameLifeTimeDelta = frameTick / frameLifeTime;
-            float frameColor = frameLifeTimeDelta <= 0.5f
-                    ? Mth.lerp(frameLifeTimeDelta * 2.0f, 0f, 1f)
+            float frameColor = frameLifeTimeDelta <= 0.5f ? Mth.lerp(frameLifeTimeDelta * 2.0f, 0f, 1f)
                     : Mth.lerp((frameLifeTimeDelta - 0.5f) * 2.0f, 1f, 0f);
             float frameSize = Mth.lerp(frameLifeTimeDelta, 0f, 5f);
             float frameRotation = Mth.lerp(frameLifeTimeDelta, 10, -10f);

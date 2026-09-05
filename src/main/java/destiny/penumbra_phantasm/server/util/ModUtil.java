@@ -19,9 +19,11 @@ import java.util.stream.Stream;
 public class ModUtil {
     public static double worldSurfaceYAtXZ(ServerLevel level, double x, double z, Heightmap.Types heightmapType) {
         ChunkPos chunk = new ChunkPos(BlockPos.containing(x, level.getMaxBuildHeight(), z));
+
         level.setChunkForced(chunk.x, chunk.z, true);
         BlockPos heightmapPos = level.getHeightmapPos(heightmapType, BlockPos.containing(x, level.getMaxBuildHeight(), z));
         level.setChunkForced(chunk.x, chunk.z, false);
+
         return heightmapPos.getY() + 1;
     }
 
@@ -35,8 +37,10 @@ public class ModUtil {
 
     public static ResourceKey<Level> stringToDimension(String dimensionString) {
         String[] split = dimensionString.split(":");
+
         if (split.length > 1)
             return ResourceKey.create(ResourceKey.createRegistryKey(new ResourceLocation("minecraft", "dimension")), new ResourceLocation(split[0], split[1]));
+
         return null;
     }
 

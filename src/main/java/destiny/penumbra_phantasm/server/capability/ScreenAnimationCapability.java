@@ -142,13 +142,11 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
 
     @Override
     public CompoundTag serializeNBT() {
-        CompoundTag tag = new CompoundTag();
-        return tag;
+        return new CompoundTag();
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {
-    }
+    public void deserializeNBT(CompoundTag tag) {}
 
     public void sync(@NotNull ScreenAnimationCapability cap) {
         this.darknessLandTicker = cap.darknessLandTicker;

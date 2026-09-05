@@ -70,7 +70,7 @@ public class IchorCandleBlock extends GenericHorizontalOrientableBlock{
 
         if (lit) {
             pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, false));
-            pLevel.playSound(null, pPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
+            pLevel.playSound(null, pPos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1, 1);
             pLevel.gameEvent(pPlayer, GameEvent.BLOCK_CHANGE, pPos);
 
             return InteractionResult.SUCCESS;
@@ -82,7 +82,7 @@ public class IchorCandleBlock extends GenericHorizontalOrientableBlock{
 
                 if (tag != null && tag.getBoolean(OPEN)) {
                     pLevel.setBlockAndUpdate(pPos, pState.setValue(LIT, true));
-                    pLevel.playSound(null, pPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    pLevel.playSound(null, pPos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1, 1);
                     pLevel.gameEvent(pPlayer, GameEvent.BLOCK_CHANGE, pPos);
 
                     return InteractionResult.SUCCESS;
@@ -157,15 +157,15 @@ public class IchorCandleBlock extends GenericHorizontalOrientableBlock{
     private static void addParticlesAndSound(Level pLevel, Vec3 pOffset, RandomSource pRandom) {
         float nextFloat = pRandom.nextFloat();
 
-        if (nextFloat < 0.3F) {
-            pLevel.addParticle(ParticleTypes.SMOKE, pOffset.x, pOffset.y, pOffset.z, (double)0.0F, (double)0.0F, (double)0.0F);
+        if (nextFloat < 0.3f) {
+            pLevel.addParticle(ParticleTypes.SMOKE, pOffset.x, pOffset.y, pOffset.z, 0, 0, 0);
 
-            if (nextFloat < 0.17F) {
-                pLevel.playLocalSound(pOffset.x + (double)0.5F, pOffset.y + (double)0.5F, pOffset.z + (double)0.5F, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1.0F + pRandom.nextFloat(), pRandom.nextFloat() * 0.7F + 0.3F, false);
+            if (nextFloat < 0.17f) {
+                pLevel.playLocalSound(pOffset.x + 0.5, pOffset.y + 0.5, pOffset.z + 0.5, SoundEvents.CANDLE_AMBIENT, SoundSource.BLOCKS, 1 + pRandom.nextFloat(), pRandom.nextFloat() * 0.7f + 0.3f, false);
             }
         }
 
-        pLevel.addParticle(ParticleTypeRegistry.ICHOR_FIRE_FLAME.get(), pOffset.x, pOffset.y, pOffset.z, (double)0.0F, (double)0.0F, (double)0.0F);
+        pLevel.addParticle(ParticleTypeRegistry.ICHOR_FIRE_FLAME.get(), pOffset.x, pOffset.y, pOffset.z, 0, 0, 0);
     }
 
     @Override

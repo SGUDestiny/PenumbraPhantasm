@@ -42,11 +42,8 @@ public class DarkWorldButton extends AbstractButton {
     private int stateHeight;
     private int stateCount;
 
-    protected DarkWorldButton(int x, int y, int width, int height, Component message,
-                              DarkWorldButton.OnPress onPress, DarkWorldButton.CreateNarration createNarration,
-                              ResourceLocation texture, int textureX, int textureY,
-                              int textureWidth, int textureHeight, int stateHeight, int stateCount,
-                              int borderX, int borderY) {
+    protected DarkWorldButton(int x, int y, int width, int height, Component message, DarkWorldButton.OnPress onPress, DarkWorldButton.CreateNarration createNarration,
+                              ResourceLocation texture, int textureX, int textureY, int textureWidth, int textureHeight, int stateHeight, int stateCount, int borderX, int borderY) {
         super(x, y, width, height, message);
         this.onPress = onPress;
         this.createNarration = createNarration;
@@ -62,11 +59,8 @@ public class DarkWorldButton extends AbstractButton {
     }
 
     protected DarkWorldButton(Builder builder) {
-        this(builder.x, builder.y, builder.width, builder.height, builder.message,
-                builder.onPress, builder.createNarration,
-                builder.texture, builder.textureX, builder.textureY,
-                builder.textureWidth, builder.textureHeight, builder.stateHeight,
-                builder.stateCount, builder.borderX, builder.borderY);
+        this(builder.x, builder.y, builder.width, builder.height, builder.message, builder.onPress, builder.createNarration, builder.texture, builder.textureX, builder.textureY,
+                builder.textureWidth, builder.textureHeight, builder.stateHeight, builder.stateCount, builder.borderX, builder.borderY);
         setTooltip(builder.tooltip);
     }
 
@@ -105,6 +99,7 @@ public class DarkWorldButton extends AbstractButton {
     private int getStateIndex() {
         if (!active) return 0;
         if (isHoveredOrFocused()) return 2;
+
         return 1;
     }
 
@@ -131,30 +126,22 @@ public class DarkWorldButton extends AbstractButton {
             glow = 0;
         }
 
-        guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
+        guiGraphics.setColor(1, 1, 1, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
-        guiGraphics.blitNineSliced(texture,
-                this.getX(), this.getY(),
-                this.getWidth(), this.getHeight(),
-                borderX, borderY,
-                textureWidth, stateHeight,
+        guiGraphics.blitNineSliced(texture, this.getX(), this.getY(), this.getWidth(), this.getHeight(), borderX, borderY, textureWidth, stateHeight,
                 getTextureU(), getTextureV());
 
         if (isHoveredOrFocused()) {
             guiGraphics.setColor(glow, glow, glow, this.alpha);
 
-            guiGraphics.blitNineSliced(DEFAULT_TEXTURE_GLOW,
-                    this.getX(), this.getY(),
-                    this.getWidth(), this.getHeight(),
-                    borderX, borderY,
-                    textureWidth, stateHeight,
+            guiGraphics.blitNineSliced(DEFAULT_TEXTURE_GLOW, this.getX(), this.getY(), this.getWidth(), this.getHeight(), borderX, borderY, textureWidth, stateHeight,
                     getTextureU(), getTextureV());
         }
 
-        guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        guiGraphics.setColor(1, 1, 1, 1);
         int color = this.getFGColor();
-        this.renderString(guiGraphics, minecraft.font, color | Mth.ceil(this.alpha * 255.0F) << 24);
+        this.renderString(guiGraphics, minecraft.font, color | Mth.ceil(this.alpha * 255) << 24);
     }
 
     @Override

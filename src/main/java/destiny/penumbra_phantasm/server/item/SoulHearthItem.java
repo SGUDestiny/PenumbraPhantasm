@@ -75,10 +75,10 @@ public class SoulHearthItem extends Item {
             private static final HumanoidModel.ArmPose POSE = HumanoidModel.ArmPose.create("POSE", false, (model, entity, arm) -> {
                 if (arm == HumanoidArm.RIGHT) {
                     model.rightArm.xRot = 4.8f + entity.getXRot() / 90;
-                    model.rightArm.yRot = Mth.clamp(ModUtil.wrapRad(0F + model.head.yRot), -0.5f, 1);
+                    model.rightArm.yRot = Mth.clamp(ModUtil.wrapRad(0 + model.head.yRot), -0.5f, 1);
                 } else {
                     model.leftArm.xRot = 4.8f + entity.getXRot() / 90;
-                    model.leftArm.yRot = Mth.clamp(ModUtil.wrapRad(0F + model.head.yRot), -0.5f, 1);
+                    model.leftArm.yRot = Mth.clamp(ModUtil.wrapRad(0 + model.head.yRot), -0.5f, 1);
                 }
             });
 

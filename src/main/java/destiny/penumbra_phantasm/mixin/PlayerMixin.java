@@ -20,6 +20,7 @@ public abstract class PlayerMixin {
             ((Entity)(Object)this).playSound(SoundRegistry.SOUL_HURT.get(), 1F, 1F);
             cir.cancel();
         }
+
         if (source.is(DamageTypeRegistry.SOUL_DAMAGE_2)) {
             ((Entity)(Object)this).playSound(SoundRegistry.SOUL_SHATTER.get(), 1F, 1F);
             cir.cancel();

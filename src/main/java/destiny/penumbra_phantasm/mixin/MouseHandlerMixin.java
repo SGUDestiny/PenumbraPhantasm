@@ -14,6 +14,7 @@ public class MouseHandlerMixin {
 	@Inject(method = "turnPlayer", at = @At("HEAD"), cancellable = true)
 	private void penumbraPhantasm$skipEggRoomTurn(CallbackInfo ci) {
 		LocalPlayer player = Minecraft.getInstance().player;
+
 		if (player != null && CardKingdomEggRoomUtil.isEggRoom(player.level())) {
 			ci.cancel();
 		}

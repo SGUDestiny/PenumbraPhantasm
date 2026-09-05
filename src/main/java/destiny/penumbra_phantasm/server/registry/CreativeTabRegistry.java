@@ -123,6 +123,9 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.FALLEN_SCARLET_LEAVES.get());
 
                 output.accept(BlockRegistry.SCARLET_LOG.get());
+                output.accept(BlockRegistry.SCARLET_WOOD.get());
+                output.accept(BlockRegistry.STRIPPED_SCARLET_LOG.get());
+                output.accept(BlockRegistry.STRIPPED_SCARLET_WOOD.get());
                 output.accept(BlockRegistry.SCARLET_LOG_MYSTERIOUS_DOOR.get());
                 output.accept(BlockRegistry.SCARLET_PLANKS.get());
                 output.accept(BlockRegistry.SCARLET_STAIRS.get());
@@ -142,6 +145,9 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.FALLEN_DARK_CANDY_LEAVES.get());
 
                 output.accept(BlockRegistry.DARK_CANDY_LOG.get());
+                output.accept(BlockRegistry.DARK_CANDY_WOOD.get());
+                output.accept(BlockRegistry.STRIPPED_DARK_CANDY_LOG.get());
+                output.accept(BlockRegistry.STRIPPED_DARK_CANDY_WOOD.get());
 
                 output.accept(BlockRegistry.DARK_CANDY_CRAFTING_TABLE.get());
 

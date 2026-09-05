@@ -1,5 +1,11 @@
 {
-  "carvers": {},
+  "carvers": {
+    "air": [
+      "penumbra_phantasm:dark_world_cave",
+      "penumbra_phantasm:dark_world_cave_extra_underground",
+      "penumbra_phantasm:dark_world_canyon"
+    ]
+  },
   "downfall": 0.0,
   "effects": {
     "fog_color": 0,

@@ -57,7 +57,7 @@ public final class FountainOpeningPosterizeRenderer {
         float w = FountainOpeningPosterize.whiteLevel(tick);
         float strengthUniform = s * fade * FountainRenderUtil.OPENING_POSTERIZE_STRENGTH_MAX;
 
-        if (s <= 0f || fade <= 0f) {
+        if (s <= 0 || fade <= 0) {
             return;
         }
 
@@ -67,83 +67,78 @@ public final class FountainOpeningPosterizeRenderer {
         Matrix4f savedProjection = new Matrix4f(RenderSystem.getProjectionMatrix());
         VertexSorting savedSorting = RenderSystem.getVertexSorting();
 
-        try {
-            GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, main.frameBufferId);
-            GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, scratch.frameBufferId);
-            GlStateManager._glBlitFrameBuffer(0, 0, main.width, main.height, 0, 0, scratch.width, scratch.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-            GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-            GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+        GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, main.frameBufferId);
+        GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, scratch.frameBufferId);
+        GlStateManager._glBlitFrameBuffer(0, 0, main.width, main.height, 0, 0, scratch.width, scratch.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+        GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-            main.bindWrite(false);
+        main.bindWrite(false);
 
-            RenderSystem.viewport(0, 0, main.width, main.height);
-            RenderSystem.disableDepthTest();
-            RenderSystem.disableBlend();
+        RenderSystem.viewport(0, 0, main.width, main.height);
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableBlend();
 
-            GlStateManager._depthMask(false);
-            GlStateManager._colorMask(true, true, true, false);
+        GlStateManager._depthMask(false);
+        GlStateManager._colorMask(true, true, true, false);
 
-            Matrix4f ortho = new Matrix4f().setOrtho(0f, (float) main.width, (float) main.height, 0f, 1000f, 3000f);
+        Matrix4f ortho = new Matrix4f().setOrtho(0f, (float) main.width, (float) main.height, 0f, 1000f, 3000f);
 
-            RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);
-            RenderSystem.setShader(() -> shader);
+        RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);
+        RenderSystem.setShader(() -> shader);
 
-            shader.setSampler("Sampler0", scratch.getColorTextureId());
+        shader.setSampler("Sampler0", scratch.getColorTextureId());
 
-            if (shader.MODEL_VIEW_MATRIX != null) {
-                shader.MODEL_VIEW_MATRIX.set(new Matrix4f().translation(0f, 0f, -2000f));
-            }
-
-            if (shader.PROJECTION_MATRIX != null) {
-                shader.PROJECTION_MATRIX.set(ortho);
-            }
-
-            Uniform uStrength = shader.getUniform("Strength");
-            if (uStrength != null) {
-                uStrength.set(strengthUniform);
-            }
-
-            Uniform uWhite = shader.getUniform("WhiteLevel");
-            if (uWhite != null) {
-                uWhite.set(whiteUniform);
-            }
-
-            Uniform uThreshold = shader.getUniform("Threshold");
-            if (uThreshold != null) {
-                uThreshold.set(FountainRenderUtil.openingPosterizeLumaThresholdForCameraBlockLight(
-                        level,
-                        camPos,
-                        FountainRenderUtil.OPENING_POSTERIZE_LUMA_THRESHOLD));
-            }
-
-            shader.apply();
-
-            BufferBuilder buffer = RenderSystem.renderThreadTesselator().getBuilder();
-
-            float pw = (float) main.width;
-            float ph = (float) main.height;
-
-            buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            buffer.vertex(0.0D, ph, 0.0D).uv(0.0F, 0.0F).endVertex();
-            buffer.vertex(pw, ph, 0.0D).uv(1.0F, 0.0F).endVertex();
-            buffer.vertex(pw, 0.0D, 0.0D).uv(1.0F, 1.0F).endVertex();
-            buffer.vertex(0.0D, 0.0D, 0.0D).uv(0.0F, 1.0F).endVertex();
-
-            BufferUploader.draw(buffer.end());
-
-            shader.clear();
-        } finally {
-            GlStateManager._colorMask(true, true, true, true);
-            GlStateManager._depthMask(true);
-
-            RenderSystem.setProjectionMatrix(savedProjection, savedSorting);
-            RenderSystem.enableDepthTest();
-
-            main.bindWrite(false);
-
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        if (shader.MODEL_VIEW_MATRIX != null) {
+            shader.MODEL_VIEW_MATRIX.set(new Matrix4f().translation(0f, 0f, -2000f));
         }
+
+        if (shader.PROJECTION_MATRIX != null) {
+            shader.PROJECTION_MATRIX.set(ortho);
+        }
+
+        Uniform uStrength = shader.getUniform("Strength");
+        if (uStrength != null) {
+            uStrength.set(strengthUniform);
+        }
+
+        Uniform uWhite = shader.getUniform("WhiteLevel");
+        if (uWhite != null) {
+            uWhite.set(whiteUniform);
+        }
+
+        Uniform uThreshold = shader.getUniform("Threshold");
+        if (uThreshold != null) {
+            uThreshold.set(FountainRenderUtil.openingPosterizeLumaThresholdForCameraBlockLight(level, camPos, FountainRenderUtil.OPENING_POSTERIZE_LUMA_THRESHOLD));
+        }
+
+        shader.apply();
+
+        BufferBuilder buffer = RenderSystem.renderThreadTesselator().getBuilder();
+
+        float pw = (float) main.width;
+        float ph = (float) main.height;
+
+        buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+        buffer.vertex(0, ph, 0).uv(0, 0).endVertex();
+        buffer.vertex(pw, ph, 0).uv(1, 0).endVertex();
+        buffer.vertex(pw, 0, 0).uv(1, 1).endVertex();
+        buffer.vertex(0, 0, 0).uv(0, 1).endVertex();
+
+        BufferUploader.draw(buffer.end());
+
+        shader.clear();
+
+        GlStateManager._colorMask(true, true, true, true);
+        GlStateManager._depthMask(true);
+
+        RenderSystem.setProjectionMatrix(savedProjection, savedSorting);
+        RenderSystem.enableDepthTest();
+
+        main.bindWrite(false);
+
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
     private static void ensureScratch(RenderTarget main) {

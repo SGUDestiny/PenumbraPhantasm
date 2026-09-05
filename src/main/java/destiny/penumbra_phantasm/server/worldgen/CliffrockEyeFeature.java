@@ -30,15 +30,17 @@ public class CliffrockEyeFeature extends Feature<NoneFeatureConfiguration> {
         for (int i = 0; i < attempts; i++) {
             int y = minY + random.nextInt(maxY - minY);
             BlockPos currentPos = new BlockPos(pos.getX(), y, pos.getZ());
-            BlockState state = level.getBlockState(currentPos);
+            BlockState currentState = level.getBlockState(currentPos);
 
-            if (!state.is(BlockRegistry.CLIFFROCK.get())) continue;
+            if (!currentState.is(BlockRegistry.CLIFFROCK.get())) continue;
 
-            for (Direction dir : Direction.Plane.HORIZONTAL) {
-                BlockPos adjacent = currentPos.relative(dir);
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                BlockPos adjacent = currentPos.relative(direction);
+
                 if (!level.getBlockState(adjacent).isSolidRender(level, adjacent)) {
-                    if (random.nextFloat() < 0.2F) {
-                        level.setBlock(currentPos, BlockRegistry.CLIFFROCK_EYE.get().defaultBlockState().setValue(HORIZONTAL_FACING, dir), 2);
+                    if (random.nextFloat() < 0.2f) {
+                        level.setBlock(currentPos, BlockRegistry.CLIFFROCK_EYE.get().defaultBlockState().setValue(HORIZONTAL_FACING, direction), 2);
+
                         return true;
                     }
                     break;

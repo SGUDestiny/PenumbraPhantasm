@@ -4,14 +4,14 @@
     "decorators": [
       {
         "type": "penumbra_phantasm:dark_candy_on_leaves",
-        "probability": 0.5
+        "chance": 0.5
       },
       {
         "type": "penumbra_phantasm:fallen_leaf_tree_decorator",
         "leaf_block": {
           "Name": "penumbra_phantasm:fallen_dark_candy_leaves"
         },
-        "probability": 0.5
+        "chance": 0.5
       }
     ],
     "dirt_provider": {

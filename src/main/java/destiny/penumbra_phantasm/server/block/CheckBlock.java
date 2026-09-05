@@ -48,7 +48,7 @@ public class CheckBlock extends FallingBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter getter, BlockPos pos, CollisionContext context) {
-        return Block.box(0.0F, 0.0F, 0.0F, 16.0F, 4.0F * state.getValue(CHECKS), 16.0F);
+        return Block.box(0, 0, 0, 16, 4 * state.getValue(CHECKS), 16);
     }
 
     @Override

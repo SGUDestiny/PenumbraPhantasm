@@ -22,21 +22,28 @@ import java.util.*;
 
 public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
     private static final String DARK_FOUNTAINS = "dark_fountains";
+
     private static final String PERSISTENT_DARK_WORLD_SITES = "persistent_dark_world_sites";
+    private static final String FOUNTAINS = "fountains";
+    private static final String FOUNTAIN = "fountain";
+    private static final String TYPE = "type";
+    private static final String DIMENSION = "dimension";
 
     public HashMap<BlockPos, DarkFountain> darkFountains = new HashMap<>();
     private final List<PersistentDarkWorldSite> persistentDarkWorldSites = new ArrayList<>();
 
-    public static boolean roomContainsActiveFountainAnchor(DarkFountainCapability cap, Iterable<BlockPos> candidateRoom) {
-        HashSet<Long> roomCells = new HashSet<>();
-        for (BlockPos p : candidateRoom) {
-            roomCells.add(p.asLong());
+    public static boolean roomContainsActiveFountain(DarkFountainCapability cap, Iterable<BlockPos> room) {
+        HashSet<Long> roomBlocks = new HashSet<>();
+        for (BlockPos pos : room) {
+            roomBlocks.add(pos.asLong());
         }
+
         for (DarkFountain fountain : cap.darkFountains.values()) {
-            if (roomCells.contains(fountain.getFountainPos().asLong())) {
+            if (roomBlocks.contains(fountain.getFountainPos().asLong())) {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -44,30 +51,28 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         return !DarkWorldUtil.levelHasDarkFountain(darkLevel);
     }
 
-    public Optional<PersistentDarkWorldSite> findMatchingPersistentSite(MinecraftServer server, Iterable<BlockPos> roomPositions, ResourceLocation typeId) {
+    public Optional<PersistentDarkWorldSite> findMatchingPersistentSite(MinecraftServer server, Iterable<BlockPos> roomBlocks, ResourceLocation typeId) {
         for (PersistentDarkWorldSite site : persistentDarkWorldSites) {
-            if (!site.worldTypeId.equals(typeId)) {
-                continue;
-            }
+            if (!site.worldTypeId.equals(typeId)) continue;
+
             boolean roomContainsSiteAnchor = false;
-            for (BlockPos p : roomPositions) {
-                if (site.fountainPos.equals(p)) {
+            for (BlockPos pos : roomBlocks) {
+                if (site.fountainPos.equals(pos)) {
                     roomContainsSiteAnchor = true;
                     break;
                 }
             }
-            if (!roomContainsSiteAnchor) {
-                continue;
-            }
-            if (lightAlreadyLinksToDarkDimension(site.dimensionKey)) {
-                continue;
-            }
+
+            if (!roomContainsSiteAnchor) continue;
+            if (lightAlreadyLinksToDarkDimension(site.dimensionKey)) continue;
+
             ServerLevel candidate = server.getLevel(site.dimensionKey);
-            if (candidate != null && !isDarkWorldAvailableForNewFountain(candidate)) {
-                continue;
-            }
+
+            if (candidate != null && !isDarkWorldAvailableForNewFountain(candidate)) continue;
+
             return Optional.of(site);
         }
+
         return Optional.empty();
     }
 
@@ -77,6 +82,7 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
                 return true;
             }
         }
+
         return false;
     }
 
@@ -98,10 +104,8 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         CompoundTag objectsTag = new CompoundTag();
         ListTag fountainTag = new ListTag();
 
-        this.darkFountains.forEach((pos, fountain) -> {
-            fountainTag.add(fountain.save());
-        });
-        objectsTag.put("fountains", fountainTag);
+        this.darkFountains.forEach((pos, fountain) -> fountainTag.add(fountain.save()));
+        objectsTag.put(FOUNTAINS, fountainTag);
 
         return objectsTag;
     }
@@ -110,28 +114,27 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         ListTag list = new ListTag();
         for (PersistentDarkWorldSite site : persistentDarkWorldSites) {
             CompoundTag siteTag = new CompoundTag();
-            siteTag.putString("type", site.worldTypeId.toString());
-            siteTag.putString("dimension", site.dimensionKey.location().toString());
-            siteTag.putLong("fountain", site.fountainPos.asLong());
+
+            siteTag.putString(TYPE, site.worldTypeId.toString());
+            siteTag.putString(DIMENSION, site.dimensionKey.location().toString());
+            siteTag.putLong(FOUNTAIN, site.fountainPos.asLong());
+
             list.add(siteTag);
         }
+
         return list;
     }
 
-    public void addDarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension,
-                                BlockPos destinationPos, ResourceKey<Level> destinationDimension,
+    public void addDarkFountain(BlockPos fountainPos, ResourceKey<Level> fountainDimension, BlockPos destinationPos, ResourceKey<Level> destinationDimension,
                                 int openingTick, int frameTick, int frame, int frameOptimized, HashSet<UUID> teleportedEntities, List<Integer> shockwaveTickers, int sealingTick, int sealingFrameTick, float sealingFrameTickProgress) {
         this.darkFountains.put(fountainPos, new DarkFountain(fountainPos, fountainDimension, destinationPos, destinationDimension, openingTick, frameTick, frame, frameOptimized, teleportedEntities, shockwaveTickers, sealingTick, sealingFrameTick, sealingFrameTickProgress));
     }
 
     public void removeDarkFountain(Level level, BlockPos fountainPos) {
         if (level instanceof ServerLevel serverLevel) {
-            serverLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap ->
-                    cap.darkFountains.remove(fountainPos));
-            PacketHandlerRegistry.INSTANCE.send(
-                    PacketDistributor.DIMENSION.with(serverLevel::dimension),
-                    new ClientBoundRemoveFountainPacket(fountainPos)
-            );
+            serverLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.darkFountains.remove(fountainPos));
+
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(serverLevel::dimension), new ClientBoundRemoveFountainPacket(fountainPos));
         }
     }
 
@@ -144,10 +147,11 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         }
     }
 
-    private void deserializeDarkFountains(CompoundTag tag) {
-        ListTag fountainTags = tag.getList("fountains", ListTag.TAG_COMPOUND);
-        for (Tag nbt : fountainTags) {
-            CompoundTag fountainTag = ((CompoundTag) nbt);
+    private void deserializeDarkFountains(CompoundTag compoundTag) {
+        ListTag fountainTags = compoundTag.getList(FOUNTAINS, ListTag.TAG_COMPOUND);
+
+        for (Tag tag : fountainTags) {
+            CompoundTag fountainTag = ((CompoundTag) tag);
             DarkFountain fountain = DarkFountain.load(fountainTag);
 
             this.darkFountains.put(fountain.fountainPos, fountain);
@@ -155,12 +159,14 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
     }
 
     private void deserializePersistentSites(ListTag list) {
-        for (Tag nbt : list) {
-            CompoundTag siteTag = (CompoundTag) nbt;
-            ResourceLocation typeId = new ResourceLocation(siteTag.getString("type"));
-            ResourceLocation dimLoc = new ResourceLocation(siteTag.getString("dimension"));
+        for (Tag tag : list) {
+            CompoundTag siteTag = (CompoundTag) tag;
+
+            ResourceLocation typeId = new ResourceLocation(siteTag.getString(TYPE));
+            ResourceLocation dimLoc = new ResourceLocation(siteTag.getString(DIMENSION));
             ResourceKey<Level> dimKey = ResourceKey.create(Registries.DIMENSION, dimLoc);
-            BlockPos fountainPos = BlockPos.of(siteTag.getLong("fountain"));
+            BlockPos fountainPos = BlockPos.of(siteTag.getLong(FOUNTAIN));
+
             persistentDarkWorldSites.add(new PersistentDarkWorldSite(typeId, fountainPos, dimKey));
         }
     }

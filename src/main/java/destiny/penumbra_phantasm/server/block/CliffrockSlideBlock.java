@@ -23,12 +23,11 @@ import net.minecraft.world.phys.shapes.Shapes;
 
 public class CliffrockSlideBlock extends HorizontalDirectionalBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    //private static final String SOUND_COOLDOWN = "penumbra_phantasm.cliffrock_slide_sound_cooldown";
 
     private static final VoxelShape SHAPE_NORTH = Shapes.create(0, 0, (1 / 16.0) * 2, 1, 1, 1);
-    private static final VoxelShape SHAPE_SOUTH = Shapes.create(0, 0, 0, 1, 1, 14/16.0);
-    private static final VoxelShape SHAPE_WEST = Shapes.create((1/16.0) * 2, 0, 0, 1, 1, 1);
-    private static final VoxelShape SHAPE_EAST = Shapes.create(0, 0, 0, 14/16.0, 1, 1);
+    private static final VoxelShape SHAPE_SOUTH = Shapes.create(0, 0, 0, 1, 1, 14 / 16d);
+    private static final VoxelShape SHAPE_WEST = Shapes.create((1 / 16d) * 2, 0, 0, 1, 1, 1);
+    private static final VoxelShape SHAPE_EAST = Shapes.create(0, 0, 0, 14 / 16d, 1, 1);
 
     public CliffrockSlideBlock(Properties properties) {
         super(properties);
@@ -55,9 +54,9 @@ public class CliffrockSlideBlock extends HorizontalDirectionalBlock {
         return switch (state.getValue(FACING)) {
             case NORTH -> SHAPE_NORTH;
             case SOUTH -> SHAPE_SOUTH;
-            case WEST  -> SHAPE_WEST;
-            case EAST  -> SHAPE_EAST;
-            default    -> Shapes.block();
+            case WEST -> SHAPE_WEST;
+            case EAST -> SHAPE_EAST;
+            default -> Shapes.block();
         };
     }
 
@@ -80,19 +79,19 @@ public class CliffrockSlideBlock extends HorizontalDirectionalBlock {
 
         double backOff = 0.3;
         double targetX = targetPos.getX() + 0.5 - facing.getStepX() * backOff;
-        double targetY = targetPos.getY() + 1.0;
+        double targetY = targetPos.getY() + 1;
         double targetZ = targetPos.getZ() + 0.5 - facing.getStepZ() * backOff;
 
         entity.teleportTo(targetX, targetY, targetZ);
-        entity.fallDistance = 0.0F;
+        entity.fallDistance = 0;
 
-        level.playSound(null, pos, SoundRegistry.SLIDE_DOWN.get(), SoundSource.BLOCKS, 0.5F, 1.0F);
+        level.playSound(null, pos, SoundRegistry.SLIDE_DOWN.get(), SoundSource.BLOCKS, 0.5f, 1);
         super.stepOn(level, pos, state, entity);
     }
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        entity.makeStuckInBlock(state, new Vec3(1.0d, 1.0d, 1.0d));
-        entity.fallDistance = 0.0F;
+        entity.makeStuckInBlock(state, new Vec3(1, 1, 1));
+        entity.fallDistance = 0;
     }
 }

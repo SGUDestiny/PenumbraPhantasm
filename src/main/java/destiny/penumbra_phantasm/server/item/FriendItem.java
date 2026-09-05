@@ -30,12 +30,12 @@ public class FriendItem extends Item {
                 stack.getOrCreateTag().putBoolean("reset", false);
             }
 
-            // 0-4 Appear
-            // 5 Idle
-            // 6 Look Left
-            // 7 Look Up
-            // 8 Look Right
-            // 9-19 Disappear
+            //0-4 Appear
+            //5 Idle
+            //6 Look left
+            //7 Look up
+            //8 Look right
+            //9-19 Disappear
 
             int animation = stack.getTag().getInt("animation");
             int fun = stack.getTag().getInt("fun");
@@ -52,7 +52,7 @@ public class FriendItem extends Item {
             }
 
             if (level.getGameTime() % 7 == 0) {
-                //Look Left
+                //Look left
                 if (fun == 2) {
                     if (!reset) {
                         stack.getOrCreateTag().putInt("animation", 6);
@@ -64,7 +64,7 @@ public class FriendItem extends Item {
                     }
                 }
 
-                //Look Up
+                //Look up
                 if (fun == 3) {
                     if (!reset) {
                         stack.getOrCreateTag().putInt("animation", 7);
@@ -76,7 +76,7 @@ public class FriendItem extends Item {
                     }
                 }
 
-                //Look Right
+                //Look right
                 if (fun == 4) {
                     if (!reset) {
                         stack.getOrCreateTag().putInt("animation", 8);

@@ -31,11 +31,9 @@ public record FireDoor(ResourceKey<Level> darkWorld, BlockPos doorPos, float fac
         float facingAngle = tag.getFloat(FACING_ANGLE);
 
         Component name;
-        try {
-            name = Component.Serializer.fromJson(tag.getString(NAME));
-        } catch (Exception e) {
-            name = Component.translatable("block.penumbra_phantasm.fire_door");
-        }
+        Component customName = Component.Serializer.fromJson(tag.getString(NAME));
+
+        name = customName != null ? customName : Component.translatable("block.penumbra_phantasm.fire_door");
 
         return new FireDoor(darkWorld, doorPos, facingAngle, name);
     }

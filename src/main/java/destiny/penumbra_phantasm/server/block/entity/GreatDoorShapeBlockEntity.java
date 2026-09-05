@@ -9,7 +9,6 @@ import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.Connection;
@@ -46,15 +45,13 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
             return;
         }
-        if (greatDoorShape.removalEarliestGameTime < 0L) {
-            greatDoorShape.removalEarliestGameTime = level.getGameTime() + 200L;
+        if (greatDoorShape.removalEarliestGameTime < 0) {
+            greatDoorShape.removalEarliestGameTime = level.getGameTime() + 200;
         }
-        if (level.getGameTime() < greatDoorShape.removalEarliestGameTime) {
-            return;
-        }
-        if (level.random.nextDouble() <= 0.8) {
-            return;
-        }
+
+        if (level.getGameTime() < greatDoorShape.removalEarliestGameTime) return;
+        if (level.random.nextDouble() <= 0.8) return;
+
         if (getGreatDoor(level, greatDoorShape) == null) {
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         }
@@ -64,6 +61,7 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
         if (level.isClientSide()) {
             return InteractionResult.SUCCESS;
         }
+
         GreatDoor greatDoor = getGreatDoor(level, greatDoorShape);
 
         if (greatDoor == null) {
@@ -75,7 +73,7 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
         }
 
         if (greatDoor.isUnlinkedForAutoBinding()) {
-            DarkWorldUtil.tryBindUnlinkedGreatDoor(serverLevel, greatDoor);
+            DarkWorldUtil.bindUnlinkedGreatDoor(serverLevel, greatDoor);
         }
         if (!DarkWorldUtil.levelHasDarkFountain(serverLevel)) {
             if (player instanceof ServerPlayer serverPlayer) {
@@ -115,7 +113,7 @@ public class GreatDoorShapeBlockEntity extends BlockEntity {
         }
 
         serverLevel.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                SoundRegistry.GREAT_DOOR.get(), SoundSource.BLOCKS, 1f, 1f);
+                SoundRegistry.GREAT_DOOR.get(), SoundSource.BLOCKS, 1, 1);
 
         markUpdated();
 

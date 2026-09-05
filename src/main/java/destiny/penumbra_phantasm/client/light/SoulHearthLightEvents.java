@@ -17,14 +17,19 @@ public class SoulHearthLightEvents {
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
+
         Minecraft minecraft = Minecraft.getInstance();
+
         if (minecraft.isPaused()) return;
+
         ClientLevel level = minecraft.level;
+
         if (level == null) return;
 
         for (Player player : level.players()) {
             SoulHearthLightManager.update(player);
         }
+
         SoulHearthLightManager.purgeMissingPlayers(level);
     }
 

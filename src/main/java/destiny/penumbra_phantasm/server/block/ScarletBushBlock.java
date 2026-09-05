@@ -49,7 +49,7 @@ public class ScarletBushBlock extends Block implements SimpleWaterloggedBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        entity.makeStuckInBlock(state, new Vec3(0.5d, 0.5d, 0.5d));
+        entity.makeStuckInBlock(state, new Vec3(0.5, 0.5, 0.5));
 
         if (!(entity instanceof Player)) return;
 
@@ -57,7 +57,7 @@ public class ScarletBushBlock extends Block implements SimpleWaterloggedBlock {
 
         double deltaX = entity.xOld - pos.getCenter().x;
         double deltaZ = entity.zOld - pos.getCenter().z;
-        Direction entryDirection = Direction.getNearest(deltaX, 0d, deltaZ);
+        Direction entryDirection = Direction.getNearest(deltaX, 0, deltaZ);
 
         if (!entryDirection.getAxis().isHorizontal()) return;
 
@@ -65,7 +65,7 @@ public class ScarletBushBlock extends Block implements SimpleWaterloggedBlock {
 
         level.setBlock(pos, state.setValue(HOLE, HoleStates.valueOf(entryDirection.getName().toUpperCase())), 2);
 
-        level.playSound(null, pos, SoundEvents.AZALEA_BREAK, SoundSource.BLOCKS, 1f, 1f);
+        level.playSound(null, pos, SoundEvents.AZALEA_BREAK, SoundSource.BLOCKS, 1, 1);
     }
 
     @Override

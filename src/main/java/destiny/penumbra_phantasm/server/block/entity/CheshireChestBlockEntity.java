@@ -13,6 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class CheshireChestBlockEntity extends BlockEntity {
+    public static final String OPEN_COUNT = "OpenCount";
+
     private int openCount;
     private float lidAngle;
     private float prevLidAngle;
@@ -31,10 +33,11 @@ public class CheshireChestBlockEntity extends BlockEntity {
         if (!player.isSpectator()) {
             int oldCount = this.openCount;
             this.openCount++;
+
             if (level != null && oldCount == 0) {
-                level.playSound(null, worldPosition, SoundEvents.ENDER_CHEST_OPEN,
-                        SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
+                level.playSound(null, worldPosition, SoundEvents.ENDER_CHEST_OPEN, SoundSource.BLOCKS, 0.5f, level.random.nextFloat() * 0.1f + 0.9f);
             }
+
             level.blockEvent(worldPosition, getBlockState().getBlock(), 1, this.openCount);
         }
     }
@@ -43,47 +46,47 @@ public class CheshireChestBlockEntity extends BlockEntity {
         if (!player.isSpectator()) {
             int oldCount = this.openCount;
             this.openCount--;
+
             if (level != null && oldCount == 1) {
-                level.playSound(null, worldPosition, SoundEvents.ENDER_CHEST_CLOSE,
-                        SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
-                level.playSound(null, worldPosition, SoundRegistry.CHESHIRE_CHEST_LAUGH.get(),
-                        SoundSource.BLOCKS, 0.2F, 1f);
+                level.playSound(null, worldPosition, SoundEvents.ENDER_CHEST_CLOSE, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1f + 0.9f);
+                level.playSound(null, worldPosition, SoundRegistry.CHESHIRE_CHEST_LAUGH.get(), SoundSource.BLOCKS, 0.2f, 1f);
             }
+
             level.blockEvent(worldPosition, getBlockState().getBlock(), 1, this.openCount);
         }
     }
 
-    public static void clientTick(Level level, BlockPos pos, BlockState state, CheshireChestBlockEntity be) {
-        float target = be.openCount > 0 ? 1.0F : 0.0F;
-        be.prevLidAngle = be.lidAngle;
+    public static void clientTick(Level level, BlockPos pos, BlockState state, CheshireChestBlockEntity chestBlock) {
+        float target = chestBlock.openCount > 0 ? 1 : 0;
+        chestBlock.prevLidAngle = chestBlock.lidAngle;
 
-        if (target == 1.0F && be.lidAngle < 0.999F && be.animationState != AnimationState.OPENING) {
-            be.animationState = AnimationState.OPENING;
-            be.animationTick = (int)(easeOutInverse(be.lidAngle) * ANIMATION_DURATION);
-        } else if (target == 0.0F && be.lidAngle > 0.001F && be.animationState != AnimationState.CLOSING) {
-            be.animationState = AnimationState.CLOSING;
-            be.animationTick = (int)(easeInInverse(1.0F - be.lidAngle) * ANIMATION_DURATION);
+        if (target == 1.0F && chestBlock.lidAngle < 0.999F && chestBlock.animationState != AnimationState.OPENING) {
+            chestBlock.animationState = AnimationState.OPENING;
+            chestBlock.animationTick = (int)(easeOutInverse(chestBlock.lidAngle) * ANIMATION_DURATION);
+        } else if (target == 0.0F && chestBlock.lidAngle > 0.001f && chestBlock.animationState != AnimationState.CLOSING) {
+            chestBlock.animationState = AnimationState.CLOSING;
+            chestBlock.animationTick = (int)(easeInInverse(1 - chestBlock.lidAngle) * ANIMATION_DURATION);
         }
 
-        if (be.animationState != AnimationState.IDLE) {
-            be.animationTick = Math.min(be.animationTick + 1, ANIMATION_DURATION);
-            float progress = be.animationTick / (float) ANIMATION_DURATION;
+        if (chestBlock.animationState != AnimationState.IDLE) {
+            chestBlock.animationTick = Math.min(chestBlock.animationTick + 1, ANIMATION_DURATION);
+            float progress = chestBlock.animationTick / (float) ANIMATION_DURATION;
 
-            if (be.animationState == AnimationState.OPENING) {
-                be.lidAngle = easeOut(progress);
+            if (chestBlock.animationState == AnimationState.OPENING) {
+                chestBlock.lidAngle = easeOut(progress);
             } else {
-                be.lidAngle = 1.0F - easeIn(progress);
+                chestBlock.lidAngle = 1 - easeIn(progress);
             }
 
-            if (be.animationTick == ANIMATION_DURATION) {
-                be.animationState = AnimationState.IDLE;
-                be.lidAngle = target;
+            if (chestBlock.animationTick == ANIMATION_DURATION) {
+                chestBlock.animationState = AnimationState.IDLE;
+                chestBlock.lidAngle = target;
             }
         }
     }
 
     private static float easeOut(float t) {
-        return 1.0F - (1.0F - t) * (1.0F - t);
+        return 1 - (1 - t) * (1 - t);
     }
 
     private static float easeIn(float t) {
@@ -91,11 +94,11 @@ public class CheshireChestBlockEntity extends BlockEntity {
     }
 
     private static float easeOutInverse(float y) {
-        return 1.0F - (float) Math.sqrt(Math.max(0.0, 1.0 - y));
+        return 1 - (float) Math.sqrt(Math.max(0, 1 - y));
     }
 
     private static float easeInInverse(float y) {
-        return (float) Math.sqrt(Math.max(0.0, y));
+        return (float) Math.sqrt(Math.max(0, y));
     }
 
     public float getLidAngle(float partialTicks) {
@@ -108,6 +111,7 @@ public class CheshireChestBlockEntity extends BlockEntity {
             this.openCount = type;
             return true;
         }
+
         return super.triggerEvent(id, type);
     }
 
@@ -122,25 +126,25 @@ public class CheshireChestBlockEntity extends BlockEntity {
     @Override
     public void load(CompoundTag tag) {
         super.load(tag);
-        this.openCount = tag.getInt("OpenCount");
+        this.openCount = tag.getInt(OPEN_COUNT);
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag) {
         super.saveAdditional(tag);
-        tag.putInt("OpenCount", this.openCount);
+        tag.putInt(OPEN_COUNT, this.openCount);
     }
 
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
-        tag.putInt("OpenCount", this.openCount);
+        tag.putInt(OPEN_COUNT, this.openCount);
         return tag;
     }
 
     @Override
     public void handleUpdateTag(CompoundTag tag) {
         super.handleUpdateTag(tag);
-        this.openCount = tag.getInt("OpenCount");
+        this.openCount = tag.getInt(OPEN_COUNT);
     }
 }

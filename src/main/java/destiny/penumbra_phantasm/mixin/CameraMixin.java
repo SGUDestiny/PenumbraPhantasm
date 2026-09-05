@@ -29,6 +29,7 @@ public abstract class CameraMixin {
 		if (!(entity instanceof Player player) || !CardKingdomEggRoomUtil.isEggRoom(player.level())) {
 			return;
 		}
+
 		this.detached = true;
 		double camX = CardKingdomEggRoomUtil.CAMERA_X;
 		double camY = CardKingdomEggRoomUtil.CAMERA_Y;
@@ -36,6 +37,7 @@ public abstract class CameraMixin {
 		double targetX = Mth.lerp(partialTick, player.xo, player.getX());
 		double targetY = Mth.lerp(partialTick, player.yo, player.getY()) + player.getEyeHeight();
 		double targetZ = Mth.lerp(partialTick, player.zo, player.getZ());
+
 		Vec2 look = CardKingdomEggRoomUtil.cameraLook(camX, camY, camZ, targetX, targetY, targetZ);
 		this.setPosition(camX, camY, camZ);
 		this.setRotation(look.x, look.y);

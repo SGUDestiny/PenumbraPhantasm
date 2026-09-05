@@ -131,7 +131,7 @@ public class DarkFountain {
             if (!DarkWorldUtil.isDarkWorld(level)) {
                 if (level instanceof ServerLevel serverLevel) {
                     tickRoomDarknessFill(serverLevel);
-                    tickOutsideDoorGreatDoor(serverLevel);
+                    tickOutsideDoorToGreatDoor(serverLevel);
                     tickDarkWorldTransportTickers(serverLevel);
                     tickRoomDissipation(serverLevel);
                     tickDarkWorldTeleportContact(serverLevel);
@@ -195,26 +195,24 @@ public class DarkFountain {
 
                 if (this.sealingTick == 0 && level instanceof ServerLevel sealingServerLevel) {
                     BlockPos sealingFountainPos = this.getFountainPos();
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.DIMENSION.with(sealingServerLevel::dimension),
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(sealingServerLevel::dimension),
                             new ClientBoundSoundPackets.FountainWind(sealingFountainPos, true)
                     );
-                    PacketHandlerRegistry.INSTANCE.send(
-                            PacketDistributor.DIMENSION.with(sealingServerLevel::dimension),
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(sealingServerLevel::dimension),
                             new ClientBoundSoundPackets.FountainMusic(sealingFountainPos, true)
                     );
                 }
 
                 if (this.sealingTick >= 0) {
                     if (this.sealingFrameTick >= 0) {
-                        float delta = Mth.clamp((float) this.sealingTick / (float) SEAL_DURATION, 0.0F, 1.0F);
-                        float frameSpeed = Mth.lerp(delta, 1.0F, 0.0F);
+                        float delta = Mth.clamp((float) this.sealingTick / (float) SEAL_DURATION, 0, 1);
+                        float frameSpeed = Mth.lerp(delta, 1, 0);
                         frameSpeed *= frameSpeed;
 
                         this.sealingFrameTickProgress += frameSpeed;
 
-                        while (this.sealingFrameTickProgress >= 1.0F) {
-                            this.sealingFrameTickProgress -= 1.0F;
+                        while (this.sealingFrameTickProgress >= 1) {
+                            this.sealingFrameTickProgress -= 1;
                             if (this.sealingFrameTick >= 27 * 3) {
                                 this.sealingFrameTick = 0;
                             } else {
@@ -522,22 +520,27 @@ public class DarkFountain {
             }
 
             if (!completedThisTick.isEmpty()) {
-                DarkFountain destinationFountain = destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
-                        .map(cap -> cap.darkFountains.get(destinationPos))
-                        .orElse(null);
+                DarkFountain destinationFountain = destinationLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).map(cap ->
+                                cap.darkFountains.get(destinationPos)).orElse(null);
+
                 if (destinationFountain != null) {
                     Vec3 base = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainContactTeleportMinRadius, ServerConfig.fountainContactTeleportMaxRadius);
+
                     for (UUID completedId : completedThisTick) {
                         ServerPlayer player = level.getServer().getPlayerList().getPlayer(completedId);
+
                         if (player == null || !player.level().dimension().equals(level.dimension())) {
                             room.getTransportTickers().remove(completedId);
                             continue;
                         }
+
                         double tx = base.x + (player.getX() - lightAnchor.x);
                         double tz = base.z + (player.getZ() - lightAnchor.z);
                         double ty = ModUtil.worldSurfaceYAtXZ(destinationLevel, tx, tz);
                         Vec3 target = new Vec3(tx, ty, tz);
+
                         teleportPlayer(player, destinationLevel, target, player.getYRot(), player.getXRot());
+
                         room.getTransportTickers().remove(completedId);
                     }
                 } else {
@@ -549,9 +552,11 @@ public class DarkFountain {
 
             for (Map.Entry<UUID, Integer> entry : room.getTransportTickers().entrySet()) {
                 Entity entity = level.getEntity(entry.getKey());
+
                 if (!(entity instanceof ServerPlayer player)) {
                     continue;
                 }
+
                 float progress = (float) entry.getValue() / TRANSPORT_TICKER_DURATION;
                 PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(progress));
             }
@@ -601,22 +606,25 @@ public class DarkFountain {
 
     public static Map<BlockPos, ResourceKey<Level>> otherFountainRoomCellsToDarkWorld(ServerLevel level, @Nullable BlockPos excludeFountainAnchor) {
         Map<BlockPos, ResourceKey<Level>> map = new HashMap<>();
+
         level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-            for (Map.Entry<BlockPos, DarkFountain> e : cap.darkFountains.entrySet()) {
-                if (e.getKey().equals(excludeFountainAnchor)) continue;
-                ResourceKey<Level> destDim = e.getValue().getDestinationDimension();
-                for (DarkRoom room : e.getValue().rooms) {
+            for (Map.Entry<BlockPos, DarkFountain> entry : cap.darkFountains.entrySet()) {
+                if (entry.getKey().equals(excludeFountainAnchor)) continue;
+
+                ResourceKey<Level> destDim = entry.getValue().getDestinationDimension();
+                for (DarkRoom room : entry.getValue().rooms) {
                     if (!room.isDissipating()) {
-                        for (BlockPos p : room.getPositions()) {
-                            map.put(p, destDim);
+                        for (BlockPos roomBlock : room.getPositions()) {
+                            map.put(roomBlock, destDim);
                         }
-                        for (BlockPos d : room.getDoorPositions()) {
-                            map.put(d, destDim);
+                        for (BlockPos doorBlock : room.getDoorPositions()) {
+                            map.put(doorBlock, destDim);
                         }
                     }
                 }
             }
         });
+
         return map;
     }
 
@@ -626,13 +634,15 @@ public class DarkFountain {
     }
 
     private void tickRoomManagement(ServerLevel level) {
-        Set<BlockPos> otherAnchors = collectOtherFountainAnchors(level);
-        Map<BlockPos, ResourceKey<Level>> otherRoomCells = otherFountainRoomCellsToDarkWorld(level, this.fountainPos);
+        Set<BlockPos> otherFountains = collectOtherFountainAnchors(level);
+        Map<BlockPos, ResourceKey<Level>> otherRoomBlocks = otherFountainRoomCellsToDarkWorld(level, this.fountainPos);
 
         if (rooms.isEmpty()) {
-            RoomScanner.RoomScanResult result = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
+            RoomScanner.RoomScanResult result = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false,
+                    otherFountains, otherRoomBlocks);
             if (result.isValid()) {
                 DarkRoom newRoom = new DarkRoom(fountainPos, result.getPositions(), result.getDoorPositions(), result.getOutsideDoors(), result.getSharedDoors());
+
                 addEntitiesInRoomToTickers(level, newRoom);
                 rooms.add(newRoom);
             }
@@ -642,7 +652,8 @@ public class DarkFountain {
         for (DarkRoom room : rooms) {
             if (room.isDissipating()) continue;
 
-            RoomScanner.RoomScanResult result = RoomScanner.scan(level, room.getSeedPos(), ServerConfig.maxRoomVolume, true, true, otherAnchors, otherRoomCells);
+            RoomScanner.RoomScanResult result = RoomScanner.scan(level, room.getSeedPos(), ServerConfig.maxRoomVolume, true, true,
+                    otherFountains, otherRoomBlocks);
             if (result.isValid()) {
                 room.positions = result.getPositions();
                 room.doorPositions = result.getDoorPositions();
@@ -653,12 +664,12 @@ public class DarkFountain {
                 int totalDarkness = DarkRoom.getTotalDarknessCount(rooms);
                 int remainingVolume = ServerConfig.maxRoomVolume - totalDarkness;
 
-                RoomScanner.reclassifyDoorsWithRemainingBudget(level, room, Math.max(0, remainingVolume), otherAnchors, otherRoomCells);
+                RoomScanner.reclassifyDoorsWithRemainingBudget(level, room, Math.max(0, remainingVolume), otherFountains, otherRoomBlocks);
             }
         }
 
         tickConnectivityViaDoors(level);
-        tickExpansionThroughDoors(level, otherAnchors, otherRoomCells);
+        tickExpansionThroughDoors(level, otherFountains, otherRoomBlocks);
     }
 
     private void tickConnectivityViaDoors(ServerLevel level) {
@@ -686,8 +697,10 @@ public class DarkFountain {
 
         while (!queue.isEmpty()) {
             DarkRoom current = queue.poll();
+
             for (DarkRoom other : rooms) {
                 if (reachableViaOpenDoors.contains(other) || other.isDissipating()) continue;
+
                 if (DarkRoom.sharesAnOpenDoor(level, current, other)) {
                     reachableViaOpenDoors.add(other);
                     queue.add(other);
@@ -719,30 +732,38 @@ public class DarkFountain {
 
             for (BlockPos doorPos : room.getDoorPositions()) {
                 BlockState doorState = level.getBlockState(doorPos);
+
                 if (!(doorState.getBlock() instanceof DoorBlock) || !doorState.getValue(DoorBlock.OPEN)) continue;
 
                 for (Direction dir : Direction.Plane.HORIZONTAL) {
                     BlockPos adjacent = doorPos.relative(dir);
+
                     if (allPositions.contains(adjacent)) continue;
 
                     if (otherFountainAnchors != null && otherFountainAnchors.contains(adjacent)) continue;
 
                     BlockState adjState = level.getBlockState(adjacent);
-                    if (!adjState.isAir())
-                        continue;
 
-                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false, false, otherFountainAnchors, otherRoomCells);
+                    if (!adjState.isAir()) continue;
+
+                    RoomScanner.RoomScanResult result = RoomScanner.scan(level, adjacent, remainingVolume, false, false,
+                            otherFountainAnchors, otherRoomCells);
+
                     if (result.isValid()) {
-                        DarkRoom newRoom = new DarkRoom(adjacent, result.getPositions(), result.getDoorPositions(), result.getOutsideDoors(), result.getSharedDoors());
+                        DarkRoom newRoom = new DarkRoom(adjacent, result.getPositions(), result.getDoorPositions(), result.getOutsideDoors(),
+                                result.getSharedDoors());
                         addEntitiesInRoomToTickers(level, newRoom);
                         newRooms.add(newRoom);
                         allPositions.addAll(result.getPositions());
                         remainingVolume -= result.getPositions().size();
+
                         if (remainingVolume <= 0) break;
                     }
                 }
+
                 if (remainingVolume <= 0) break;
             }
+
             if (remainingVolume <= 0) break;
         }
 
@@ -765,6 +786,7 @@ public class DarkFountain {
 
         AABB roomBox = new AABB(minX, minY, minZ, maxX + 1, maxY + 1, maxZ + 1);
         Set<BlockPos> posSet = new HashSet<>(room.getPositions());
+
         for (ServerPlayer entity : level.getEntitiesOfClass(ServerPlayer.class, roomBox)) {
             if (posSet.contains(entity.blockPosition()) || posSet.contains(entity.blockPosition().above())) {
                 room.getTransportTickers().put(entity.getUUID(), 0);
@@ -800,101 +822,100 @@ public class DarkFountain {
                     DarkFountain destinationFountain = cap.darkFountains.get(destinationPos);
 
                     if (destinationFountain != null) {
-                        Vec3 target = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainContactTeleportMinRadius, ServerConfig.fountainContactTeleportMaxRadius);
+                        Vec3 target = getRandomTeleportTarget(destinationLevel, ServerConfig.fountainContactTeleportMinRadius,
+                                ServerConfig.fountainContactTeleportMaxRadius);
 
                         float yaw = (float) Math.toDegrees(Math.atan2(-((destinationPos.getX() + 0.5) - target.x), (destinationPos.getZ() + 0.5) - target.z));
 
                         level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
 
                         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
-                        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos, target.x, target.y, target.z, yaw, destinationDimension, false, BlockPos.ZERO));
+                        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(destinationPos,
+                                target.x, target.y, target.z, yaw, destinationDimension, false, BlockPos.ZERO));
                     }
                 });
                 this.teleportedEntities.add(player.getUUID());
             }
         }
-        pruneLightFountainTeleportedEntities(level);
+        clearLightFountainTeleportedEntities(level);
     }
 
     private static AABB lightDoorLowerColumnBox(BlockPos lowerFoot) {
-        return new AABB(lowerFoot.getX(), lowerFoot.getY(), lowerFoot.getZ(),
-                lowerFoot.getX() + 1.0, lowerFoot.getY() + 2.0, lowerFoot.getZ() + 1.0);
+        return new AABB(lowerFoot.getX(), lowerFoot.getY(), lowerFoot.getZ(), lowerFoot.getX() + 1, lowerFoot.getY() + 2, lowerFoot.getZ() + 1);
     }
 
-    private void tickOutsideDoorGreatDoor(ServerLevel level) {
-        if (this.openingTick >= 0 && this.openingTick < FILL_START_TICK) {
-            return;
-        }
+    private void tickOutsideDoorToGreatDoor(ServerLevel level) {
+        if (this.openingTick >= 0 && this.openingTick < FILL_START_TICK) return;
+
         ServerLevel destinationLevel = level.getServer().getLevel(this.destinationDimension);
-        if (destinationLevel == null) {
-            return;
-        }
+        if (destinationLevel == null) return;
 
         for (DarkRoom room : rooms) {
-            if (!room.isActive()) {
-                continue;
-            }
+            if (!room.isActive()) continue;
+
             for (Map.Entry<BlockPos, DarkRoom.OutsideDoorExit> entry : room.getOutsideDoors().entrySet()) {
-                BlockPos doorLower = entry.getKey();
-                BlockPos canonDoor = DarkWorldUtil.canonicalLowerDoorFoot(level, doorLower);
-                if (!canonDoor.equals(doorLower)) {
-                    continue;
-                }
+                BlockPos doorLowerPos = entry.getKey();
+                BlockPos doorPos = DarkWorldUtil.getLowerDoor(level, doorLowerPos);
+
+                if (!doorPos.equals(doorLowerPos)) continue;
+
                 DarkRoom.OutsideDoorExit outsideExit = entry.getValue();
-                Direction dirFromInterior = outsideExit.exitFromInterior();
-                BlockState doorState = level.getBlockState(canonDoor);
-                if (!(doorState.getBlock() instanceof DoorBlock)) {
-                    continue;
+                Direction directionFromInside = outsideExit.exitFromInterior();
+                BlockState doorState = level.getBlockState(doorPos);
+
+                if (!(doorState.getBlock() instanceof DoorBlock)) continue;
+
+                Direction directionFromOutside = directionFromInside.getOpposite();
+                boolean isVisuallyOpen = DarknessBlock.isDoorVisuallyOpenFromSide(level, doorPos, doorState, directionFromOutside);
+                BlockPos doubleLowerHalf = outsideExit.doubleLowerHalf();
+
+                if (doubleLowerHalf != null) {
+                    BlockPos doubleLowerPos = doubleLowerHalf;
+                    BlockState doubleLowerState = level.getBlockState(doubleLowerPos);
+
+                    if (doubleLowerState.getBlock() instanceof DoorBlock && doubleLowerState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
+                        doubleLowerPos = doubleLowerHalf.below();
+                        doubleLowerState = level.getBlockState(doubleLowerPos);
+                    }
+
+                    if (doubleLowerState.getBlock() instanceof DoorBlock) {
+                        isVisuallyOpen = isVisuallyOpen || DarknessBlock.isDoorVisuallyOpenFromSide(level, doubleLowerPos, doubleLowerState, directionFromOutside);
+                    }
                 }
-                Direction viewFromExterior = dirFromInterior.getOpposite();
-                boolean passageOpen = DarknessBlock.isDoorVisuallyOpenFromSide(level, canonDoor, doorState, viewFromExterior);
-                BlockPos secondLower = outsideExit.secondLowerHalf();
-                if (secondLower != null) {
-                    BlockPos lower2 = secondLower;
-                    BlockState doorState2 = level.getBlockState(lower2);
-                    if (doorState2.getBlock() instanceof DoorBlock && doorState2.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER) {
-                        lower2 = secondLower.below();
-                        doorState2 = level.getBlockState(lower2);
-                    }
-                    if (doorState2.getBlock() instanceof DoorBlock) {
-                        passageOpen = passageOpen || DarknessBlock.isDoorVisuallyOpenFromSide(level, lower2, doorState2, viewFromExterior);
-                    }
+
+                if (!isVisuallyOpen) continue;
+
+                AABB doorBoundingBox = lightDoorLowerColumnBox(doorPos);
+
+                if (doubleLowerHalf != null) {
+                    doorBoundingBox = doorBoundingBox.minmax(lightDoorLowerColumnBox(doubleLowerHalf));
                 }
-                if (!passageOpen) {
-                    continue;
-                }
-                AABB doorCandidateBox = lightDoorLowerColumnBox(canonDoor);
-                if (secondLower != null) {
-                    doorCandidateBox = doorCandidateBox.minmax(lightDoorLowerColumnBox(secondLower));
-                }
-                for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, doorCandidateBox)) {
-                    if (!player.level().dimension().equals(level.dimension())) {
-                        continue;
-                    }
-                    if (player.isSpectator()) {
-                        continue;
-                    }
-                    BlockPos feet = player.blockPosition();
-                    BlockState feetState = level.getBlockState(feet);
-                    if (!(feetState.getBlock() instanceof DoorBlock)) {
-                        continue;
-                    }
-                    BlockPos feetLower = feetState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER ? feet.below() : feet;
-                    BlockPos feetCanon = DarkWorldUtil.canonicalLowerDoorFoot(level, feetLower);
-                    if (!feetCanon.equals(canonDoor)) {
-                        continue;
-                    }
-                    if (this.teleportedEntities.contains(player.getUUID())) {
-                        continue;
-                    }
-                    GreatDoor greatDoor = DarkWorldUtil.ensureGreatDoorForOutsideDoor(destinationLevel, this.destinationPos, canonDoor, level.dimension(), dirFromInterior, secondLower);
-                    if (greatDoor == null) {
-                        continue;
-                    }
+
+                for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, doorBoundingBox)) {
+                    if (!player.level().dimension().equals(level.dimension())) continue;
+                    if (player.isSpectator()) continue;
+
+                    BlockPos feetPos = player.blockPosition();
+                    BlockState feetState = level.getBlockState(feetPos);
+
+                    if (!(feetState.getBlock() instanceof DoorBlock)) continue;
+
+                    BlockPos feetLower = feetState.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER ? feetPos.below() : feetPos;
+                    BlockPos feetDoor = DarkWorldUtil.getLowerDoor(level, feetLower);
+
+                    if (!feetDoor.equals(doorPos)) continue;
+                    if (this.teleportedEntities.contains(player.getUUID())) continue;
+
+                    GreatDoor greatDoor = DarkWorldUtil.ensureGreatDoorForOutsideDoor(destinationLevel, this.destinationPos, doorPos, level.dimension(),
+                            directionFromInside, doubleLowerHalf);
+
+                    if (greatDoor == null) continue;
+
                     Vec3 spawn = GreatDoor.spawnCenterInFrontOfGreatDoor(destinationLevel, greatDoor.greatDoorPos, greatDoor.direction);
                     float yaw = greatDoor.direction.toYRot();
                     this.teleportedEntities.add(player.getUUID());
                     player.invulnerableTime = 60;
+
                     level.removePlayerImmediately(player, Entity.RemovalReason.CHANGED_DIMENSION);
                     PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTransportTickerPacket(0f));
                     PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundDarknessFallPacket(this.destinationPos, spawn.x, spawn.y, spawn.z, yaw, this.destinationDimension, true, greatDoor.greatDoorPos));
@@ -903,49 +924,49 @@ public class DarkFountain {
         }
     }
 
-    private void pruneLightFountainTeleportedEntities(ServerLevel level) {
+    private void clearLightFountainTeleportedEntities(ServerLevel level) {
         HashSet<UUID> next = new HashSet<>();
-        Set<BlockPos> outsideDoorFeet = new HashSet<>();
+        Set<BlockPos> outsideDoorLower = new HashSet<>();
         for (DarkRoom room : rooms) {
-            if (room.isDissipating()) {
-                continue;
-            }
-            for (BlockPos d : room.getOutsideDoors().keySet()) {
-                DarkWorldUtil.addDoorStandingFeet(level, d, outsideDoorFeet);
+            if (room.isDissipating()) continue;
+
+            for (BlockPos doorPos : room.getOutsideDoors().keySet()) {
+                DarkWorldUtil.addDoorStandingLower(level, doorPos, outsideDoorLower);
             }
         }
+
         for (UUID id : this.teleportedEntities) {
             Entity entity = level.getEntity(id);
-            if (entity == null) {
-                continue;
-            }
+
+            if (entity == null) continue;
+
             BlockPos feet = entity.blockPosition();
-            if (outsideDoorFeet.contains(feet)) {
+
+            if (outsideDoorLower.contains(feet)) {
                 next.add(id);
                 continue;
             }
-            boolean inDarknessCell = false;
+
+            boolean isDarknessBlock = false;
             for (DarkRoom room : rooms) {
-                if (room.isDissipating()) {
-                    continue;
-                }
-                for (BlockPos p : room.getPositions()) {
-                    if (!p.equals(feet) && !p.equals(feet.above())) {
-                        continue;
-                    }
-                    if (level.getBlockState(p).getBlock() instanceof DarknessBlock) {
-                        inDarknessCell = true;
+                if (room.isDissipating()) continue;
+                for (BlockPos roomBlock : room.getPositions()) {
+                    if (!roomBlock.equals(feet) && !roomBlock.equals(feet.above())) continue;
+
+                    if (level.getBlockState(roomBlock).getBlock() instanceof DarknessBlock) {
+                        isDarknessBlock = true;
                         break;
                     }
                 }
-                if (inDarknessCell) {
-                    break;
-                }
+
+                if (isDarknessBlock) break;
             }
-            if (inDarknessCell) {
+
+            if (isDarknessBlock) {
                 next.add(id);
             }
         }
+
         this.teleportedEntities = next;
     }
 
@@ -959,11 +980,11 @@ public class DarkFountain {
             double dz = entityPos.z - center.z;
             double xz = Math.sqrt(dx * dx + dz * dz);
 
-            double pushStrength = 3.0;
+            double pushStrength = 3;
             boolean showPushMessage = true;
 
             if (entity instanceof ServerPlayer serverPlayer) {
-                if (xz >= 4.0) {
+                if (xz >= 4) {
                     this.depthsTransit.remove(serverPlayer.getUUID());
                 }
 
@@ -971,13 +992,11 @@ public class DarkFountain {
                     pushStrength = DEPTHS_PIERCE_PUSH_STRENGTH;
                     showPushMessage = false;
                 } else if (canPierceFountain(serverPlayer) && !this.depthsTransit.contains(serverPlayer.getUUID())) {
-                    if (xz < DEPTHS_PIERCE_XZ && entityPos.y > fountainPos.getY() - 1.0) {
-                        tryEnterDepths(serverPlayer, level);
+                    if (xz < DEPTHS_PIERCE_XZ && entityPos.y > fountainPos.getY() - 1) {
+                        enterDepths(serverPlayer, level);
                         continue;
                     }
-                    if (serverPlayer.isCreative()) {
-                        continue;
-                    }
+
                     pushStrength = DEPTHS_PIERCE_PUSH_STRENGTH;
                     showPushMessage = false;
                 }
@@ -989,16 +1008,14 @@ public class DarkFountain {
             if (entityPos.y < center.y) {
                 awayVec = entityPos.subtract(center);
             } else {
-                awayVec = new Vec3(dx, 0.0, dz);
+                awayVec = new Vec3(dx, 0, dz);
             }
 
             distance = awayVec.length();
-            if (distance >= 4 || distance < 0.0001) {
-                continue;
-            }
+            if (distance >= 4 || distance < 0.0001) continue;
 
-            Vec3 directionVec = awayVec.scale(1.0 / distance);
-            double falloff = 1.0 - distance / 4;
+            Vec3 directionVec = awayVec.scale(1 / distance);
+            double falloff = 1 - distance / 4;
             Vec3 pushAwayVec = directionVec.scale(pushStrength * falloff);
 
             entity.push(pushAwayVec.x, pushAwayVec.y, pushAwayVec.z);
@@ -1022,14 +1039,14 @@ public class DarkFountain {
         return soulCap.determination >= 100;
     }
 
-    private void tryEnterDepths(ServerPlayer player, ServerLevel darkLevel) {
+    private void enterDepths(ServerPlayer player, ServerLevel darkLevel) {
         if (this.depthsPos == null) return;
 
         ServerLevel depths = DarkWorldUtil.getDepths(darkLevel.getServer());
         if (depths == null) return;
 
-        DarkFountain depthsFountain = depths.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
-                .map(cap -> cap.darkFountains.get(this.depthsPos)).orElse(null);
+        DarkFountain depthsFountain = depths.getCapability(CapabilityRegistry.DARK_FOUNTAIN).map(cap -> cap.darkFountains.get(this.depthsPos))
+                .orElse(null);
 
         if (depthsFountain == null) return;
 
@@ -1039,12 +1056,14 @@ public class DarkFountain {
             cap.syncToClient(player);
         });
 
-        Vec3 spawn = Vec3.atCenterOf(this.depthsPos).add(DEPTHS_EJECT_OFFSET, -1.0, 0.0);
+        Vec3 spawn = Vec3.atCenterOf(this.depthsPos).add(DEPTHS_EJECT_OFFSET, -1, 0);
+
         player.fallDistance = 0f;
         player.teleportTo(depths, spawn.x, spawn.y, spawn.z, player.getYRot(), player.getXRot());
         player.fallDistance = 0f;
-        player.setDeltaMovement(0.0, -10.0, 0.0);
+        player.setDeltaMovement(0, -10, 0);
         player.connection.send(new ClientboundSetEntityMotionPacket(player));
+
         depthsFountain.depthsTransit.add(player.getUUID());
         depthsFountain.teleportedEntities.add(player.getUUID());
     }
@@ -1052,8 +1071,8 @@ public class DarkFountain {
     private void tickDepthsFountain(ServerLevel level) {
         Vec3 opening = this.fountainPos.getCenter();
         double suctionY = DEPTHS_SUCTION_Y;
-        AABB suctionBox = new AABB(opening, opening).inflate(DEPTHS_SUCTION_XZ, 0.0, DEPTHS_SUCTION_XZ).expandTowards(0.0, -suctionY, 0.0)
-                .expandTowards(0.0, 2.0, 0.0);
+        AABB suctionBox = new AABB(opening, opening).inflate(DEPTHS_SUCTION_XZ, 0, DEPTHS_SUCTION_XZ).expandTowards(0, -suctionY, 0)
+                .expandTowards(0, 2, 0);
         AABB contactBox = new AABB(opening, opening).inflate(DEPTHS_CONTACT_XZ, DEPTHS_CONTACT_Y, DEPTHS_CONTACT_XZ);
 
         for (ServerPlayer player : level.getEntitiesOfClass(ServerPlayer.class, suctionBox)) {
@@ -1068,78 +1087,71 @@ public class DarkFountain {
                 continue;
             }
 
-            if (this.teleportedEntities.contains(player.getUUID()) || this.depthsTransit.contains(player.getUUID())) {
-                continue;
-            }
+            if (this.teleportedEntities.contains(player.getUUID()) || this.depthsTransit.contains(player.getUUID())) continue;
 
-            if (player.getY() > opening.y + 0.5) {
-                continue;
-            }
+            if (player.getY() > opening.y + 0.5) continue;
+
             double dy = opening.y - player.getY();
-            if (dy < -0.5 || dy > suctionY) {
-                continue;
-            }
+            if (dy < -0.5 || dy > suctionY) continue;
+
 
             if (player.getBoundingBox().intersects(contactBox) || player.getEyeY() >= opening.y - 0.35) {
-                ejectToDarkWorld(player, level);
+                ejectFromDepths(player, level);
                 continue;
             }
 
             Vec3 toOpening = opening.subtract(player.position());
             double dist = Math.max(toOpening.length(), 0.0001);
-            Vec3 pull = toOpening.scale((0.45 + 0.55 * (1.0 - dist / suctionY)) / dist);
+            Vec3 pull = toOpening.scale((0.45 + 0.55 * (1 - dist / suctionY)) / dist);
+
             player.push(pull.x, pull.y, pull.z);
             player.connection.send(new ClientboundSetEntityMotionPacket(player));
         }
     }
 
-    private void ejectToDarkWorld(ServerPlayer player, ServerLevel depthsLevel) {
+    private void ejectFromDepths(ServerPlayer player, ServerLevel depthsLevel) {
         ServerLevel darkLevel = depthsLevel.getServer().getLevel(this.destinationDimension);
-        if (darkLevel == null) {
-            return;
-        }
-        DarkFountain darkFountain = darkLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN)
-                .map(cap -> cap.darkFountains.get(this.destinationPos)).orElse(null);
 
-        Vec3 dest = Vec3.atCenterOf(this.destinationPos).add(DEPTHS_EJECT_OFFSET, 0.0, 0.0);
+        if (darkLevel == null) return;
+
+        DarkFountain darkFountain = darkLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).map(cap ->
+                cap.darkFountains.get(this.destinationPos)).orElse(null);
+
+        Vec3 dest = Vec3.atCenterOf(this.destinationPos).add(DEPTHS_EJECT_OFFSET, 0, 0);
+
         player.teleportTo(darkLevel, dest.x, dest.y, dest.z, player.getYRot(), player.getXRot());
-        player.setDeltaMovement(0.45, 0.15, 0.0);
+        player.setDeltaMovement(0.45, 0.15, 0);
         player.connection.send(new ClientboundSetEntityMotionPacket(player));
+
         if (darkFountain != null) {
             darkFountain.depthsTransit.add(player.getUUID());
         }
     }
 
     private void removeDepthsTwin(ServerLevel darkLevel) {
-        if (this.depthsPos == null) {
-            return;
-        }
+        if (this.depthsPos == null) return;
+
         ServerLevel depths = DarkWorldUtil.getDepths(darkLevel.getServer());
-        if (depths == null) {
-            return;
-        }
-        depths.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap ->
-                cap.removeDarkFountain(depths, this.depthsPos));
+
+        if (depths == null) return;
+
+        depths.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.removeDarkFountain(depths, this.depthsPos));
         this.depthsPos = null;
     }
 
-    public static int scaledDepthsX(int originX) {
-        return -1 * originX / DEPTHS_XZ_SCALE;
+    public static int scaleDepthsAxis(int originAxis) {
+        return -1 * originAxis / DEPTHS_XZ_SCALE;
     }
 
-    public static int scaledDepthsZ(int originZ) {
-        return -1 * originZ / DEPTHS_XZ_SCALE;
-    }
-
-    public static boolean isDepthsXzOccupied(MinecraftServer server, Vec2 depthsPos) {
+    public static boolean isDepthsOccupied(MinecraftServer server, Vec2 depthsPos) {
         ServerLevel depths = DarkWorldUtil.getDepths(server);
-        if (depths == null) {
-            return false;
-        }
-        return isDepthsXzOccupied(depths, depthsPos);
+
+        if (depths == null) return false;
+
+        return isDepthsOccupied(depths, depthsPos);
     }
 
-    public static boolean isDepthsXzOccupied(ServerLevel depths, Vec2 depthsPos) {
+    public static boolean isDepthsOccupied(ServerLevel depths, Vec2 depthsPos) {
         return depths.getCapability(CapabilityRegistry.DARK_FOUNTAIN).map(cap -> {
             for (DarkFountain fountain : cap.darkFountains.values()) {
                 Vec2 originPos = new Vec2(depthsPos.x, depthsPos.y);
@@ -1147,21 +1159,23 @@ public class DarkFountain {
 
                 return originPos.distanceToSqr(fountainPos) < Mth.square(16);
             }
+
             return false;
         }).orElse(false);
     }
 
     public static Vec2 getBumpedDepthsXZ(MinecraftServer server, Vec2 originPos) {
         ServerLevel depths = DarkWorldUtil.getDepths(server);
-        if (depths == null) {
-            return originPos;
-        }
+
+        if (depths == null) return originPos;
+
         return getBumpedDepthsXZ(depths, originPos);
     }
 
     public static Vec2 getBumpedDepthsXZ(ServerLevel depths, Vec2 originPos) {
         DarkFountainCapability capability;
         LazyOptional<DarkFountainCapability> darkLazyCapability = depths.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+
         if(darkLazyCapability.isPresent() && darkLazyCapability.resolve().isPresent())
             capability = darkLazyCapability.resolve().get();
         else {
@@ -1208,17 +1222,14 @@ public class DarkFountain {
 
     private void tickSoundPackets(Level level) {
         if (DarkWorldUtil.isDepths(level)) {
-            PacketHandlerRegistry.INSTANCE.send(
-                    PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
                     new ClientBoundSoundPackets.FountainWindDepths(this.fountainPos, false)
             );
         } else if (DarkWorldUtil.isDarkWorld(level)) {
-            PacketHandlerRegistry.INSTANCE.send(
-                    PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
                     new ClientBoundSoundPackets.FountainWind(this.fountainPos, false));
         } else {
-            PacketHandlerRegistry.INSTANCE.send(
-                    PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(this.getFountainPos())),
                     new ClientBoundSoundPackets.FountainDarkness(this.fountainPos, false));
         }
     }
@@ -1229,6 +1240,7 @@ public class DarkFountain {
         double x = destinationPos.getX() + 0.5 + Math.cos(angle) * distance;
         double z = destinationPos.getZ() + 0.5 + Math.sin(angle) * distance;
         double y = ModUtil.worldSurfaceYAtXZ(destinationLevel, x, z);
+
         return new Vec3(x, y, z);
     }
 
@@ -1272,6 +1284,7 @@ public class DarkFountain {
         tag.putInt(FRAME_TICK, frameTick);
         tag.putInt(FRAME, frame);
         tag.putInt(FRAME_OPTIMIZED, frameOptimized);
+
         ListTag teleportedEntitiesList = new ListTag();
         for (UUID uuid : teleportedEntities) {
             teleportedEntitiesList.add(StringTag.valueOf(uuid.toString()));
@@ -1310,6 +1323,7 @@ public class DarkFountain {
         int frame = tag.getInt(FRAME);
         int frameOptimized = tag.getInt(FRAME_OPTIMIZED);
         HashSet<UUID> teleportedEntities = new HashSet<>();
+
         ListTag teleportedEntitiesTag = tag.getList(TELEPORTED_ENTITIES, Tag.TAG_STRING);
         for (Tag tg : teleportedEntitiesTag) {
             teleportedEntities.add(UUID.fromString(tg.getAsString()));
@@ -1370,14 +1384,37 @@ public class DarkFountain {
         this.depthsPos = fountain.depthsPos;
     }
 
-    public BlockPos getFountainPos() { return fountainPos; }
-    public ResourceKey<Level> getFountainDimension() { return fountainDimension; }
-    public BlockPos getDestinationPos() { return destinationPos; }
-    public ResourceKey<Level> getDestinationDimension() { return destinationDimension; }
-    public int getOpeningTick() { return openingTick; }
-    public int getFrameTick() { return frameTick; }
-    public int getFrame() { return frame; }
-    public int getFrameOptimized() { return frameOptimized; }
+    public BlockPos getFountainPos() {
+        return fountainPos;
+    }
+
+    public ResourceKey<Level> getFountainDimension() {
+        return fountainDimension;
+    }
+
+    public BlockPos getDestinationPos() {
+        return destinationPos;
+    }
+
+    public ResourceKey<Level> getDestinationDimension() {
+        return destinationDimension;
+    }
+
+    public int getOpeningTick() {
+        return openingTick;
+    }
+
+    public int getFrameTick() {
+        return frameTick;
+    }
+
+    public int getFrame() {
+        return frame;
+    }
+
+    public int getFrameOptimized() {
+        return frameOptimized;
+    }
 
     public static class DarkFountainTeleporter implements ITeleporter {
         private final Vec3 pos;

@@ -31,8 +31,7 @@ public class CliffrockSlideFeature extends Feature<NoneFeatureConfiguration> {
             BlockPos currentPos = originPos.below(i);
             BlockState state = level.getBlockState(currentPos);
 
-            boolean isCliffrock = state.is(BlockRegistry.CLIFFROCK.get()) ||
-                    state.is(BlockRegistry.CLIFFROCK_PATH.get());
+            boolean isCliffrock = state.is(BlockRegistry.CLIFFROCK.get()) || state.is(BlockRegistry.CLIFFROCK_PATH.get());
 
             if (!isCliffrock) {
                 if (foundCliffStart) break;
@@ -41,9 +40,9 @@ public class CliffrockSlideFeature extends Feature<NoneFeatureConfiguration> {
 
             foundCliffStart = true;
             Direction facing = null;
-            for (Direction dir : Direction.Plane.HORIZONTAL) {
-                if (level.getBlockState(currentPos.relative(dir)).isAir()) {
-                    facing = dir;
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                if (level.getBlockState(currentPos.relative(direction)).isAir()) {
+                    facing = direction;
                     break;
                 }
             }
@@ -65,6 +64,7 @@ public class CliffrockSlideFeature extends Feature<NoneFeatureConfiguration> {
                 break;
             }
         }
+
         if (lastFacing == null) return false;
 
         BlockPos landingPos = lastPos.relative(lastFacing).below();
@@ -72,16 +72,15 @@ public class CliffrockSlideFeature extends Feature<NoneFeatureConfiguration> {
             return false;
         }
 
-        for (BlockPos pos : toPlace) {
-            for (Direction dir : Direction.Plane.HORIZONTAL) {
-                if (level.getBlockState(pos.relative(dir)).isAir()) {
-                    level.setBlock(pos,
-                            BlockRegistry.CLIFFROCK_SLIDE.get().defaultBlockState()
-                                    .setValue(HORIZONTAL_FACING, dir), 2);
+        for (BlockPos blockPos : toPlace) {
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                if (level.getBlockState(blockPos.relative(direction)).isAir()) {
+                    level.setBlock(blockPos, BlockRegistry.CLIFFROCK_SLIDE.get().defaultBlockState().setValue(HORIZONTAL_FACING, direction), 2);
                     break;
                 }
             }
         }
+
         return true;
     }
 }

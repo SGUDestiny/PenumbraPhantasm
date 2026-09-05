@@ -20,30 +20,30 @@ public class ScarletBushFeature extends Feature<ProbabilityFeatureConfiguration>
     @Override
     public boolean place(FeaturePlaceContext<ProbabilityFeatureConfiguration> pContext) {
         WorldGenLevel level = pContext.level();
-        BlockPos origin = pContext.origin();
-        Direction extension = Direction.Plane.HORIZONTAL.getRandomDirection(pContext.random());
+        BlockPos originPos = pContext.origin();
+        Direction randomDirection = Direction.Plane.HORIZONTAL.getRandomDirection(pContext.random());
 
         BlockState baseState = BlockRegistry.SCARLET_BUSH.get().defaultBlockState();
         BlockState tallState = baseState.setValue(ScarletBushBlock.TALL, true);
 
-        BlockPos[] footprint = new BlockPos[6];
-        footprint[0] = origin;
-        footprint[1] = origin.offset(1, 0, 0);
-        footprint[2] = origin.offset(0, 0, 1);
-        footprint[3] = origin.offset(1, 0, 1);
+        BlockPos[] bushPositions = new BlockPos[6];
+        bushPositions[0] = originPos;
+        bushPositions[1] = originPos.offset(1, 0, 0);
+        bushPositions[2] = originPos.offset(0, 0, 1);
+        bushPositions[3] = originPos.offset(1, 0, 1);
 
-        if (extension.getAxis() == Direction.Axis.X) {
-            int x = extension == Direction.EAST ? 2 : -1;
-            footprint[4] = origin.offset(x, 0, 0);
-            footprint[5] = origin.offset(x, 0, 1);
+        if (randomDirection.getAxis() == Direction.Axis.X) {
+            int x = randomDirection == Direction.EAST ? 2 : -1;
+            bushPositions[4] = originPos.offset(x, 0, 0);
+            bushPositions[5] = originPos.offset(x, 0, 1);
         } else {
-            int z = extension == Direction.SOUTH ? 2 : -1;
-            footprint[4] = origin.offset(0, 0, z);
-            footprint[5] = origin.offset(1, 0, z);
+            int z = randomDirection == Direction.SOUTH ? 2 : -1;
+            bushPositions[4] = originPos.offset(0, 0, z);
+            bushPositions[5] = originPos.offset(1, 0, z);
         }
 
-        for (BlockPos pos : footprint) {
-            if (level.isStateAtPosition(pos.below(), s -> s.isAir() || !s.getFluidState().isEmpty())) {
+        for (BlockPos pos : bushPositions) {
+            if (level.isStateAtPosition(pos.below(), state -> state.isAir() || !state.getFluidState().isEmpty())) {
                 return false;
             }
         }
@@ -51,10 +51,12 @@ public class ScarletBushFeature extends Feature<ProbabilityFeatureConfiguration>
         boolean placed = false;
         for (int y = 0; y < 2; y++) {
             BlockState state = y == 1 ? tallState : baseState;
-            for (BlockPos pos : footprint) {
-                BlockPos target = pos.above(y);
-                if (level.isStateAtPosition(target, s -> s.isAir() || s.canBeReplaced())) {
-                    level.setBlock(target, state, 2);
+
+            for (BlockPos pos : bushPositions) {
+                BlockPos targetPos = pos.above(y);
+
+                if (level.isStateAtPosition(targetPos, state1 -> state1.isAir() || state1.canBeReplaced())) {
+                    level.setBlock(targetPos, state, 2);
                     placed = true;
                 }
             }

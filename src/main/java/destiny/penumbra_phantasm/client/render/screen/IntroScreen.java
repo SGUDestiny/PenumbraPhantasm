@@ -48,7 +48,6 @@ public class IntroScreen extends Screen {
     public int outlineTick = 0;
     public int tickDepthsMusic = -1;
     public boolean stopDepthsMusic = false;
-    //Depths lifetime - 8 seconds
     public final float depthsLifetime = 8 * 20;
     public List<Float> activeDepths = new ArrayList<>();
     public final float depthsSpacing = depthsLifetime / 5f;
@@ -492,11 +491,6 @@ public class IntroScreen extends Screen {
         }
 
         if (this.tick > depthsStart) {
-            // BG Depths
-            pose.pushPose();
-            //RenderBlitUtil.blit(IMAGE_DEPTH, pose, 0, 0, depthsColor, depthsColor, depthsColor, 1, 0, 0, this.width, this.height, this.width, this.height);
-            pose.popPose();
-
             List<Float> sortedDepths = new ArrayList<>(activeDepths);
             sortedDepths.sort(Collections.reverseOrder());
 

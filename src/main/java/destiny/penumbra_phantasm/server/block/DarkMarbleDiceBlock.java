@@ -48,7 +48,7 @@ public class DarkMarbleDiceBlock extends BaseEntityBlock {
             }
         }
 
-        pLevel.playSound(null, pPos, SoundRegistry.DICE_THROW.get(), SoundSource.BLOCKS, 1f, 1f);
+        pLevel.playSound(null, pPos, SoundRegistry.DICE_THROW.get(), SoundSource.BLOCKS, 1, 1);
         spawnDestroyParticles(pLevel, pPlayer, pPos, pState);
 
         return InteractionResult.SUCCESS;
@@ -70,12 +70,12 @@ public class DarkMarbleDiceBlock extends BaseEntityBlock {
                 .rotateZ((float) Math.toRadians(dice.rotationZ));
 
         Map<Integer, Vector3f> faces = Map.of(
-                1, new Vector3f(0, 0, -1), // north
-                6, new Vector3f(0, 0, 1),  // south
-                2, new Vector3f(1, 0, 0),  // east
-                5, new Vector3f(-1, 0, 0), // west
-                4, new Vector3f(0, 1, 0),  // up
-                3, new Vector3f(0, -1, 0)  // down
+                1, new Vector3f(0, 0, -1), //North
+                6, new Vector3f(0, 0, 1), //South
+                2, new Vector3f(1, 0, 0), //East
+                5, new Vector3f(-1, 0, 0), //West
+                4, new Vector3f(0, 1, 0), //Up
+                3, new Vector3f(0, -1, 0) //Down
         );
 
         int topFace = 0;

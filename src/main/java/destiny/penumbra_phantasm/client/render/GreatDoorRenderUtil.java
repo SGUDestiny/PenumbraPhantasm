@@ -48,11 +48,11 @@ public class GreatDoorRenderUtil {
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
         if (direction == Direction.EAST) {
-            pose.translate(0d, 0d, -1d);
+            pose.translate(0, 0, -1);
         } else if (direction == Direction.SOUTH) {
-            pose.translate(1d, 0d, -1d);
+            pose.translate(1, 0, -1);
         } else if (direction == Direction.WEST) {
-            pose.translate(1d, 0d, 0d);
+            pose.translate(1, 0, 0);
         }
         ResourceLocation finalTexture;
         if (greatDoor.destinationGreatDoorDimension != null && DarkWorldUtil.isDarkWorldKey(greatDoor.destinationGreatDoorDimension)) {
@@ -62,9 +62,9 @@ public class GreatDoorRenderUtil {
         }
 
         getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(finalTexture)),
-                packedLight, overlay, 1F, 1F, 1F, 1f);
+                packedLight, overlay, 1, 1, 1, 1);
         getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityTranslucentEmissive(finalTexture)),
-                LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1f);
+                LightTexture.FULL_BRIGHT, overlay, 1, 1, 1, 1);
         pose.popPose();
     }
 
@@ -76,11 +76,11 @@ public class GreatDoorRenderUtil {
         pose.mulPose(Axis.XP.rotationDegrees(180));
         pose.mulPose(Axis.YP.rotationDegrees(180));
         if (direction == Direction.EAST) {
-            pose.translate(0d, 0d, -1d);
+            pose.translate(0, 0, -1);
         } else if (direction == Direction.SOUTH) {
-            pose.translate(1d, 0d, -1d);
+            pose.translate(1, 0, -1);
         } else if (direction == Direction.WEST) {
-            pose.translate(1d, 0d, 0d);
+            pose.translate(1, 0, 0);
         }
         ResourceLocation finalTexture;
         if (greatDoor.destinationGreatDoorDimension != null && DarkWorldUtil.isDarkWorldKey(greatDoor.destinationGreatDoorDimension)) {
@@ -90,9 +90,9 @@ public class GreatDoorRenderUtil {
         }
 
         getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(finalTexture)),
-                packedLight, overlay, 1F, 1F, 1F, 1f);
+                packedLight, overlay, 1, 1, 1, 1);
         getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityTranslucentEmissive(finalTexture)),
-                LightTexture.FULL_BRIGHT, overlay, 1F, 1F, 1F, 1f);
+                LightTexture.FULL_BRIGHT, overlay, 1, 1, 1, 1);
         pose.popPose();
     }
 }

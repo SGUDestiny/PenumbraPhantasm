@@ -18,6 +18,7 @@ public abstract class BlockLightEngineMixin {
     private void penumbraPhantasm$soulHearthBlockEmission(long packedPos, BlockState state, CallbackInfoReturnable<Integer> cir) {
         LightChunkGetter chunkSource = ((LightEngineAccessor) this).penumbraPhantasm$getChunkSource();
         BlockGetter blockGetter = chunkSource.getLevel();
+
         if (!(blockGetter instanceof Level level)) return;
 
         int contribution = SoulHearthLightManager.getBlockLightContribution(level, BlockPos.of(packedPos));

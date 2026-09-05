@@ -44,22 +44,21 @@ public class DarknessBlockEntity extends BlockEntity {
                 level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
                 return;
             }
-            if (darkness.removalEarliestGameTime < 0L) {
-                darkness.removalEarliestGameTime = level.getGameTime() + 200L;
+
+            if (darkness.removalEarliestGameTime < 0) {
+                darkness.removalEarliestGameTime = level.getGameTime() + 200;
             }
+
             if (level.getGameTime() < darkness.removalEarliestGameTime) {
                 DarkFountainCapability fountainCapability = null;
                 LazyOptional<DarkFountainCapability> lazyOptional = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
                 if (lazyOptional.isPresent() && lazyOptional.resolve().isPresent())
                     fountainCapability = lazyOptional.resolve().get();
 
-                if (fountainCapability == null) {
-                    return;
-                }
+                if (fountainCapability == null) return;
 
-                if (fountainCapability.darkFountains.get(darkness.fountainPos) != null) {
-                    return;
-                }
+                if (fountainCapability.darkFountains.get(darkness.fountainPos) != null) return;
+
                 return;
             }
 
@@ -67,21 +66,16 @@ public class DarknessBlockEntity extends BlockEntity {
                 spawnParticles(level, pos, level.getRandom());
             }
 
-            if (level.random.nextDouble() <= 0.8) {
-                return;
-            }
+            if (level.random.nextDouble() <= 0.8) return;
+
             DarkFountainCapability fountainCapability = null;
             LazyOptional<DarkFountainCapability> lazyOptional = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
             if (lazyOptional.isPresent() && lazyOptional.resolve().isPresent())
                 fountainCapability = lazyOptional.resolve().get();
 
-            if (fountainCapability == null) {
-                return;
-            }
+            if (fountainCapability == null) return;
 
-            if (fountainCapability.darkFountains.get(darkness.fountainPos) != null) {
-                return;
-            }
+            if (fountainCapability.darkFountains.get(darkness.fountainPos) != null) return;
 
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
         }
@@ -99,8 +93,10 @@ public class DarknessBlockEntity extends BlockEntity {
                 shouldSpawn = true;
             } else if (neighbor.getBlock() instanceof DoorBlock) {
                 Direction fromDoorToRoom = dir.getOpposite();
+
                 if (isDoorVisuallyOpenFromSide(level, neighborPos, neighbor, fromDoorToRoom)) {
                     BlockPos beyondDoor = neighborPos.relative(dir);
+
                     if (!(level.getBlockState(beyondDoor).getBlock() instanceof DarknessBlock)) {
                         shouldSpawn = true;
                         particleDirection = dir;

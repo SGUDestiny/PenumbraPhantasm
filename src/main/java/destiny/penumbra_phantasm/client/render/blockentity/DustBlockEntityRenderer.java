@@ -32,8 +32,8 @@ public class DustBlockEntityRenderer implements BlockEntityRenderer<DustBlockEnt
         if (state.hasProperty(ANIMATION_OFFSET) && state.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
             int offset = state.getValue(ANIMATION_OFFSET);
             if (offset > 0) {
-                float speed = 0.1F;
-                float radius = 0.1F;
+                float speed = 0.1f;
+                float radius = 0.1f;
 
                 float phase = offset * 0.3333F * (float) (2 * Math.PI);
                 double angle = (level.getGameTime() + partialTick) * speed + phase;
@@ -42,19 +42,20 @@ public class DustBlockEntityRenderer implements BlockEntityRenderer<DustBlockEnt
                 float fx = facing.getStepX();
                 float fz = facing.getStepZ();
 
-                float diagX = fx + fz;
-                float diagZ = fz - fx;
-                float length = (float) Math.sqrt(diagX * diagX + diagZ * diagZ);
+                float diagonalX = fx + fz;
+                float diagonalZ = fz - fx;
+                float length = (float) Math.sqrt(diagonalX * diagonalX + diagonalZ * diagonalZ);
+
                 if (length != 0) {
-                    diagX /= length;
-                    diagZ /= length;
+                    diagonalX /= length;
+                    diagonalZ /= length;
                 }
 
-                float horizDisp = radius * (float) Math.cos(angle);
-                float vertDisp = radius * (float) Math.sin(angle);
+                float horizontalDisplacement = radius * (float) Math.cos(angle);
+                float verticalDisplacement = radius * (float) Math.sin(angle);
 
                 poseStack.pushPose();
-                poseStack.translate(diagX * horizDisp, vertDisp, diagZ * horizDisp);
+                poseStack.translate(diagonalX * horizontalDisplacement, verticalDisplacement, diagonalZ * horizontalDisplacement);
 
                 state = BlockRegistry.DUST_BLOCK_GHOST.get().defaultBlockState();
 

@@ -7,7 +7,7 @@
         "leaf_block": {
           "Name": "penumbra_phantasm:fallen_scarlet_leaves"
         },
-        "probability": 0.5
+        "chance": 0.5
       }
     ],
     "dirt_provider": {

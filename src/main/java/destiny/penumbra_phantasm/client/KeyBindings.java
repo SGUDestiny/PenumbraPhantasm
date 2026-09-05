@@ -14,8 +14,7 @@ public final class KeyBindings {
 	public static KeyMapping CANCEL;
 	public static KeyMapping CANCEL_ALT;
 
-	private KeyBindings() {
-	}
+	private KeyBindings() {}
 
 	public static void register(RegisterKeyMappingsEvent event) {
 		CONFIRM = new KeyMapping("key.penumbra_phantasm.confirm", KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_Z, CATEGORY);
@@ -29,8 +28,7 @@ public final class KeyBindings {
 	}
 
 	public static boolean isDialogueKey(int keyCode) {
-		return matches(CONFIRM, keyCode) || matches(CONFIRM_ALT, keyCode)
-				|| matches(CANCEL, keyCode) || matches(CANCEL_ALT, keyCode);
+		return matches(CONFIRM, keyCode) || matches(CONFIRM_ALT, keyCode) || matches(CANCEL, keyCode) || matches(CANCEL_ALT, keyCode);
 	}
 
 	public static boolean isConfirmKey(int keyCode) {

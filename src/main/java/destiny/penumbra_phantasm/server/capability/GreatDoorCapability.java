@@ -24,8 +24,7 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
 
     public void addGreatDoor(BlockPos greatDoorPos, Direction direction, boolean isOpen, List<BlockPos> volumePositions,
                              @Nullable BlockPos lightDoorPos, @Nullable BlockPos lightDoorSecondLower, @Nullable ResourceKey<Level> lightDoorDimension, @Nullable Direction lightDoorExitDirection,
-                             boolean isDestinationDarkWorld, @Nullable BlockPos destinationGreatDoorPos,
-                             @Nullable ResourceKey<Level> destinationGreatDoorDimension) {
+                             boolean isDestinationDarkWorld, @Nullable BlockPos destinationGreatDoorPos, @Nullable ResourceKey<Level> destinationGreatDoorDimension) {
         this.greatDoors.put(greatDoorPos, new GreatDoor(greatDoorPos, direction, isOpen, volumePositions, lightDoorPos, lightDoorSecondLower,
                 lightDoorDimension, lightDoorExitDirection, isDestinationDarkWorld, destinationGreatDoorPos, destinationGreatDoorDimension));
     }
@@ -35,13 +34,14 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
         if (lightDoorPos == null || lightDimension == null) {
             return null;
         }
+
         for (GreatDoor door : this.greatDoors.values()) {
-            if (!lightDimension.equals(door.lightDoorDimension)) {
-                continue;
-            }
+            if (!lightDimension.equals(door.lightDoorDimension)) continue;
+
             if (lightDoorPos.equals(door.lightDoorPos)) {
                 return door;
             }
+
             if (door.lightDoorSecondLower != null && lightDoorPos.equals(door.lightDoorSecondLower)) {
                 return door;
             }
@@ -51,21 +51,20 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
 
     public void removeGreatDoor(Level level, BlockPos greatDoorPos) {
         if (level instanceof ServerLevel serverLevel) {
-            serverLevel.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap ->
-                    cap.greatDoors.remove(greatDoorPos));
+            serverLevel.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> cap.greatDoors.remove(greatDoorPos));
         }
     }
 
     private CompoundTag serializeGreatDoors() {
-        CompoundTag objectsTag = new CompoundTag();
+        CompoundTag compoundTag = new CompoundTag();
         ListTag greatDoorTag = new ListTag();
 
         for (GreatDoor greatDoor : new ArrayList<>(this.greatDoors.values())) {
             greatDoorTag.add(greatDoor.save());
         }
-        objectsTag.put(GREAT_DOORS, greatDoorTag);
+        compoundTag.put(GREAT_DOORS, greatDoorTag);
 
-        return objectsTag;
+        return compoundTag;
     }
 
     @Override
@@ -77,10 +76,11 @@ public class GreatDoorCapability implements INBTSerializable<CompoundTag> {
         return tag;
     }
 
-    private void deserializeGreatDoors(CompoundTag tag) {
-        ListTag greatDoorsTag = tag.getList(GREAT_DOORS, ListTag.TAG_COMPOUND);
-        for (Tag nbt : greatDoorsTag) {
-            CompoundTag greatDoorTag = ((CompoundTag) nbt);
+    private void deserializeGreatDoors(CompoundTag compoundTag) {
+        ListTag greatDoorsTag = compoundTag.getList(GREAT_DOORS, ListTag.TAG_COMPOUND);
+
+        for (Tag tag : greatDoorsTag) {
+            CompoundTag greatDoorTag = ((CompoundTag) tag);
             GreatDoor greatDoor = GreatDoor.load(greatDoorTag);
 
             this.greatDoors.put(greatDoor.greatDoorPos, greatDoor);

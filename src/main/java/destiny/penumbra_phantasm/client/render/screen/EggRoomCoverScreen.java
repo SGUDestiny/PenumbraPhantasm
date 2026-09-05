@@ -80,11 +80,11 @@ public class EggRoomCoverScreen extends Screen {
 		if (readySent) {
 			return;
 		}
+
 		ticks++;
+
 		Minecraft minecraft = Minecraft.getInstance();
-		boolean chunkReady = minecraft.level != null
-				&& minecraft.level.dimension().equals(dimension)
-				&& minecraft.level.getChunkSource().getChunkNow(chunkX, chunkZ) != null;
+		boolean chunkReady = minecraft.level != null && minecraft.level.dimension().equals(dimension) && minecraft.level.getChunkSource().getChunkNow(chunkX, chunkZ) != null;
 		if (chunkReady) {
 			finish(true);
 		} else if (ticks >= TIMEOUT_TICKS) {
@@ -110,7 +110,7 @@ public class EggRoomCoverScreen extends Screen {
 
 	@Override
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-		graphics.blit(BLACK_SCREEN, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, this.width, this.height);
+		graphics.blit(BLACK_SCREEN, 0, 0, 0, 0, 0, this.width, this.height, this.width, this.height);
 	}
 
 	@Override

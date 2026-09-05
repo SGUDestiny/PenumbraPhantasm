@@ -16,19 +16,19 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class CheshireChestBlockEntityRenderer implements BlockEntityRenderer<CheshireChestBlockEntity> {
     private final CheshireChestModel model;
-    private final float pivotX = 8.0F / 16.0F;
-    private final float pivotY = 5.5F / 16.0F;
-    private final float pivotZ = 14.5F / 16.0F;
+    private final float pivotX = 8f / 16f;
+    private final float pivotY = 5.5f / 16f;
+    private final float pivotZ = 14.5f / 16f;
 
     public CheshireChestBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
         this.model = new CheshireChestModel(ctx.getModelSet().bakeLayer(CheshireChestModel.LAYER_LOCATION));
     }
 
     @Override
-    public void render(CheshireChestBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight,
-                       int packedOverlay) {
+    public void render(CheshireChestBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutout(new ResourceLocation(PenumbraPhantasm.MODID, "textures/block/cheshire_chest.png")));
         Direction facing = blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
+
         float yRot = switch (facing) {
             case EAST -> 90f;
             case SOUTH -> 180f;
@@ -37,7 +37,7 @@ public class CheshireChestBlockEntityRenderer implements BlockEntityRenderer<Che
         };
 
         float lidAngle = blockEntity.getLidAngle(partialTick);
-        float openRadians = lidAngle * (float) Math.PI / 2.0F;
+        float openRadians = lidAngle * (float) Math.PI / 2f;
 
         poseStack.pushPose();
         applyBlockTransform(poseStack, yRot);

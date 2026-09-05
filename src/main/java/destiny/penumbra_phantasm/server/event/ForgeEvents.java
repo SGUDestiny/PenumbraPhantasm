@@ -45,103 +45,29 @@ import net.minecraftforge.fml.common.Mod;
 public class ForgeEvents {
     @SubscribeEvent
     public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event) {
-        event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountains"), new GenericProvider<>(CapabilityRegistry.DARK_FOUNTAIN, new DarkFountainCapability()));
-        event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "great_doors"), new GenericProvider<>(CapabilityRegistry.GREAT_DOOR, new GreatDoorCapability()));
+        event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountains"), new GenericProvider<>(CapabilityRegistry.DARK_FOUNTAIN,
+                new DarkFountainCapability()));
+        event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "great_doors"), new GenericProvider<>(CapabilityRegistry.GREAT_DOOR,
+                new GreatDoorCapability()));
     }
 
     @SubscribeEvent
     public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "soul"), new GenericProvider<>(CapabilityRegistry.SOUL, new SoulCapability()));
-            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "screen_animation"), new GenericProvider<>(CapabilityRegistry.SCREEN_ANIMATION, new ScreenAnimationCapability()));
+            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "screen_animation"), new GenericProvider<>(CapabilityRegistry.SCREEN_ANIMATION,
+                    new ScreenAnimationCapability()));
             event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "cheshire_chest"), new CheshireChestCapability());
-            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "fire_doors"), new GenericProvider<>(CapabilityRegistry.FIRE_DOORS, new FireDoorsCapability()));
+            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "fire_doors"), new GenericProvider<>(CapabilityRegistry.FIRE_DOORS,
+                    new FireDoorsCapability()));
         }
-    }
-
-    @SubscribeEvent
-    public static void onEntityInteract(PlayerInteractEvent.EntityInteract event) {
-        //emptySyringeInteraction(event);
-        //determinationSyringeInteraction(event);
-    }
-
-    public static void emptySyringeInteraction(PlayerInteractEvent.EntityInteract event) {
-        Level level = event.getLevel();
-        if (level.isClientSide()) return;
-
-        if (event.getHand() != InteractionHand.MAIN_HAND) return;
-
-        Entity target = event.getTarget();
-        if (!(target instanceof Player targetPlayer)) return;
-
-        Player player = event.getEntity();
-        ItemStack stack = event.getItemStack();
-
-        if(stack.getItem() == ItemRegistry.EMPTY_INJECTION.get()) {
-            SoulCapability soulCap = targetPlayer.getCapability(CapabilityRegistry.SOUL).orElse(null);
-
-            if (soulCap.determination < 100) return;
-
-            targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_DRAIN), targetPlayer.getMaxHealth() / 2);
-            soulCap.determination = 0;
-
-            level.playSound(null, targetPlayer.getOnPos(), SoundEvents.PLAYER_BIG_FALL, SoundSource.PLAYERS, 1, 1);
-
-            if (stack.getCount() > 1) {
-                stack.shrink(1);
-                player.addItem(new ItemStack(ItemRegistry.DETERMINATION_INJECTION.get()));
-            } else {
-                player.setItemInHand(event.getHand(), new ItemStack(ItemRegistry.DETERMINATION_INJECTION.get()));
-            }
-
-            TriggerCriterions.DETERMINATION_INJECTION_STEAL.trigger((ServerPlayer) player);
-        }
-
-        event.setCanceled(true);
-    }
-
-    public static void determinationSyringeInteraction(PlayerInteractEvent.EntityInteract event) {
-        Level level = event.getLevel();
-        if (level.isClientSide()) return;
-
-        if (event.getHand() != InteractionHand.MAIN_HAND) return;
-
-        Player player = event.getEntity();
-
-        Entity target = event.getTarget();
-        if (!(target instanceof Player targetPlayer)) return;
-
-        ItemStack stack = event.getItemStack();
-
-        if(stack.getItem() == ItemRegistry.DETERMINATION_INJECTION.get()) {
-            SoulCapability soulCap = targetPlayer.getCapability(CapabilityRegistry.SOUL).orElse(null);
-
-            if (soulCap.determination >= 100) {
-                TriggerCriterions.DETERMINATION_INJECTION_CAUSE_OVERDOSE.trigger((ServerPlayer) player);
-
-                targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_OVERDOSE), targetPlayer.getMaxHealth());
-            } else {
-                targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_PRICK), targetPlayer.getMaxHealth() / 2);
-                soulCap.determination = 100;
-            }
-
-            level.playSound(null, targetPlayer.getOnPos(), SoundEvents.PLAYER_BIG_FALL, SoundSource.PLAYERS, 1, 1);
-
-            if (!player.isCreative()) {
-                player.setItemInHand(event.getHand(), new ItemStack(ItemRegistry.EMPTY_INJECTION.get()));
-            }
-        }
-
-        event.setCanceled(true);
     }
 
     @SubscribeEvent
     public static void onFillBucket(FillBucketEvent event) {
         ItemStack emptyBucket = event.getEmptyBucket();
 
-        if (!(emptyBucket.getItem() instanceof BucketItem bucketItem) || bucketItem.getFluid() != Fluids.EMPTY) {
-            return;
-        }
+        if (!(emptyBucket.getItem() instanceof BucketItem bucketItem) || bucketItem.getFluid() != Fluids.EMPTY) return;
 
         Level level = event.getLevel();
         Vec3 location = event.getTarget().getLocation();
@@ -170,6 +96,7 @@ public class ForgeEvents {
             if (block instanceof DarknessBlock || block instanceof GreatDoorShapeBlock) {
                 event.setCanceled(true);
             }
+
             if (blockUp instanceof DarknessBlock || blockUp instanceof GreatDoorShapeBlock) {
                 event.setCanceled(true);
             }
@@ -178,17 +105,9 @@ public class ForgeEvents {
 
     @SubscribeEvent
     public static void onLivingHeal(LivingHealEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer player)) {
-            return;
-        }
-        if (player.hasEffect(net.minecraft.world.effect.MobEffects.REGENERATION)
-                || player.hasEffect(net.minecraft.world.effect.MobEffects.HEAL)) {
-            return;
-        }
-        if (event.getAmount() > 1.0F) {
-            return;
-        }
-
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        if (player.hasEffect(net.minecraft.world.effect.MobEffects.REGENERATION) || player.hasEffect(net.minecraft.world.effect.MobEffects.HEAL)) return;
+        if (event.getAmount() > 1) return;
         if (!DarkWorldUtil.isDepths(player.level())) return;
 
         player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
@@ -245,6 +164,7 @@ public class ForgeEvents {
         if (event.getItemStack().getItem() instanceof EggItem) {
             return;
         }
+
         event.setCanceled(true);
     }
 }

@@ -129,7 +129,16 @@ public class BlockRegistry {
             () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak(), 1));
     public static final RegistryObject<Block> SCARLET_LOG = registerBlock("scarlet_log",
-            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+            () -> new RotatedPillarWoodBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> SCARLET_WOOD = registerBlock("scarlet_wood",
+            () -> new RotatedPillarWoodBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> STRIPPED_SCARLET_LOG = registerBlock("stripped_scarlet_log",
+            () -> new RotatedPillarWoodBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> STRIPPED_SCARLET_WOOD = registerBlock("stripped_scarlet_wood",
+            () -> new RotatedPillarWoodBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block> SCARLET_LOG_MYSTERIOUS_DOOR = registerBlock("scarlet_log_mysterious_door",
             () -> new ScarletLogMysteriousDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
@@ -168,7 +177,16 @@ public class BlockRegistry {
             () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak(), 1f));
     public static final RegistryObject<Block> DARK_CANDY_LOG = registerBlock("dark_candy_log",
-            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+            () -> new RotatedPillarWoodBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> DARK_CANDY_WOOD = registerBlock("dark_candy_wood",
+            () -> new RotatedPillarWoodBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> STRIPPED_DARK_CANDY_WOOD = registerBlock("stripped_dark_candy_wood",
+            () -> new RotatedPillarWoodBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
+    public static final RegistryObject<Block> STRIPPED_DARK_CANDY_LOG = registerBlock("stripped_dark_candy_log",
+            () -> new RotatedPillarWoodBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block>DARK_CANDY_SAPLING = registerBlock("dark_candy_sapling",
             () -> new DarkWorldSaplingBlock(new DarkCandyGrower(), BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING)

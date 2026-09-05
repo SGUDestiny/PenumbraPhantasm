@@ -11,9 +11,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -104,36 +102,41 @@ public class RoomScanner {
 
         Map<BlockPos, DarkRoom.OutsideDoorExit> outsideDoors = new HashMap<>();
         Map<BlockPos, DarkRoom.SharedDoorLink> sharedDoors = new HashMap<>();
-        classifyShellDoors(level, positions, doorPositions, otherFountainRoomToDarkWorld, outsideDoors, sharedDoors, maxVolume, blockingPositions);
+        processOutsideDoors(level, positions, doorPositions, otherFountainRoomToDarkWorld, outsideDoors, sharedDoors, maxVolume, blockingPositions);
 
         return RoomScanResult.success(positions, keyBlockPositions, doorPositions, outsideDoors, sharedDoors);
     }
 
     private static BlockPos doorLowerHalf(Level level, BlockPos pos) {
-        BlockState s = level.getBlockState(pos);
-        if (!(s.getBlock() instanceof DoorBlock)) {
+        BlockState state = level.getBlockState(pos);
+        if (!(state.getBlock() instanceof DoorBlock)) {
             return pos;
         }
-        return s.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
+
+        return state.getValue(DoorBlock.HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
     }
 
     private static boolean isOpenAir(BlockState state) {
         return state.isAir() || state.is(Blocks.CAVE_AIR) || state.is(Blocks.VOID_AIR);
     }
 
-    private static BlockPos outwardPastAdjacentDoorLeaves(Level level, BlockPos firstBeyond, Direction outwardDir) {
-        BlockPos p = firstBeyond;
+    private static BlockPos getPosBeyondDoor(Level level, BlockPos firstBeyond, Direction outwardDir) {
+        BlockPos pos = firstBeyond;
         for (int i = 0; i < 3; i++) {
-            BlockState st = level.getBlockState(p);
-            if (!(st.getBlock() instanceof DoorBlock)) {
-                return p;
+            BlockState state = level.getBlockState(pos);
+
+            if (!(state.getBlock() instanceof DoorBlock)) {
+                return pos;
             }
-            p = p.relative(outwardDir);
+
+            pos = pos.relative(outwardDir);
         }
-        return p;
+        return pos;
     }
 
-    private static boolean exteriorPocketExceedsRoomBudget(Level level, BlockPos footBeyond, BlockState b0, Set<BlockPos> posSet, int maxVolume, @Nullable Set<BlockPos> scanBlockingAnchors, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld) {
+    private static boolean outsideExceedsRoomBudget(Level level, BlockPos footBeyond, BlockState b0, Set<BlockPos> posSet, int maxVolume,
+                                                    @Nullable Set<BlockPos> scanBlockingAnchors,
+                                                    @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld) {
         BlockPos seed = isOpenAir(b0) ? footBeyond : footBeyond.above();
         Set<BlockPos> blocking = new HashSet<>(posSet);
 
@@ -171,88 +174,93 @@ public class RoomScanner {
         return false;
     }
 
-    private static void classifyShellDoors(Level level, List<BlockPos> positions, Set<BlockPos> doorPositions, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld, Map<BlockPos, DarkRoom.OutsideDoorExit> outsideDoors, Map<BlockPos, DarkRoom.SharedDoorLink> sharedDoors, int maxVolume, @Nullable Set<BlockPos> scanBlockingAnchors) {
+    private static void processOutsideDoors(Level level, List<BlockPos> positions, Set<BlockPos> doorPositions, @Nullable Map<BlockPos, ResourceKey<Level>> otherFountainRoomToDarkWorld, Map<BlockPos, DarkRoom.OutsideDoorExit> outsideDoors, Map<BlockPos, DarkRoom.SharedDoorLink> sharedDoors, int maxVolume, @Nullable Set<BlockPos> scanBlockingAnchors) {
         Set<BlockPos> posSet = new HashSet<>(positions);
         Map<BlockPos, ResourceKey<Level>> ownerMap = otherFountainRoomToDarkWorld != null ? otherFountainRoomToDarkWorld : Collections.emptyMap();
 
-        BiConsumer<BlockPos, Direction> tryClassify = (doorPartPos, dirFromInterior) -> {
+        BiConsumer<BlockPos, Direction> consumer = (doorPartPos, directionFromInside) -> {
             BlockState doorState = level.getBlockState(doorPartPos);
-            if (!(doorState.getBlock() instanceof DoorBlock)) {
-                return;
-            }
+            if (!(doorState.getBlock() instanceof DoorBlock)) return;
+
             BlockPos lower = doorLowerHalf(level, doorPartPos);
-            BlockPos canonKey = DarkWorldUtil.canonicalLowerDoorFoot(level, lower);
-            if (outsideDoors.containsKey(canonKey) || sharedDoors.containsKey(canonKey)) {
+            BlockPos upper = DarkWorldUtil.getLowerDoor(level, lower);
+
+            if (outsideDoors.containsKey(upper) || sharedDoors.containsKey(upper)) return;
+
+            BlockPos beyondPos = getPosBeyondDoor(level, upper.relative(directionFromInside), directionFromInside);
+            BlockPos beyondPosUp = beyondPos.above();
+            ResourceKey<Level> sharedLevel = ownerMap.get(beyondPos);
+
+            if (sharedLevel == null) {
+                sharedLevel = ownerMap.get(beyondPosUp);
+            }
+
+            BlockPos doubleLower = DarkWorldUtil.getDoubleDoorLower(level, upper);
+            if (sharedLevel != null) {
+                sharedDoors.put(upper, new DarkRoom.SharedDoorLink(sharedLevel, doubleLower));
                 return;
             }
-            BlockPos footBeyond = outwardPastAdjacentDoorLeaves(level, canonKey.relative(dirFromInterior), dirFromInterior);
-            BlockPos footBeyondUp = footBeyond.above();
-            ResourceKey<Level> shr = ownerMap.get(footBeyond);
-            if (shr == null) {
-                shr = ownerMap.get(footBeyondUp);
-            }
-            BlockPos secondLower = DarkWorldUtil.getDoubleDoorPartnerLower(level, canonKey);
-            if (shr != null) {
-                sharedDoors.put(canonKey, new DarkRoom.SharedDoorLink(shr, secondLower));
-                return;
-            }
-            BlockState b0 = level.getBlockState(footBeyond);
-            BlockState b1 = level.getBlockState(footBeyondUp);
-            if (isOpenAir(b0) || isOpenAir(b1)) {
-                if (exteriorPocketExceedsRoomBudget(level, footBeyond, b0, posSet, maxVolume, scanBlockingAnchors, otherFountainRoomToDarkWorld)) {
-                    outsideDoors.put(canonKey, new DarkRoom.OutsideDoorExit(dirFromInterior, secondLower));
+
+            BlockState beyondState = level.getBlockState(beyondPos);
+            BlockState beyondUpState = level.getBlockState(beyondPosUp);
+            if (isOpenAir(beyondState) || isOpenAir(beyondUpState)) {
+                if (outsideExceedsRoomBudget(level, beyondPos, beyondState, posSet, maxVolume, scanBlockingAnchors, otherFountainRoomToDarkWorld)) {
+                    outsideDoors.put(upper, new DarkRoom.OutsideDoorExit(directionFromInside, doubleLower));
                 }
             }
         };
 
-        for (BlockPos pos : positions) {
-            for (Direction dir : Direction.values()) {
-                BlockPos n = pos.relative(dir);
-                if (posSet.contains(n)) {
-                    continue;
-                }
-                if (level.getBlockState(n).getBlock() instanceof DoorBlock) {
-                    tryClassify.accept(n, dir);
+        for (BlockPos blockPos : positions) {
+            for (Direction direction : Direction.values()) {
+                BlockPos relativePos = blockPos.relative(direction);
+
+                if (posSet.contains(relativePos)) continue;
+
+                if (level.getBlockState(relativePos).getBlock() instanceof DoorBlock) {
+                    consumer.accept(relativePos, direction);
                 }
             }
         }
 
         for (BlockPos doorPart : doorPositions) {
-            BlockPos lower = doorLowerHalf(level, doorPart);
-            for (Direction dir : Direction.values()) {
-                BlockPos in0 = lower.relative(dir.getOpposite());
-                BlockPos in1 = lower.above().relative(dir.getOpposite());
-                if (posSet.contains(in0) || posSet.contains(in1)) {
-                    tryClassify.accept(doorPart, dir);
+            BlockPos lowerPos = doorLowerHalf(level, doorPart);
+
+            for (Direction direction : Direction.values()) {
+                BlockPos insideLowerPos = lowerPos.relative(direction.getOpposite());
+                BlockPos insideUpperPos = lowerPos.above().relative(direction.getOpposite());
+
+                if (posSet.contains(insideLowerPos) || posSet.contains(insideUpperPos)) {
+                    consumer.accept(doorPart, direction);
                     break;
                 }
             }
         }
     }
 
-    public static void reclassifyDoorsWithRemainingBudget(ServerLevel level, DarkRoom room, int remainingVolume, Set<BlockPos> otherAnchors,
-                                                    Map<BlockPos, ResourceKey<Level>> otherRoomCells) {
+    public static void reclassifyDoorsWithRemainingBudget(ServerLevel level, DarkRoom room, int remainingVolume, Set<BlockPos> otherFountains,
+                                                          Map<BlockPos, ResourceKey<Level>> otherRoomBlocks) {
         if (remainingVolume <= 0) {
             for (BlockPos doorPos : room.getDoorPositions()) {
                 BlockPos lower = doorLowerHalf(level, doorPos);
-                BlockPos canon = DarkWorldUtil.canonicalLowerDoorFoot(level, lower);
+                BlockPos upper = DarkWorldUtil.getLowerDoor(level, lower);
 
-                if (room.outsideDoors.containsKey(canon) || room.getSharedDoors().containsKey(canon))
+                if (room.outsideDoors.containsKey(upper) || room.getSharedDoors().containsKey(upper))
                     continue;
 
-                Direction dirFromInterior = null;
-                for (Direction dir : Direction.values()) {
-                    BlockPos in = lower.relative(dir.getOpposite());
-                    if (room.getPositions().contains(in) || room.getPositions().contains(in.above())) {
-                        dirFromInterior = dir;
+                Direction directionFromInside = null;
+                for (Direction direction : Direction.values()) {
+                    BlockPos insidePos = lower.relative(direction.getOpposite());
+
+                    if (room.getPositions().contains(insidePos) || room.getPositions().contains(insidePos.above())) {
+                        directionFromInside = direction;
                         break;
                     }
                 }
 
-                if (dirFromInterior == null) continue;
+                if (directionFromInside == null) continue;
 
-                BlockPos secondLower = DarkWorldUtil.getDoubleDoorPartnerLower(level, canon);
-                room.outsideDoors.put(canon, new DarkRoom.OutsideDoorExit(dirFromInterior, secondLower));
+                BlockPos doubleLower = DarkWorldUtil.getDoubleDoorLower(level, upper);
+                room.outsideDoors.put(upper, new DarkRoom.OutsideDoorExit(directionFromInside, doubleLower));
             }
             return;
         }
@@ -260,76 +268,82 @@ public class RoomScanner {
         Set<BlockPos> posSet = new HashSet<>(room.getPositions());
         Set<BlockPos> blocking = new HashSet<>(posSet);
 
-        if (otherAnchors != null) blocking.addAll(otherAnchors);
+        if (otherFountains != null) blocking.addAll(otherFountains);
 
         for (BlockPos doorPos : room.getDoorPositions()) {
             BlockPos lower = doorLowerHalf(level, doorPos);
-            BlockPos canon = DarkWorldUtil.canonicalLowerDoorFoot(level, lower);
+            BlockPos upper = DarkWorldUtil.getLowerDoor(level, lower);
 
-            if (room.outsideDoors.containsKey(canon) || room.getSharedDoors().containsKey(canon))
-                continue;
+            if (room.outsideDoors.containsKey(upper) || room.getSharedDoors().containsKey(upper)) continue;
 
-            Direction dirFromInterior = null;
-            for (Direction dir : Direction.values()) {
-                BlockPos in = lower.relative(dir.getOpposite());
-                if (posSet.contains(in) || posSet.contains(in.above())) {
-                    dirFromInterior = dir;
+            Direction directionFromInside = null;
+            for (Direction direction : Direction.values()) {
+                BlockPos innerPos = lower.relative(direction.getOpposite());
+
+                if (posSet.contains(innerPos) || posSet.contains(innerPos.above())) {
+                    directionFromInside = direction;
                     break;
                 }
             }
 
-            if (dirFromInterior == null) continue;
+            if (directionFromInside == null) continue;
 
-            BlockPos footBeyond = outwardPastAdjacentDoorLeaves(level, canon.relative(dirFromInterior), dirFromInterior);
-            BlockState b0 = level.getBlockState(footBeyond);
-            BlockPos seed = isOpenAir(b0) ? footBeyond : footBeyond.above();
+            BlockPos beyondPos = getPosBeyondDoor(level, upper.relative(directionFromInside), directionFromInside);
+            BlockState beyondState = level.getBlockState(beyondPos);
+            BlockPos seedPos = isOpenAir(beyondState) ? beyondPos : beyondPos.above();
 
             Set<BlockPos> visited = new HashSet<>();
             Deque<BlockPos> queue = new ArrayDeque<>();
 
-            queue.add(seed);
-            visited.add(seed);
+            queue.add(seedPos);
+            visited.add(seedPos);
 
             int count = 0;
-            boolean exceeds = false;
+            boolean exceedsBudget = false;
             while (!queue.isEmpty()) {
-                if (count > remainingVolume) { exceeds = true; break; }
-                BlockPos p = queue.poll();
+                if (count > remainingVolume) {
+                    exceedsBudget = true;
+                    break;
+                }
+
+                BlockPos pos = queue.poll();
                 count++;
 
-                for (Direction d : Direction.values()) {
-                    BlockPos n = p.relative(d);
+                for (Direction direction : Direction.values()) {
+                    BlockPos relativePos = pos.relative(direction);
 
-                    if (visited.contains(n) || blocking.contains(n)) continue;
-                    if (otherRoomCells.containsKey(n)) continue;
+                    if (visited.contains(relativePos) || blocking.contains(relativePos)) continue;
+                    if (otherRoomBlocks.containsKey(relativePos)) continue;
 
-                    BlockState state = level.getBlockState(n);
+                    BlockState state = level.getBlockState(relativePos);
 
                     if (state.isAir()) {
-                        visited.add(n);
-                        queue.add(n);
+                        visited.add(relativePos);
+                        queue.add(relativePos);
                     }
                 }
             }
-            if (exceeds) {
-                BlockPos secondLower = DarkWorldUtil.getDoubleDoorPartnerLower(level, canon);
-                room.outsideDoors.put(canon, new DarkRoom.OutsideDoorExit(dirFromInterior, secondLower));
+
+            if (exceedsBudget) {
+                BlockPos doubleLower = DarkWorldUtil.getDoubleDoorLower(level, upper);
+                room.outsideDoors.put(upper, new DarkRoom.OutsideDoorExit(directionFromInside, doubleLower));
             }
         }
     }
 
     public static boolean hasBreach(Level level, Set<BlockPos> roomPositions, Set<BlockPos> allRoomPositions) {
-        for (BlockPos pos : roomPositions) {
-            for (Direction dir : Direction.values()) {
-                BlockPos neighbor = pos.relative(dir);
-                if (allRoomPositions.contains(neighbor)) continue;
+        for (BlockPos blockPos : roomPositions) {
+            for (Direction direction : Direction.values()) {
+                BlockPos neighborPos = blockPos.relative(direction);
 
-                BlockState state = level.getBlockState(neighbor);
-                if (state.isAir()) {
-                    return true;
-                }
+                if (allRoomPositions.contains(neighborPos)) continue;
+
+                BlockState state = level.getBlockState(neighborPos);
+
+                if (state.isAir()) return true;
             }
         }
+
         return false;
     }
 

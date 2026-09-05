@@ -15,13 +15,13 @@ import java.util.List;
 
 public class DarkCandyOnLeavesTreeDecorator extends TreeDecorator {
     public static final Codec<DarkCandyOnLeavesTreeDecorator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            Codec.floatRange(0.0F, 1.0F).fieldOf("probability").forGetter(d -> d.probability)
+            Codec.floatRange(0, 1).fieldOf("chance").forGetter(decorator -> decorator.chance)
     ).apply(instance, DarkCandyOnLeavesTreeDecorator::new));
 
-    private final float probability;
+    private final float chance;
 
-    public DarkCandyOnLeavesTreeDecorator(float probability) {
-        this.probability = probability;
+    public DarkCandyOnLeavesTreeDecorator(float chance) {
+        this.chance = chance;
     }
 
     @Override
@@ -34,37 +34,36 @@ public class DarkCandyOnLeavesTreeDecorator extends TreeDecorator {
         RandomSource random = context.random();
         List<BlockPos> leaves = context.leaves();
         for (BlockPos leafPos : leaves) {
-            if (random.nextFloat() >= probability) {
-                continue;
-            }
+            if (random.nextFloat() >= chance) continue;
+
             Direction outward = pickOutwardDirection(context, leafPos, random);
-            if (outward == null) {
-                continue;
-            }
+            if (outward == null) continue;
+
             BlockPos candyPos = leafPos.relative(outward);
-            if (!context.isAir(candyPos)) {
-                continue;
-            }
+            if (!context.isAir(candyPos)) continue;
+
             int age = 1 + random.nextInt(6);
-            context.setBlock(candyPos, BlockRegistry.DARK_CANDY_BLOCK.get().defaultBlockState()
-                    .setValue(DarkCandyBlock.FACING, outward)
+            context.setBlock(candyPos, BlockRegistry.DARK_CANDY_BLOCK.get().defaultBlockState().setValue(DarkCandyBlock.FACING, outward)
                     .setValue(DarkCandyBlock.AGE, age));
         }
     }
 
     private static Direction pickOutwardDirection(Context context, BlockPos leafPos, RandomSource random) {
-        Direction[] dirs = Direction.values().clone();
-        for (int i = dirs.length - 1; i > 0; i--) {
-            int j = random.nextInt(i + 1);
-            Direction tmp = dirs[i];
-            dirs[i] = dirs[j];
-            dirs[j] = tmp;
+        Direction[] directions = Direction.values().clone();
+        for (int i = directions.length - 1; i > 0; i--) {
+            int randomDirection = random.nextInt(i + 1);
+            Direction relativeDirections = directions[i];
+
+            directions[i] = directions[randomDirection];
+            directions[randomDirection] = relativeDirections;
         }
-        for (Direction dir : dirs) {
-            if (context.isAir(leafPos.relative(dir))) {
-                return dir;
+
+        for (Direction direction : directions) {
+            if (context.isAir(leafPos.relative(direction))) {
+                return direction;
             }
         }
+
         return null;
     }
 }

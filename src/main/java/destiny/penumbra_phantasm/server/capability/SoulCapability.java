@@ -241,14 +241,6 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
         eggObtained |= bit;
     }
 
-    public boolean hasEggRoomFrontHint(int bit) {
-        return (eggRoomFrontHint & bit) != 0;
-    }
-
-    public void setEggRoomFrontHint(int bit) {
-        eggRoomFrontHint |= bit;
-    }
-
     public void sync(@NotNull SoulCapability cap) {
         this.soulType = cap.soulType;
         this.diedWithSoulHearth = cap.diedWithSoulHearth;

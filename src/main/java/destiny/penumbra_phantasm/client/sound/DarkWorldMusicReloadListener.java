@@ -11,12 +11,11 @@ public class DarkWorldMusicReloadListener implements ResourceManagerReloadListen
 
     @Override
     public void onResourceManagerReload(ResourceManager resourceManager) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc != null) {
-            mc.execute(() -> {
-                MusicManager.getInstance().stopImmediately();
-                SoundAccess.refreshFountainAmbientsAfterReload();
-            });
-        }
+        Minecraft minecraft = Minecraft.getInstance();
+
+        minecraft.execute(() -> {
+            MusicManager.getInstance().stopImmediately();
+            SoundAccess.refreshFountainAmbientsAfterReload();
+        });
     }
 }

@@ -21,6 +21,7 @@ public class NightGrassBlock extends SnowyDirtBlock {
     private static boolean canBeGrass(BlockState p_56824_, LevelReader p_56825_, BlockPos p_56826_) {
         BlockPos blockpos = p_56826_.above();
         BlockState blockstate = p_56825_.getBlockState(blockpos);
+
         if (blockstate.is(Blocks.SNOW) && blockstate.getValue(SnowLayerBlock.LAYERS) == 1) {
             return true;
         } else if (blockstate.getFluidState().getAmount() == 8) {

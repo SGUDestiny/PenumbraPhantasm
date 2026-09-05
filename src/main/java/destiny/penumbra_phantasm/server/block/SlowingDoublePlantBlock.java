@@ -16,7 +16,7 @@ public class SlowingDoublePlantBlock extends DoublePlantBlock {
 
     public void entityInside(BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity) {
         if (pEntity instanceof LivingEntity && pEntity.getType() != EntityType.FOX && pEntity.getType() != EntityType.BEE) {
-            pEntity.makeStuckInBlock(pState, new Vec3(0.5d, 0.5d, 0.5d));
+            pEntity.makeStuckInBlock(pState, new Vec3(0.5, 0.5, 0.5));
         }
     }
 }

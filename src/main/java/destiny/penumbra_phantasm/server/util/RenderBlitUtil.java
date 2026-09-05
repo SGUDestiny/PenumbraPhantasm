@@ -6,8 +6,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
-public class RenderBlitUtil
-{
+public class RenderBlitUtil {
     public static void blit(ResourceLocation pAtlasLocation, PoseStack stack, float pX, float pY, float pUOffset, float pVOffset, float pUWidth, float pVHeight) {
         RenderBlitUtil.blit(pAtlasLocation, stack, pX, pY, 0, pUOffset, pVOffset, pUWidth, pVHeight, 256, 256);
     }

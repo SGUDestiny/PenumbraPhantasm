@@ -54,7 +54,7 @@ public class DarkCandyLeaves extends LeavesBlock {
             if (!directions.isEmpty()) {
                 Direction direction = directions.get(level.getRandom().nextInt(0, directions.size()));
 
-                level.playSound(null, pos, SoundEvents.AZALEA_PLACE, SoundSource.BLOCKS, 1f, 1f);
+                level.playSound(null, pos, SoundEvents.AZALEA_PLACE, SoundSource.BLOCKS, 1, 1);
                 if (level.getBlockState(pos.relative(direction)).getBlock() != BlockRegistry.DARK_CANDY_BLOCK.get()) {
                     level.setBlockAndUpdate(pos.relative(direction), BlockRegistry.DARK_CANDY_BLOCK.get().defaultBlockState().setValue(FACING, direction).setValue(AGE, 1));
                 } else if (level.getBlockState(pos.relative(direction)).getValue(FACING) == direction) {

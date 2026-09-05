@@ -130,6 +130,9 @@
 
   "block.penumbra_phantasm.scarlet_leaves": "Scarlet Leaves",
   "block.penumbra_phantasm.scarlet_log": "Scarlet Log",
+  "block.penumbra_phantasm.scarlet_wood": "Scarlet Wood",
+  "block.penumbra_phantasm.stripped_scarlet_log": "Stripped Scarlet Log",
+  "block.penumbra_phantasm.stripped_scarlet_wood": "Stripped Scarlet Wood",
 
   "block.penumbra_phantasm.scarlet_planks": "Scarlet Planks",
   "block.penumbra_phantasm.scarlet_stairs": "Scarlet Stairs",
@@ -150,6 +153,9 @@
   "block.penumbra_phantasm.dark_candy_leaves": "Dark Candy Leaves",
   "block.penumbra_phantasm.fallen_dark_candy_leaves": "Fallen Dark Candy Leaves",
   "block.penumbra_phantasm.dark_candy_log": "Dark Candy Log",
+  "block.penumbra_phantasm.dark_candy_wood": "Dark Candy Wood",
+  "block.penumbra_phantasm.stripped_dark_candy_log": "Stripped Dark Candy Log",
+  "block.penumbra_phantasm.stripped_dark_candy_wood": "Stripped Dark Candy Wood",
 
   "block.penumbra_phantasm.dark_candy_crafting_table": "Dark Candy Crafting Table",
 

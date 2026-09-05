@@ -93,10 +93,7 @@ public final class FountainOpeningPosterize {
             return 1f;
         }
 
-        return 1f - smoothStep(
-                FountainRenderUtil.OPENING_POSTERIZE_FADE_START,
-                outer,
-                distanceInBlocks
+        return 1f - smoothStep(FountainRenderUtil.OPENING_POSTERIZE_FADE_START, outer, distanceInBlocks
         );
     }
 
@@ -116,7 +113,7 @@ public final class FountainOpeningPosterize {
         DarkFountainCapability cap = capOpt.get();
         for (DarkFountain fountain : cap.darkFountains.values()) {
             float t = fountain.openingTick;
-            if (t < 0f || t >= FountainRenderUtil.OPENING_POSTERIZE_TICK_END) {
+            if (t < 0 || t >= FountainRenderUtil.OPENING_POSTERIZE_TICK_END) {
                 continue;
             }
 

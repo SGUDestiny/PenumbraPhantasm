@@ -21,6 +21,7 @@ public class ServerLevelMixin {
 	private void findClosestBiome3d(Predicate<Holder<Biome>> biomePredicate, BlockPos pos, int radius, int horizontalBlockCheckInterval, int verticalBlockCheckInterval, CallbackInfoReturnable<Pair<BlockPos, Holder<Biome>>> cir) {
 		ServerLevel level = (ServerLevel)(Object)this;
 		ChunkGenerator generator = level.getChunkSource().getGenerator();
+
 		if(generator instanceof SeededNoiseBasedChunkGenerator seededGenerator) {
 			Climate.Sampler sampler = seededGenerator.getOrCreateSampler(level.registryAccess());
 			cir.setReturnValue(generator.getBiomeSource().findClosestBiome3d(pos, radius, horizontalBlockCheckInterval, verticalBlockCheckInterval, biomePredicate, sampler, level));

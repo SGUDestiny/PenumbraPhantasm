@@ -26,7 +26,7 @@ public class CheshireChestMenu extends AbstractContainerMenu {
 
     public CheshireChestMenu(int windowId, Inventory playerInventory, CheshireChestInventory cheshireInventory, BlockPos pos, Player player, ContainerLevelAccess access) {
         super(MenuRegistry.CHESHIRE_CHEST_MENU.get(), windowId);
-        PenumbraPhantasm.LOGGER.info("Chest inventory class: {}", cheshireInventory.getClass().getName());
+
         this.pos = pos;
         this.player = player;
         this.access = access;
@@ -51,6 +51,7 @@ public class CheshireChestMenu extends AbstractContainerMenu {
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         Slot slot = this.slots.get(index);
+
         if (!slot.hasItem()) return ItemStack.EMPTY;
 
         ItemStack original = slot.getItem().copy();
@@ -62,8 +63,11 @@ public class CheshireChestMenu extends AbstractContainerMenu {
             if (!this.moveItemStackTo(stack, 0, 27, false)) return ItemStack.EMPTY;
         }
 
-        if (stack.isEmpty()) slot.set(ItemStack.EMPTY);
-        else slot.setChanged();
+        if (stack.isEmpty()) {
+            slot.set(ItemStack.EMPTY);
+        } else {
+            slot.setChanged();
+        }
 
         return original;
     }
@@ -71,10 +75,12 @@ public class CheshireChestMenu extends AbstractContainerMenu {
     @Override
     public void removed(Player pPlayer) {
         super.removed(pPlayer);
+
         if (!pPlayer.level().isClientSide && player != null) {
-            BlockEntity be = pPlayer.level().getBlockEntity(pos);
-            if (be instanceof CheshireChestBlockEntity enderBe) {
-                enderBe.stopOpen(player);
+            BlockEntity blockEntity = pPlayer.level().getBlockEntity(pos);
+
+            if (blockEntity instanceof CheshireChestBlockEntity chesireBlock) {
+                chesireBlock.stopOpen(player);
             }
         }
     }

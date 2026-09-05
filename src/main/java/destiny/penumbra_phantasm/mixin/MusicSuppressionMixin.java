@@ -17,6 +17,7 @@ public class MusicSuppressionMixin {
     private void suppressDarkWorldMusic(CallbackInfoReturnable<Music> cir) {
         Minecraft mc = (Minecraft) (Object) this;
         LocalPlayer player = mc.player;
+
         if (player != null && DarkWorldUtil.isDarkWorld(player.level()) || mc.screen instanceof IntroScreen) {
             cir.setReturnValue(new Music(SoundEvents.MUSIC_GAME, Integer.MAX_VALUE, Integer.MAX_VALUE, false));
         }

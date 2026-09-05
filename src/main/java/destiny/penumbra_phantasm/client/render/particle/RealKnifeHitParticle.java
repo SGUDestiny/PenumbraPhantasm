@@ -12,7 +12,7 @@ public class RealKnifeHitParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
     public RealKnifeHitParticle(ClientLevel level, double x, double y, double z, SpriteSet sprite, double xSpeed, double ySpeed, double zSpeed) {
-        super(level, x, y, z, 0.0D, 0.0D, 0.0D);
+        super(level, x, y, z, 0, 0, 0);
         this.sprites = sprite;
         this.friction = 1f;
         this.lifetime = 10;
@@ -35,22 +35,24 @@ public class RealKnifeHitParticle extends TextureSheetParticle {
         int ageAt = this.lifetime - 7;
         int sprite = this.age >= ageAt ? Math.min(this.age - ageAt, 7) : 0;
         this.setSprite(sprites.get(sprite, 6));
+
         if (this.age++ >= this.lifetime) {
             this.remove();
         } else {
             this.yd -= 0.04 * (double)this.gravity;
             this.move(this.xd, this.yd, this.zd);
+
             if (this.speedUpWhenYMotionIsBlocked && this.y == this.yo) {
                 this.xd *= 1.1;
                 this.zd *= 1.1;
             }
 
-            this.xd *= (double)this.friction;
-            this.yd *= (double)this.friction;
-            this.zd *= (double)this.friction;
+            this.xd *= this.friction;
+            this.yd *= this.friction;
+            this.zd *= this.friction;
             if (this.onGround) {
-                this.xd *= (double)0.7F;
-                this.zd *= (double)0.7F;
+                this.xd *= 0.7F;
+                this.zd *= 0.7F;
             }
         }
     }

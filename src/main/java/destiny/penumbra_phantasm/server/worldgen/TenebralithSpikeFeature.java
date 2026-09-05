@@ -89,6 +89,6 @@ public class TenebralithSpikeFeature extends Feature<PointedDripstoneConfigurati
     }
 
     public static boolean isTenebralithBase(BlockState pState) {
-        return pState.is(BlockRegistry.TENEBRALITH.get());
+        return pState.is(BlockRegistry.TENEBRALITH.get()) || pState.is(BlockRegistry.TENEBRALITH_PATH.get());
     }
 }

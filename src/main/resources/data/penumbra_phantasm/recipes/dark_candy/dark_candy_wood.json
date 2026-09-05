@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "bark",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:dark_candy_log"
+    }
+  },
+  "pattern": [
+    "##",
+    "##"
+  ],
+  "result": {
+    "item": "penumbra_phantasm:dark_candy_wood",
+    "count": 3
+  },
+  "show_notification": true
+}

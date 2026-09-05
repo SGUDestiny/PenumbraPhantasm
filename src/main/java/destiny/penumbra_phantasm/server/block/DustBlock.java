@@ -47,8 +47,8 @@ public class DustBlock extends BaseEntityBlock {
     @Override
     public void animateTick(BlockState pState, Level pLevel, BlockPos pPos, RandomSource pRandom) {
         if (pState.getValue(SPAWN_PARTICLES)) {
-            pLevel.addParticle(new DustParticleOptions(new Vector3f(1f, 1f, 1f), 1.25f), pPos.getX() + 0.5, pPos.getY() + 1.25, pPos.getZ() + 0.5, 0, 15, 0);
-            pLevel.addParticle(new DustParticleOptions(new Vector3f(1f, 1f, 1f), 1.25f), pPos.getX() + 0.5, pPos.getY() + 1.25, pPos.getZ() + 0.5, 0, 15, 0);
+            pLevel.addParticle(new DustParticleOptions(new Vector3f(1, 1, 1), 1.25f), pPos.getX() + 0.5, pPos.getY() + 1.25, pPos.getZ() + 0.5, 0, 15, 0);
+            pLevel.addParticle(new DustParticleOptions(new Vector3f(1, 1, 1), 1.25f), pPos.getX() + 0.5, pPos.getY() + 1.25, pPos.getZ() + 0.5, 0, 15, 0);
         }
     }
 

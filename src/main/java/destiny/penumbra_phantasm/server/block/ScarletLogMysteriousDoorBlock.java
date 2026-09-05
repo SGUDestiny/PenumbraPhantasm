@@ -40,9 +40,7 @@ public class ScarletLogMysteriousDoorBlock extends HorizontalDirectionalBlock {
 
 	public ScarletLogMysteriousDoorBlock(Properties properties) {
 		super(properties);
-		this.registerDefaultState(this.stateDefinition.any()
-				.setValue(FACING, Direction.NORTH)
-				.setValue(OPEN, false)
+		this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(OPEN, false)
 				.setValue(HALF, DoubleBlockHalf.LOWER));
 	}
 
@@ -71,8 +69,8 @@ public class ScarletLogMysteriousDoorBlock extends HorizontalDirectionalBlock {
 		}
 		boolean open = !state.getValue(OPEN);
 		setOpen(level, pos, state, open);
-		level.playSound(null, pos, open ? SoundEvents.CHERRY_WOOD_DOOR_OPEN : SoundEvents.CHERRY_WOOD_DOOR_CLOSE,
-				SoundSource.BLOCKS, 1f, 1f);
+
+		level.playSound(null, pos, open ? SoundEvents.CHERRY_WOOD_DOOR_OPEN : SoundEvents.CHERRY_WOOD_DOOR_CLOSE, SoundSource.BLOCKS, 1, 1);
 		return InteractionResult.CONSUME;
 	}
 
@@ -107,6 +105,7 @@ public class ScarletLogMysteriousDoorBlock extends HorizontalDirectionalBlock {
 		if (lowerState.getBlock() instanceof ScarletLogMysteriousDoorBlock) {
 			level.setBlock(lower, lowerState.setValue(OPEN, open), 3);
 		}
+
 		if (upperState.getBlock() instanceof ScarletLogMysteriousDoorBlock) {
 			level.setBlock(lower.above(), upperState.setValue(OPEN, open), 3);
 		}
@@ -121,9 +120,11 @@ public class ScarletLogMysteriousDoorBlock extends HorizontalDirectionalBlock {
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		BlockPos pos = context.getClickedPos();
 		Level level = context.getLevel();
+
 		if (pos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(pos.above()).canBeReplaced(context)) {
 			return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(OPEN, false).setValue(HALF, DoubleBlockHalf.LOWER);
 		}
+
 		return null;
 	}
 
@@ -136,10 +137,12 @@ public class ScarletLogMysteriousDoorBlock extends HorizontalDirectionalBlock {
 	public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
 		BlockPos other = state.getValue(HALF) == DoubleBlockHalf.LOWER ? pos.above() : pos.below();
 		BlockState otherState = level.getBlockState(other);
+
 		if (otherState.getBlock() instanceof ScarletLogMysteriousDoorBlock) {
 			level.setBlock(other, Blocks.AIR.defaultBlockState(), 35);
 			level.levelEvent(player, 2001, other, Block.getId(otherState));
 		}
+
 		super.playerWillDestroy(level, pos, state, player);
 	}
 

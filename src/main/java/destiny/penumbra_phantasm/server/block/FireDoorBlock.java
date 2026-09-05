@@ -81,8 +81,7 @@ public class FireDoorBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer,
-                                 InteractionHand pHand, BlockHitResult pHit) {
+    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (DarkWorldUtil.isDepths(pLevel)) {
             if (pPlayer instanceof ServerPlayer serverPlayer) {
                 PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
@@ -104,32 +103,32 @@ public class FireDoorBlock extends BaseEntityBlock {
             //Validate doors
             List<FireDoor> invalidDoors = new ArrayList<>();
             List<Map.Entry<FireDoor, FireDoor>> doorsToUpdate = new ArrayList<>();
-            for (FireDoor fireDoor : allDoors) {
-                if (!fireDoor.darkWorld().equals(currentDim)) continue;
+            for (FireDoor fireDoorEntry : allDoors) {
+                if (!fireDoorEntry.darkWorld().equals(currentDim)) continue;
 
-                BlockPos doorPos = fireDoor.doorPos();
+                BlockPos doorPos = fireDoorEntry.doorPos();
                 BlockState stateAtPos = pLevel.getBlockState(doorPos);
 
                 if (stateAtPos.getBlock() != this) {
-                    invalidDoors.add(fireDoor);
+                    invalidDoors.add(fireDoorEntry);
                     continue;
                 }
 
                 float currentYRot = stateAtPos.getValue(HORIZONTAL_FACING).toYRot();
 
                 Component currentName;
-                if (pLevel.getBlockEntity(doorPos) instanceof FireDoorBlockEntity be && be.hasCustomName()) {
-                    currentName = be.getCustomName();
+                if (pLevel.getBlockEntity(doorPos) instanceof FireDoorBlockEntity fireDoor && fireDoor.hasCustomName()) {
+                    currentName = fireDoor.getCustomName();
                 } else {
                     currentName = Component.translatable("block.penumbra_phantasm.fire_door");
                 }
 
-                boolean angleChanged = fireDoor.facingAngle() != currentYRot;
-                boolean nameChanged = !fireDoor.name().equals(currentName);
+                boolean angleChanged = fireDoorEntry.facingAngle() != currentYRot;
+                boolean nameChanged = !fireDoorEntry.name().equals(currentName);
 
                 if (angleChanged || nameChanged) {
-                    FireDoor updated = new FireDoor(fireDoor.darkWorld(), doorPos, currentYRot, currentName);
-                    doorsToUpdate.add(new AbstractMap.SimpleEntry<>(fireDoor, updated));
+                    FireDoor updated = new FireDoor(fireDoorEntry.darkWorld(), doorPos, currentYRot, currentName);
+                    doorsToUpdate.add(new AbstractMap.SimpleEntry<>(fireDoorEntry, updated));
                 }
             }
 
@@ -317,10 +316,9 @@ public class FireDoorBlock extends BaseEntityBlock {
         Level level = pContext.getLevel();
 
         if (pos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(pos.above()).canBeReplaced(pContext)) {
-            return this.defaultBlockState()
-                    .setValue(HORIZONTAL_FACING, pContext.getHorizontalDirection().getOpposite())
-                    .setValue(HALF, DoubleBlockHalf.LOWER);
+            return this.defaultBlockState().setValue(HORIZONTAL_FACING, pContext.getHorizontalDirection().getOpposite()).setValue(HALF, DoubleBlockHalf.LOWER);
         }
+
         return null;
     }
 
@@ -330,16 +328,15 @@ public class FireDoorBlock extends BaseEntityBlock {
 
         if (!level.isClientSide() && state.getValue(HALF) == DoubleBlockHalf.LOWER) {
             BlockPos upperPos = pos.above();
-            level.setBlock(upperPos, this.defaultBlockState()
-                    .setValue(HORIZONTAL_FACING, state.getValue(HORIZONTAL_FACING))
-                    .setValue(HALF, DoubleBlockHalf.UPPER)
+            level.setBlock(upperPos, this.defaultBlockState().setValue(HORIZONTAL_FACING, state.getValue(HORIZONTAL_FACING)).setValue(HALF, DoubleBlockHalf.UPPER)
                     .setValue(OPEN, false), Block.UPDATE_ALL);
         }
 
         if (stack.hasCustomHoverName()) {
             BlockPos lowerPos = state.getValue(HALF) == DoubleBlockHalf.UPPER ? pos.below() : pos;
-            if (level.getBlockEntity(lowerPos) instanceof FireDoorBlockEntity be) {
-                be.setCustomName(stack.getHoverName());
+
+            if (level.getBlockEntity(lowerPos) instanceof FireDoorBlockEntity fireDoor) {
+                fireDoor.setCustomName(stack.getHoverName());
             }
         }
     }
@@ -347,9 +344,11 @@ public class FireDoorBlock extends BaseEntityBlock {
     @Override
     public ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
         ItemStack stack = super.getCloneItemStack(level, pos, state);
-        if (level.getBlockEntity(pos) instanceof FireDoorBlockEntity be && be.getCustomName() != null) {
-            stack.setHoverName(be.getCustomName());
+
+        if (level.getBlockEntity(pos) instanceof FireDoorBlockEntity fireDoor && fireDoor.getCustomName() != null) {
+            stack.setHoverName(fireDoor.getCustomName());
         }
+
         return stack;
     }
 

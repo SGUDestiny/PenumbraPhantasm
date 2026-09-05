@@ -42,7 +42,8 @@ public class PureDarknessFluidType extends FluidType {
         if (entity.onGround()) {
             return 0.01;
         }
-        return 0.014D;
+
+        return 0.014;
     }
 
     public ResourceLocation getStillTexture() {
@@ -89,16 +90,16 @@ public class PureDarknessFluidType extends FluidType {
             }
 
             @Override
-            public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level,
-                                                    int renderDistance, float darkenWorldAmount, Vector3f fluidFogColor) {
+            public @NotNull Vector3f modifyFogColor(Camera camera, float partialTick, ClientLevel level, int renderDistance, float darkenWorldAmount,
+                                                    Vector3f fluidFogColor) {
                 return fogColor;
             }
 
             @Override
-            public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick,
-                                        float nearDistance, float farDistance, FogShape shape) {
-                RenderSystem.setShaderFogStart(1f);
-                RenderSystem.setShaderFogEnd(6f);
+            public void modifyFogRender(Camera camera, FogRenderer.FogMode mode, float renderDistance, float partialTick, float nearDistance, float farDistance,
+                                        FogShape shape) {
+                RenderSystem.setShaderFogStart(1);
+                RenderSystem.setShaderFogEnd(6);
             }
         });
     }

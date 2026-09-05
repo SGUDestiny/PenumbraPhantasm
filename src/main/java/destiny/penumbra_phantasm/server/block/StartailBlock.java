@@ -44,8 +44,7 @@ public class StartailBlock extends DoublePlantBlock implements SimpleWaterlogged
         LevelAccessor levelaccessor = pContext.getLevel();
         BlockPos blockpos = pContext.getClickedPos();
         Level level = pContext.getLevel();
-        boolean canPlace = blockpos.getY() < level.getMaxBuildHeight() - 1
-                && level.getBlockState(blockpos).getBlock() == BlockRegistry.LUMINESCENT_WATER.get()
+        boolean canPlace = blockpos.getY() < level.getMaxBuildHeight() - 1 && level.getBlockState(blockpos).getBlock() == BlockRegistry.LUMINESCENT_WATER.get()
                 && level.getBlockState(blockpos.above()).isAir();
 
         return canPlace ? this.defaultBlockState().setValue(WATERLOGGED, isLuminescentWater(levelaccessor.getFluidState(blockpos))) : null;

@@ -44,7 +44,7 @@ public class ScarletMarbleDiceBlockEntityRenderer implements BlockEntityRenderer
 
         Minecraft.getInstance().getBlockRenderer().getModelRenderer().renderModel(
                 poseStack.last(), vertexConsumer, state, model,
-                1.0f, 1.0f, 1.0f, packedLight, packedOverlay
+                1f, 1f, 1f, packedLight, packedOverlay
         );
 
         poseStack.popPose();

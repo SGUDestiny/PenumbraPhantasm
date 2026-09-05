@@ -33,18 +33,20 @@ public class DarknessBlock extends BaseEntityBlock {
     public static boolean getDoorOpenState(Level level, BlockPos doorPos, BlockState doorState) {
         if (!(doorState.getBlock() instanceof DoorBlock)) return false;
         if (doorState.getValue(DoorBlock.OPEN)) return true;
-        BlockPos otherHalf = doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER
-                ? doorPos.above()
-                : doorPos.below();
+
+        BlockPos otherHalf = doorState.getValue(DoorBlock.HALF) == DoubleBlockHalf.LOWER ? doorPos.above() : doorPos.below();
         BlockState other = level.getBlockState(otherHalf);
+
         return other.getBlock() instanceof DoorBlock && other.getValue(DoorBlock.OPEN);
     }
 
     public static boolean isDoorVisuallyOpenFromSide(Level level, BlockPos doorPos, BlockState doorState, Direction fromDoorToRoom) {
         if (!(doorState.getBlock() instanceof DoorBlock)) return false;
+
         boolean open = getDoorOpenState(level, doorPos, doorState);
         Direction facing = doorState.getValue(DoorBlock.FACING);
         boolean facingParallelToRoom = facing.getAxis() == fromDoorToRoom.getAxis();
+
         return facingParallelToRoom ? open : !open;
     }
 

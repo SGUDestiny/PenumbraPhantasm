@@ -22,6 +22,12 @@
     "penumbra_phantasm:dark_candy_trapdoor",
     "penumbra_phantasm:dark_candy_button",
     "penumbra_phantasm:dark_candy_pressure_plate",
-    "penumbra_phantasm:dark_candy_crafting_table"
+    "penumbra_phantasm:dark_candy_crafting_table",
+    "penumbra_phantasm:stripped_scarlet_log",
+    "penumbra_phantasm:stripped_dark_candy_log",
+    "penumbra_phantasm:scarlet_wood",
+    "penumbra_phantasm:dark_candy_wood",
+    "penumbra_phantasm:stripped_scarlet_wood",
+    "penumbra_phantasm:stripped_dark_candy_wood"
   ]
 }

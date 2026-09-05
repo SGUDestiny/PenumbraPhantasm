@@ -46,33 +46,21 @@ public class CommonEvents {
     private static final Map<ResourceKey<Level>, Set<ChunkPos>> pendingGreatDoorSpawnerChunks = new HashMap<>();
     private static final int GREAT_DOOR_SPAWNER_CHUNK_DRAIN_PER_TICK = 20;
 
-    private static void rescuePlayerIfStrandedDarkWorldWithoutFountain(ServerPlayer player) {
-        if (player.level().isClientSide) {
-            return;
-        }
-        if (!(player.level() instanceof ServerLevel level)) {
-            return;
-        }
-        if (!DarkWorldUtil.isDarkWorld(level)) {
-            return;
-        }
-        if (CardKingdomEggRoomUtil.isEggRoom(level)) {
-            return;
-        }
-        if (DarkWorldUtil.isDepths(level)) {
-            return;
-        }
+    private static void bootPlayerFromDarkWorldsWithoutFountain(ServerPlayer player) {
+        if (player.level().isClientSide) return;
+        if (!(player.level() instanceof ServerLevel level)) return;
+        if (!DarkWorldUtil.isDarkWorld(level)) return;
+        if (CardKingdomEggRoomUtil.isEggRoom(level)) return;
+        if (DarkWorldUtil.isDepths(level)) return;
+
         boolean noFountain = !DarkWorldUtil.levelHasDarkFountain(level);
-        if (!noFountain) {
-            return;
-        }
-        if (player.getServer() == null) {
-            return;
-        }
+        if (!noFountain) return;
+        if (player.getServer() == null) return;
+
         ServerLevel overworld = player.getServer().overworld();
         BlockPos spawnPos = overworld.getSharedSpawnPos();
 
-        player.teleportTo(overworld, spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, overworld.getSharedSpawnAngle(), 0f);
+        player.teleportTo(overworld, spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, overworld.getSharedSpawnAngle(), 0);
 
         player.displayClientMessage(Component.translatable("message.penumbra_phantasm.dark_world_without_fountain"), true);
     }
@@ -86,18 +74,22 @@ public class CommonEvents {
         if (set == null || set.isEmpty()) {
             return;
         }
+
         int budget = GREAT_DOOR_SPAWNER_CHUNK_DRAIN_PER_TICK;
         ArrayList<ChunkPos> batch = new ArrayList<>(Math.min(budget, set.size()));
-        Iterator<ChunkPos> it = set.iterator();
-        while (budget > 0 && it.hasNext()) {
-            batch.add(it.next());
-            it.remove();
+
+        Iterator<ChunkPos> iterator = set.iterator();
+        while (budget > 0 && iterator.hasNext()) {
+            batch.add(iterator.next());
+            iterator.remove();
             budget--;
         }
+
         for (ChunkPos pos : batch) {
             ChunkAccess chunk = level.getChunkSource().getChunkNow(pos.x, pos.z);
+
             if (chunk != null) {
-                DarkWorldUtil.convertGreatDoorSpawnersInChunk(level, chunk);
+                DarkWorldUtil.convertGreatDoorSpawnerInChunk(level, chunk);
             }
         }
     }
@@ -107,9 +99,11 @@ public class CommonEvents {
         if (!(event.getLevel() instanceof ServerLevel serverLevel)) {
             return;
         }
+
         if (!DarkWorldUtil.isDarkWorld(serverLevel)) {
             return;
         }
+
         enqueueGreatDoorSpawnerChunkCheck(serverLevel, event.getChunk().getPos());
     }
 
@@ -208,17 +202,16 @@ public class CommonEvents {
                 for (DarkFountain fountain : new ArrayList<>(cap.darkFountains.values())) {
                     fountain.tick(level);
                 }
-                if (level instanceof ServerLevel serverLevel && !DarkWorldUtil.isDarkWorld(serverLevel)) {
-                    //DarkFountain.resolveCrossFountainRoomDisputes(cap);
-                }
             });
 
             if (level instanceof ServerLevel serverLevel) {
                 DepthsSkyLightning.tick(serverLevel);
                 CardKingdomEggRoomManager.tickPendingDoors(serverLevel);
+
                 level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
                     for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
                         ChunkPos doorChunk = new ChunkPos(greatDoor.greatDoorPos);
+
                         if (serverLevel.getChunkSource().getChunkNow(doorChunk.x, doorChunk.z) != null) {
                             greatDoor.tick(level);
                         }
@@ -229,11 +222,10 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void deathEvent(LivingDeathEvent event)
-    {
+    public void deathEvent(LivingDeathEvent event) {
         LivingEntity living = event.getEntity();
-        if(living instanceof ServerPlayer serverPlayer)
-        {
+
+        if(living instanceof ServerPlayer serverPlayer) {
             serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
 				cap.diedWithSoulHearth = SoulCapability.hasOwnSoulHearth(serverPlayer);
 
@@ -244,51 +236,36 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void cloneEvent(PlayerEvent.Clone event)
-    {
+    public void cloneEvent(PlayerEvent.Clone event) {
         Player original = event.getOriginal();
         Player player = event.getEntity();
 
         original.reviveCaps();
 
-        original.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
-            player.getCapability(CapabilityRegistry.SOUL).ifPresent(copyCap -> {
-                copyCap.sync(cap);
-            });
-        });
+        original.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> player.getCapability(CapabilityRegistry.SOUL)
+                .ifPresent(copyCap -> copyCap.sync(cap)));
 
-        original.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
-            player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(copyCap -> {
-                copyCap.sync(cap);
-            });
-        });
+        original.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap ->
+                player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(copyCap -> copyCap.sync(cap)));
 
-        original.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(oldInv -> {
-            player.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(newInv -> {
-                newInv.deserializeNBT(oldInv.serializeNBT());
-            });
-        });
+        original.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(oldInv ->
+                player.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(newInv -> newInv.deserializeNBT(oldInv.serializeNBT())));
 
-        original.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(cap -> {
-            player.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(copyCap -> {
-                copyCap.sync(cap);
-            });
-        });
+        original.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(cap ->
+                player.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(copyCap -> copyCap.sync(cap)));
 
         original.invalidateCaps();
 
-        if(event.getEntity() instanceof ServerPlayer serverPlayer)
-        {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer) {
             Level level = serverPlayer.level();
             ResourceKey<Level> sourceDim = original.level().dimension();
             ResourceKey<Level> targetDim = serverPlayer.level().dimension();
 
-            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
-                return;
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem)) return;
 
-            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
-            {
+            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim)) {
                 StorageData data = StorageData.get(level);
+
                 data.getInventory(serverPlayer.getUUID()).swap(serverPlayer);
                 data.setDirty();
             }
@@ -299,23 +276,22 @@ public class CommonEvents {
     public void playerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             ChangedDimensionContainsTrigger.INSTANCE.trigger(serverPlayer, event.getFrom(), event.getTo());
+
             if (CardKingdomEggRoomUtil.isEggRoomKey(event.getTo())) {
                 CardKingdomEggRoomManager.onChangedToEggRoom(serverPlayer);
             }
         }
 
-        if(event.getEntity() instanceof ServerPlayer serverPlayer)
-        {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer) {
             Level level = serverPlayer.level();
             ResourceKey<Level> sourceDim = event.getFrom();
             ResourceKey<Level> targetDim = event.getTo();
 
-            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
-                return;
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem)) return;
 
-            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
-            {
+            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim)) {
                 StorageData data = StorageData.get(level);
+
                 data.getInventory(serverPlayer.getUUID()).swap(serverPlayer, true, true);
                 data.setDirty();
             }
@@ -323,20 +299,17 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void entityChangedDimension(EntityTravelToDimensionEvent event)
-    {
-        if(event.getEntity() instanceof ServerPlayer serverPlayer)
-        {
+    public void entityChangedDimension(EntityTravelToDimensionEvent event) {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer) {
             Level level = serverPlayer.level();
             ResourceKey<Level> sourceDim = serverPlayer.level().dimension();
             ResourceKey<Level> targetDim = event.getDimension();
 
-            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
-                return;
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem)) return;
 
-            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
-            {
+            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim)) {
                 StorageData data = StorageData.get(level);
+
                 data.getInventory(serverPlayer.getUUID()).swap(serverPlayer, true, false);
                 data.setDirty();
             }
@@ -347,10 +320,12 @@ public class CommonEvents {
     @SubscribeEvent
     public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            rescuePlayerIfStrandedDarkWorldWithoutFountain(serverPlayer);
+            bootPlayerFromDarkWorldsWithoutFountain(serverPlayer);
+
             if (CardKingdomEggRoomUtil.isEggRoom(serverPlayer.level())) {
                 CardKingdomEggRoomManager.onChangedToEggRoom(serverPlayer);
             }
+
             if (ServerConfig.skipIntroScreen) {
                 serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
                     if (!cap.seenIntro) {
@@ -372,7 +347,7 @@ public class CommonEvents {
     @SubscribeEvent
     public void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
-            rescuePlayerIfStrandedDarkWorldWithoutFountain(serverPlayer);
+            bootPlayerFromDarkWorldsWithoutFountain(serverPlayer);
         }
     }
 
@@ -381,7 +356,7 @@ public class CommonEvents {
         if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof ServerPlayer player) {
             event.player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> cap.tick(event.player.level(), player));
             event.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.tick(event.player.level(), player));
-            rescuePlayerIfStrandedDarkWorldWithoutFountain(player);
+            bootPlayerFromDarkWorldsWithoutFountain(player);
             CardKingdomEggRoomManager.tickPlayer(player);
         }
     }

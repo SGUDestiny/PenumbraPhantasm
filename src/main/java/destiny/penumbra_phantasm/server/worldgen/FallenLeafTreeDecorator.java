@@ -20,16 +20,16 @@ import static destiny.penumbra_phantasm.server.block.FallenLeafBlock.LEAVES;
 
 public class FallenLeafTreeDecorator extends TreeDecorator {
     public static final Codec<FallenLeafTreeDecorator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BlockState.CODEC.fieldOf("leaf_block").forGetter(d -> d.fallenLeafBlock),
-            Codec.floatRange(0.0F, 1.0F).fieldOf("probability").forGetter(d -> d.probability)
+            BlockState.CODEC.fieldOf("leaf_block").forGetter(decorator -> decorator.fallenLeafBlock),
+            Codec.floatRange(0, 1).fieldOf("chance").forGetter(decorator -> decorator.chance)
     ).apply(instance, FallenLeafTreeDecorator::new));
 
     private final BlockState fallenLeafBlock;
-    private final float probability;
+    private final float chance;
 
-    public FallenLeafTreeDecorator(BlockState fallenLeafBlock, float probability) {
+    public FallenLeafTreeDecorator(BlockState fallenLeafBlock, float chance) {
         this.fallenLeafBlock = fallenLeafBlock;
-        this.probability = probability;
+        this.chance = chance;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class FallenLeafTreeDecorator extends TreeDecorator {
         Set<BlockPos> placedGroundPositions = new HashSet<>();
 
         for (BlockPos leafPos : leaves) {
-            if (random.nextFloat() >= probability) continue;
+            if (random.nextFloat() >= chance) continue;
 
             BlockPos groundPos = findGroundUnderLeaf(context, leafPos);
             if (groundPos == null) continue;
@@ -68,11 +68,11 @@ public class FallenLeafTreeDecorator extends TreeDecorator {
             BlockPos currentPos = mutablePos.immutable();
 
             if (level.isStateAtPosition(currentPos, BlockBehaviour.BlockStateBase::isSolid)
-                    && !level.isStateAtPosition(currentPos, BlockBehaviour.BlockStateBase::canBeReplaced)
-                    && !context.isAir(currentPos)) {
+                    && !level.isStateAtPosition(currentPos, BlockBehaviour.BlockStateBase::canBeReplaced) && !context.isAir(currentPos)) {
                 return currentPos;
             }
         }
+
         return null;
     }
 }

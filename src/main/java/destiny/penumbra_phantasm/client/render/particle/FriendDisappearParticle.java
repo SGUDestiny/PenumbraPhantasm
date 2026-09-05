@@ -11,7 +11,7 @@ public class FriendDisappearParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
     public FriendDisappearParticle(ClientLevel level, double x, double y, double z, SpriteSet sprite, double xSpeed, double ySpeed, double zSpeed) {
-        super(level, x, y, z, 0.0D, 0.0D, 0.0D);
+        super(level, x, y, z, 0, 0, 0);
         this.sprites = sprite;
         this.friction = 1f;
         this.lifetime = 20;
@@ -27,8 +27,7 @@ public class FriendDisappearParticle extends TextureSheetParticle {
         this.setSpriteFromAge(this.sprites);
 
         if (this.age == 1) {
-            level.playLocalSound(x, y, z, SoundRegistry.CHESHIRE_CHEST_LAUGH.get(),
-                    SoundSource.AMBIENT, 0.25f, 1f, false);
+            level.playLocalSound(x, y, z, SoundRegistry.CHESHIRE_CHEST_LAUGH.get(), SoundSource.AMBIENT, 0.25f, 1f, false);
         }
         if (this.age++ >= this.lifetime) {
             this.remove();

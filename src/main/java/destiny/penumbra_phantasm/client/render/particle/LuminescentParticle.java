@@ -12,7 +12,7 @@ public class LuminescentParticle extends TextureSheetParticle {
     private final float rollOffset;
 
     public LuminescentParticle(ClientLevel level, double x, double y, double z, SpriteSet sprite, double xSpeed, double ySpeed, double zSpeed) {
-        super(level, x, y, z, 0.0D, 0.0D, 0.0D);
+        super(level, x, y, z, 0, 0, 0);
         this.sprites = sprite;
         this.friction = 1f;
         this.lifetime = 70 + level.random.nextInt(-5, 10);
@@ -33,6 +33,7 @@ public class LuminescentParticle extends TextureSheetParticle {
         this.yo = this.y;
         this.zo = this.z;
         this.oRoll = this.roll;
+
         if (this.age++ >= this.lifetime) {
             this.remove();
         } else {
@@ -40,6 +41,7 @@ public class LuminescentParticle extends TextureSheetParticle {
             this.setSprite(sprites.get(sprite, 3));
             this.move(0, this.yd, 0);
             this.quadSize -= 0.2f / this.lifetime;
+
             if (this.rollDirection) {
                 this.roll += (1.5f + this.rollOffset) / this.lifetime;
             } else {

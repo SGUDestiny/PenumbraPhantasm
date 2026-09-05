@@ -14,7 +14,7 @@ public class FountainTargetParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
     public FountainTargetParticle(ClientLevel level, double x, double y, double z, SpriteSet sprite, double xSpeed, double ySpeed, double zSpeed) {
-        super(level, x, y, z, 0.0D, 0.0D, 0.0D);
+        super(level, x, y, z, 0, 0, 0);
         this.sprites = sprite;
         this.friction = 1f;
         this.lifetime = 4;

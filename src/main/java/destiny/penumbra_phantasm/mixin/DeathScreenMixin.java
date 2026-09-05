@@ -1,6 +1,5 @@
 package destiny.penumbra_phantasm.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
@@ -49,8 +48,8 @@ public class DeathScreenMixin
 	private Vec2 soulShardPos5 = new Vec2(0, 0);
 	private Vec2 soulShardVel5 = new Vec2(0, 0);
 
-	private final float gravity = 0.4f; // Adjustable gravity (pixels per tick squared, positive for downward)
-	private final float horizontalFriction = 0.95f; // Adjustable friction multiplier per tick (less than 1 to decay horizontal velocity)
+	private final float gravity = 0.4f;
+	private final float horizontalFriction = 0.95f;
 
 	private final Minecraft minecraft = Minecraft.getInstance();
 

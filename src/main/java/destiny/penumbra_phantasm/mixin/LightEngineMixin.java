@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class LightEngineMixin {
     @Shadow
     @Final
-    private LightChunkGetter chunkSource;
+    protected LightChunkGetter chunkSource;
 
     @Inject(method = "getLightValue(Lnet/minecraft/core/BlockPos;)I", at = @At("RETURN"), cancellable = true)
     private void penumbraPhantasm$soulHearthLightValue(BlockPos pos, CallbackInfoReturnable<Integer> cir) {

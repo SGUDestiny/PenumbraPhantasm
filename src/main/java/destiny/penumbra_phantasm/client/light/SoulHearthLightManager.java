@@ -37,10 +37,13 @@ public final class SoulHearthLightManager {
 
     public static void unregister(Player player) {
         if (!player.level().isClientSide) return;
+
         SourceState previousState = SOURCE_STATES.remove(player);
         LAST_UPDATE_TICK.remove(player);
+
         if (previousState != null) {
             BlockPos pos = previousState.pos();
+
             removeFromPosMap(pos, player);
             checkLightRemoval(player.level(), pos);
         }
@@ -68,6 +71,7 @@ public final class SoulHearthLightManager {
             if (previousState != null) {
                 SOURCE_STATES.remove(player);
                 LAST_UPDATE_TICK.remove(player);
+
                 removeFromPosMap(previousState.pos(), player);
                 checkLightRemoval(player.level(), previousState.pos());
             }
@@ -78,23 +82,29 @@ public final class SoulHearthLightManager {
 
         if (previousState == null) {
             SOURCE_STATES.put(player, currentState);
+
             addToPosMap(currentPos, player);
             checkLightSource(player.level(), currentPos);
+
             return;
         }
 
         if (!previousState.pos().equals(currentPos)) {
             SOURCE_STATES.put(player, currentState);
+
             removeFromPosMap(previousState.pos(), player);
             addToPosMap(currentPos, player);
             checkLightRemoval(player.level(), previousState.pos());
             checkLightSource(player.level(), currentPos);
+
             return;
         }
 
         if (previousState.lightLevel() != currentLight) {
             SOURCE_STATES.put(player, currentState);
+
             checkLightSource(player.level(), currentPos);
+
             return;
         }
 
@@ -103,20 +113,25 @@ public final class SoulHearthLightManager {
 
     public static int getBlockLightContribution(Level level, BlockPos pos) {
         if (!level.isClientSide) return 0;
+
         Set<Player> sources = POS_TO_SOURCES.get(pos);
+
         if (sources == null) return 0;
 
         int maxLight = 0;
         for (Player source : sources) {
-            if (!source.isAlive() || source.level() != level) continue;
+            if (!source.isAlive() || source.level() != level || source.isSpectator()) continue;
             if (!SOURCE_STATES.containsKey(source)) continue;
+
             maxLight = Math.max(maxLight, getPlayerLightLevel(source));
         }
+
         return maxLight;
     }
 
     public static void scheduleRecheckSavedBlockLight(Level level, LevelChunk chunk) {
         if (!level.isClientSide) return;
+
         long chunkKey = chunk.getPos().toLong();
         Minecraft.getInstance().execute(() -> recheckSavedBlockLight(level, chunkKey));
     }
@@ -129,21 +144,24 @@ public final class SoulHearthLightManager {
 
     public static void purgeMissingPlayers(Level level) {
         if (!level.isClientSide) return;
+
         List<Player> toRemove = new ArrayList<>();
         for (Player player : SOURCE_STATES.keySet()) {
-            if (!player.isAlive() || player.level() != level || !level.players().contains(player)) {
+            if (!player.isAlive() || player.level() != level || !level.players().contains(player) || player.isSpectator()) {
                 toRemove.add(player);
             }
         }
+
         for (Player player : toRemove) {
             unregister(player);
         }
     }
 
     private static int getPlayerLightLevel(Player player) {
-        if (!player.isAlive() || player.isRemoved() || !SoulHearthItem.isHoldingOwn(player)) {
+        if (!player.isAlive() || player.isRemoved() || !SoulHearthItem.isHoldingOwn(player) || player.isSpectator()) {
             return 0;
         }
+
         return LIGHT_LEVEL;
     }
 
@@ -153,6 +171,7 @@ public final class SoulHearthLightManager {
         int chunkX = ChunkPos.getX(chunkKey);
         int chunkZ = ChunkPos.getZ(chunkKey);
         LevelChunk chunk = level.getChunkSource().getChunkNow(chunkX, chunkZ);
+
         if (chunk == null || level != chunk.getLevel()) return;
 
         int minY = Integer.MAX_VALUE;
@@ -166,15 +185,18 @@ public final class SoulHearthLightManager {
 
         for (Map.Entry<Player, SourceState> entry : SOURCE_STATES.entrySet()) {
             Player source = entry.getKey();
-            if (!source.isAlive() || source.level() != level) continue;
+
+            if (!source.isAlive() || source.level() != level || source.isSpectator()) continue;
+
             BlockPos pos = entry.getValue().pos();
-            if (pos.getX() < minX - LIGHT_RADIUS || pos.getX() > maxX + LIGHT_RADIUS
-                    || pos.getZ() < minZ - LIGHT_RADIUS || pos.getZ() > maxZ + LIGHT_RADIUS) {
+            if (pos.getX() < minX - LIGHT_RADIUS || pos.getX() > maxX + LIGHT_RADIUS || pos.getZ() < minZ - LIGHT_RADIUS || pos.getZ() > maxZ + LIGHT_RADIUS) {
                 continue;
             }
+
             anySource = true;
             minY = Math.min(minY, pos.getY() - LIGHT_RADIUS);
             maxY = Math.max(maxY, pos.getY() + LIGHT_RADIUS);
+
             checkLightSource(level, pos);
         }
 
@@ -188,8 +210,10 @@ public final class SoulHearthLightManager {
             for (int z = 0; z < 16; z++) {
                 for (int y = minY; y <= maxY; y++) {
                     pos.set(minX + x, y, minZ + z);
+
                     if (level.getBrightness(LightLayer.BLOCK, pos) <= 0) continue;
                     if (level.getBlockState(pos).getLightEmission(level, pos) > 0) continue;
+
                     level.getLightEngine().checkBlock(pos);
                 }
             }
@@ -204,12 +228,14 @@ public final class SoulHearthLightManager {
         Set<Player> set = POS_TO_SOURCES.get(pos);
         if (set != null) {
             set.remove(player);
+
             if (set.isEmpty()) POS_TO_SOURCES.remove(pos);
         }
     }
 
     private static void checkLightSource(Level level, BlockPos pos) {
         level.getLightEngine().checkBlock(pos);
+
         for (Direction direction : Direction.values()) {
             level.getLightEngine().checkBlock(MUTABLE_POS.set(pos).move(direction));
         }
@@ -221,6 +247,7 @@ public final class SoulHearthLightManager {
             for (int y = -LIGHT_RADIUS; y <= LIGHT_RADIUS; y++) {
                 for (int z = -LIGHT_RADIUS; z <= LIGHT_RADIUS; z++) {
                     if (x * x + y * y + z * z > radiusSqr) continue;
+
                     MUTABLE_POS.set(pos).move(x, y, z);
                     level.getLightEngine().checkBlock(MUTABLE_POS);
                 }

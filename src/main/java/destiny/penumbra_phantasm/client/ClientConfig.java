@@ -57,9 +57,8 @@ public class ClientConfig {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
-        if (event.getConfig().getSpec() != SPEC) {
-            return;
-        }
+        if (event.getConfig().getSpec() != SPEC) return;
+
         fountainMakingPosterization = FOUNTAIN_MAKING_POSTERIZATION.get();
         fountainProximityRainbow = FOUNTAIN_PROXIMITY_RAINBOW.get();
         always_show_location_titles = ALWAYS_SHOW_LOCATION_TITLES.get();

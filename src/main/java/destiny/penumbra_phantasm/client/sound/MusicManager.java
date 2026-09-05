@@ -66,18 +66,18 @@ public class MusicManager {
         if (initialized && biomeMusicMap.isEmpty() && minecraft.level != null) {
             initialized = false;
         }
-        if (!initialized)
-        {
-            if(minecraft.level != null)
-            {
+
+        if (!initialized) {
+            if(minecraft.level != null) {
                 biomeMusicMap.clear();
+
                 RegistryAccess access = minecraft.level.registryAccess();
                 Registry<BiomeMusicType> registry = access.registryOrThrow(BiomeMusicType.REGISTRY_KEY);
-                for(Map.Entry<ResourceKey<BiomeMusicType>, BiomeMusicType> entry : registry.entrySet())
-                {
+                for(Map.Entry<ResourceKey<BiomeMusicType>, BiomeMusicType> entry : registry.entrySet()) {
                     BiomeMusicType type = entry.getValue();
                     SoundEvent event = SoundEvent.createVariableRangeEvent(type.sound());
                     BiomeMusic music = new BiomeMusic(() -> event, type.looping(), type.minDelay(), type.maxDelay());
+
                     biomeMusicMap.put(type.biome(), music);
                 }
                 initialized = true;
@@ -90,14 +90,16 @@ public class MusicManager {
 
         LocalPlayer player = minecraft.player;
         ClientLevel level = minecraft.level;
+
         if (level == null) {
             lastDimension = null;
             stopImmediately();
+
             return;
         }
-        if (player == null) {
-            return;
-        }
+
+        if (player == null) return;
+
 
         if (lastDimension == null || !lastDimension.equals(level.dimension())) {
             lastDimension = level.dimension();
@@ -125,7 +127,7 @@ public class MusicManager {
         }
 
         float musicSlider = minecraft.options.getSoundSourceVolume(SoundSource.MUSIC);
-        boolean musicUnmuted = !Float.isNaN(lastMusicSlider) && lastMusicSlider <= 1.0E-4F && musicSlider > 1.0E-4F;
+        boolean musicUnmuted = !Float.isNaN(lastMusicSlider) && lastMusicSlider <= 1.0e-4f && musicSlider > 1.0e-4f;
         lastMusicSlider = musicSlider;
 
         if (currentSound == null && (state == State.PLAYING || state == State.FADING_IN || state == State.FADING_OUT)) {
@@ -133,23 +135,21 @@ public class MusicManager {
             fadeInTicks = 0;
         }
 
-        if (currentSound != null && state != State.SILENT && state != State.WAITING
-                && !minecraft.getSoundManager().isActive(currentSound)
+        if (currentSound != null && state != State.SILENT && state != State.WAITING && !minecraft.getSoundManager().isActive(currentSound)
                 && !(state == State.FADING_IN && fadeInTicks <= 10)) {
             if (!currentSound.isStopped()) {
                 currentSound.stopSound();
                 minecraft.getSoundManager().stop(currentSound);
             }
-            if (state == State.PLAYING && currentSoundEvent != null
-                    && scheduleBiomeWaitIfApplicable(currentSoundEvent)) {
-                fadeInTicks = 0;
-            } else {
+
+            if (state != State.PLAYING || currentSoundEvent == null || !scheduleBiomeWaitIfApplicable(currentSoundEvent)) {
                 currentSound = null;
                 currentSoundEvent = null;
                 pendingSoundEvent = null;
                 state = State.SILENT;
-                fadeInTicks = 0;
             }
+
+            fadeInTicks = 0;
         }
 
         SoundEvent desiredSound = null;
@@ -184,9 +184,7 @@ public class MusicManager {
             return;
         }
 
-        if (musicUnmuted && desiredSound.equals(currentSoundEvent)
-                && desiredPriority == currentPriority
-                && (state == State.PLAYING || state == State.FADING_IN)) {
+        if (musicUnmuted && desiredSound.equals(currentSoundEvent) && desiredPriority == currentPriority && (state == State.PLAYING || state == State.FADING_IN)) {
             startTrack(desiredSound, desiredPriority, desiredLooping);
             tickFade();
             return;
@@ -209,6 +207,7 @@ public class MusicManager {
                 pendingSoundEvent = desiredSound;
                 pendingPriority = desiredPriority;
                 pendingLooping = desiredLooping;
+
                 beginFadeOut();
             } else if (state == State.FADING_OUT) {
                 pendingSoundEvent = desiredSound;
@@ -227,6 +226,7 @@ public class MusicManager {
             pendingSoundEvent = sound;
             pendingPriority = priority;
             pendingLooping = looping;
+
             if (state == State.PLAYING || state == State.FADING_IN) {
                 beginFadeOut();
             } else if (state == State.SILENT || state == State.WAITING) {
@@ -238,6 +238,7 @@ public class MusicManager {
     public void stopMusic(MusicPriority priority) {
         if (currentPriority == priority && state != State.SILENT) {
             pendingSoundEvent = null;
+
             beginFadeOut();
         }
     }
@@ -246,13 +247,14 @@ public class MusicManager {
         if (currentSound == null) return;
 
         if (currentSound.isStopped()) {
-            if (state == State.PLAYING && currentSoundEvent != null
-                    && scheduleBiomeWaitIfApplicable(currentSoundEvent)) {
+            if (state == State.PLAYING && currentSoundEvent != null && scheduleBiomeWaitIfApplicable(currentSoundEvent)) {
                 return;
             }
+
             state = State.SILENT;
             currentSound = null;
             currentSoundEvent = null;
+
             checkPendingMusic();
             return;
         }
@@ -263,18 +265,20 @@ public class MusicManager {
             currentSound = null;
             currentSoundEvent = null;
             state = State.SILENT;
+
             checkPendingMusic();
             return;
         }
 
         if (state == State.FADING_IN) {
             fadeInTicks++;
+
             if (fadeInTicks > 10 && !minecraft.getSoundManager().isActive(currentSound)) {
                 startTrack(currentSoundEvent, currentPriority, currentLooping);
                 return;
             }
-            if (currentSound.getTargetVolume() > 0
-                    && currentSound.getLinearVolume() >= currentSound.getTargetVolume() - 0.005F) {
+
+            if (currentSound.getTargetVolume() > 0 && currentSound.getLinearVolume() >= currentSound.getTargetVolume() - 0.005f) {
                 state = State.PLAYING;
             }
         }
@@ -322,6 +326,7 @@ public class MusicManager {
             MusicPriority priority = pendingPriority;
             boolean looping = pendingLooping;
             pendingSoundEvent = null;
+
             startTrack(sound, priority, looping);
         }
     }
@@ -331,6 +336,7 @@ public class MusicManager {
             currentSound.stopSound();
             minecraft.getSoundManager().stop(currentSound);
         }
+
         currentSound = null;
         currentSoundEvent = null;
         state = State.SILENT;
@@ -341,11 +347,11 @@ public class MusicManager {
     @Nullable
     private BiomeMusic biomeMusic(LocalPlayer player, ClientLevel level) {
         Holder<Biome> biomeHolder = level.getBiome(player.blockPosition());
-        ResourceLocation biomeId = biomeHolder.unwrapKey()
-                .map(ResourceKey::location)
-                .orElse(null);
+        ResourceLocation biomeId = biomeHolder.unwrapKey().map(ResourceKey::location).orElse(null);
+
         if (biomeId == null)
             return null;
+
         return biomeMusicMap.get(biomeId);
     }
 
@@ -390,6 +396,7 @@ public class MusicManager {
                 return SoundAccess.getFountainMusic();
             }
         }
+
         return null;
     }
 
@@ -403,12 +410,15 @@ public class MusicManager {
 
     private boolean scheduleBiomeWaitIfApplicable(SoundEvent sound) {
         BiomeMusic bm = findBiomeMusic(sound);
+
         if (bm == null || bm.looping()) {
             return false;
         }
+
         state = State.WAITING;
         waitTimer = bm.minDelay() + random.nextInt(Math.max(1, bm.maxDelay() - bm.minDelay()));
         currentSound = null;
+
         return true;
     }
 

@@ -46,7 +46,7 @@ public class DarkWorldCycleButton<T> extends AbstractButton {
     private int index;
     private T value;
     private final ValueListSupplier<T> values;
-    private final Function<T, Component> valueStringifier;         // uppercased wrapper
+    private final Function<T, Component> valueStringifier;
     private final Function<DarkWorldCycleButton<T>, MutableComponent> narrationProvider;
     private final OnValueChange<T> onValueChange;
     private final boolean displayOnlyValue;
@@ -209,29 +209,21 @@ public class DarkWorldCycleButton<T> extends AbstractButton {
             glow = 0;
         }
 
-        guiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
+        guiGraphics.setColor(1, 1, 1, this.alpha);
         RenderSystem.enableBlend();
         RenderSystem.enableDepthTest();
-        guiGraphics.blitNineSliced(texture,
-                this.getX(), this.getY(),
-                this.getWidth(), this.getHeight(),
-                borderX, borderY,
-                textureWidth, stateHeight,
+        guiGraphics.blitNineSliced(texture, this.getX(), this.getY(), this.getWidth(), this.getHeight(), borderX, borderY, textureWidth, stateHeight,
                 getTextureU(), getTextureV());
 
         if (isHoveredOrFocused()) {
             guiGraphics.setColor(glow, glow, glow, this.alpha);
-            guiGraphics.blitNineSliced(DEFAULT_TEXTURE_GLOW,
-                    this.getX(), this.getY(),
-                    this.getWidth(), this.getHeight(),
-                    borderX, borderY,
-                    textureWidth, stateHeight,
+            guiGraphics.blitNineSliced(DEFAULT_TEXTURE_GLOW, this.getX(), this.getY(), this.getWidth(), this.getHeight(), borderX, borderY, textureWidth, stateHeight,
                     getTextureU(), getTextureV());
         }
 
-        guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+        guiGraphics.setColor(1, 1, 1, 1);
         int color = this.getFGColor();
-        this.renderString(guiGraphics, minecraft.font, color | Mth.ceil(this.alpha * 255.0F) << 24);
+        this.renderString(guiGraphics, minecraft.font, color | Mth.ceil(this.alpha * 255) << 24);
     }
 
     @Override
@@ -364,16 +356,9 @@ public class DarkWorldCycleButton<T> extends AbstractButton {
 
             Component message = this.displayOnlyValue ? initialLabel : CommonComponents.optionNameValue(name, initialLabel);
 
-            return new DarkWorldCycleButton<>(x, y, width, height, message, name,
-                    this.initialIndex, initial,
-                    this.values, this.valueStringifier,
-                    this.narrationProvider, onValueChange,
-                    this.tooltipSupplier, this.displayOnlyValue,
-
-                    this.texture, this.textureX, this.textureY,
-                    this.textureWidth, this.textureHeight,
-                    this.stateHeight, this.stateCount,
-                    this.borderX, this.borderY
+            return new DarkWorldCycleButton<>(x, y, width, height, message, name, this.initialIndex, initial, this.values, this.valueStringifier,
+                    this.narrationProvider, onValueChange, this.tooltipSupplier, this.displayOnlyValue, this.texture, this.textureX, this.textureY,
+                    this.textureWidth, this.textureHeight, this.stateHeight, this.stateCount, this.borderX, this.borderY
             );
         }
     }
@@ -385,19 +370,26 @@ public class DarkWorldCycleButton<T> extends AbstractButton {
 
         static <T> ValueListSupplier<T> create(Collection<T> values) {
             final List<T> list = ImmutableList.copyOf(values);
-            return new ValueListSupplier<T>() {
-                public List<T> getSelectedList() { return list; }
-                public List<T> getDefaultList() { return list; }
+
+            return new ValueListSupplier<>() {
+                public List<T> getSelectedList() {
+                    return list;
+                }
+
+                public List<T> getDefaultList() {
+                    return list;
+                }
             };
         }
 
         static <T> ValueListSupplier<T> create(final BooleanSupplier altListSelector, List<T> defaultList, List<T> selectedList) {
             final List<T> def = ImmutableList.copyOf(defaultList);
             final List<T> sel = ImmutableList.copyOf(selectedList);
-            return new ValueListSupplier<T>() {
+            return new ValueListSupplier<>() {
                 public List<T> getSelectedList() {
                     return altListSelector.getAsBoolean() ? sel : def;
                 }
+
                 public List<T> getDefaultList() {
                     return def;
                 }

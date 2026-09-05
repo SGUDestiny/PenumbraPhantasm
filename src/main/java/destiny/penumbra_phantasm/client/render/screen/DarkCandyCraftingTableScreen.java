@@ -54,15 +54,13 @@ public class DarkCandyCraftingTableScreen extends AbstractContainerScreen<DarkCa
         this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth - 4);
         this.topPos = (this.height - this.imageHeight) / 2;
 
-        this.addRenderableWidget(new ImageButton(
-                this.leftPos + 5, this.height / 2 - 49, 20, 18,
-                0, 0, 19,
+        this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.height / 2 - 49, 20, 18, 0, 0, 19,
                 RECIPE_BUTTON_LOCATION, (p_289630_) -> {
             this.recipeBookComponent.toggleVisibility();
             this.leftPos = this.recipeBookComponent.updateScreenPosition(this.width, this.imageWidth - 4);
             p_289630_.setPosition(this.leftPos + 5, this.height / 2 - 49);
-        }
-        ));
+        }));
+
         this.addWidget(this.recipeBookComponent);
         this.setInitialFocus(this.recipeBookComponent);
 

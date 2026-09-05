@@ -373,16 +373,16 @@ public class CardKingdomEggRoomManager {
 		double z = player.getZ();
 		SoulCapability cap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
         boolean gone = cap.hasEggRoomManGone(CardKingdomEggRoomUtil.CARD_KINGDOM_BIT);
-		String script = null;
+		String interactionMessage = null;
 
 		if (CardKingdomEggRoomUtil.inTreeFront(x, z, data.treeX, data.treeZ)) {
-			script = gone ? ClientBoundTextBoxPacket.CARD_KINGDOM_EGG_ROOM_TREE_FRONT_GONE : ClientBoundTextBoxPacket.CARD_KINGDOM_EGG_ROOM_TREE_FRONT;
+			interactionMessage = gone ? ClientBoundTextBoxPacket.CARD_KINGDOM_EGG_ROOM_TREE_FRONT_GONE : ClientBoundTextBoxPacket.CARD_KINGDOM_EGG_ROOM_TREE_FRONT;
 		} else if (CardKingdomEggRoomUtil.inTreeBehind(x, z, data.treeX, data.treeZ)) {
-			script = gone ? ClientBoundTextBoxPacket.CARD_KINGDOM_EGG_ROOM_TREE_BEHIND_GONE : ClientBoundTextBoxPacket.CARD_KINGDOM_EGG_ROOM_TREE_BEHIND;
+			interactionMessage = gone ? ClientBoundTextBoxPacket.CARD_KINGDOM_EGG_ROOM_TREE_BEHIND_GONE : ClientBoundTextBoxPacket.CARD_KINGDOM_EGG_ROOM_TREE_BEHIND;
 		}
 
-		if (script != null) {
-			PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTextBoxPacket(script));
+		if (interactionMessage != null) {
+			PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), new ClientBoundTextBoxPacket(interactionMessage));
 		}
 	}
 
@@ -507,6 +507,7 @@ public class CardKingdomEggRoomManager {
 		int maxCx = (maxX >> 4) + 1;
 		int minCz = (minZ >> 4) - 1;
 		int maxCz = (maxZ >> 4) + 1;
+
 		for (int cx = minCx; cx <= maxCx; cx++) {
 			for (int cz = minCz; cz <= maxCz; cz++) {
 				level.setChunkForced(cx, cz, true);

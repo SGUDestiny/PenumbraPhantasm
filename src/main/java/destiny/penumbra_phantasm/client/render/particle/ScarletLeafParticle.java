@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 @OnlyIn(Dist.CLIENT)
 public class ScarletLeafParticle extends TextureSheetParticle {
     public ScarletLeafParticle(ClientLevel level, double x, double y, double z, SpriteSet sprite, double xSpeed, double ySpeed, double zSpeed) {
-        super(level, x, y, z, 0.0D, 0.0D, 0.0D);
+        super(level, x, y, z, 0, 0, 0);
         this.friction = 0.1f + level.getRandom().nextFloat() * 0.4f;
         this.lifetime = level.getRandom().nextInt(60, 200);
         this.setSprite(sprite.get(this.random.nextInt(4), 4));

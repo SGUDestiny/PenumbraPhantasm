@@ -14,7 +14,7 @@
     }
   },
   "noise": {
-    "min_y": -64,
+    "min_y": 0,
     "height": 384,
     "size_horizontal": 1,
     "size_vertical": 2
@@ -45,25 +45,25 @@
     "temperature": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:temperature",
-      "xz_scale": 0.4,
-      "y_scale": 0,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
-      "shift_z": "minecraft:shift_z"
+      "shift_z": "minecraft:shift_z",
+      "xz_scale": 0.25,
+      "y_scale": 0
     },
     "vegetation": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:vegetation",
-      "xz_scale": 0.35,
-      "y_scale": 0,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
-      "shift_z": "minecraft:shift_z"
+      "shift_z": "minecraft:shift_z",
+      "xz_scale": 0.25,
+      "y_scale": 0
     },
-    "continents": 0,
+    "continents": "minecraft:overworld/continents",
     "erosion": "minecraft:overworld/erosion",
     "depth": "minecraft:overworld/depth",
-    "ridges": 0,
+    "ridges": "minecraft:overworld/ridges",
     "initial_density_without_jaggedness": 0,
     "final_density": {
       "type": "minecraft:add",

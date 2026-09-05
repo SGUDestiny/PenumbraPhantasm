@@ -138,7 +138,7 @@ public class KnifeItem extends SwordItem {
         Vec2 occupancyPosFlat = new Vec2(occupancyPos.getX(), occupancyPos.getZ());
         Vec2 bumpedDepthsPos = DarkFountain.getBumpedDepthsXZ(level.getServer(), occupancyPosFlat);
 
-        if (DarkFountain.isDepthsXzOccupied(((ServerLevel) level).getServer(), bumpedDepthsPos)) {
+        if (DarkFountain.isDepthsOccupied(((ServerLevel) level).getServer(), bumpedDepthsPos)) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_depths_conflict"), true);
             return InteractionResultHolder.fail(stack);
         }
@@ -213,7 +213,7 @@ public class KnifeItem extends SwordItem {
             return InteractionResultHolder.fail(stack);
         }
 
-        if (DarkFountainCapability.roomContainsActiveFountainAnchor(cap, roomResult.getPositions())) {
+        if (DarkFountainCapability.roomContainsActiveFountain(cap, roomResult.getPositions())) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
             return InteractionResultHolder.fail(stack);
         }
@@ -446,7 +446,7 @@ public class KnifeItem extends SwordItem {
             return;
         }
 
-        if (DarkFountainCapability.roomContainsActiveFountainAnchor(lightCap, roomResult.getPositions())) {
+        if (DarkFountainCapability.roomContainsActiveFountain(lightCap, roomResult.getPositions())) {
             player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
             resetMakingState(tag);
             return;
@@ -541,12 +541,12 @@ public class KnifeItem extends SwordItem {
         //Depths fountain
         ServerLevel depths = DarkWorldUtil.getDepths(level.getServer());
         if (depths != null) {
-            int depthsX = DarkFountain.scaledDepthsX(fountainPos.getX());
-            int depthsZ = DarkFountain.scaledDepthsX(fountainPos.getZ());
+            int depthsX = DarkFountain.scaleDepthsAxis(fountainPos.getX());
+            int depthsZ = DarkFountain.scaleDepthsAxis(fountainPos.getZ());
             Vec2 depthsPos = new Vec2(depthsX, depthsZ);
             depthsPos = DarkFountain.getBumpedDepthsXZ(depths, depthsPos);
 
-            if (DarkFountain.isDepthsXzOccupied(depths, depthsPos)) {
+            if (DarkFountain.isDepthsOccupied(depths, depthsPos)) {
                 lightCap.removeDarkFountain(level, fountainPos);
                 darkCap.removeDarkFountain(targetLevel, darkFountainPos);
 

@@ -11,8 +11,7 @@ public class RenderTypes extends RenderType {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
     }
 
-    public static RenderType fountain(ResourceLocation rl)
-    {
+    public static RenderType fountain(ResourceLocation rl) {
         return create("fountain", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
@@ -23,9 +22,8 @@ public class RenderTypes extends RenderType {
                         .createCompositeState(true));
     }
 
-    public static RenderType fountainNoCull(ResourceLocation rl)
-    {
-        return create("fountain", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
+    public static RenderType fountainNoCull(ResourceLocation rl) {
+        return create("fountain_no_cull", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
@@ -35,8 +33,7 @@ public class RenderTypes extends RenderType {
                         .createCompositeState(true));
     }
 
-    public static RenderType fountainBeam()
-    {
+    public static RenderType fountainBeam() {
         return create("fountain_beam", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
@@ -48,8 +45,7 @@ public class RenderTypes extends RenderType {
                         .createCompositeState(true));
     }
 
-    public static RenderType fountainShockwave(ResourceLocation rl)
-    {
+    public static RenderType fountainShockwave(ResourceLocation rl) {
         return create("fountain_shockwave", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
@@ -64,11 +60,7 @@ public class RenderTypes extends RenderType {
     private static final RenderStateShard.ShaderStateShard FOUNTAIN_MASKED_SHADER =
             new RenderStateShard.ShaderStateShard(() -> ModShaders.FOUNTAIN_MASKED);
 
-    public static RenderType fountainMaskedPortal(
-            ResourceLocation maskTex,
-            ResourceLocation flowTex,
-            boolean depthWrite
-    ) {
+    public static RenderType fountainMaskedPortal(ResourceLocation maskTex, ResourceLocation flowTex, boolean depthWrite) {
         CompositeState.CompositeStateBuilder builder = RenderType.CompositeState.builder()
                 .setShaderState(FOUNTAIN_MASKED_SHADER)
                 .setTextureState(
@@ -92,11 +84,7 @@ public class RenderTypes extends RenderType {
         );
     }
 
-    public static RenderType negativePhotons(
-            ResourceLocation maskTex,
-            ResourceLocation flowTex,
-            boolean depthWrite
-    ) {
+    public static RenderType negativePhotons(ResourceLocation maskTex, ResourceLocation flowTex, boolean depthWrite) {
         CompositeState.CompositeStateBuilder builder = RenderType.CompositeState.builder()
                 .setShaderState(FOUNTAIN_MASKED_SHADER)
                 .setTextureState(

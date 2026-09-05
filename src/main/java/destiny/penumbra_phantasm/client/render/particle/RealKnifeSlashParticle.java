@@ -14,7 +14,7 @@ public class RealKnifeSlashParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
     public RealKnifeSlashParticle(ClientLevel level, double x, double y, double z, SpriteSet sprite, double xSpeed, double ySpeed, double zSpeed) {
-        super(level, x, y, z, 0.0D, 0.0D, 0.0D);
+        super(level, x, y, z, 0, 0, 0);
         this.sprites = sprite;
         this.friction = 1f;
         this.lifetime = 5;
@@ -30,9 +30,11 @@ public class RealKnifeSlashParticle extends TextureSheetParticle {
         int ageAt = this.lifetime - 7;
         int sprite = this.age >= ageAt ? Math.min(this.age - ageAt, 7) : 0;
         this.setSprite(sprites.get(sprite, 6));
+
         if (this.age == 1) {
             level.playLocalSound(x, y, z, SoundRegistry.REAL_KNIFE_SLASH.get(), SoundSource.AMBIENT, 1f, 1f, false);
         }
+
         if (this.age++ >= this.lifetime) {
             this.remove();
         }

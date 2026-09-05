@@ -9,7 +9,7 @@ public class FountainDarknessParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
 
     protected FountainDarknessParticle(ClientLevel level, double x, double y, double z, SpriteSet sprite, double xSpeed, double ySpeed, double zSpeed) {
-        super(level, x, y, z, 0.0D, 0.0D, 0.0D);
+        super(level, x, y, z, 0, 0, 0);
         this.sprites = sprite;
         this.friction = 1f;
         this.lifetime = 40;
@@ -51,7 +51,6 @@ public class FountainDarknessParticle extends TextureSheetParticle {
                 this.zd = Math.min(this.zd + reduction, 0);
             }
 
-            //this.quadSize += Math.min(this.age * 0.001f, 3f);
             this.move(this.xd, this.yd, this.zd);
 
             if (this.speedUpWhenYMotionIsBlocked && this.y == this.yo) {

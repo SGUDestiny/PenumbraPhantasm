@@ -1,0 +1,12 @@
+{
+  "parent": "penumbra_phantasm:block/template_cube_column_emissive",
+  "textures": {
+    "particle": "penumbra_phantasm:block/stripped_scarlet_log",
+    "up": "penumbra_phantasm:block/stripped_scarlet_log_top",
+    "down": "penumbra_phantasm:block/stripped_scarlet_log_top",
+    "north": "penumbra_phantasm:block/stripped_scarlet_log",
+    "south": "penumbra_phantasm:block/stripped_scarlet_log",
+    "west": "penumbra_phantasm:block/stripped_scarlet_log",
+    "east": "penumbra_phantasm:block/stripped_scarlet_log"
+  }
+}

@@ -1,9 +1,6 @@
 package destiny.penumbra_phantasm.client.render.dimension;
 
-import destiny.penumbra_phantasm.client.render.ModShaders;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.*;
-import net.minecraft.world.phys.Vec2;
 import org.joml.Matrix4f;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -21,8 +18,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-
-import java.awt.*;
 
 public class DarkWorldDimensionEffects extends DimensionSpecialEffects {
     public static final ResourceLocation DARK_WORLD_DIMENSION_EFFECTS = new ResourceLocation(PenumbraPhantasm.MODID, "dark_world_dimension_effects");
@@ -51,7 +46,7 @@ public class DarkWorldDimensionEffects extends DimensionSpecialEffects {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
 
-        BufferBuilder.RenderedBuffer renderedbuffer = buildSkyDisc(bufferbuilder, 16F);
+        BufferBuilder.RenderedBuffer renderedbuffer = buildSkyDisc(bufferbuilder, 16f);
         skyBuffer.bind();
         skyBuffer.upload(renderedbuffer);
         VertexBuffer.unbind();
@@ -60,7 +55,7 @@ public class DarkWorldDimensionEffects extends DimensionSpecialEffects {
     }
 
     public static BufferBuilder.RenderedBuffer buildSkyDisc(BufferBuilder builder, float scale) {
-        float baseRadius = 512F;
+        float baseRadius = 512f;
         float invertibleBaseRadius = Math.signum(scale) * baseRadius;
 
         RenderSystem.setShader(GameRenderer::getPositionShader);
@@ -77,7 +72,7 @@ public class DarkWorldDimensionEffects extends DimensionSpecialEffects {
     }
 
     public static BufferBuilder.RenderedBuffer buildDepthsSkyDisc(BufferBuilder builder, float scale) {
-        float baseRadius = 512F;
+        float baseRadius = 512f;
         float invertibleBaseRadius = Math.signum(scale) * baseRadius;
 
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
@@ -102,14 +97,14 @@ public class DarkWorldDimensionEffects extends DimensionSpecialEffects {
         float skyZ = (float)skyColor.z;
         FogRenderer.levelFogColor();
         RenderSystem.depthMask(false);
-        RenderSystem.setShaderColor(skyX, skyY, skyZ, 1.0F);
+        RenderSystem.setShaderColor(skyX, skyY, skyZ, 1);
         RenderSystem.setShader(GameRenderer::getPositionShader);
 
         this.skyBuffer.bind();
         this.skyBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
         VertexBuffer.unbind();
 
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.depthMask(true);
 
         return true;
@@ -117,7 +112,7 @@ public class DarkWorldDimensionEffects extends DimensionSpecialEffects {
 
     @Override
     public Vec3 getBrightnessDependentFogColor(Vec3 vec3, float v) {
-        return vec3.multiply(v * 0.94F + 0.06F, v * 0.94F + 0.06F, v * 0.91F + 0.09F);
+        return vec3.multiply(v * 0.94f + 0.06f, v * 0.94f + 0.06f, v * 0.91f + 0.09f);
     }
 
     @Override
