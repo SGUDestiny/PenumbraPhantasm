@@ -45,25 +45,25 @@
     "temperature": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:temperature",
+      "xz_scale": 0.4,
+      "y_scale": 0,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
-      "shift_z": "minecraft:shift_z",
-      "xz_scale": 0.25,
-      "y_scale": 0
+      "shift_z": "minecraft:shift_z"
     },
     "vegetation": {
       "type": "minecraft:shifted_noise",
       "noise": "minecraft:vegetation",
+      "xz_scale": 0.35,
+      "y_scale": 0,
       "shift_x": "minecraft:shift_x",
       "shift_y": 0,
-      "shift_z": "minecraft:shift_z",
-      "xz_scale": 0.25,
-      "y_scale": 0
+      "shift_z": "minecraft:shift_z"
     },
-    "continents": "minecraft:overworld/continents",
+    "continents": 0,
     "erosion": "minecraft:overworld/erosion",
     "depth": "minecraft:overworld/depth",
-    "ridges": "minecraft:overworld/ridges",
+    "ridges": 0,
     "initial_density_without_jaggedness": 0,
     "final_density": {
       "type": "minecraft:add",
