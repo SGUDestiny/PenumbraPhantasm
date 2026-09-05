@@ -31,7 +31,7 @@ public class LightTextureMixin {
     @Unique
     private float penumbra_phantasm$lastAmbient = Float.NaN;
 
- /*   @Inject(method = "updateLightTexture(F)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "updateLightTexture(F)V", at = @At("HEAD"), cancellable = true)
     private void nullOuroboros$vergeLightMap(float partialTick, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
         ClientLevel level = minecraft.level;
@@ -67,7 +67,7 @@ public class LightTextureMixin {
         lightTexture.upload();
         this.updateLightTexture = false;
         ci.cancel();
-    }*/
+    }
 
     private static float vanillaBlockBrightness(float ambientLight, int blockLight) {
         float level = blockLight / 15f;
