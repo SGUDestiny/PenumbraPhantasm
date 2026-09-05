@@ -53,6 +53,8 @@ public class TenebralithSpikeFeature extends Feature<PointedDripstoneConfigurati
 
     public static void growTenebralithSpike(LevelAccessor pLevel, BlockPos pPos, Direction pDirection, int pHeight, boolean pMergeTip) {
         if (isTenebralithBase(pLevel.getBlockState(pPos.relative(pDirection.getOpposite())))) {
+            pLevel.setBlock(pPos.relative(pDirection.getOpposite()), BlockRegistry.TENEBRALITH.get().defaultBlockState(), 2);
+
             BlockPos.MutableBlockPos mutablePos = pPos.mutable();
 
             buildBaseToTipColumn(pDirection, pHeight, pMergeTip, (state) -> {
