@@ -71,8 +71,8 @@
         "type": "minecraft:y_clamped_gradient",
         "from_y": 50,
         "to_y": 96,
-        "from_value": 1,
-        "to_value": -1
+        "from_value": 1.5,
+        "to_value": -1.5
       },
       "argument2": {
         "type": "minecraft:noise",
