@@ -112,7 +112,8 @@ public class BlockRegistry {
     //Scarlet misc
     public static final RegistryObject<Block> SCARLET_BUSH = registerBlock("scarlet_bush",
             () -> new ScarletBushBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission()));
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission()
+                    .isViewBlocking((state, level, pos) -> false)));
     public static final RegistryObject<Block> TALL_SCARLET_BUSH = registerBlock("tall_scarlet_bush",
             () -> new SlowingDoublePlantBlock(BlockBehaviour.Properties.copy(Blocks.PEONY)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.PINK_PETALS).noCollission()));
@@ -125,8 +126,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> SCARLET_LEAVES = registerBlock("scarlet_leaves",
             () -> new ScarletLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES).isSuffocating((state, level, pos) -> false)
-                    .isRedstoneConductor((state, level, pos) -> false)
-                    .isViewBlocking((state, level, pos) -> false)));
+                    .isRedstoneConductor((state, level, pos) -> false)));
     public static final RegistryObject<Block> FALLEN_SCARLET_LEAVES = BLOCKS.register("fallen_scarlet_leaves",
             () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak(), 1));
@@ -176,8 +176,7 @@ public class BlockRegistry {
             () -> new DarkCandyLeaves(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()
                     .isSuffocating((state, level, pos) -> false)
-                    .isRedstoneConductor((state, level, pos) -> false)
-                    .isViewBlocking((state, level, pos) -> false)));
+                    .isRedstoneConductor((state, level, pos) -> false)));
     public static final RegistryObject<Block> FALLEN_DARK_CANDY_LEAVES = BLOCKS.register("fallen_dark_candy_leaves",
             () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak(), 1f));
@@ -483,8 +482,7 @@ public class BlockRegistry {
             () -> new DarknessBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLACK).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
                     .noOcclusion().noParticlesOnBreak().isSuffocating((state, level, pos) -> false)
-                    .isRedstoneConductor((state, level, pos) -> false)
-                    .isViewBlocking((state, level, pos) -> false)));
+                    .isRedstoneConductor((state, level, pos) -> false)));
     public static final RegistryObject<Block> UNBREAKABLE_DARKNESS = BLOCKS.register("unbreakable_darkness",
             () -> new UnbreakableDarknessBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLACK).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
