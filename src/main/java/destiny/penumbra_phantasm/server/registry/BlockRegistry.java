@@ -507,10 +507,10 @@ public class BlockRegistry {
                     BlockBehaviour.Properties.copy(Blocks.POTTED_POPPY).noOcclusion().lightLevel((state) -> 8)));
 
     public static final RegistryObject<Block> ROARING_EYE = registerBlock("roaring_eye",
-            () -> new RoaringEyeBlock(BlockBehaviour.Properties.copy(Blocks.POPPY)
+            () -> new RoaringEyeBlock(BlockBehaviour.Properties.copy(Blocks.POPPY).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
     public static final RegistryObject<Block> ROARING_EYE_GHOST = BLOCKS.register("roaring_eye_ghost",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.POPPY)
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.POPPY).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

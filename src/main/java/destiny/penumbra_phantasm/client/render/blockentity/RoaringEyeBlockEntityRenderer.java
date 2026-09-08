@@ -50,7 +50,7 @@ public class RoaringEyeBlockEntityRenderer implements BlockEntityRenderer<Roarin
 
         poseStack.pushPose();
 
-        poseStack.translate(0.3f, 0.7f, 0.6f);
+        poseStack.translate(0.5f, 0.7f, 0.5f);
 
         poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
