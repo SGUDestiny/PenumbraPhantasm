@@ -492,6 +492,20 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_GRAY).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
                     .sound(SoundTypeRegistry.CLIFF).noParticlesOnBreak()));
 
+    public static final RegistryObject<Block> VANTAROSE = registerBlock("vantarose",
+            () -> new DepthsFlowerBlock(() -> MobEffects.DARKNESS, 20, BlockBehaviour.Properties.copy(Blocks.POPPY)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission().lightLevel((state) -> 15)));
+    public static final RegistryObject<Block> POTTED_VANTAROSE = BLOCKS.register("potted_vantarose",
+            () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.VANTAROSE,
+                    BlockBehaviour.Properties.copy(Blocks.POTTED_POPPY).noOcclusion().lightLevel((state) -> 8)));
+
+    public static final RegistryObject<Block> ROARING_EYE = registerBlock("roaring_eye",
+            () -> new RoaringEyeBlock(BlockBehaviour.Properties.copy(Blocks.POPPY)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
+    public static final RegistryObject<Block> ROARING_EYE_GHOST = BLOCKS.register("roaring_eye_ghost",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.POPPY)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
+
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);

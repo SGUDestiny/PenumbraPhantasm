@@ -382,6 +382,10 @@
 
   "block.penumbra_phantasm.titanstone": "Titanstone",
 
+  "block.penumbra_phantasm.vantarose": "Vantarose",
+  "block.penumbra_phantasm.potted_vantarose": "Potted Vantarose",
+  "block.penumbra_phantasm.roaring_eye": "Roaring Eye",
+
   "liquid.penumbra_phantasm.pure_darkness": "Pure Darkness",
   "liquid.penumbra_phantasm.luminescent_water": "Luminescent Water",
   "liquid.penumbra_phantasm.negative_photons": "§8NEGATIVE PHOTONS§r",

@@ -372,6 +372,8 @@ public class CreativeTabRegistry {
             .title(Component.translatable("itemGroup.penumbra_phantasm.the_depths"))
             .withTabsBefore(CARD_KINGDOM.getKey())
             .displayItems((parameters, output) -> {
+                output.accept(BlockRegistry.VANTAROSE.get());
+                output.accept(BlockRegistry.ROARING_EYE.get());
                 output.accept(BlockRegistry.TENEBRALITH_SPIKE.get());
                 output.accept(BlockRegistry.TENEBRALITH_PATH.get());
                 output.accept(BlockRegistry.DARK_SAND.get());

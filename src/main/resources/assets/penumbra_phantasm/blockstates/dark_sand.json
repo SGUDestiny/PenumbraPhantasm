@@ -2,7 +2,16 @@
   "variants": {
     "": [
       {
-        "model": "penumbra_phantasm:block/dark_sand"
+        "model": "penumbra_phantasm:block/dark_sand",
+        "weight": 33
+      },
+      {
+        "model": "penumbra_phantasm:block/dark_sand_1",
+        "weight": 33
+      },
+      {
+        "model": "penumbra_phantasm:block/dark_sand_2",
+        "weight": 34
       }
     ]
   }

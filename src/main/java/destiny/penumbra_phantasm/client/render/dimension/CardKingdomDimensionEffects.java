@@ -55,20 +55,20 @@ public class CardKingdomDimensionEffects extends DarkWorldDimensionEffects {
     private static final float SHOOTING_STAR_MAX_ARC_ANGLE = 1.56f;
 
     private final VertexBuffer lowerSkyBuffer;
-    private final VertexBuffer[] staticStarBuffers = new VertexBuffer[STAR_TEXTURES.length];
+    private final VertexBuffer[] starBuffers = new VertexBuffer[STAR_TEXTURES.length];
     private final VertexBuffer dynamicTexturedBuffer;
     private final VertexBuffer dynamicColorBuffer;
 
     private long starSeed = Long.MIN_VALUE;
 
-    private List<Star> staticStars = List.of();
+    private List<Star> stars = List.of();
 
     public CardKingdomDimensionEffects() {
         instance = this;
         this.lowerSkyBuffer = createSkyBuffer(-SKY_DISC_HEIGHT);
 
-        for (int i = 0; i < this.staticStarBuffers.length; i++) {
-            this.staticStarBuffers[i] = new VertexBuffer(VertexBuffer.Usage.STATIC);
+        for (int i = 0; i < this.starBuffers.length; i++) {
+            this.starBuffers[i] = new VertexBuffer(VertexBuffer.Usage.STATIC);
         }
 
         this.dynamicTexturedBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
@@ -156,7 +156,7 @@ public class CardKingdomDimensionEffects extends DarkWorldDimensionEffects {
             stars.add(new Star(direction, size, rotation, textureIndex, alpha, twinkleOffset));
         }
 
-        this.staticStars = stars;
+        this.stars = stars;
         this.starSeed = seed;
     }
 
@@ -168,7 +168,7 @@ public class CardKingdomDimensionEffects extends DarkWorldDimensionEffects {
         for (int textureIndex = 0; textureIndex < STAR_TEXTURES.length; textureIndex++) {
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
-            for (Star star : this.staticStars) {
+            for (Star star : this.stars) {
                 if (star.textureIndex != textureIndex) {
                     continue;
                 }
@@ -184,8 +184,8 @@ public class CardKingdomDimensionEffects extends DarkWorldDimensionEffects {
             }
 
             BufferBuilder.RenderedBuffer renderedBuffer = bufferBuilder.end();
-            this.staticStarBuffers[textureIndex].bind();
-            this.staticStarBuffers[textureIndex].upload(renderedBuffer);
+            this.starBuffers[textureIndex].bind();
+            this.starBuffers[textureIndex].upload(renderedBuffer);
             VertexBuffer.unbind();
         }
     }
@@ -198,8 +198,8 @@ public class CardKingdomDimensionEffects extends DarkWorldDimensionEffects {
 
         for (int textureIndex = 0; textureIndex < STAR_TEXTURES.length; textureIndex++) {
             RenderSystem.setShaderTexture(0, STAR_TEXTURES[textureIndex]);
-            this.staticStarBuffers[textureIndex].bind();
-            this.staticStarBuffers[textureIndex].drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
+            this.starBuffers[textureIndex].bind();
+            this.starBuffers[textureIndex].drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
             VertexBuffer.unbind();
         }
     }

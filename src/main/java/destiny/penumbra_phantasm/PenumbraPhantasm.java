@@ -2,10 +2,7 @@ package destiny.penumbra_phantasm;
 
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.KeyBindings;
-import destiny.penumbra_phantasm.client.render.blockentity.CheshireChestBlockEntityRenderer;
-import destiny.penumbra_phantasm.client.render.blockentity.DarkMarbleDiceBlockEntityRenderer;
-import destiny.penumbra_phantasm.client.render.blockentity.DustBlockEntityRenderer;
-import destiny.penumbra_phantasm.client.render.blockentity.ScarletMarbleDiceBlockEntityRenderer;
+import destiny.penumbra_phantasm.client.render.blockentity.*;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
 import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorBacksideModel;
@@ -218,6 +215,7 @@ public class PenumbraPhantasm {
                 ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.SCARLET_SAPLING.getId(), BlockRegistry.POTTED_SCARLET_SAPLING);
                 ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.DARK_CANDY_SAPLING.getId(), BlockRegistry.POTTED_DARK_CANDY_SAPLING);
                 ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.SCARLET_ROSE.getId(), BlockRegistry.POTTED_SCARLET_ROSE);
+                ((FlowerPotBlock) Blocks.FLOWER_POT).addPlant(BlockRegistry.VANTAROSE.getId(), BlockRegistry.POTTED_VANTAROSE);
             });
         }
 
@@ -239,6 +237,7 @@ public class PenumbraPhantasm {
             event.registerBlockEntityRenderer(BlockEntityRegistry.SCARLET_MARBLE_DICE_BLOCK_ENTITY.get(), ScarletMarbleDiceBlockEntityRenderer::new);
             event.registerBlockEntityRenderer(BlockEntityRegistry.DUST_BLOCK_ENTITY.get(), DustBlockEntityRenderer::new);
             event.registerBlockEntityRenderer(BlockEntityRegistry.CHESHIRE_CHEST_BLOCK_ENTITY.get(), CheshireChestBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(BlockEntityRegistry.ROARING_EYE_BLOCK_ENTITY.get(), RoaringEyeBlockEntityRenderer::new);
         }
     }
 }

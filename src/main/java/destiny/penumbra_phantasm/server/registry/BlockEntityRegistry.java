@@ -19,4 +19,5 @@ public class BlockEntityRegistry {
     public static final RegistryObject<BlockEntityType<CheshireChestBlockEntity>> CHESHIRE_CHEST_BLOCK_ENTITY = BLOCK_ENTITIES.register("cheshire_chest", () -> BlockEntityType.Builder.of(CheshireChestBlockEntity::new, BlockRegistry.CHESHIRE_CHEST.get()).build(null));
     public static final RegistryObject<BlockEntityType<FireDoorBlockEntity>> FIRE_DOOR_BLOCK_ENTITY = BLOCK_ENTITIES.register("fire_door", () -> BlockEntityType.Builder.of(FireDoorBlockEntity::new, BlockRegistry.FIRE_DOOR.get()).build(null));
     public static final RegistryObject<BlockEntityType<HearthBlockEntity>> HEARTH_ENTITY = BLOCK_ENTITIES.register("hearth", () -> BlockEntityType.Builder.of(HearthBlockEntity::new, BlockRegistry.HEARTH.get()).build(null));
+    public static final RegistryObject<BlockEntityType<RoaringEyeBlockEntity>> ROARING_EYE_BLOCK_ENTITY = BLOCK_ENTITIES.register("roaring_eye_block_entity", () -> BlockEntityType.Builder.of(RoaringEyeBlockEntity::new, BlockRegistry.ROARING_EYE.get()).build(null));
 }
