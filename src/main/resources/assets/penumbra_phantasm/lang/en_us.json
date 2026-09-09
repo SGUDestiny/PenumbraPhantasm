@@ -6,10 +6,13 @@
   "item.penumbra_phantasm.real_knife": "§4Real Knife§r",
   "item.penumbra_phantasm.black_knife": "Black Knife",
 
-  "item.penumbra_phantasm.dark_wallet": "Dark Wallet",
-  "item.penumbra_phantasm.dark_dollar": "Dark Dollar",
-  "item.penumbra_phantasm.dark_dime": "Dark Dime",
   "item.penumbra_phantasm.glowshard": "Glowshard",
+  "item.penumbra_phantasm.dark_wallet": "Dark Wallet",
+  "item.penumbra_phantasm.dark_dime": "Dark Dime",
+  "item.penumbra_phantasm.dark_dollar": "Dark Dollar",
+  "item.penumbra_phantasm.dark_wad": "Dark Wad",
+  "item.penumbra_phantasm.dark_bar": "Dark Bar",
+  "item.penumbra_phantasm.dark_grant": "Dark Grant",
 
   "item.penumbra_phantasm.dark_candy": "Dark Candy",
   "item.penumbra_phantasm.choco_diamond": "Choco Diamond",
@@ -546,7 +549,7 @@
   "death.attack.penumbra_phantasm.injection_overdose": "%1$s was too DETERMINED and melted into goop",
   "death.attack.penumbra_phantasm.injection_overdose.player": "%1$s was made too DETERMINED by %2$s and melted into goop",
   "death.attack.penumbra_phantasm.soul_damage": "%1$s couldn't rip out their SOUL",
-  "death.attack.penumbra_phantasm.erosion": "%1$s's DETERMINATION was crushed by darkness",
+  "death.attack.penumbra_phantasm.erosion": "%1$s's DETERMINATION was crushed by DARKNESS",
 
   "container.penumbra_phantasm.umbrastone_furnace": "Umbrastone Furnace",
   "container.penumbra_phantasm.dark_world_inventory.narration.button.usage.hover": "LEFT CLICK TO SWITCH TO %s",

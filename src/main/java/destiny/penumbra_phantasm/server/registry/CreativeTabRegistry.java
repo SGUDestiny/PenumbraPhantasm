@@ -32,9 +32,12 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.REAL_KNIFE.get());
                 output.accept(ItemRegistry.BLACK_KNIFE.get());
 
-                output.accept(ItemRegistry.DARK_WALLET.get());
-                output.accept(ItemRegistry.DARK_DOLLAR.get());
                 output.accept(ItemRegistry.DARK_DIME.get());
+                output.accept(ItemRegistry.DARK_DOLLAR.get());
+                output.accept(ItemRegistry.DARK_WAD.get());
+                output.accept(ItemRegistry.DARK_BAR.get());
+                output.accept(ItemRegistry.DARK_GRANT.get());
+                output.accept(ItemRegistry.DARK_WALLET.get());
                 output.accept(ItemRegistry.GLOWSHARD.get());
 
                 output.accept(ItemRegistry.TENSION_BIT.get());

@@ -71,14 +71,20 @@ public class ItemRegistry {
             () -> new FlavorTooltipItem(new Item.Properties().stacksTo(1)));
 
     //Money
-    public static final RegistryObject<Item> DARK_DOLLAR = ITEMS.register("dark_dollar",
-            () -> new FlavorTooltipItem(new Item.Properties()));
-    public static final RegistryObject<Item> DARK_DIME = ITEMS.register("dark_dime",
-            () -> new FlavorTooltipItem(new Item.Properties()));
-    public static final RegistryObject<Item> DARK_WALLET = ITEMS.register("dark_wallet",
-            () -> new DarkWallerItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> GLOWSHARD = ITEMS.register("glowshard",
             () -> new FlavorTooltipItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> DARK_WALLET = ITEMS.register("dark_wallet",
+            () -> new DarkWallerItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> DARK_DIME = ITEMS.register("dark_dime",
+            () -> new FlavorTooltipItem(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_DOLLAR = ITEMS.register("dark_dollar",
+            () -> new FlavorTooltipItem(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_WAD = ITEMS.register("dark_wad",
+            () -> new FlavorTooltipItem(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_BAR = ITEMS.register("dark_bar",
+            () -> new FlavorTooltipItem(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_GRANT = ITEMS.register("dark_grant",
+            () -> new FlavorTooltipItem(new Item.Properties()));
 
     public static final RegistryObject<Item> FRIEND = ITEMS.register("friend",
             () -> new FriendItem(basicItem()));
