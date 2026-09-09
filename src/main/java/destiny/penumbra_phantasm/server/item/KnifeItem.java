@@ -168,7 +168,7 @@ public class KnifeItem extends SwordItem {
         Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
         Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
         BlockPos scanSeed = player.getOnPos().above();
-        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, scanSeed, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, scanSeed, ServerConfig.maxRoomVolume, false, true, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
             if (scanSeedBlockedByExistingFountain(scanSeed, otherAnchors, otherRoomCells)) {
                 player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
@@ -401,7 +401,7 @@ public class KnifeItem extends SwordItem {
         }
         Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
         Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
-        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, false, otherAnchors, otherRoomCells);
+        RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, true, otherAnchors, otherRoomCells);
         if (!roomResult.isValid()) {
             if (scanSeedBlockedByExistingFountain(fountainPos, otherAnchors, otherRoomCells)) {
                 player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
