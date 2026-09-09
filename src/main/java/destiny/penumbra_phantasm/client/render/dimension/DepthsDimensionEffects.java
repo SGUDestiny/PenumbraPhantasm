@@ -68,9 +68,9 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
     private List<Sprite> sprites = List.of();
 
     public DepthsDimensionEffects() {
-        super(Float.NaN, true, SkyType.NONE, false, false);
-        this.skyBuffer = createSkyBuffer(SKY_DISC_HEIGHT);
-        this.lowerSkyBuffer = createDepthsSkyBuffer(-SKY_DISC_HEIGHT);
+        super(Float.NaN, false, SkyType.NONE, false, false);
+        this.skyBuffer = createDepthsSkyBuffer(0.1f);
+        this.lowerSkyBuffer = createDepthsSkyBuffer(-0.1f);
         this.silhouettesBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.flashesBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.flashesBackgroundBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
@@ -86,6 +86,7 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
 
         this.skyBuffer.bind();
         this.skyBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
+        VertexBuffer.unbind();
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.enableBlend();
@@ -101,9 +102,22 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
 
         this.renderSpriteQuads(poseStack, projectionMatrix);
 
+        setupFog.run();
+        RenderSystem.depthMask(false);
+        RenderSystem.disableCull();
+        RenderSystem.setShaderColor(0, 0, 0, 1);
+        RenderSystem.setShader(GameRenderer::getPositionShader);
+
         this.lowerSkyBuffer.bind();
         this.lowerSkyBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
         VertexBuffer.unbind();
+
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        FogRenderer.levelFogColor();
+        RenderSystem.setShaderFogStart(CYLINDER_RADIUS * 4f);
+        RenderSystem.setShaderFogEnd(CYLINDER_RADIUS * 4.5f);
 
         RenderSystem.disableBlend();
         RenderSystem.enableCull();
@@ -395,7 +409,7 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
         VertexBuffer skyBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
-        BufferBuilder.RenderedBuffer renderedBuffer = DarkWorldDimensionEffects.buildDepthsSkyDisc(bufferBuilder, scale, 32);
+        BufferBuilder.RenderedBuffer renderedBuffer = DarkWorldDimensionEffects.buildDepthsSkyDisc(bufferBuilder, scale, 512);
 
         skyBuffer.bind();
         skyBuffer.upload(renderedBuffer);
