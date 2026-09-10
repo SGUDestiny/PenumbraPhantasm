@@ -324,7 +324,7 @@ public class ClientEvents {
 							1f
 					);
 
-				float shadertime = (level.getGameTime() + partialTick) * 0.05f;
+				float shadertime = (level.getGameTime() + partialTick) * 0.01f;
 				shader.safeGetUniform("FountainTime").set(shadertime);
 				Minecraft mc = Minecraft.getInstance();
 				float aspect = (float) mc.getWindow().getWidth() /
