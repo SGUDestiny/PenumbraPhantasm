@@ -5,14 +5,18 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
+import java.awt.*;
 import java.util.function.Consumer;
 
 public class NegativePhotonsFluidType extends FluidType {
@@ -86,6 +90,12 @@ public class NegativePhotonsFluidType extends FluidType {
             @Override
             public int getTintColor() {
                 return tintColor;
+            }
+
+            @Override
+            public int getTintColor(FluidState state, BlockAndTintGetter getter, BlockPos pos)
+            {
+                return (254 << 24) | (0 << 16) | (0 << 8) | 0;
             }
 
             @Override

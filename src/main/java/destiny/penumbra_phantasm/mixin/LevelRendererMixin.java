@@ -25,25 +25,4 @@ public class LevelRendererMixin {
 		Level level = Minecraft.getInstance().level;
 		return isSpectator || (level != null && CardKingdomEggRoomUtil.isEggRoom(level));
 	}
-
-	@Inject(method = "blockChanged", at = @At(value = "HEAD"))
-	private void penumbra_phantasm$block_changed(BlockGetter pLevel, BlockPos pPos, BlockState pOldState, BlockState pNewState, int pFlags, CallbackInfo ci) {
-		FluidState oldFluidState = pOldState.getFluidState();
-		FluidState newFluidState = pNewState.getFluidState();
-
-		if (!isNegativePhotonsFluid(oldFluidState) && !isNegativePhotonsFluid(newFluidState)) return;
-
-		ChunkPos chunkPos = new ChunkPos(pPos);
-
-		if (isNegativePhotonsFluid(oldFluidState) && !isNegativePhotonsFluid(newFluidState)) {
-			ClientEvents.negativePhotons.get(chunkPos).remove(pPos);
-		} else if (!isNegativePhotonsFluid(oldFluidState) && isNegativePhotonsFluid(newFluidState)) {
-			ClientEvents.negativePhotons.get(chunkPos).add(pPos);
-		}
-	}
-
-	@Unique
-	private boolean isNegativePhotonsFluid(FluidState fluidState) {
-		return fluidState.getFluidType() == FluidTypeRegistry.NEGATIVE_PHOTONS.get();
-	}
 }

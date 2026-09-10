@@ -195,6 +195,9 @@ public class PenumbraPhantasm {
                 ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCARLET_TRAPDOOR.get(), RenderType.cutout());
                 ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCARLET_LOG_MYSTERIOUS_DOOR.get(), RenderType.cutout());
 
+                ItemBlockRenderTypes.setRenderLayer(FluidRegistry.FLOWING_NEGATIVE_PHOTONS.get(), RenderType.translucent());
+                ItemBlockRenderTypes.setRenderLayer(FluidRegistry.SOURCE_NEGATIVE_PHOTONS.get(), RenderType.translucent());
+
                 EntityRenderers.register(EntityRegistry.SEALING_SOUL.get(), SealingSoulEntityRenderer::new);
 
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());

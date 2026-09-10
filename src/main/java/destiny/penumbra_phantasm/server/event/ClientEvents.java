@@ -20,6 +20,7 @@ import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.client.KeyBindings;
 import destiny.penumbra_phantasm.client.render.textbox.DarkWorldDialogue;
 import destiny.penumbra_phantasm.client.render.tooltip.DarkMoneyTooltipComponent;
+import destiny.penumbra_phantasm.mixin.MouseHandlerMixin;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
@@ -37,8 +38,13 @@ import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.ShareToLanScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.core.SectionPos;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
@@ -50,6 +56,7 @@ import net.minecraft.world.entity.PlayerRideableJumping;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodData;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
@@ -91,6 +98,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.awt.*;
 import java.util.*;
 
 import static org.lwjgl.opengl.GL32C.GL_DEPTH_CLAMP;
@@ -284,13 +292,59 @@ public class ClientEvents {
 				}
 			});
 
-			if(renderShockwavePass) {
-				NegativePhotonsRenderUtil.renderNegativePhotonsBlocks(Minecraft.getInstance().level, buffer, camera, pose, negativePhotons);
-			}
 
 			buffer.endBatch();
 
 			GL11.glDisable(GL_DEPTH_CLAMP);
+		}
+
+		if(event.getStage() == RenderLevelStageEvent.Stage.AFTER_CUTOUT_BLOCKS)
+		{
+			ClientLevel level = Minecraft.getInstance().level;
+
+			if(level == null) return;
+
+			float partialTick = event.getPartialTick();
+
+			ShaderInstance shader = Minecraft.getInstance().gameRenderer.getShader("rendertype_translucent");
+			if(shader != null)
+			{
+				Color middleColor = Color.getHSBColor(0f, 0f, 0.05f);
+
+				float middleRed = middleColor.getRed() / 255f;
+				float middleGreen = middleColor.getGreen() / 255f;
+				float middleBlue = middleColor.getBlue() / 255f;
+
+				float tintRed = 1f + (middleRed - 1f);
+				float tintGreen = 1f + (middleGreen - 1f);
+				float tintBlue = 1f + (middleBlue - 1f);
+
+					shader.safeGetUniform("TintColor").set(
+							tintRed,
+							tintGreen,
+							tintBlue,
+							1f
+					);
+
+				float shadertime = (level.getGameTime() + partialTick) * 0.05f;
+				shader.safeGetUniform("FountainTime").set(shadertime);
+				Minecraft mc = Minecraft.getInstance();
+				float aspect = (float) mc.getWindow().getWidth() /
+									   (float) mc.getWindow().getHeight();
+
+				shader.safeGetUniform("FountainAspect").set(aspect);
+
+				TextureManager manager = Minecraft.getInstance().getTextureManager();
+
+				RenderSystem.setShaderTexture(3, NegativePhotonsRenderUtil.IMAGE_DEPTH);
+				RenderSystem.setShaderTexture(4, NegativePhotonsRenderUtil.WHITE_SCREEN);
+
+				AbstractTexture depth = manager.getTexture(NegativePhotonsRenderUtil.IMAGE_DEPTH);
+				AbstractTexture white = manager.getTexture(NegativePhotonsRenderUtil.WHITE_SCREEN);
+
+				shader.setSampler("ImageDepth", depth.getId());
+				shader.setSampler("WhiteScreen", white.getId());
+			}
 		}
 	}
 

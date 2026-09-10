@@ -43,8 +43,8 @@ public class FluidTypeRegistry {
                             .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)));
 
     public static final RegistryObject<FluidType> NEGATIVE_PHOTONS = registerFluidType("negative_photons",
-            new NegativePhotonsFluidType(NEGATIVE_PHOTONS_TEXTURE, NEGATIVE_PHOTONS_TEXTURE, NEGATIVE_PHOTONS_TEXTURE, 0xFFFFFFFF,
-                    new Vector3f(0f / 255f, 0f / 255f, 0f / 255f),
+            new NegativePhotonsFluidType(NEGATIVE_PHOTONS_TEXTURE, NEGATIVE_PHOTONS_TEXTURE, NEGATIVE_PHOTONS_TEXTURE, 0xFEFFFFFF,
+                    new Vector3f(11f / 255f, 12f / 255f, 13f / 255f),
                     FluidType.Properties.create().lightLevel(0).viscosity(7).density(14).canExtinguish(false)
                             .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                             .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
