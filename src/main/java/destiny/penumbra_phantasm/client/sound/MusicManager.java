@@ -191,6 +191,10 @@ public class MusicManager {
         }
 
         boolean sameTrack = desiredSound.equals(currentSoundEvent) && desiredPriority == currentPriority;
+        if (currentSoundEvent != null) {
+            boolean sameSound = desiredSound.getLocation().equals(currentSoundEvent.getLocation());
+            sameTrack = sameTrack && sameSound;
+        }
 
         if (sameTrack && (state == State.PLAYING || state == State.FADING_IN)) {
             tickFade();

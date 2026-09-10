@@ -71,8 +71,7 @@ public class DarkWorldDimensionEffects extends DimensionSpecialEffects {
         return builder.end();
     }
 
-    public static BufferBuilder.RenderedBuffer buildDepthsSkyDisc(BufferBuilder builder, float scale) {
-        float baseRadius = 512f;
+    public static BufferBuilder.RenderedBuffer buildDepthsSkyDisc(BufferBuilder builder, float scale, float baseRadius) {
         float invertibleBaseRadius = Math.signum(scale) * baseRadius;
 
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);

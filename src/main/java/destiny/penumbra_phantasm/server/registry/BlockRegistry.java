@@ -112,7 +112,8 @@ public class BlockRegistry {
     //Scarlet misc
     public static final RegistryObject<Block> SCARLET_BUSH = registerBlock("scarlet_bush",
             () -> new ScarletBushBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission()));
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission()
+                    .isViewBlocking((state, level, pos) -> false)));
     public static final RegistryObject<Block> TALL_SCARLET_BUSH = registerBlock("tall_scarlet_bush",
             () -> new SlowingDoublePlantBlock(BlockBehaviour.Properties.copy(Blocks.PEONY)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.PINK_PETALS).noCollission()));
@@ -124,7 +125,8 @@ public class BlockRegistry {
                     BlockBehaviour.Properties.copy(Blocks.POTTED_POPPY).noOcclusion()));
     public static final RegistryObject<Block> SCARLET_LEAVES = registerBlock("scarlet_leaves",
             () -> new ScarletLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES)));
+                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES).isSuffocating((state, level, pos) -> false)
+                    .isRedstoneConductor((state, level, pos) -> false)));
     public static final RegistryObject<Block> FALLEN_SCARLET_LEAVES = BLOCKS.register("fallen_scarlet_leaves",
             () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak(), 1));
@@ -172,7 +174,9 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission().noOcclusion().instabreak().randomTicks()));
     public static final RegistryObject<Block> DARK_CANDY_LEAVES = registerBlock("dark_candy_leaves",
             () -> new DarkCandyLeaves(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()));
+                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()
+                    .isSuffocating((state, level, pos) -> false)
+                    .isRedstoneConductor((state, level, pos) -> false)));
     public static final RegistryObject<Block> FALLEN_DARK_CANDY_LEAVES = BLOCKS.register("fallen_dark_candy_leaves",
             () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
                     .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.PINK_PETALS).noCollission().noOcclusion().instabreak(), 1f));
@@ -477,7 +481,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> DARKNESS = BLOCKS.register("darkness",
             () -> new DarknessBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLACK).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
-                    .noOcclusion().noParticlesOnBreak()));
+                    .noOcclusion().noParticlesOnBreak().isSuffocating((state, level, pos) -> false)
+                    .isRedstoneConductor((state, level, pos) -> false)));
     public static final RegistryObject<Block> UNBREAKABLE_DARKNESS = BLOCKS.register("unbreakable_darkness",
             () -> new UnbreakableDarknessBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLACK).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
@@ -485,12 +490,28 @@ public class BlockRegistry {
     public static final RegistryObject<Block> GREAT_DOOR_SHAPE = BLOCKS.register("great_door_shape",
             () -> new GreatDoorShapeBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.NONE).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
-                    .noOcclusion().noParticlesOnBreak()));
+                    .noOcclusion().noParticlesOnBreak().isSuffocating((state, level, pos) -> false)
+                    .isRedstoneConductor((state, level, pos) -> false)
+                    .isViewBlocking((state, level, pos) -> false)));
 
     public static final RegistryObject<Block> TITANSTONE = registerBlock("titanstone",
             () -> new UnbreakableDarknessBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_GRAY).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
                     .sound(SoundTypeRegistry.CLIFF).noParticlesOnBreak()));
+
+    public static final RegistryObject<Block> VANTAROSE = registerBlock("vantarose",
+            () -> new DepthsFlowerBlock(() -> MobEffects.DARKNESS, 20, BlockBehaviour.Properties.copy(Blocks.POPPY)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission().lightLevel((state) -> 15)));
+    public static final RegistryObject<Block> POTTED_VANTAROSE = BLOCKS.register("potted_vantarose",
+            () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.VANTAROSE,
+                    BlockBehaviour.Properties.copy(Blocks.POTTED_POPPY).noOcclusion().lightLevel((state) -> 8)));
+
+    public static final RegistryObject<Block> ROARING_EYE = registerBlock("roaring_eye",
+            () -> new RoaringEyeBlock(BlockBehaviour.Properties.copy(Blocks.POPPY).offsetType(BlockBehaviour.OffsetType.NONE)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
+    public static final RegistryObject<Block> ROARING_EYE_GHOST = BLOCKS.register("roaring_eye_ghost",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.POPPY).offsetType(BlockBehaviour.OffsetType.NONE)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);

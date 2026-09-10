@@ -49,14 +49,14 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
     public static final int MIN_DEBRIS_COUNT = 10;
     public static final int MAX_DEBRIS_COUNT = 13;
 
-    private static final float HORIZON_OFFSET = -7.5F;
-    private static final float SPRITE_SIZE = 24F;
+    private static final float HORIZON_OFFSET = -7.5f;
+    private static final float SPRITE_SIZE = 24f;
 
-    private static final float FLASH_RADIUS_SCALE = 2.25F;
+    private static final float FLASH_RADIUS_SCALE = 2.25f;
     private static final int FLASH_SEGMENTS = 24;
-    public static final float FLASH_Y = 12F;
+    public static final float FLASH_Y = 12f;
 
-    private static final float CYLINDER_RADIUS = 96F;
+    private static final float CYLINDER_RADIUS = 96f;
 
     private final VertexBuffer skyBuffer;
     private final VertexBuffer lowerSkyBuffer;
@@ -68,9 +68,9 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
     private List<Sprite> sprites = List.of();
 
     public DepthsDimensionEffects() {
-        super(Float.NaN, true, SkyType.NONE, false, false);
-        this.skyBuffer = createSkyBuffer(SKY_DISC_HEIGHT);
-        this.lowerSkyBuffer = createSkyBuffer(-SKY_DISC_HEIGHT);
+        super(Float.NaN, false, SkyType.NONE, false, false);
+        this.skyBuffer = createDepthsSkyBuffer(0.1f);
+        this.lowerSkyBuffer = createDepthsSkyBuffer(-0.1f);
         this.silhouettesBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.flashesBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         this.flashesBackgroundBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
@@ -81,18 +81,19 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
         setupFog.run();
         RenderSystem.depthMask(false);
         RenderSystem.disableCull();
-        RenderSystem.setShaderColor(0F, 0F, 0F, 1F);
+        RenderSystem.setShaderColor(0, 0, 0, 1);
         RenderSystem.setShader(GameRenderer::getPositionShader);
 
         this.skyBuffer.bind();
         this.skyBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
+        VertexBuffer.unbind();
 
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         FogRenderer.levelFogColor();
-        RenderSystem.setShaderFogStart(CYLINDER_RADIUS * 4F);
-        RenderSystem.setShaderFogEnd(CYLINDER_RADIUS * 4.5F);
+        RenderSystem.setShaderFogStart(CYLINDER_RADIUS * 4f);
+        RenderSystem.setShaderFogEnd(CYLINDER_RADIUS * 4.5f);
 
         this.renderFlashesBackground(level, partialTick, poseStack, projectionMatrix);
         this.renderFlashes(level, partialTick, poseStack, projectionMatrix);
@@ -101,13 +102,26 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
 
         this.renderSpriteQuads(poseStack, projectionMatrix);
 
+        setupFog.run();
+        RenderSystem.depthMask(false);
+        RenderSystem.disableCull();
+        RenderSystem.setShaderColor(0, 0, 0, 1);
+        RenderSystem.setShader(GameRenderer::getPositionShader);
+
         this.lowerSkyBuffer.bind();
         this.lowerSkyBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, RenderSystem.getShader());
         VertexBuffer.unbind();
 
+        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        FogRenderer.levelFogColor();
+        RenderSystem.setShaderFogStart(CYLINDER_RADIUS * 4f);
+        RenderSystem.setShaderFogEnd(CYLINDER_RADIUS * 4.5f);
+
         RenderSystem.disableBlend();
         RenderSystem.enableCull();
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.depthMask(true);
 
         return true;
@@ -205,10 +219,11 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
             drawing = true;
 
             Vec3 flashCenter = new Vec3(Mth.cos(flash.event.azimuth()) * flash.event.radius(), FLASH_Y,
-                    Mth.sin(flash.event.azimuth()) * flash.event.radius()
-            );
+                    Mth.sin(flash.event.azimuth()) * flash.event.radius());
+
             Basis basis = getUprightBasis(flashCenter);
-            float radius = 16F * FLASH_RADIUS_SCALE;
+            float radius = 16f * FLASH_RADIUS_SCALE;
+
             this.addFlashDisc(bufferBuilder, flashCenter, basis, radius, flash.alpha);
         }
 
@@ -236,10 +251,11 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
             drawing = true;
 
             Vec3 flashCenter = new Vec3(Mth.cos(flash.event.azimuth()) * flash.event.radius(), FLASH_Y,
-                    Mth.sin(flash.event.azimuth()) * flash.event.radius()
-            );
+                    Mth.sin(flash.event.azimuth()) * flash.event.radius());
+
             Basis basis = getUprightBasis(flashCenter);
-            float radius = 16F * FLASH_RADIUS_SCALE;
+            float radius = 16f * FLASH_RADIUS_SCALE;
+
             this.addFlashDisc(bufferBuilder, flashCenter, basis, radius, flash.alpha);
         }
 
@@ -393,7 +409,7 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
         VertexBuffer skyBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferBuilder = tesselator.getBuilder();
-        BufferBuilder.RenderedBuffer renderedBuffer = DarkWorldDimensionEffects.buildDepthsSkyDisc(bufferBuilder, scale);
+        BufferBuilder.RenderedBuffer renderedBuffer = DarkWorldDimensionEffects.buildDepthsSkyDisc(bufferBuilder, scale, 512);
 
         skyBuffer.bind();
         skyBuffer.upload(renderedBuffer);

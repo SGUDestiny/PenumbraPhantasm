@@ -32,9 +32,12 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.REAL_KNIFE.get());
                 output.accept(ItemRegistry.BLACK_KNIFE.get());
 
-                output.accept(ItemRegistry.DARK_WALLET.get());
-                output.accept(ItemRegistry.DARK_DOLLAR.get());
                 output.accept(ItemRegistry.DARK_DIME.get());
+                output.accept(ItemRegistry.DARK_DOLLAR.get());
+                output.accept(ItemRegistry.DARK_WAD.get());
+                output.accept(ItemRegistry.DARK_BAR.get());
+                output.accept(ItemRegistry.DARK_GRANT.get());
+                output.accept(ItemRegistry.DARK_WALLET.get());
                 output.accept(ItemRegistry.GLOWSHARD.get());
 
                 output.accept(ItemRegistry.TENSION_BIT.get());
@@ -372,6 +375,8 @@ public class CreativeTabRegistry {
             .title(Component.translatable("itemGroup.penumbra_phantasm.the_depths"))
             .withTabsBefore(CARD_KINGDOM.getKey())
             .displayItems((parameters, output) -> {
+                output.accept(BlockRegistry.VANTAROSE.get());
+                output.accept(BlockRegistry.ROARING_EYE.get());
                 output.accept(BlockRegistry.TENEBRALITH_SPIKE.get());
                 output.accept(BlockRegistry.TENEBRALITH_PATH.get());
                 output.accept(BlockRegistry.DARK_SAND.get());

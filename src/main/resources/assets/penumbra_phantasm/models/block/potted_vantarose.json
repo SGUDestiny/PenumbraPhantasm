@@ -1,0 +1,7 @@
+{
+  "parent": "penumbra_phantasm:block/template_tinted_flower_pot_cross_layered_emissive",
+  "textures": {
+    "plant": "penumbra_phantasm:block/vantarose",
+    "plant_emissive": "penumbra_phantasm:block/vantarose_emissive"
+  }
+}

@@ -1,8 +1,6 @@
 {
-  "parent": "penumbra_phantasm:block/template_cube_layered_emissive",
+  "parent": "minecraft:block/cube_all",
   "textures": {
-    "outer": "penumbra_phantasm:block/dark_sand_glow",
-    "inner": "penumbra_phantasm:block/dark_sand",
-    "particle": "penumbra_phantasm:block/dark_sand"
+    "all": "penumbra_phantasm:block/dark_sand"
   }
 }

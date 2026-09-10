@@ -70,6 +70,11 @@ public class DarknessBlock extends BaseEntityBlock {
     }
 
     @Override
+    public VoxelShape getBlockSupportShape(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
+        return Shapes.empty();
+    }
+
+    @Override
     public int getLightBlock(BlockState state, BlockGetter level, BlockPos pos) {
         return 0;
     }

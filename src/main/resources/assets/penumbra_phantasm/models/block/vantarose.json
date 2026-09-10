@@ -1,0 +1,7 @@
+{
+  "parent": "penumbra_phantasm:block/template_cross_layered_emissive",
+  "textures": {
+    "cross": "penumbra_phantasm:block/vantarose",
+    "cross_emissive": "penumbra_phantasm:block/vantarose_emissive"
+  }
+}
