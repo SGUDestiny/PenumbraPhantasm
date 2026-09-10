@@ -29,7 +29,7 @@ void main() {
     vec4 baseColor = texture(Sampler0, texCoord0) * vertexColor * ColorModulator;
     vec4 outColor = baseColor;
 
-    if (abs(vColor.a - 0.996) < 0.03) {
+    if (abs(vColor.a - 0.996078431372549) < 0.00001) {
         float scale = 4.0;
         float speed = 0.12;
 
