@@ -120,8 +120,6 @@ public class ClientEvents {
 	private static ResourceKey<Level> lastClientDim;
 	private static int eggRoomRebuildLeft;
 
-	public static Map<ChunkPos, Set<BlockPos>> negativePhotons = new HashMap<>();
-
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void eggRoomCameraAngles(ViewportEvent.ComputeCameraAngles event) {
 		LocalPlayer player = Minecraft.getInstance().player;
@@ -346,68 +344,6 @@ public class ClientEvents {
 				shader.setSampler("WhiteScreen", white.getId());
 			}
 		}
-	}
-
-	@SubscribeEvent
-	public static void onChunkLoad(ChunkEvent.Load event) {
-		if(!event.getLevel().isClientSide()) return;
-		if(!(event.getLevel() instanceof ClientLevel level)) return;
-
-		ChunkAccess chunk = event.getChunk();
-
-		if(chunk == null) return;
-
-		ChunkPos chunkPos = chunk.getPos();
-		int chunkMinX = chunkPos.getMinBlockX();
-		int chunkMinZ = chunkPos.getMinBlockZ();
-
-		Set<BlockPos> negativePhotonsSet = new HashSet<>();
-		for(int sectionIndex = 0; sectionIndex < chunk.getSectionsCount(); sectionIndex++) {
-			LevelChunkSection section = chunk.getSection(sectionIndex);
-
-			if(section.hasOnlyAir()) continue;
-			if(!section.maybeHas(state -> state.getFluidState().getFluidType() == FluidTypeRegistry.NEGATIVE_PHOTONS.get()))
-				continue;
-
-			int sectionChunkY = chunk.getSectionYFromSectionIndex(sectionIndex);
-			int sectionMinY = SectionPos.sectionToBlockCoord(sectionChunkY);
-
-			for(int sectionX = 0; sectionX < 16; sectionX++) {
-				for(int sectionY = 0; sectionY < 16; sectionY++) {
-					for(int sectionZ = 0; sectionZ < 16; sectionZ++) {
-						FluidState fluidState = section.getFluidState(sectionX, sectionY, sectionZ);
-
-						if(fluidState.getFluidType() != FluidTypeRegistry.NEGATIVE_PHOTONS.get()) continue;
-
-						BlockPos negativePhotonsPos = new BlockPos(chunkMinX + sectionX, sectionMinY + sectionY, chunkMinZ + sectionZ);
-						negativePhotonsSet.add(negativePhotonsPos);
-					}
-				}
-			}
-		}
-
-		negativePhotons.put(chunkPos, negativePhotonsSet);
-
-		if(CardKingdomEggRoomUtil.isEggRoom(level)) {
-			Minecraft minecraft = Minecraft.getInstance();
-			int minY = level.getMinSection();
-			int maxY = level.getMaxSection();
-
-			for(int y = minY; y < maxY; y++) {
-				minecraft.levelRenderer.setSectionDirty(chunkPos.x, y, chunkPos.z);
-			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onChunkUnload(ChunkEvent.Unload event) {
-		if(!event.getLevel().isClientSide()) return;
-		if(!(event.getLevel() instanceof ClientLevel level)) return;
-
-		ChunkAccess chunk = event.getChunk();
-		ChunkPos chunkPos = chunk.getPos();
-
-		negativePhotons.remove(chunkPos);
 	}
 
 	@SubscribeEvent
