@@ -8,7 +8,7 @@
     "Name": "penumbra_phantasm:tenebralith"
   },
   "default_fluid": {
-    "Name": "penumbra_phantasm:pure_darkness",
+    "Name": "penumbra_phantasm:negative_photons",
     "Properties": {
       "level": "0"
     }
