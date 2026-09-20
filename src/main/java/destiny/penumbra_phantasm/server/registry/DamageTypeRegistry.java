@@ -14,7 +14,7 @@ public class DamageTypeRegistry {
     public static final ResourceKey<DamageType> INJECTION_OVERDOSE = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(PenumbraPhantasm.MODID, "injection_overdose"));
     public static final ResourceKey<DamageType> SOUL_DAMAGE_1 = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(PenumbraPhantasm.MODID, "soul_damage_1"));
     public static final ResourceKey<DamageType> SOUL_DAMAGE_2 = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(PenumbraPhantasm.MODID, "soul_damage_2"));
-    public static final ResourceKey<DamageType> EROSION = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(PenumbraPhantasm.MODID, "erosion"));
+    public static final ResourceKey<DamageType> PETRIFICATION = ResourceKey.create(Registries.DAMAGE_TYPE, new ResourceLocation(PenumbraPhantasm.MODID, "petrification"));
 
     public static DamageSource getSimpleDamageSource(Level level, ResourceKey<DamageType> type) {
         return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(type));

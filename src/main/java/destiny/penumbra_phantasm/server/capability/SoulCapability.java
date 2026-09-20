@@ -18,8 +18,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidType;
@@ -141,7 +139,7 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
                 player.getFoodData().setSaturation(0f);
 
                 if (level.getGameTime() % 60 == 0) {
-                    player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.EROSION), 6);
+                    player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.PETRIFICATION), 6);
                 }
             }
         }

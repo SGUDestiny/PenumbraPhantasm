@@ -50,6 +50,8 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
 
     public int determinationTarget = 0;
     public int determinationDifference = 0;
+    public int determinationTargetTicker = 0;
+    public int determinationDifferenceTicker = 0;
 
     public void tick(Level level, Player player) {
         if (darknessLandTicker >= 40) {
@@ -149,7 +151,9 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     }
 
     @Override
-    public void deserializeNBT(CompoundTag tag) {}
+    public void deserializeNBT(CompoundTag tag) {
+        //No thoughts, head empty
+    }
 
     public void sync(@NotNull ScreenAnimationCapability cap) {
         this.darknessLandTicker = cap.darknessLandTicker;
@@ -159,5 +163,9 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         this.titleAlphaTicker = cap.titleAlphaTicker;
         this.sealShineTicker = cap.sealShineTicker;
         this.depthsEntryTicker = cap.depthsEntryTicker;
+        this.determinationTarget = cap.determinationTarget;
+        this.determinationDifference = cap.determinationDifference;
+        this.determinationTargetTicker = cap.determinationTargetTicker;
+        this.determinationDifferenceTicker = cap.determinationDifferenceTicker;
     }
 }

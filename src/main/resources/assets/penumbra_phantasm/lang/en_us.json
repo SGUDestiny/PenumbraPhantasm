@@ -549,7 +549,7 @@
   "death.attack.penumbra_phantasm.injection_overdose": "%1$s was too DETERMINED and melted into goop",
   "death.attack.penumbra_phantasm.injection_overdose.player": "%1$s was made too DETERMINED by %2$s and melted into goop",
   "death.attack.penumbra_phantasm.soul_damage": "%1$s couldn't rip out their SOUL",
-  "death.attack.penumbra_phantasm.erosion": "%1$s's DETERMINATION was crushed by DARKNESS",
+  "death.attack.penumbra_phantasm.petrification": "%1$s's DETERMINATION was crushed by DARKNESS",
 
   "container.penumbra_phantasm.umbrastone_furnace": "Umbrastone Furnace",
   "container.penumbra_phantasm.dark_world_inventory.narration.button.usage.hover": "LEFT CLICK TO SWITCH TO %s",
