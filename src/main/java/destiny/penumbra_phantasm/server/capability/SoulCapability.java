@@ -28,9 +28,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-//TODO:
-// - Transition soul hearth stuff to the capability
-
 public class SoulCapability implements INBTSerializable<CompoundTag> {
     public static final String SEEN_INTRO = "seenIntro";
     public static final String SOUL_TYPE = "soulType";
@@ -47,7 +44,6 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
     public static final String EGG_DOOR_X = "eggDoorX";
     public static final String EGG_DOOR_Y = "eggDoorY";
     public static final String EGG_DOOR_Z = "eggDoorZ";
-	public static final String EGG_LEFT_ENTRANCE = "eggLeftEntrance";
 	public static final String EGG_ROOM_FRONT_HINT = "eggRoomFrontHint";
 
     public boolean seenIntro = false;
@@ -109,17 +105,21 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
 
                 if (fountainCapability != null) {
                     BlockPos playerPos = player.blockPosition();
+                    List<BlockPos> fountainPoses = new ArrayList<>();
 
                     for (Map.Entry<BlockPos, DarkFountain> entry : fountainCapability.darkFountains.entrySet()) {
                         BlockPos fountainPos = entry.getKey();
 
-                        if (playerPos.distSqr(fountainPos) > Mth.square(96)) {
-                            if (!player.isCreative() && !player.isSpectator()) {
-                                if (level.getGameTime() % (5 * 20) == 0) {
-                                    determination = determination - 1;
-                                }
+                        fountainPoses.add(fountainPos);
+                    }
+
+                    fountainPoses.sort((Comparator.comparingDouble(pos -> pos.getCenter().distanceTo(playerPos.getCenter()))));
+
+                    if (fountainPoses.isEmpty() || playerPos.distSqr(fountainPoses.get(0)) > Mth.square(96)) {
+                        if (!player.isCreative() && !player.isSpectator()) {
+                            if (level.getGameTime() % (5 * 20) == 0) {
+                                determination = determination - 1;
                             }
-                            break;
                         }
                     }
                 }

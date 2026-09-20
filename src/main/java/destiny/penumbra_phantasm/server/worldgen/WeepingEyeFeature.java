@@ -55,7 +55,6 @@ public class WeepingEyeFeature extends Feature<NoneFeatureConfiguration> {
                         }
                     }
 
-                    // Place the eye
                     int leaking = actualLength > 0 ? 2 : 0;
                     level.setBlock(currentPos, BlockRegistry.WEEPING_EYE.get().defaultBlockState().setValue(HORIZONTAL_FACING, dir)
                                     .setValue(WeepingEyeBlock.LEAKING, leaking), 2);

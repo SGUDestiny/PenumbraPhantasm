@@ -48,6 +48,9 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
 
     public int depthsEntryTicker = -1;
 
+    public int determinationTarget = 0;
+    public int determinationDifference = 0;
+
     public void tick(Level level, Player player) {
         if (darknessLandTicker >= 40) {
             darknessLandTicker = -1;

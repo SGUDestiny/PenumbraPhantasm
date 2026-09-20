@@ -13,45 +13,28 @@ import static destiny.penumbra_phantasm.PenumbraPhantasm.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PlayerAnimator {
+
     @SubscribeEvent
-    public static void onClientSetup(FMLClientSetupEvent event)
-    {
-        //Set the player construct callback. It can be a lambda function.
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                new ResourceLocation(MODID, "fountain_make"),
-                1500,
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(ResourceLocation.tryBuild(MODID, "fountain_make"), 1500,
                 PlayerAnimator::registerPlayerAnimation);
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                new ResourceLocation(MODID, "fountain_make_jump"),
-                1500,
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(ResourceLocation.tryBuild(MODID, "fountain_make_jump"), 1500,
                 PlayerAnimator::registerPlayerAnimation);
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                new ResourceLocation(MODID, "fountain_make_stab"),
-                1500,
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(ResourceLocation.tryBuild(MODID, "fountain_make_stab"), 1500,
                 PlayerAnimator::registerPlayerAnimation);
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                new ResourceLocation(MODID, "fountain_make_cancel"),
-                1500,
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(ResourceLocation.tryBuild(MODID, "fountain_make_cancel"), 1500,
                 PlayerAnimator::registerPlayerAnimation);
 
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                new ResourceLocation(MODID, "injection_use"),
-                1500,
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(ResourceLocation.tryBuild(MODID, "injection_use"), 1500,
                 PlayerAnimator::registerPlayerAnimation);
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                new ResourceLocation(MODID, "injection_use_alt"),
-                1500,
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(ResourceLocation.tryBuild(MODID, "injection_use_alt"), 1500,
                 PlayerAnimator::registerPlayerAnimation);
 
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                new ResourceLocation(MODID, "soul_rip"),
-                1500,
+        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(ResourceLocation.tryBuild(MODID, "soul_rip"), 1500,
                 PlayerAnimator::registerPlayerAnimation);
     }
 
-    //This method will set your mods animation into the library.
     private static IAnimation registerPlayerAnimation(AbstractClientPlayer player) {
-        //This will be invoked for every new player
         return new ModifierLayer<>();
     }
 }
