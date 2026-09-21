@@ -65,19 +65,37 @@ public class VerticalBarCapability implements INBTSerializable<CompoundTag> {
             if (determinationAppearTicker < 10) {
                 determinationAppearTicker++;
             }
-        } else if (isDeterminationItem(determinationSelectedItem, determination)) {
-            if (determinationAppearTicker < 10) {
-                determinationAppearTicker++;
-            }
-            if (determinationTargetTicker == -1 && determinationDifferenceTicker < 6) {
-                determinationDifferenceTicker++;
+
+            if (isDeterminationItem(determinationSelectedItem, determination)) {
+                if (determinationTargetTicker == -1 && determinationDifferenceTicker < 6) {
+                    determinationDifferenceTicker++;
+                }
+            } else {
+                if (determinationDifferenceTicker >= 0) {
+                    determinationDifferenceTicker--;
+                }
+                if (determinationDifferenceTicker == -1) {
+                    determinationDifference = 0;
+                }
             }
         } else {
-            if (determinationAppearTicker >= 0) {
-                determinationAppearTicker--;
-            }
-            if (determinationDifferenceTicker >= 0) {
-                determinationDifferenceTicker--;
+            if (isDeterminationItem(determinationSelectedItem, determination)) {
+                if (determinationAppearTicker < 10) {
+                    determinationAppearTicker++;
+                }
+                if (determinationTargetTicker == -1 && determinationDifferenceTicker < 6) {
+                    determinationDifferenceTicker++;
+                }
+            } else {
+                if (determinationAppearTicker >= 0) {
+                    determinationAppearTicker--;
+                }
+                if (determinationDifferenceTicker >= 0) {
+                    determinationDifferenceTicker--;
+                }
+                if (determinationDifferenceTicker == -1) {
+                    determinationDifference = 0;
+                }
             }
         }
 

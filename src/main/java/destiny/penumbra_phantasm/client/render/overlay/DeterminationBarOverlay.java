@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
-import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.capability.VerticalBarCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -16,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
 import net.minecraftforge.common.util.LazyOptional;
@@ -51,7 +49,6 @@ public class DeterminationBarOverlay {
         int oldDetermination = verticalBarCap.oldDetermination;
         int targetTicker = verticalBarCap.determinationTargetTicker;
         int differenceTicker = verticalBarCap.determinationDifferenceTicker;
-        ItemStack determinationItem = verticalBarCap.determinationSelectedItem;
 
         //Getting capability
         SoulCapability soulCap;
@@ -62,7 +59,7 @@ public class DeterminationBarOverlay {
 
         int determination = soulCap.determination;
 
-        int xTarget = width - 55;
+        int xTarget = width - 60;
         float xPos;
         float totalAlpha;
 
@@ -181,12 +178,23 @@ public class DeterminationBarOverlay {
 
         pose.pushPose();
 
-        pose.translate(width / 2f, height / 2f, 0f);
         pose.scale(2f, 2f, 1f);
-        pose.translate(-width / 2f, -height / 2f, 0f);
 
-        drawString(guiGraphics, Component.literal(determination + "").withStyle(Style.EMPTY.withFont(
-                ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "8_bit_operator"))), 0, 0, 0xFFFFFF, 1f);
+        int determinationDisplay;
+        if (targetTicker > -1 && targetTicker < 6) {
+            float displayDelta = Mth.clamp(targetTicker / 6f, 0, 1);
+            determinationDisplay = (int) Mth.lerp(displayDelta, oldDetermination, determination);
+        } else {
+            determinationDisplay = determination;
+        }
+
+        //Determination number
+        drawString(guiGraphics, Component.literal(determinationDisplay + "").withStyle(Style.EMPTY.withFont(
+                ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "8_bit_operator"))), 14, -10, 0xFFFFFF, 1f);
+
+        //Percentage symbol
+        drawString(guiGraphics, Component.literal("%").withStyle(Style.EMPTY.withFont(
+                ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "8_bit_operator"))), 18, 0, 0xFFFFFF, 1f);
 
         pose.popPose();
 

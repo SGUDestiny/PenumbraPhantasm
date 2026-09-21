@@ -80,15 +80,7 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
             seenIntro = true;
         }
 
-        if (isInNegativePhotons(level, player)) {
-            if (!player.isCreative() && !player.isSpectator()) {
-                if (level.getGameTime() % 5 == 0) {
-                    if (determination > 0) {
-                        determination = determination - 1;
-                    }
-                }
-            }
-        } else if (!DarkWorldUtil.isDepths(level)) {
+        if (!DarkWorldUtil.isDepths(level)) {
             if (hasOwnSoulHearth(player)) {
                 if (determination < 100) {
                     if (level.getGameTime() % (5 * 20) == 0) {
@@ -98,28 +90,38 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
             }
         } else {
             if (determination > 0) {
-                DarkFountainCapability fountainCapability = null;
-                LazyOptional<DarkFountainCapability> lazyFountainCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
-                if (lazyFountainCapability.isPresent() && lazyFountainCapability.resolve().isPresent()) {
-                    fountainCapability = lazyFountainCapability.resolve().get();
-                }
-
-                if (fountainCapability != null) {
-                    BlockPos playerPos = player.blockPosition();
-                    List<BlockPos> fountainPoses = new ArrayList<>();
-
-                    for (Map.Entry<BlockPos, DarkFountain> entry : fountainCapability.darkFountains.entrySet()) {
-                        BlockPos fountainPos = entry.getKey();
-
-                        fountainPoses.add(fountainPos);
+                if (isInNegativePhotons(level, player)) {
+                    if (!player.isCreative() && !player.isSpectator()) {
+                        if (level.getGameTime() % 5 == 0) {
+                            if (determination > 0) {
+                                determination = determination - 1;
+                            }
+                        }
+                    }
+                } else {
+                    DarkFountainCapability fountainCapability = null;
+                    LazyOptional<DarkFountainCapability> lazyFountainCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+                    if (lazyFountainCapability.isPresent() && lazyFountainCapability.resolve().isPresent()) {
+                        fountainCapability = lazyFountainCapability.resolve().get();
                     }
 
-                    fountainPoses.sort((Comparator.comparingDouble(pos -> pos.getCenter().distanceTo(playerPos.getCenter()))));
+                    if (fountainCapability != null) {
+                        BlockPos playerPos = player.blockPosition();
+                        List<BlockPos> fountainPoses = new ArrayList<>();
 
-                    if (fountainPoses.isEmpty() || playerPos.distSqr(fountainPoses.get(0)) > Mth.square(96)) {
-                        if (!player.isCreative() && !player.isSpectator()) {
-                            if (level.getGameTime() % (5 * 20) == 0) {
-                                determination = determination - 1;
+                        for (Map.Entry<BlockPos, DarkFountain> entry : fountainCapability.darkFountains.entrySet()) {
+                            BlockPos fountainPos = entry.getKey();
+
+                            fountainPoses.add(fountainPos);
+                        }
+
+                        fountainPoses.sort((Comparator.comparingDouble(pos -> pos.getCenter().distanceTo(playerPos.getCenter()))));
+
+                        if (fountainPoses.isEmpty() || playerPos.distSqr(fountainPoses.get(0)) > Mth.square(96)) {
+                            if (!player.isCreative() && !player.isSpectator()) {
+                                if (level.getGameTime() % (5 * 20) == 0) {
+                                    determination = determination - 1;
+                                }
                             }
                         }
                     }
@@ -134,6 +136,7 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
                         effectsToRemove.add(effect.getEffect());
                     }
                 }
+
                 for (MobEffect mobEffect : effectsToRemove) {
                     player.removeEffect(mobEffect);
                 }
