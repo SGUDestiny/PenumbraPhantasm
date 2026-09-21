@@ -18,76 +18,70 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL46;
 
 import java.util.Optional;
 
 public final class FountainOpeningPosterizeRenderer {
-    private static final int GL_COLOR_BUFFER_BIT = 16384;
-    private static final int GL_NEAREST = 9728;
-    private static final int GL_READ_FRAMEBUFFER = 36008;
-    private static final int GL_DRAW_FRAMEBUFFER = 36009;
+    private static final int GL_COLOR_BUFFER_BIT = GL11.GL_COLOR_BUFFER_BIT;
+    private static final int GL_NEAREST = GL11.GL_NEAREST;
+    private static final int GL_READ_FRAMEBUFFER = GL46.GL_READ_FRAMEBUFFER;
+    private static final int GL_DRAW_FRAMEBUFFER = GL46.GL_DRAW_FRAMEBUFFER;
 
-    private static RenderTarget scratch;
+    private static RenderTarget target;
 
     private FountainOpeningPosterizeRenderer() {}
 
     public static void render(Minecraft minecraft, GameRenderer gameRenderer, float partialTick) {
-        if (!(minecraft.level instanceof ClientLevel)) {
-            return;
-        }
+        if (!(minecraft.level instanceof ClientLevel)) return;
 
         ShaderInstance shader = ModShaders.OPENING_POSTERIZE;
-        if (shader == null) {
-            return;
-        }
+        if (shader == null) return;
 
         ClientLevel level = minecraft.level;
         Vec3 camPos = gameRenderer.getMainCamera().getPosition();
         Optional<DarkFountain> fountainOpt = FountainOpeningPosterize.findClosestOpeningFountain(level, camPos, partialTick);
-        if (fountainOpt.isEmpty()) {
-            return;
-        }
+        if (fountainOpt.isEmpty()) return;
 
         DarkFountain fountain = fountainOpt.get();
 
-        float d = FountainOpeningPosterize.distanceInBlocks(camPos, fountain.getFountainPos());
-        float fade = FountainOpeningPosterize.distanceFade(d);
+        float distance = FountainOpeningPosterize.distanceInBlocks(camPos, fountain.getFountainPos());
+        float fade = FountainOpeningPosterize.distanceFade(distance);
         float tick = fountain.getOpeningTick(partialTick);
-        float s = FountainOpeningPosterize.strength(tick);
-        float w = FountainOpeningPosterize.whiteLevel(tick);
-        float strengthUniform = s * fade * FountainRenderUtil.OPENING_POSTERIZE_STRENGTH_MAX;
+        float strength = FountainOpeningPosterize.strength(tick);
+        float white = FountainOpeningPosterize.whiteLevel(tick);
+        float strengthUniform = strength * fade * FountainRenderUtil.OPENING_POSTERIZE_STRENGTH_MAX;
+        float whiteUniform = white * fade;
 
-        if (s <= 0 || fade <= 0) {
-            return;
-        }
+        if (strength <= 0 || fade <= 0) return;
 
-        float whiteUniform = w * fade;
-        RenderTarget main = minecraft.getMainRenderTarget();
-        ensureScratch(main);
+        RenderTarget mainTarget = minecraft.getMainRenderTarget();
+        ensureTarget(mainTarget);
         Matrix4f savedProjection = new Matrix4f(RenderSystem.getProjectionMatrix());
         VertexSorting savedSorting = RenderSystem.getVertexSorting();
 
-        GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, main.frameBufferId);
-        GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, scratch.frameBufferId);
-        GlStateManager._glBlitFrameBuffer(0, 0, main.width, main.height, 0, 0, scratch.width, scratch.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, mainTarget.frameBufferId);
+        GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.frameBufferId);
+        GlStateManager._glBlitFrameBuffer(0, 0, mainTarget.width, mainTarget.height, 0, 0, target.width, target.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
         GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-        main.bindWrite(false);
+        mainTarget.bindWrite(false);
 
-        RenderSystem.viewport(0, 0, main.width, main.height);
+        RenderSystem.viewport(0, 0, mainTarget.width, mainTarget.height);
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
 
         GlStateManager._depthMask(false);
         GlStateManager._colorMask(true, true, true, false);
 
-        Matrix4f ortho = new Matrix4f().setOrtho(0f, (float) main.width, (float) main.height, 0f, 1000f, 3000f);
+        Matrix4f ortho = new Matrix4f().setOrtho(0f, (float) mainTarget.width, (float) mainTarget.height, 0f, 1000f, 3000f);
 
         RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);
         RenderSystem.setShader(() -> shader);
 
-        shader.setSampler("Sampler0", scratch.getColorTextureId());
+        shader.setSampler("Sampler0", target.getColorTextureId());
 
         if (shader.MODEL_VIEW_MATRIX != null) {
             shader.MODEL_VIEW_MATRIX.set(new Matrix4f().translation(0f, 0f, -2000f));
@@ -116,13 +110,13 @@ public final class FountainOpeningPosterizeRenderer {
 
         BufferBuilder buffer = RenderSystem.renderThreadTesselator().getBuilder();
 
-        float pw = (float) main.width;
-        float ph = (float) main.height;
+        float targetWidth = (float) mainTarget.width;
+        float targetHeight = (float) mainTarget.height;
 
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(0, ph, 0).uv(0, 0).endVertex();
-        buffer.vertex(pw, ph, 0).uv(1, 0).endVertex();
-        buffer.vertex(pw, 0, 0).uv(1, 1).endVertex();
+        buffer.vertex(0, targetHeight, 0).uv(0, 0).endVertex();
+        buffer.vertex(targetWidth, targetHeight, 0).uv(1, 0).endVertex();
+        buffer.vertex(targetWidth, 0, 0).uv(1, 1).endVertex();
         buffer.vertex(0, 0, 0).uv(0, 1).endVertex();
 
         BufferUploader.draw(buffer.end());
@@ -135,19 +129,19 @@ public final class FountainOpeningPosterizeRenderer {
         RenderSystem.setProjectionMatrix(savedProjection, savedSorting);
         RenderSystem.enableDepthTest();
 
-        main.bindWrite(false);
+        mainTarget.bindWrite(false);
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
-    private static void ensureScratch(RenderTarget main) {
-        if (scratch == null) {
-            scratch = new TextureTarget(main.width, main.height, false, Minecraft.ON_OSX);
-            scratch.setFilterMode(GL_NEAREST);
-        } else if (scratch.width != main.width || scratch.height != main.height) {
-            scratch.resize(main.width, main.height, Minecraft.ON_OSX);
-            scratch.setFilterMode(GL_NEAREST);
+    private static void ensureTarget(RenderTarget main) {
+        if (target == null) {
+            target = new TextureTarget(main.width, main.height, false, Minecraft.ON_OSX);
+            target.setFilterMode(GL_NEAREST);
+        } else if (target.width != main.width || target.height != main.height) {
+            target.resize(main.width, main.height, Minecraft.ON_OSX);
+            target.setFilterMode(GL_NEAREST);
         }
     }
 }

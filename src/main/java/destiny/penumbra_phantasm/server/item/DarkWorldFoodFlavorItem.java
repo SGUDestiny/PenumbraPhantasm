@@ -2,8 +2,10 @@ package destiny.penumbra_phantasm.server.item;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
+import destiny.penumbra_phantasm.server.capability.VerticalBarCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,12 +22,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class DarkWorldFoodFlavorItem extends FlavorTooltipItem {
-    int determinationGain;
-    SoundEvent consumeSound;
+    public int determinationDifference;
+    public SoundEvent consumeSound;
 
-    public DarkWorldFoodFlavorItem(Properties pProperties, int determinationGain, SoundEvent consumeSound) {
+    public DarkWorldFoodFlavorItem(Properties pProperties, int determinationDifference, SoundEvent consumeSound) {
         super(pProperties);
-        this.determinationGain = determinationGain;
+        this.determinationDifference = determinationDifference;
         this.consumeSound = consumeSound;
     }
 
@@ -33,7 +35,12 @@ public class DarkWorldFoodFlavorItem extends FlavorTooltipItem {
     public ItemStack finishUsingItem(ItemStack pStack, Level pLevel, LivingEntity pLivingEntity) {
         if (pLivingEntity instanceof ServerPlayer player) {
             SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
-            soulCap.determination = Mth.clamp(soulCap.determination + determinationGain, 0, 100);
+            VerticalBarCapability verticalBarCap = player.getCapability(CapabilityRegistry.VERTICAL_BAR).orElse(null);
+
+            verticalBarCap.determinationDifferenceTicker = 0;
+            verticalBarCap.determinationTargetTicker = 0;
+            verticalBarCap.oldDetermination = soulCap.determination;
+            soulCap.determination = Mth.clamp(soulCap.determination + determinationDifference, 0, 100);
 
             pLevel.playSound(null, player.getOnPos(), consumeSound, SoundSource.PLAYERS, 0.5f, 1);
         }
@@ -68,10 +75,20 @@ public class DarkWorldFoodFlavorItem extends FlavorTooltipItem {
                     .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))));
         }
 
-        if (determinationGain != 0) {
-            components.add(Component.literal("+" + determinationGain + " ")
+        if (determinationDifference != 0) {
+            MutableComponent mutableComponent = Component.empty();
+
+            if (determinationDifference > 0) {
+                mutableComponent.append(Component.literal("+"));
+            } else {
+                mutableComponent.append(Component.literal("-"));
+            }
+
+            mutableComponent.append(Component.literal(determinationDifference + " ")
                     .append(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.soul_type.1"))
                     .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))));
+
+            components.add(mutableComponent);
         }
     }
 }

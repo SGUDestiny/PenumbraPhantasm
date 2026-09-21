@@ -45,21 +45,23 @@ import net.minecraftforge.fml.common.Mod;
 public class ForgeEvents {
     @SubscribeEvent
     public static void attachWorldCapabilities(AttachCapabilitiesEvent<Level> event) {
-        event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountains"), new GenericProvider<>(CapabilityRegistry.DARK_FOUNTAIN,
+        event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "dark_fountains"), new GenericProvider<>(CapabilityRegistry.DARK_FOUNTAIN,
                 new DarkFountainCapability()));
-        event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "great_doors"), new GenericProvider<>(CapabilityRegistry.GREAT_DOOR,
+        event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "great_doors"), new GenericProvider<>(CapabilityRegistry.GREAT_DOOR,
                 new GreatDoorCapability()));
     }
 
     @SubscribeEvent
     public static void attachEntityCapabilities(AttachCapabilitiesEvent<Entity> event) {
         if (event.getObject() instanceof Player) {
-            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "soul"), new GenericProvider<>(CapabilityRegistry.SOUL, new SoulCapability()));
-            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "screen_animation"), new GenericProvider<>(CapabilityRegistry.SCREEN_ANIMATION,
+            event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "soul"), new GenericProvider<>(CapabilityRegistry.SOUL, new SoulCapability()));
+            event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "screen_animation"), new GenericProvider<>(CapabilityRegistry.SCREEN_ANIMATION,
                     new ScreenAnimationCapability()));
-            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "cheshire_chest"), new CheshireChestCapability());
-            event.addCapability(new ResourceLocation(PenumbraPhantasm.MODID, "fire_doors"), new GenericProvider<>(CapabilityRegistry.FIRE_DOORS,
+            event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "cheshire_chest"), new CheshireChestCapability());
+            event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "fire_doors"), new GenericProvider<>(CapabilityRegistry.FIRE_DOORS,
                     new FireDoorsCapability()));
+            event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "vertical_bar"), new GenericProvider<>(CapabilityRegistry.VERTICAL_BAR,
+                    new VerticalBarCapability()));
         }
     }
 

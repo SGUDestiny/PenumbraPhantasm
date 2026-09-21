@@ -5,6 +5,7 @@ import destiny.penumbra_phantasm.client.network.ClientBoundCancelPlayerAnimation
 import destiny.penumbra_phantasm.client.network.ClientBoundPlayPlayerAnimationPacket;
 import destiny.penumbra_phantasm.server.advancement.TriggerCriterions;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
+import destiny.penumbra_phantasm.server.capability.VerticalBarCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.DamageTypeRegistry;
 import destiny.penumbra_phantasm.server.registry.ItemRegistry;
@@ -54,8 +55,13 @@ public class DeterminationInjectionItem extends Item {
                 targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_OVERDOSE), targetPlayer.getMaxHealth());
             } else {
                 targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_PRICK), targetPlayer.getMaxHealth() / 2);
-                soulCap.determination = 100;
             }
+
+            VerticalBarCapability verticalBarCap = targetPlayer.getCapability(CapabilityRegistry.VERTICAL_BAR).orElse(null);
+
+            verticalBarCap.determinationTargetTicker = 0;
+            verticalBarCap.oldDetermination = soulCap.determination;
+            soulCap.determination = 100;
 
             level.playSound(null, targetPlayer.getOnPos(), SoundEvents.PLAYER_BIG_FALL, SoundSource.PLAYERS, 1, 1);
 
@@ -137,8 +143,6 @@ public class DeterminationInjectionItem extends Item {
 
                     player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_OVERDOSE), player.getMaxHealth());
                 } else {
-                    soulCap.determination = 100;
-
                     if (!player.isCreative()) {
                         if (player.getHealth() < player.getMaxHealth() / 2) {
                             TriggerCriterions.DETERMINATION_INJECTION_DEATH.trigger((ServerPlayer) player);
@@ -147,6 +151,13 @@ public class DeterminationInjectionItem extends Item {
                         player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_PRICK), player.getMaxHealth() / 2);
                     }
                 }
+
+                VerticalBarCapability verticalBarCap = player.getCapability(CapabilityRegistry.VERTICAL_BAR).orElse(null);
+
+                verticalBarCap.determinationDifferenceTicker = 0;
+                verticalBarCap.determinationTargetTicker = 0;
+                verticalBarCap.oldDetermination = soulCap.determination;
+                soulCap.determination = 100;
 
                 TriggerCriterions.DETERMINATION_INJECTION.trigger((ServerPlayer) player);
 

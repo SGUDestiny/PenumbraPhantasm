@@ -32,8 +32,7 @@ public class LocationTitleOverlay {
 
         Level level = player.level();
 
-        if (!DarkWorldUtil.isDarkWorld(level) || CardKingdomEggRoomUtil.isEggRoom(level))
-            return;
+        if (!DarkWorldUtil.isDarkWorld(level) || CardKingdomEggRoomUtil.isEggRoom(level)) return;
 
         //Getting capability
         ScreenAnimationCapability cap;

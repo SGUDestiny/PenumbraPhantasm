@@ -4,6 +4,9 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.client.network.ClientBoundAnimationPacket;
+import destiny.penumbra_phantasm.server.item.DarkWorldFoodFlavorItem;
+import destiny.penumbra_phantasm.server.item.DarkWorldFoodItem;
+import destiny.penumbra_phantasm.server.item.DeterminationInjectionItem;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
@@ -14,6 +17,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -27,15 +33,6 @@ import java.util.Map;
 import static destiny.penumbra_phantasm.client.sound.MusicManager.FOUNTAIN_MUSIC_RANGE;
 
 public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> {
-    public static final String DARKNESS_LAND_TICKER = "darknessLandTicker";
-    public static final String DARKNESS_OVERLAY_TICKER = "darknessOverlayTicker";
-
-    public static final String PREVIOUS_LOCATION = "previousLocation";
-    public static final String CURRENT_LOCATION = "currentLocation";
-    public static final String TITLE_ALPHA_TICKER = "titleAlphaTicker";
-
-    public static final String SEAL_SHINE_TICKER = "sealShineTicker";
-
     public int darknessLandTicker = -1;
     public int darknessOverlayTicker = -1;
 
@@ -47,11 +44,6 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     public int sealShineTicker = -1;
 
     public int depthsEntryTicker = -1;
-
-    public int determinationTarget = 0;
-    public int determinationDifference = 0;
-    public int determinationTargetTicker = 0;
-    public int determinationDifferenceTicker = 0;
 
     public void tick(Level level, Player player) {
         if (darknessLandTicker >= 40) {
@@ -84,7 +76,6 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
 
         //Location title stuff below this point
         currentLocation = Util.makeDescriptionId("biome", level.getBiome(player.getOnPos()).unwrapKey().get().location());
-
 
         if (!DarkWorldUtil.isDepths(level)) {
             LazyOptional<DarkFountainCapability> lazyCap = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
@@ -142,7 +133,8 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     }
 
     public void syncToClient(ServerPlayer serverPlayer) {
-        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundAnimationPacket(darknessLandTicker, darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker, depthsEntryTicker));
+        PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundAnimationPacket(darknessLandTicker,
+                darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker, depthsEntryTicker));
     }
 
     @Override
@@ -163,9 +155,5 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         this.titleAlphaTicker = cap.titleAlphaTicker;
         this.sealShineTicker = cap.sealShineTicker;
         this.depthsEntryTicker = cap.depthsEntryTicker;
-        this.determinationTarget = cap.determinationTarget;
-        this.determinationDifference = cap.determinationDifference;
-        this.determinationTargetTicker = cap.determinationTargetTicker;
-        this.determinationDifferenceTicker = cap.determinationDifferenceTicker;
     }
 }

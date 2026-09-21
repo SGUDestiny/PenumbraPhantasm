@@ -22,26 +22,24 @@ import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL46;
 
 public final class FountainHueShiftRenderer {
-    private static final int GL_COLOR_BUFFER_BIT = 16384;
-    private static final int GL_NEAREST = 9728;
-    private static final int GL_READ_FRAMEBUFFER = 36008;
-    private static final int GL_DRAW_FRAMEBUFFER = 36009;
+    private static final int GL_COLOR_BUFFER_BIT = GL11.GL_COLOR_BUFFER_BIT;
+    private static final int GL_NEAREST = GL11.GL_NEAREST;
+    private static final int GL_READ_FRAMEBUFFER = GL46.GL_READ_FRAMEBUFFER;
+    private static final int GL_DRAW_FRAMEBUFFER = GL46.GL_DRAW_FRAMEBUFFER;
 
-    private static RenderTarget scratch;
+    private static RenderTarget target;
 
     private FountainHueShiftRenderer() {}
 
     public static void render(Minecraft minecraft, GameRenderer gameRenderer, float partialTick) {
-        if (!(minecraft.level instanceof ClientLevel)) {
-            return;
-        }
+        if (!(minecraft.level instanceof ClientLevel)) return;
 
         ShaderInstance shader = ModShaders.HUE_SHIFT;
-        if (shader == null) {
-            return;
-        }
+        if (shader == null) return;
 
         ClientLevel level = minecraft.level;
 
@@ -49,14 +47,12 @@ public final class FountainHueShiftRenderer {
 
         Vec3 camPos = gameRenderer.getMainCamera().getPosition();
         DarkFountain fountain = getClosestFountain(level, camPos);
-        if (fountain == null) {
-            return;
-        }
+        if (fountain == null) return;
 
         float distance = (float) Math.sqrt(camPos.distanceToSqr(Vec3.atLowerCornerOf(fountain.getFountainPos())));
         float fadeRange = FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_START - FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_END;
         float distanceFade = (FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_START - distance) / fadeRange;
-        distanceFade = Math.max(0.0F, Math.min(1.0F, distanceFade));
+        distanceFade = Math.max(0, Math.min(1, distanceFade));
 
         float sealingFade = 1f;
         if (fountain.sealingTick >= 0) {
@@ -72,32 +68,32 @@ public final class FountainHueShiftRenderer {
 
         float fountainHue = ((level.getGameTime() + partialTick) * 0.003f) % 1;
 
-        RenderTarget main = minecraft.getMainRenderTarget();
-        ensureScratch(main);
+        RenderTarget mainTarget = minecraft.getMainRenderTarget();
+        ensureTarget(mainTarget);
         Matrix4f savedProjection = new Matrix4f(RenderSystem.getProjectionMatrix());
         VertexSorting savedSorting = RenderSystem.getVertexSorting();
 
-        GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, main.frameBufferId);
-        GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, scratch.frameBufferId);
-        GlStateManager._glBlitFrameBuffer(0, 0, main.width, main.height, 0, 0, scratch.width, scratch.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, mainTarget.frameBufferId);
+        GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.frameBufferId);
+        GlStateManager._glBlitFrameBuffer(0, 0, mainTarget.width, mainTarget.height, 0, 0, target.width, target.height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
         GlStateManager._glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
         GlStateManager._glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-        main.bindWrite(false);
+        mainTarget.bindWrite(false);
 
-        RenderSystem.viewport(0, 0, main.width, main.height);
+        RenderSystem.viewport(0, 0, mainTarget.width, mainTarget.height);
         RenderSystem.disableDepthTest();
         RenderSystem.disableBlend();
 
         GlStateManager._depthMask(false);
         GlStateManager._colorMask(true, true, true, false);
 
-        Matrix4f ortho = new Matrix4f().setOrtho(0f, (float) main.width, (float) main.height, 0f, 1000f, 3000f);
+        Matrix4f ortho = new Matrix4f().setOrtho(0f, (float) mainTarget.width, (float) mainTarget.height, 0f, 1000f, 3000f);
 
         RenderSystem.setProjectionMatrix(ortho, VertexSorting.ORTHOGRAPHIC_Z);
         RenderSystem.setShader(() -> shader);
 
-        shader.setSampler("Sampler0", scratch.getColorTextureId());
+        shader.setSampler("Sampler0", target.getColorTextureId());
 
         if (shader.MODEL_VIEW_MATRIX != null) {
             shader.MODEL_VIEW_MATRIX.set(new Matrix4f().translation(0f, 0f, -2000f));
@@ -121,13 +117,13 @@ public final class FountainHueShiftRenderer {
 
         BufferBuilder buffer = RenderSystem.renderThreadTesselator().getBuilder();
 
-        float pw = (float) main.width;
-        float ph = (float) main.height;
+        float targetWidth = (float) mainTarget.width;
+        float targetHeight = (float) mainTarget.height;
 
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        buffer.vertex(0, ph, 0).uv(0, 0).endVertex();
-        buffer.vertex(pw, ph, 0).uv(1, 0).endVertex();
-        buffer.vertex(pw, 0, 0).uv(1, 1).endVertex();
+        buffer.vertex(0, targetHeight, 0).uv(0, 0).endVertex();
+        buffer.vertex(targetWidth, targetHeight, 0).uv(1, 0).endVertex();
+        buffer.vertex(targetWidth, 0, 0).uv(1, 1).endVertex();
         buffer.vertex(0, 0, 0).uv(0, 1).endVertex();
 
         BufferUploader.draw(buffer.end());
@@ -140,27 +136,26 @@ public final class FountainHueShiftRenderer {
         RenderSystem.setProjectionMatrix(savedProjection, savedSorting);
         RenderSystem.enableDepthTest();
 
-        main.bindWrite(false);
+        mainTarget.bindWrite(false);
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
-    private static void ensureScratch(RenderTarget main) {
-        if (scratch == null) {
-            scratch = new TextureTarget(main.width, main.height, false, Minecraft.ON_OSX);
-            scratch.setFilterMode(GL_NEAREST);
-        } else if (scratch.width != main.width || scratch.height != main.height) {
-            scratch.resize(main.width, main.height, Minecraft.ON_OSX);
-            scratch.setFilterMode(GL_NEAREST);
+    private static void ensureTarget(RenderTarget main) {
+        if (target == null) {
+            target = new TextureTarget(main.width, main.height, false, Minecraft.ON_OSX);
+            target.setFilterMode(GL_NEAREST);
+        } else if (target.width != main.width || target.height != main.height) {
+            target.resize(main.width, main.height, Minecraft.ON_OSX);
+            target.setFilterMode(GL_NEAREST);
         }
     }
 
     private static DarkFountain getClosestFountain(ClientLevel level, Vec3 camPos) {
         DarkFountainCapability cap = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).resolve().orElse(null);
-        if (cap == null || cap.darkFountains.isEmpty()) {
-            return null;
-        }
+
+        if (cap == null || cap.darkFountains.isEmpty()) return null;
 
         DarkFountain best = null;
         double bestDistanceSq = Double.MAX_VALUE;
@@ -177,14 +172,10 @@ public final class FountainHueShiftRenderer {
             }
         }
 
-        if (best == null) {
-            return null;
-        }
+        if (best == null) return null;
 
         double distance = Math.sqrt(bestDistanceSq);
-        if (distance > FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_START) {
-            return null;
-        }
+        if (distance > FountainRenderUtil.FOUNTAIN_SCREEN_TINT_FADE_START) return null;
 
         return best;
     }

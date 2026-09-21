@@ -8,7 +8,7 @@ import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorBacksideModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorClosedModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenModel;
-import destiny.penumbra_phantasm.client.render.overlay.DepthsEntryOverlay;
+import destiny.penumbra_phantasm.client.render.overlay.*;
 import destiny.penumbra_phantasm.client.render.particle.*;
 import destiny.penumbra_phantasm.client.render.screen.CheshireChestScreen;
 import destiny.penumbra_phantasm.client.render.screen.DarkCandyCraftingTableScreen;
@@ -24,9 +24,6 @@ import destiny.penumbra_phantasm.client.render.dimension.DarkWorldDimensionEffec
 import destiny.penumbra_phantasm.client.render.dimension.DepthsDimensionEffects;
 import destiny.penumbra_phantasm.client.render.dimension.EggRoomDimensionEffects;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
-import destiny.penumbra_phantasm.client.render.overlay.DarknessLandOverlay;
-import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
-import destiny.penumbra_phantasm.client.render.overlay.LocationTitleOverlay;
 import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
@@ -164,6 +161,7 @@ public class PenumbraPhantasm {
             event.registerAboveAll("darkness_land", DarknessLandOverlay.OVERLAY);
             event.registerAboveAll("location_title", LocationTitleOverlay.OVERLAY);
             event.registerAboveAll("depths_entry", DepthsEntryOverlay.OVERLAY);
+            event.registerAboveAll("determination_bar", DeterminationBarOverlay.OVERLAY);
         }
 
         @SubscribeEvent

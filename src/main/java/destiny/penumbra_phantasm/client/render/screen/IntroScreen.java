@@ -32,7 +32,7 @@ import java.util.Random;
 
 public class IntroScreen extends Screen {
     private static final int WORLD_THUMBNAIL_DELAY_TICKS = 20;
-    private static final float REFERENCE_GUI_SCALE = 2.0f;
+    private static final float REFERENCE_GUI_SCALE = 2f;
     private static Path worldThumbnailPath;
     private static int worldThumbnailTicksRemaining;
 
@@ -255,8 +255,8 @@ public class IntroScreen extends Screen {
     {
         float outlineAlphaDelta = outlineTick / 60f;
         float outlineAlpha = outlineAlphaDelta <= 0.5f
-                ? Mth.lerp(outlineAlphaDelta * 2.0f, 0.2f, 0.5f)
-                : Mth.lerp((outlineAlphaDelta - 0.5f) * 2.0f, 0.5f, 0.2f);
+                ? Mth.lerp(outlineAlphaDelta * 2f, 0.2f, 0.5f)
+                : Mth.lerp((outlineAlphaDelta - 0.5f) * 2f, 0.5f, 0.2f);
         float guiScaleCompensation = getGuiScaleCompensation();
         int skipTextY = Mth.floor(getReferenceGuiHeight() - 10f);
 

@@ -24,6 +24,8 @@ public class CapabilityRegistry {
     });
     public static final Capability<FireDoorsCapability> FIRE_DOORS = CapabilityManager.get(new CapabilityToken<>() {
     });
+    public static final Capability<VerticalBarCapability> VERTICAL_BAR = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @SubscribeEvent
     public static void register(RegisterCapabilitiesEvent event)
@@ -34,5 +36,6 @@ public class CapabilityRegistry {
         event.register(GreatDoorCapability.class);
         event.register(CheshireChestCapability.class);
         event.register(FireDoorsCapability.class);
+        event.register(VerticalBarCapability.class);
     }
 }

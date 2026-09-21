@@ -58,7 +58,7 @@ public class ItemRegistry {
                     .build()), 0, SoundRegistry.HEAL.get()));
     public static final RegistryObject<Item> HEARTS_DONUT = ITEMS.register("hearts_donut",
             () -> new DarkWorldFoodFlavorItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(10).saturationMod(0.4f)
-                    .build()), 0, SoundRegistry.HEAL.get()));
+                    .build()), -30, SoundRegistry.HEAL.get()));
     public static final RegistryObject<Item> LANCER_COOKIE = ITEMS.register("lancer_cookie",
             () -> new DarkWorldFoodFlavorItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(12).saturationMod(0.8f)
                     .build()), 10, SoundRegistry.HEAL.get()));

@@ -18,23 +18,22 @@ import net.minecraft.util.Mth;
 import java.util.List;
 
 public final class DarkWorldTextBox {
-	private DarkWorldTextBox() {
-	}
+	private DarkWorldTextBox() {}
 
-	public static void render(GuiGraphics graphics, TextBoxWriter writer, int screenWidth, int screenHeight) {
-		Minecraft minecraft = Minecraft.getInstance();
-		int scale = screenWidth >= TextBoxConstants.BOX_WIDTH * 2 && screenHeight >= TextBoxConstants.BOX_HEIGHT * 2 + 8 ? 2 : 1;
-		int boxW = TextBoxConstants.BOX_WIDTH * scale;
-		int boxH = TextBoxConstants.BOX_HEIGHT * scale;
-		int originX = (screenWidth - boxW) / 2;
-		int originY = screenHeight - boxH;
+	public static void render(Minecraft minecraft, GuiGraphics graphics, TextBoxWriter writer, int screenWidth, int screenHeight) {
+		int boxWidth = TextBoxConstants.BOX_WIDTH * TextBoxConstants.BOX_SIZE;
+		int boxHeight = TextBoxConstants.BOX_HEIGHT * TextBoxConstants.BOX_SIZE;
+		int originX = (screenWidth - boxWidth) / 2;
+		int originY = screenHeight - boxHeight;
 
 		PoseStack pose = graphics.pose();
+
 		pose.pushPose();
 		pose.translate(originX, originY, 0);
-		pose.scale(scale, scale, 1);
+		pose.scale(TextBoxConstants.BOX_SIZE, TextBoxConstants.BOX_SIZE, 1);
 
 		RenderSystem.enableBlend();
+
 		graphics.blit(TextBoxConstants.TEXTURE, 0, 0, 0, 0, TextBoxConstants.BOX_WIDTH, TextBoxConstants.BOX_HEIGHT,
 				TextBoxConstants.TEXTURE_SIZE, TextBoxConstants.TEXTURE_SIZE);
 
@@ -59,16 +58,16 @@ public final class DarkWorldTextBox {
 		Font font = minecraft.font;
 		List<String> lines = writer.visibleLines();
 		for (int i = 0; i < lines.size(); i++) {
-			drawGridLine(graphics, font, lines.get(i), TextBoxConstants.TEXT_ORIGIN_X,
-					TextBoxConstants.TEXT_ORIGIN_Y + i * TextBoxConstants.VSPACE);
+			drawGridLine(graphics, font, lines.get(i), TextBoxConstants.TEXT_ORIGIN_X, TextBoxConstants.TEXT_ORIGIN_Y + i * TextBoxConstants.VERTICAL_SPACE);
 		}
 
 		if (writer.isChoosing()) {
 			drawChoices(graphics, font, writer);
 		}
 
-		pose.popPose();
 		RenderSystem.disableBlend();
+
+		pose.popPose();
 	}
 
 	private static void blitJewel(GuiGraphics graphics, int x, int y, boolean flipX, boolean flipY) {
@@ -98,13 +97,13 @@ public final class DarkWorldTextBox {
 			graphics.drawString(font, component, cursor + 1, y + 1, 0xFF111133, false);
 			graphics.drawString(font, component, cursor, y, color, false);
 
-			cursor += TextBoxConstants.HSPACE;
+			cursor += TextBoxConstants.HORIZONTAL_SPACE;
 		}
 	}
 
 	private static void drawChoices(GuiGraphics graphics, Font font, TextBoxWriter writer) {
-		int yesW = writer.yesLabel().getString().length() * TextBoxConstants.HSPACE;
-		int noW = writer.noLabel().getString().length() * TextBoxConstants.HSPACE;
+		int yesW = writer.yesLabel().getString().length() * TextBoxConstants.HORIZONTAL_SPACE;
+		int noW = writer.noLabel().getString().length() * TextBoxConstants.HORIZONTAL_SPACE;
 		int yesX = TextBoxConstants.BOX_WIDTH / 4 - yesW / 2;
 		int noX = TextBoxConstants.BOX_WIDTH * 3 / 4 - noW / 2;
 		int y = (TextBoxConstants.BOX_HEIGHT - 8) / 2;
@@ -118,6 +117,7 @@ public final class DarkWorldTextBox {
 		int soulSize = TextBoxConstants.SOUL_SIZE;
 		int soulX;
 		int soulY = (TextBoxConstants.BOX_HEIGHT - soulSize) / 2;
+
 		if (choice < 0) {
 			soulX = TextBoxConstants.BOX_WIDTH / 2 - soulSize / 2;
 		} else {

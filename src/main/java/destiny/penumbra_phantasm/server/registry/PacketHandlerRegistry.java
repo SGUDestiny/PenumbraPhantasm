@@ -98,6 +98,12 @@ public class PacketHandlerRegistry {
                 .consumerMainThread(ClientBoundAnimationPacket::handle)
                 .add();
 
+        INSTANCE.messageBuilder(ClientBoundVerticalBarPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundVerticalBarPacket::encode)
+                .decoder(ClientBoundVerticalBarPacket::decode)
+                .consumerMainThread(ClientBoundVerticalBarPacket::handle)
+                .add();
+
         INSTANCE.messageBuilder(ClientBoundParticlePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(ClientBoundParticlePacket::encode)
                 .decoder(ClientBoundParticlePacket::decode)
