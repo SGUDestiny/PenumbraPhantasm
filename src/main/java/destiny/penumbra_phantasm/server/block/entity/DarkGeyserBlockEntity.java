@@ -20,7 +20,7 @@ public class DarkGeyserBlockEntity extends BlockEntity {
             if (aboveState.isAir()) {
                 level.addParticle(ParticleTypeRegistry.FOUNTAIN_DARKNESS.get(), false, pos.getX() + 0.5, pos.getY() + 1,
                         pos.getZ() + 0.5, ModUtil.getBoundRandomDoubleStatic(level, -0.02, 0.02),
-                        ModUtil.getBoundRandomDoubleStatic(level, 0, 0.02),
+                        ModUtil.getBoundRandomDoubleStatic(level, 0.05, 0.1),
                         ModUtil.getBoundRandomDoubleStatic(level, -0.02, 0.02));
             }
         }

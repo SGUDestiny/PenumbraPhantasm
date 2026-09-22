@@ -27,31 +27,25 @@ public class LightTextureMixin {
     private boolean updateLightTexture;
 
     @Unique
-    private float penumbra_phantasm$lastLightDim = Float.NaN;
-    @Unique
     private float penumbra_phantasm$lastAmbient = Float.NaN;
 
-/*    @Inject(method = "updateLightTexture(F)V", at = @At("HEAD"), cancellable = true)
-    private void nullOuroboros$vergeLightMap(float partialTick, CallbackInfo ci) {
+    @Inject(method = "updateLightTexture(F)V", at = @At("HEAD"), cancellable = true)
+    private void depthsLightTexture(float partialTick, CallbackInfo ci) {
         Minecraft minecraft = Minecraft.getInstance();
         ClientLevel level = minecraft.level;
 
         if (level == null || !DarkWorldUtil.isDepths(level)) return;
 
-        float lightDim = 1;
         float ambientLight = level.dimensionType().ambientLight();
 
-        if (!this.updateLightTexture
-                && lightDim == penumbra_phantasm$lastLightDim
-                && ambientLight == penumbra_phantasm$lastAmbient) {
+        if (!this.updateLightTexture && ambientLight == penumbra_phantasm$lastAmbient) {
             ci.cancel();
             return;
         }
 
-        penumbra_phantasm$lastLightDim = lightDim;
         penumbra_phantasm$lastAmbient = ambientLight;
 
-        float surfaceBrightness = 0.5f * (1f - lightDim);
+        float surfaceBrightness = 0.5f;
 
         for (int skyLight = 0; skyLight < 16; skyLight++) {
             float skyContribution = surfaceBrightness * (skyLight / 15f);
@@ -64,14 +58,17 @@ public class LightTextureMixin {
                 lightPixels.setPixelRGBA(blockLight, skyLight, 0xFF000000 | (value << 16) | (value << 8) | value);
             }
         }
+
         lightTexture.upload();
         this.updateLightTexture = false;
+
         ci.cancel();
-    }*/
+    }
 
     private static float vanillaBlockBrightness(float ambientLight, int blockLight) {
         float level = blockLight / 15f;
         float curve = level / (4f - 3f * level);
+
         return Mth.lerp(ambientLight, curve, 1f);
     }
 }

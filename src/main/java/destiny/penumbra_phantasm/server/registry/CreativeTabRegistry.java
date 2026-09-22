@@ -380,6 +380,7 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.TENEBRALITH_SPIKE.get());
                 output.accept(BlockRegistry.TENEBRALITH_PATH.get());
                 output.accept(BlockRegistry.DARK_SAND.get());
+                output.accept(BlockRegistry.DARK_GEYSER.get());
                 output.accept(ItemRegistry.NEGATIVE_PHOTONS_BUCKET.get());
                 output.accept(BlockRegistry.TENEBRALITH_PILLAR.get());
                 output.accept(BlockRegistry.CHISELED_TENEBRALITH.get());

@@ -1,0 +1,49 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "penumbra_phantasm:block/dark_geyser",
+		"particle": "penumbra_phantasm:block/dark_geyser"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 5, 15],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, 0, 1]},
+			"faces": {
+				"north": {"uv": [0, 8, 7, 10.5], "texture": "#0"},
+				"east": {"uv": [0, 8, 7, 10.5], "texture": "#0"},
+				"south": {"uv": [0, 8, 7, 10.5], "texture": "#0"},
+				"west": {"uv": [0, 8, 7, 10.5], "texture": "#0"},
+				"up": {"uv": [14, 15, 7, 8], "texture": "#0"},
+				"down": {"uv": [14, 8, 7, 15], "texture": "#0"}
+			}
+		},
+		{
+			"from": [3, 5, 3],
+			"to": [13, 9, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, 5, 1]},
+			"faces": {
+				"north": {"uv": [0, 3.5, 5, 5.5], "texture": "#0"},
+				"east": {"uv": [0, 3.5, 5, 5.5], "texture": "#0"},
+				"south": {"uv": [0, 3.5, 5, 5.5], "texture": "#0"},
+				"west": {"uv": [0, 3.5, 5, 5.5], "texture": "#0"},
+				"up": {"uv": [10, 8, 5, 3], "texture": "#0"}
+			}
+		},
+		{
+			"from": [5, 9, 5],
+			"to": [11, 16, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [1, 9, 1]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 3.5], "texture": "#0"},
+				"east": {"uv": [0, 0, 3, 3.5], "texture": "#0"},
+				"south": {"uv": [0, 0, 3, 3.5], "texture": "#0"},
+				"west": {"uv": [0, 0, 3, 3.5], "texture": "#0"},
+				"up": {"uv": [6, 3, 3, 0], "texture": "#0"}
+			}
+		}
+	]
+}
