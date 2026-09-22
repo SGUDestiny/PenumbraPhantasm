@@ -49,6 +49,7 @@ public class FeatureRegistry {
 
     public static final RegistryObject<Feature<PointedDripstoneConfiguration>> TENEBRALITH_SPIKE_FEATURE = FEATURES.register("tenebralith_spike_feature", () -> new TenebralithSpikeFeature(PointedDripstoneConfiguration.CODEC));
     public static final RegistryObject<Feature<NoneFeatureConfiguration>> LARGE_TENEBRALITH_SPIKE_FEATURE = FEATURES.register("large_tenebralith_spike_feature", () -> new LargeTenebralithSpikeFeature(NoneFeatureConfiguration.CODEC));
+    public static final RegistryObject<Feature<NoneFeatureConfiguration>> DARK_GEYSER_FEATURE = FEATURES.register("dark_geyser_feature", () -> new DarkGeyserFeature(NoneFeatureConfiguration.CODEC));
 
     public static ResourceKey<ConfiguredFeature<?, ?>> registerKey(String name) {
         return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(PenumbraPhantasm.MODID, name));

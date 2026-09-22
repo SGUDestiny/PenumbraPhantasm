@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.block.DarkGeyserBlock;
 import destiny.penumbra_phantasm.server.block.entity.*;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -20,4 +21,5 @@ public class BlockEntityRegistry {
     public static final RegistryObject<BlockEntityType<FireDoorBlockEntity>> FIRE_DOOR_BLOCK_ENTITY = BLOCK_ENTITIES.register("fire_door", () -> BlockEntityType.Builder.of(FireDoorBlockEntity::new, BlockRegistry.FIRE_DOOR.get()).build(null));
     public static final RegistryObject<BlockEntityType<HearthBlockEntity>> HEARTH_ENTITY = BLOCK_ENTITIES.register("hearth", () -> BlockEntityType.Builder.of(HearthBlockEntity::new, BlockRegistry.HEARTH.get()).build(null));
     public static final RegistryObject<BlockEntityType<RoaringEyeBlockEntity>> ROARING_EYE_BLOCK_ENTITY = BLOCK_ENTITIES.register("roaring_eye_block_entity", () -> BlockEntityType.Builder.of(RoaringEyeBlockEntity::new, BlockRegistry.ROARING_EYE.get()).build(null));
+    public static final RegistryObject<BlockEntityType<DarkGeyserBlockEntity>> DARK_GEYSER_BLOCK_ENTITY = BLOCK_ENTITIES.register("dark_geyser_block_entity", () -> BlockEntityType.Builder.of(DarkGeyserBlockEntity::new, BlockRegistry.DARK_GEYSER.get()).build(null));
 }

@@ -368,6 +368,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> DARK_SAND = registerBlock("dark_sand", () -> new FallingBlock(BlockBehaviour.Properties.copy(Blocks.SAND).mapColor(DyeColor.BLACK).sound(SoundType.SOUL_SAND).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TENEBRALITH_PILLAR = registerBlock("tenebralith_pillar", () -> new RotatedPillarBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> CHISELED_TENEBRALITH = registerBlock("chiseled_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> DARK_GEYSER = registerBlock("dark_geyser", () -> new DarkGeyserBlock(TENEBRALITH_PROPERTIES));
 
     //Polished tenebralith
     public static final RegistryObject<Block> POLISHED_TENEBRALITH = registerBlock("polished_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
