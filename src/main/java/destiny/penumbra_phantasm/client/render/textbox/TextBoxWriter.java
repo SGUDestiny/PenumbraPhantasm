@@ -1,10 +1,12 @@
 package destiny.penumbra_phantasm.client.render.textbox;
 
+import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TextBoxWriter {
-	public static final Style FONT_STYLE = Style.EMPTY.withFont(TextBoxConstants.FONT);
+	public static final Style FONT_STYLE = Style.EMPTY.withFont(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "8_bit_operator"));
 
 	private final List<Page> pages = new ArrayList<>();
 	private int pageIndex;

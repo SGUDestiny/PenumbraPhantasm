@@ -3,7 +3,6 @@ package destiny.penumbra_phantasm.mixin;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.ModShaders;
 import destiny.penumbra_phantasm.client.render.fluid.NegativePhotonsRenderUtil;
@@ -12,8 +11,6 @@ import destiny.penumbra_phantasm.client.render.fountain.FountainOpeningPosterize
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
-import destiny.penumbra_phantasm.client.render.textbox.DarkWorldDialogue;
-import destiny.penumbra_phantasm.client.render.textbox.DarkWorldTextBox;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.FluidTypeRegistry;
@@ -25,7 +22,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -38,10 +34,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-	private static final ResourceLocation VERTICAL_BAR_OUTSIDE = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/vertical_bar/vertical_bar_outside.png");
-	private static final ResourceLocation VERTICAL_BAR_INSIDE = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/vertical_bar/vertical_bar_inside.png");
-	private static final ResourceLocation VERTICAL_BAR_DT_LABEL = new ResourceLocation(PenumbraPhantasm.MODID, "textures/gui/dark_world/vertical_bar/vertical_bar_dt_label.png");
-
 	@Inject(method = "renderItemInHand", at = @At("HEAD"), cancellable = true)
 	private void penumbraPhantasm$hideEggRoomHands(PoseStack poseStack, Camera camera, float partialTick, CallbackInfo ci) {
 		if (Minecraft.getInstance().level != null && CardKingdomEggRoomUtil.isEggRoom(Minecraft.getInstance().level)) {
@@ -144,10 +136,6 @@ public class GameRendererMixin {
 		renderLandScreenFadeOut(graphics, width, height, landAlpha);
 		renderTransitionFadeOut(graphics, width, height, fountainAlpha);
 		renderSealShine(graphics, width, height, sealShineTick);
-
-		if (minecraft.screen == null && DarkWorldDialogue.isActive() && DarkWorldDialogue.writer() != null) {
-			DarkWorldTextBox.render(minecraft, graphics, DarkWorldDialogue.writer(), width, height);
-		}
 
 		graphics.flush();
 
