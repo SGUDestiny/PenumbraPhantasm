@@ -40,70 +40,29 @@ public class GreatBoardChessRandomFeature extends Feature<NoneFeatureConfigurati
     @Override
     public boolean place(FeaturePlaceContext<NoneFeatureConfiguration> context) {
         WorldGenLevel level = context.level();
-        BlockPos origin = context.origin();
-        BlockPos floorPos = findMarbleFloor(level, origin);
+        BlockPos originPos = context.origin();
 
-        if (floorPos == null) return false;
+        if (!level.getBlockState(originPos).isAir()) return false;
 
-        BlockState floor = level.getBlockState(floorPos);
-        BlockPos placePos = firstAirAbove(level, floorPos);
+        BlockPos floorPos = originPos.below();
 
-        if (placePos == null) return false;
+        if (!level.getBlockState(floorPos).isCollisionShapeFullBlock(level, floorPos)) return false;
 
+        BlockState floorState = level.getBlockState(floorPos);
         RandomSource random = context.random();
-        Block piece;
 
-        if (floor.is(BlockRegistry.POLISHED_DARK_MARBLE.get()) || floor.is(BlockRegistry.DARK_MARBLE.get())) {
-            piece = DARK_PIECES[random.nextInt(DARK_PIECES.length)];
-        } else if (floor.is(BlockRegistry.POLISHED_SCARLET_MARBLE.get()) || floor.is(BlockRegistry.SCARLET_MARBLE.get())) {
-            piece = SCARLET_PIECES[random.nextInt(SCARLET_PIECES.length)];
+        Block pieceBlock;
+        if (floorState.is(BlockRegistry.POLISHED_DARK_MARBLE.get()) || floorState.is(BlockRegistry.DARK_MARBLE.get())) {
+            pieceBlock = DARK_PIECES[random.nextInt(DARK_PIECES.length)];
+        } else if (floorState.is(BlockRegistry.POLISHED_SCARLET_MARBLE.get()) || floorState.is(BlockRegistry.SCARLET_MARBLE.get())) {
+            pieceBlock = SCARLET_PIECES[random.nextInt(SCARLET_PIECES.length)];
         } else {
             return false;
         }
 
-        long facingSeed = level.getSeed() ^ Mth.getSeed(placePos) ^ Mth.getSeed(floorPos);
+        Direction facing = Direction.Plane.HORIZONTAL.getRandomDirection(random);
+        BlockState finalState = pieceBlock.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing);
 
-        Direction facing = Direction.Plane.HORIZONTAL.getRandomDirection(RandomSource.create(facingSeed));
-        BlockState placed = piece.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing);
-
-        return level.setBlock(placePos, placed, 3);
-    }
-
-    private static BlockPos findMarbleFloor(LevelReader level, BlockPos startPos) {
-        BlockPos.MutableBlockPos mutablePos = startPos.mutable();
-        int minY = level.getMinBuildHeight();
-
-        for (int i = 0; i < 48; i++) {
-            BlockState state = level.getBlockState(mutablePos);
-
-            if (state.is(BlockRegistry.POLISHED_DARK_MARBLE.get()) || state.is(BlockRegistry.DARK_MARBLE.get())
-                    || state.is(BlockRegistry.POLISHED_SCARLET_MARBLE.get()) || state.is(BlockRegistry.SCARLET_MARBLE.get())) {
-                return mutablePos.immutable();
-            }
-
-            if (!state.isAir() && !state.canBeReplaced()) return null;
-            if (mutablePos.getY() <= minY) return null;
-
-            mutablePos.move(Direction.DOWN);
-        }
-
-        return null;
-    }
-
-    private static BlockPos firstAirAbove(LevelReader level, BlockPos floorPos) {
-        BlockPos.MutableBlockPos mutablePos = floorPos.mutable().move(Direction.UP);
-        int maxY = level.getMaxBuildHeight() - 1;
-
-        for (int i = 0; i < 24; i++) {
-            BlockState state = level.getBlockState(mutablePos);
-
-            if (state.isAir()) return mutablePos.immutable();
-
-            if (mutablePos.getY() >= maxY) return null;
-
-            mutablePos.move(Direction.UP);
-        }
-
-        return null;
+        return level.setBlock(originPos, finalState, 3);
     }
 }

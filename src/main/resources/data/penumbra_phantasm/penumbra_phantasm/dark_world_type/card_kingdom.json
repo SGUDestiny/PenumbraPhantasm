@@ -1,7 +1,7 @@
 {
   "block_tag": "penumbra_phantasm:influences_card_kingdom",
   "block_amount": 10,
-  "noise_settings": "penumbra_phantasm:dark_world_noise_settings",
+  "noise_settings": "penumbra_phantasm:card_kingdom_noise_settings",
   "dimension_type": "penumbra_phantasm:card_kingdom_dimension_type",
   "biome_source": {
     "type": "minecraft:multi_noise",
@@ -9,49 +9,109 @@
       {
         "biome": "penumbra_phantasm:field_of_hopes_and_dreams",
         "parameters": {
-          "temperature": -0.45,
-          "humidity": -0.25,
-          "continentalness": 0,
-          "erosion": 0,
-          "weirdness": 0,
+          "continentalness": [
+            -0.11,
+            0.3
+          ],
           "depth": 0,
-          "offset": 0.12
+          "erosion": [
+            -0.5799,
+            -0.375
+          ],
+          "humidity": [
+            -1,
+            -0.1
+          ],
+          "offset": 0,
+          "temperature": [
+            -0.45,
+            -0.15
+          ],
+          "weirdness": [
+            -1,
+            -0.9333
+          ]
         }
       },
       {
         "biome": "penumbra_phantasm:scarlet_forest",
         "parameters": {
-          "temperature": 0.35,
-          "humidity": -0.25,
-          "continentalness": 0,
-          "erosion": 0,
-          "weirdness": -0.25,
+          "continentalness": [
+            -0.11,
+            0.3
+          ],
           "depth": 0,
-          "offset": 0.12
+          "erosion": [
+            -0.5799,
+            -0.375
+          ],
+          "humidity": [
+            -0.1,
+            0
+          ],
+          "offset": 0,
+          "temperature": [
+            -0.45,
+            -0.35
+          ],
+          "weirdness": [
+            -1,
+            -0.9333
+          ]
         }
       },
       {
         "biome": "penumbra_phantasm:great_board",
         "parameters": {
-          "temperature": 0.35,
-          "humidity": 0.35,
-          "continentalness": 0,
-          "erosion": 0,
-          "weirdness": 0.25,
+          "continentalness": [
+            -0.11,
+            0.03
+          ],
           "depth": 0,
-          "offset": 0.12
+          "erosion": [
+            -0.5799,
+            -0.375
+          ],
+          "humidity": [
+            -1,
+            -0.35
+          ],
+          "offset": 0,
+          "temperature": [
+            0.8,
+            0.9
+          ],
+          "weirdness": [
+            -1,
+            -0.9333
+          ]
         }
       },
       {
         "biome": "penumbra_phantasm:cliffs",
         "parameters": {
-          "temperature": 0,
-          "humidity": 0,
-          "continentalness": 0,
-          "erosion": 0,
-          "weirdness": 0,
+          "continentalness": [
+            0.03,
+            1
+          ],
           "depth": 0,
-          "offset": 0.42
+          "erosion": [
+            -1,
+            -0.5799
+          ],
+          "humidity": [
+            -1,
+            -0.35
+          ],
+          "offset": 0,
+          "temperature": [
+            -1,
+            -0.45
+          ],
+          "weirdness": [
+            -0.9333,
+            -0.7666
+          ]
         }
       }
     ]

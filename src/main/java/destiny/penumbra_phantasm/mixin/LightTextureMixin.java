@@ -27,7 +27,7 @@ public class LightTextureMixin {
     private boolean updateLightTexture;
 
     @Unique
-    private float penumbra_phantasm$lastAmbient = Float.NaN;
+    private float lastAmbient = Float.NaN;
 
     @Inject(method = "updateLightTexture(F)V", at = @At("HEAD"), cancellable = true)
     private void depthsLightTexture(float partialTick, CallbackInfo ci) {
@@ -38,13 +38,13 @@ public class LightTextureMixin {
 
         float ambientLight = level.dimensionType().ambientLight();
 
-        if (!this.updateLightTexture && ambientLight == penumbra_phantasm$lastAmbient) {
+        //If no update needed, skip
+        if (!this.updateLightTexture && ambientLight == lastAmbient) {
             ci.cancel();
             return;
         }
 
-        penumbra_phantasm$lastAmbient = ambientLight;
-
+        lastAmbient = ambientLight;
         float surfaceBrightness = 0.5f;
 
         for (int skyLight = 0; skyLight < 16; skyLight++) {
@@ -66,9 +66,9 @@ public class LightTextureMixin {
     }
 
     private static float vanillaBlockBrightness(float ambientLight, int blockLight) {
-        float level = blockLight / 15f;
-        float curve = level / (4f - 3f * level);
+        float lightDelta = blockLight / 15f;
+        float lightCurve = lightDelta / (4f - 3f * lightDelta);
 
-        return Mth.lerp(ambientLight, curve, 1f);
+        return Mth.lerp(ambientLight, lightCurve, 1f);
     }
 }

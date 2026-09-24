@@ -136,7 +136,7 @@ public class LocationTitleOverlay {
         int fill = (a << 24) | (fillRgb & 0xFFFFFF);
         int outline = (a << 24) | (outlineRgb & 0xFFFFFF);
 
-        font.drawInBatch8xOutline(seq, drawX, y, fill, outline, graphics.pose().last().pose(), graphics.bufferSource(), 0xF000F0);
+        font.drawInBatch8xOutline(seq, drawX, y, fill, outline, graphics.pose().last().pose(), graphics.bufferSource(), 15728880);
         graphics.flush();
     }
 

@@ -9,11 +9,13 @@ import destiny.penumbra_phantasm.server.capability.VerticalBarCapability;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.client.gui.overlay.IGuiOverlay;
@@ -189,12 +191,12 @@ public class DeterminationBarOverlay {
         }
 
         //Determination number
-        drawString(guiGraphics, Component.literal(determinationDisplay + "").withStyle(Style.EMPTY.withFont(
-                ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "8_bit_operator"))), 14, -10, 0xFFFFFF, 1f);
+        drawStringOutlined(guiGraphics, Component.literal(determinationDisplay + "").withStyle(Style.EMPTY.withFont(
+                ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "8_bit_operator"))), 14, -10, 0xFFFFFF, 0x000000, 1f);
 
         //Percentage symbol
-        drawString(guiGraphics, Component.literal("%").withStyle(Style.EMPTY.withFont(
-                ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "8_bit_operator"))), 18, 0, 0xFFFFFF, 1f);
+        drawStringOutlined(guiGraphics, Component.literal("%").withStyle(Style.EMPTY.withFont(
+                ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "8_bit_operator"))), 18, 0, 0xFFFFFF, 0x000000, 1f);
 
         pose.popPose();
 
@@ -207,5 +209,17 @@ public class DeterminationBarOverlay {
         graphics.drawString(Minecraft.getInstance().font, lineString, x, y, color, false);
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+    }
+
+    public static void drawStringOutlined(GuiGraphics graphics, Component text, int x, int y, int fillHex, int outlineHex, float alpha) {
+        Font font = Minecraft.getInstance().font;
+        FormattedCharSequence charSequence = text.getVisualOrderText();
+
+        int finalAlpha = Mth.clamp((int) (alpha * 255f), 0, 255);
+        int fillColor = (finalAlpha << 24) | (fillHex & 0xFFFFFF);
+        int outlineColor = (finalAlpha << 24) | (outlineHex & 0xFFFFFF);
+
+        font.drawInBatch8xOutline(charSequence, x, y, fillColor, outlineColor, graphics.pose().last().pose(), graphics.bufferSource(), 15728880);
+        graphics.flush();
     }
 }
