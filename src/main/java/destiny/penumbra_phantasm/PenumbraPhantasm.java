@@ -162,7 +162,6 @@ public class PenumbraPhantasm {
             event.registerAboveAll("location_title", LocationTitleOverlay.OVERLAY);
             event.registerAboveAll("depths_entry", DepthsEntryOverlay.OVERLAY);
             event.registerAboveAll("determination_bar", DeterminationBarOverlay.OVERLAY);
-            event.registerAboveAll("text_box", TextBoxOverlay.OVERLAY);
         }
 
         @SubscribeEvent

@@ -28,7 +28,7 @@ public class TextBoxOverlay {
     public static final int TEXTURE_SIZE = 512;
     public static final int BOX_WIDTH = 296;
     public static final int BOX_HEIGHT = 83;
-    public static final int BOX_SIZE = 1;
+    public static final int BOX_SIZE = 2;
     public static final int GLOW_PERIOD_MS = 5000;
 
     public static final int SOUL_SIZE = 8;
@@ -91,11 +91,11 @@ public class TextBoxOverlay {
         }
     });
 
-    private static void drawGridLine(GuiGraphics graphics, Font font, String text, int x, int y) {
+    public static void drawGridLine(GuiGraphics graphics, Font font, String text, int x, int y) {
         drawGridLine(graphics, font, text, x, y, 0xFFFFFFFF);
     }
 
-    private static void drawGridLine(GuiGraphics graphics, Font font, String text, int x, int y, int color) {
+    public static void drawGridLine(GuiGraphics graphics, Font font, String text, int x, int y, int color) {
         Style style = TextBoxWriter.FONT_STYLE;
         int cursor = x;
         for (int i = 0; i < text.length(); i++) {
@@ -109,7 +109,7 @@ public class TextBoxOverlay {
         }
     }
 
-    private static void drawChoices(GuiGraphics graphics, Font font, TextBoxWriter writer) {
+    public static void drawChoices(GuiGraphics graphics, Font font, TextBoxWriter writer) {
         int yesW = writer.yesLabel().getString().length() * HORIZONTAL_SPACE;
         int noW = writer.noLabel().getString().length() * HORIZONTAL_SPACE;
         int yesX = BOX_WIDTH / 4 - yesW / 2;

@@ -11,12 +11,16 @@ import destiny.penumbra_phantasm.client.render.fountain.FountainOpeningPosterize
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
+import destiny.penumbra_phantasm.client.render.textbox.DarkWorldDialogue;
+import destiny.penumbra_phantasm.client.render.textbox.TextBoxWriter;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.FluidTypeRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
+import net.minecraft.Util;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -27,13 +31,20 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
+import static destiny.penumbra_phantasm.client.render.overlay.TextBoxOverlay.*;
+
 @Mixin(GameRenderer.class)
-public class GameRendererMixin {
+public abstract class GameRendererMixin {
+	@Shadow public abstract void render(float pPartialTicks, long pNanoTime, boolean pRenderLevel);
+
 	@Inject(method = "renderItemInHand", at = @At("HEAD"), cancellable = true)
 	private void penumbraPhantasm$hideEggRoomHands(PoseStack poseStack, Camera camera, float partialTick, CallbackInfo ci) {
 		if (Minecraft.getInstance().level != null && CardKingdomEggRoomUtil.isEggRoom(Minecraft.getInstance().level)) {
@@ -59,61 +70,64 @@ public class GameRendererMixin {
 	private void renderDarknessOverlays(float partialTick, long nanoTime, boolean renderLevel, CallbackInfo ci) {
 		Minecraft minecraft = Minecraft.getInstance();
 
-		if (!minecraft.isPaused() && minecraft.level != null) {
-			if (ClientConfig.fountainMakingPosterization) {
-				FountainOpeningPosterizeRenderer.render(minecraft, (GameRenderer) (Object) this, partialTick);
-			}
+		if (minecraft.isPaused()) return;
 
-			if (ClientConfig.fountainProximityRainbow) {
-				FountainHueShiftRenderer.render(minecraft, (GameRenderer) (Object) this, partialTick);
-			}
+		ClientLevel level = minecraft.level;
+
+		if (level == null) return;
+
+		LocalPlayer player = minecraft.player;
+
+		if (player == null) return;
+
+		if (ClientConfig.fountainMakingPosterization) {
+			FountainOpeningPosterizeRenderer.render(minecraft, (GameRenderer) (Object) this, partialTick);
 		}
 
-		if (minecraft.isPaused()) return;
+		if (ClientConfig.fountainProximityRainbow) {
+			FountainHueShiftRenderer.render(minecraft, (GameRenderer) (Object) this, partialTick);
+		}
 
 		float landAlpha = 0f;
 		float fountainAlpha = 0f;
 		int sealShineTick = -1;
 		int determination = -1;
 
-		if (minecraft.player != null) {
-			int darknessLandTicker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve()
-					.map(cap -> cap.darknessLandTicker).orElse(-1);
-			if (darknessLandTicker >= 0 && darknessLandTicker < 40) {
-				landAlpha = darknessLandTicker < 20 ? 1f : Mth.lerp(darknessLandTicker / 40f, 1f, 0f);
-			}
-
-			int darknessOverlayTicker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve()
-					.map(cap -> cap.darknessOverlayTicker).orElse(0);
-			if (darknessOverlayTicker > 0) {
-				fountainAlpha = Math.min(Mth.lerp(darknessOverlayTicker / 100f, 0f, 3f), 2.5f);
-			}
-
-			float petrificationAlpha = 0f;
-
-			determination = minecraft.player.getCapability(CapabilityRegistry.SOUL).resolve().map(cap -> cap.determination).orElse(0);
-
-			if (DarkWorldUtil.isDepths(minecraft.level) && determination <= 25) {
-				float erosionDelta = (25 - determination) / 25f;
-
-				petrificationAlpha = Math.min(Mth.lerp(erosionDelta, 0f, 1f), 2.5f);
-			}
-
-			fountainAlpha = Math.max(fountainAlpha, petrificationAlpha);
-			sealShineTick = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve()
-					.map(cap -> cap.sealShineTicker).orElse(-1);
+		int darknessLandTicker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve()
+				.map(cap -> cap.darknessLandTicker).orElse(-1);
+		if (darknessLandTicker >= 0 && darknessLandTicker < 40) {
+			landAlpha = darknessLandTicker < 20 ? 1f : Mth.lerp(darknessLandTicker / 40f, 1f, 0f);
 		}
 
-		int width = minecraft.getWindow().getGuiScaledWidth();
-		int height = minecraft.getWindow().getGuiScaledHeight();
+		int darknessOverlayTicker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve()
+				.map(cap -> cap.darknessOverlayTicker).orElse(0);
+		if (darknessOverlayTicker > 0) {
+			fountainAlpha = Math.min(Mth.lerp(darknessOverlayTicker / 100f, 0f, 3f), 2.5f);
+		}
+
+		float petrificationAlpha = 0f;
+
+		determination = minecraft.player.getCapability(CapabilityRegistry.SOUL).resolve().map(cap -> cap.determination).orElse(0);
+
+		if (DarkWorldUtil.isDepths(minecraft.level) && determination <= 25) {
+			float erosionDelta = (25 - determination) / 25f;
+
+			petrificationAlpha = Math.min(Mth.lerp(erosionDelta, 0f, 1f), 2.5f);
+		}
+
+		fountainAlpha = Math.max(fountainAlpha, petrificationAlpha);
+		sealShineTick = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve()
+				.map(cap -> cap.sealShineTicker).orElse(-1);
 
 		minecraft.getMainRenderTarget().bindWrite(false);
 		RenderSystem.disableDepthTest();
 
 		Window window = minecraft.getWindow();
 		float guiFarPlane = ForgeHooksClient.getGuiFarPlane();
-		Matrix4f guiProjection = new Matrix4f().setOrtho(0, (float) ((double) window.getWidth() / window.getGuiScale()), (float) ((double) window.getHeight() / window.getGuiScale()), 0.0F, 1000.0F, guiFarPlane);
+
+		Matrix4f guiProjection = new Matrix4f().setOrtho(0, (float) ((double) window.getWidth() / window.getGuiScale()), (float) ((double) window.getHeight() / window.getGuiScale()), 0f, 1000f, guiFarPlane);
 		RenderSystem.setProjectionMatrix(guiProjection, VertexSorting.ORTHOGRAPHIC_Z);
+
 		PoseStack modelViewStack = RenderSystem.getModelViewStack();
 		modelViewStack.pushPose();
 		modelViewStack.setIdentity();
@@ -126,16 +140,16 @@ public class GameRendererMixin {
 		RenderSystem.defaultBlendFunc();
 		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
-		ClientLevel level = minecraft.level;
-		LocalPlayer player = minecraft.player;
+		int scaledWidth = minecraft.getWindow().getGuiScaledWidth();
+		int scaledHeight = minecraft.getWindow().getGuiScaledHeight();
 
-		if (player != null && player.getEyeInFluidType() == FluidTypeRegistry.NEGATIVE_PHOTONS.get()) {
-			renderNegativePhotonsOverlay(level, width, height);
-		}
+		renderNegativePhotonsOverlay(minecraft, level, player, scaledWidth, scaledHeight);
 
-		renderLandScreenFadeOut(graphics, width, height, landAlpha);
-		renderTransitionFadeOut(graphics, width, height, fountainAlpha);
-		renderSealShine(graphics, width, height, sealShineTick);
+		renderTextBox(graphics, minecraft, level, player, scaledWidth, scaledHeight);
+
+		renderLandScreenFadeOut(graphics, scaledWidth, scaledHeight, landAlpha);
+		renderTransitionFadeOut(graphics, scaledWidth, scaledHeight, fountainAlpha);
+		renderSealShine(graphics, scaledWidth, scaledHeight, sealShineTick);
 
 		graphics.flush();
 
@@ -158,6 +172,7 @@ public class GameRendererMixin {
 		if (fountainAlpha > 0f) {
 			RenderSystem.setShader(GameRenderer::getPositionTexShader);
 			RenderSystem.setShaderColor(1f, 1f, 1f, fountainAlpha);
+
 			graphics.blit(FountainDarknessOverlay.DARKNESS, 0, 0, 0, 0, 0, width, height, width, height);
 		}
 	}
@@ -201,47 +216,50 @@ public class GameRendererMixin {
 		}
 
 		pose.pushPose();
+
 		pose.translate(width / 2f, height / 2f, 0);
 		pose.scale(endingSizeX3, 1, 1);
 		pose.translate(-width / 2f, -height / 2f, 0);
+
 		RenderBlitUtil.blit(IntroScreen.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha3, 0, 0, width, height, width, height);
+
 		pose.popPose();
 
 		pose.pushPose();
+
 		pose.translate(width / 2f, height / 2f, 0);
 		pose.scale(endingSizeX2, 1, 1);
+
 		pose.translate(-width / 2f, -height / 2f, 0);
 		RenderBlitUtil.blit(IntroScreen.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha2, 0, 0, width, height, width, height);
+
 		pose.popPose();
 
 		pose.pushPose();
+
 		pose.translate(width / 2f, height / 2f, 0);
 		pose.scale(endingSizeX1, 1, 1);
 		pose.translate(-width / 2f, -height / 2f, 0);
+
 		RenderBlitUtil.blit(IntroScreen.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha1, 0, 0, width, height, width, height);
+
 		pose.popPose();
 	}
 
-	private void renderNegativePhotonsOverlay(Level level, int width, int height) {
+	private void renderNegativePhotonsOverlay(Minecraft minecraft, ClientLevel level, LocalPlayer player, int width, int height) {
+		if (player.getEyeInFluidType() != FluidTypeRegistry.NEGATIVE_PHOTONS.get()) return;
+
 		ShaderInstance shaderInstance = ModShaders.FOUNTAIN_MASKED;
 
-		if (shaderInstance != null) {
-			float shadertime = (level.getGameTime()) * 0.01f;
-			shaderInstance.safeGetUniform("Time").set(shadertime);
-			Minecraft mc = Minecraft.getInstance();
-			float aspect = (float) mc.getWindow().getWidth() / (float) mc.getWindow().getHeight();
+		if (shaderInstance == null) return;
 
-			shaderInstance.safeGetUniform("AspectRatio").set(aspect);
+		float shaderTime = (level.getGameTime()) * 0.01f;
+		shaderInstance.safeGetUniform("Time").set(shaderTime);
 
-		}
+		float aspectRatio = (float) minecraft.getWindow().getWidth() / (float) minecraft.getWindow().getHeight();
 
-		LocalPlayer player = Minecraft.getInstance().player;
-
-		if(player != null) {
-			if (shaderInstance != null) {
-				shaderInstance.safeGetUniform("TintColor").set(1f, 1f, 1f, 1f);
-			}
-		}
+		shaderInstance.safeGetUniform("AspectRatio").set(aspectRatio);
+		shaderInstance.safeGetUniform("TintColor").set(1f, 1f, 1f, 1f);
 
 		RenderSystem.setShader(() -> ModShaders.FOUNTAIN_MASKED);
 		RenderSystem.setShaderTexture(0, NegativePhotonsRenderUtil.WHITE_SCREEN);
@@ -252,10 +270,49 @@ public class GameRendererMixin {
 
 		BufferBuilder builder = Tesselator.getInstance().getBuilder();
 		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+
 		builder.vertex(matrix, 0f, 0f, 0f).color(0.1f, 0.1f, 0.1f, 0.5f).uv(0f, 0f).endVertex();
 		builder.vertex(matrix, 0f, (float) height, 0f).color(0.1f, 0.1f, 0.1f, 0.5f).uv(0f, 1f).endVertex();
 		builder.vertex(matrix, (float) width, (float) height, 0f).color(0.1f, 0.1f, 0.1f, 0.5f).uv(1f, 1f).endVertex();
 		builder.vertex(matrix, (float) width, 0f, 0f).color(0.1f, 0.1f, 0.1f, 0.5f).uv(1f, 0f).endVertex();
+
 		BufferUploader.drawWithShader(builder.end());
+	}
+
+	private void renderTextBox(GuiGraphics guiGraphics, Minecraft minecraft, ClientLevel level, LocalPlayer player, int width, int height) {
+		if (!DarkWorldUtil.isDarkWorld(level)) return;
+
+		if (!DarkWorldDialogue.isActive() || DarkWorldDialogue.writer() == null) return;
+
+		PoseStack pose = guiGraphics.pose();
+		TextBoxWriter writer = DarkWorldDialogue.writer();
+
+		pose.pushPose();
+
+		pose.translate((width - BOX_WIDTH) / 2f, height - BOX_HEIGHT, 0f);
+
+		guiGraphics.blit(TEXTURE, 0, 0, 0, 0, BOX_WIDTH, BOX_HEIGHT, TEXTURE_SIZE, TEXTURE_SIZE);
+
+		float glowDelta = (float) (Util.getMillis() % GLOW_PERIOD_MS) / GLOW_PERIOD_MS;
+		float jewelAlpha = 1f - Mth.sin(glowDelta * Mth.PI);
+
+		if (DarkWorldUtil.isDepths(player.level())) {
+			jewelAlpha = 0;
+		}
+
+		RenderBlitUtil.blit(TEXTURE_GLOW, pose, 0, 0, 1f, 1f, 1f, jewelAlpha, 0, 0, BOX_WIDTH, BOX_HEIGHT,
+				TEXTURE_SIZE, TEXTURE_SIZE);
+
+		Font font = minecraft.font;
+		List<String> lines = writer.visibleLines();
+		for (int i = 0; i < lines.size(); i++) {
+			drawGridLine(guiGraphics, font, lines.get(i), TEXT_ORIGIN_X, TEXT_ORIGIN_Y + i * VERTICAL_SPACE);
+		}
+
+		if (writer.isChoosing()) {
+			drawChoices(guiGraphics, font, writer);
+		}
+
+		pose.popPose();
 	}
 }
