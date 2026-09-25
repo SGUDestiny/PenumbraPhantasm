@@ -1,5 +1,6 @@
 package destiny.penumbra_phantasm.mixin;
 
+import destiny.penumbra_phantasm.client.render.fluid.NegativePhotonsRenderUtil;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
 import destiny.penumbra_phantasm.server.event.ClientEvents;
 import destiny.penumbra_phantasm.server.registry.FluidTypeRegistry;
@@ -31,19 +32,15 @@ public class LevelRendererMixin {
 		FluidState oldFluidState = pOldState.getFluidState();
 		FluidState newFluidState = pNewState.getFluidState();
 
-		if (!isNegativePhotonsFluid(oldFluidState) && !isNegativePhotonsFluid(newFluidState)) return;
+		if (!isNegativePhotonsFluid(oldFluidState) && !isNegativePhotonsFluid(newFluidState))
+			return;
 
-		ChunkPos chunkPos = new ChunkPos(pPos);
-
-		if (isNegativePhotonsFluid(oldFluidState) && !isNegativePhotonsFluid(newFluidState)) {
-			ClientEvents.negativePhotons.get(chunkPos).remove(pPos);
-		} else if (!isNegativePhotonsFluid(oldFluidState) && isNegativePhotonsFluid(newFluidState)) {
-			ClientEvents.negativePhotons.get(chunkPos).add(pPos);
-		}
+		NegativePhotonsRenderUtil.onClientBlockChanged(pLevel, pPos, pOldState, pNewState);
 	}
 
 	@Unique
-	private boolean isNegativePhotonsFluid(FluidState fluidState) {
+	private boolean isNegativePhotonsFluid(FluidState fluidState)
+	{
 		return fluidState.getFluidType() == FluidTypeRegistry.NEGATIVE_PHOTONS.get();
 	}
 }

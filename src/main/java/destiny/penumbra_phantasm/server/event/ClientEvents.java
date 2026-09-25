@@ -62,6 +62,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
+import net.minecraftforge.event.level.LevelEvent;
 import org.lwjgl.opengl.GL11;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.fountain.FountainRenderUtil;
@@ -93,6 +94,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
 
+import static destiny.penumbra_phantasm.client.render.fluid.NegativePhotonsRenderUtil.CACHE;
 import static org.lwjgl.opengl.GL32C.GL_DEPTH_CLAMP;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
@@ -111,8 +113,6 @@ public class ClientEvents {
 	private static final Random random = new Random();
 	private static ResourceKey<Level> lastClientDim;
 	private static int eggRoomRebuildLeft;
-
-	public static Map<ChunkPos, Set<BlockPos>> negativePhotons = new HashMap<>();
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public static void eggRoomCameraAngles(ViewportEvent.ComputeCameraAngles event) {
@@ -284,8 +284,10 @@ public class ClientEvents {
 				}
 			});
 
-			if(renderShockwavePass) {
-				NegativePhotonsRenderUtil.renderNegativePhotonsBlocks(Minecraft.getInstance().level, buffer, camera, pose, negativePhotons);
+			if(renderShockwavePass)
+			{
+				NegativePhotonsRenderUtil.renderNegativePhotonsBlocks(Minecraft.getInstance().level, camera, pose,
+						event.getProjectionMatrix());
 			}
 
 			buffer.endBatch();
@@ -295,65 +297,92 @@ public class ClientEvents {
 	}
 
 	@SubscribeEvent
-	public static void onChunkLoad(ChunkEvent.Load event) {
-		if(!event.getLevel().isClientSide()) return;
-		if(!(event.getLevel() instanceof ClientLevel level)) return;
+	public static void onChunkLoad(ChunkEvent.Load event)
+	{
+		if(!event.getLevel().isClientSide())
+			return;
+		if(!(event.getLevel() instanceof ClientLevel level))
+			return;
 
 		ChunkAccess chunk = event.getChunk();
-
-		if(chunk == null) return;
+		if(chunk == null)
+			return;
 
 		ChunkPos chunkPos = chunk.getPos();
 		int chunkMinX = chunkPos.getMinBlockX();
 		int chunkMinZ = chunkPos.getMinBlockZ();
 
 		Set<BlockPos> negativePhotonsSet = new HashSet<>();
-		for(int sectionIndex = 0; sectionIndex < chunk.getSectionsCount(); sectionIndex++) {
+		for(int sectionIndex = 0; sectionIndex < chunk.getSectionsCount(); sectionIndex++)
+		{
 			LevelChunkSection section = chunk.getSection(sectionIndex);
 
-			if(section.hasOnlyAir()) continue;
+			if(section.hasOnlyAir())
+				continue;
 			if(!section.maybeHas(state -> state.getFluidState().getFluidType() == FluidTypeRegistry.NEGATIVE_PHOTONS.get()))
 				continue;
 
 			int sectionChunkY = chunk.getSectionYFromSectionIndex(sectionIndex);
 			int sectionMinY = SectionPos.sectionToBlockCoord(sectionChunkY);
 
-			for(int sectionX = 0; sectionX < 16; sectionX++) {
-				for(int sectionY = 0; sectionY < 16; sectionY++) {
-					for(int sectionZ = 0; sectionZ < 16; sectionZ++) {
+			for(int sectionX = 0; sectionX < 16; sectionX++)
+				for(int sectionY = 0; sectionY < 16; sectionY++)
+					for(int sectionZ = 0; sectionZ < 16; sectionZ++)
+					{
 						FluidState fluidState = section.getFluidState(sectionX, sectionY, sectionZ);
+						if(fluidState.getFluidType() != FluidTypeRegistry.NEGATIVE_PHOTONS.get())
+							continue;
 
-						if(fluidState.getFluidType() != FluidTypeRegistry.NEGATIVE_PHOTONS.get()) continue;
-
-						BlockPos negativePhotonsPos = new BlockPos(chunkMinX + sectionX, sectionMinY + sectionY, chunkMinZ + sectionZ);
+						BlockPos negativePhotonsPos = new BlockPos(chunkMinX + sectionX,
+								sectionMinY + sectionY,
+								chunkMinZ + sectionZ);
 						negativePhotonsSet.add(negativePhotonsPos);
 					}
-				}
-			}
 		}
 
-		negativePhotons.put(chunkPos, negativePhotonsSet);
+		NegativePhotonsRenderUtil.RenderCache cache = NegativePhotonsRenderUtil.CACHE.computeIfAbsent(chunkPos,
+				k -> new NegativePhotonsRenderUtil.RenderCache());
+		cache.fluidPositions = negativePhotonsSet;
+		cache.needsRebuild = true;
 
-		if(CardKingdomEggRoomUtil.isEggRoom(level)) {
+		if (!negativePhotonsSet.isEmpty())
+			for (int x = -1; x <= 1; x++)
+				for (int z = -1; z <= 1; z++)
+				{
+					if (x == 0 && z == 0)
+						continue;
+					NegativePhotonsRenderUtil.markChunkDirty(new ChunkPos(chunkPos.x + x, chunkPos.z + z));
+				}
+
+		if(CardKingdomEggRoomUtil.isEggRoom(level))
+		{
 			Minecraft minecraft = Minecraft.getInstance();
 			int minY = level.getMinSection();
 			int maxY = level.getMaxSection();
 
-			for(int y = minY; y < maxY; y++) {
+			for(int y = minY; y < maxY; y++)
 				minecraft.levelRenderer.setSectionDirty(chunkPos.x, y, chunkPos.z);
-			}
 		}
 	}
 
 	@SubscribeEvent
-	public static void onChunkUnload(ChunkEvent.Unload event) {
+	public static void onChunkUnload(ChunkEvent.Unload event)
+	{
 		if(!event.getLevel().isClientSide()) return;
-		if(!(event.getLevel() instanceof ClientLevel level)) return;
 
 		ChunkAccess chunk = event.getChunk();
 		ChunkPos chunkPos = chunk.getPos();
 
-		negativePhotons.remove(chunkPos);
+		NegativePhotonsRenderUtil.RenderCache cache = CACHE.remove(chunkPos);
+		if (cache != null)
+			cache.cleanup();
+	}
+
+	@SubscribeEvent
+	public static void onLevelUnload(LevelEvent.Unload event)
+	{
+		if (event.getLevel().isClientSide())
+			NegativePhotonsRenderUtil.clearCache();
 	}
 
 	@SubscribeEvent
