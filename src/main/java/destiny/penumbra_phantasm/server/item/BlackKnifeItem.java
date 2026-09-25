@@ -69,7 +69,7 @@ public class BlackKnifeItem extends KnifeItem implements GeoItem {
 
         int animationTicker = stack.getTag().getInt(SWOON_TICKER);
 
-        if (animationTicker <= SWOON_READY_TICK && animationTicker > -1) {
+        if (animationTicker < SWOON_READY_TICK && animationTicker > -1) {
             if (animationTicker == 1) {
                 level.playSound(null, entity.blockPosition(), SoundRegistry.KNIGHT_POWERUP.get(), SoundSource.PLAYERS, 1f, 1f);
             }

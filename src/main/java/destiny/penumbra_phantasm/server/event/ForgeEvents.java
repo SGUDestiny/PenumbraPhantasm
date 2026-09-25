@@ -119,8 +119,7 @@ public class ForgeEvents {
 
         Level level = player.level();
 
-        if (!CardKingdomEggRoomUtil.isEggRoom(level)) return;
-        if (!DarkWorldUtil.isDepths(level)) return;
+        if (!CardKingdomEggRoomUtil.isEggRoom(level) && !DarkWorldUtil.isDepths(level)) return;
 
         player.fallDistance = 0f;
         event.setCanceled(true);
@@ -207,7 +206,7 @@ public class ForgeEvents {
         abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.SWOON_DELAY);
 
         int swoonTicker = weaponStack.getTag().getInt(SWOON_TICKER);
-        if (swoonTicker < SWOON_READY_TICK) return;
+        if (swoonTicker != 40) return;
 
         AABB playerBox = new AABB(attacker.blockPosition()).inflate(16);
         for (ServerPlayer serverPlayer : level.getEntitiesOfClass(ServerPlayer.class, playerBox)) {
