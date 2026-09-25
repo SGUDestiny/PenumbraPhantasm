@@ -242,7 +242,7 @@ public class ForgeEvents {
         abilityCap.delayTickers.add(delayTicker);
     }
 
-    @SubscribeEvent
+/*    @SubscribeEvent
     public static void onShieldBlock(ShieldBlockEvent event) {
         Entity blocker = event.getEntity();
 
@@ -260,5 +260,5 @@ public class ForgeEvents {
         }
 
         event.setCanceled(true);
-    }
+    }*/
 }
