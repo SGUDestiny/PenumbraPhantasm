@@ -14,6 +14,7 @@ import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -28,6 +29,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
+import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -182,6 +184,8 @@ public class ForgeEvents {
         ItemStack stack = attacker.getMainHandItem();
         Entity target = event.getTarget();
 
+        if (target instanceof Player player && (player.isCreative() || player.isSpectator())) return;
+
         if (stack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
             attackWithBlackKnife(level, attacker, target, stack);
         } else if (stack.getItem() == ItemRegistry.REAL_KNIFE.get()) {
@@ -236,5 +240,25 @@ public class ForgeEvents {
 
         DelayTicker delayTicker = new DelayTicker(target.getUUID(), weaponStack, DelayTicker.REAL_KNIFE_DELAY, 0);
         abilityCap.delayTickers.add(delayTicker);
+    }
+
+    @SubscribeEvent
+    public static void onShieldBlock(ShieldBlockEvent event) {
+        Entity blocker = event.getEntity();
+
+        if (!(blocker instanceof Player player)) return;
+
+        float blockedDamage = event.getBlockedDamage();
+        float originalBlocked = event.getOriginalBlockedDamage();
+        DamageSource source = event.getDamageSource();
+        boolean shieldTakesDamage = event.shieldTakesDamage();
+
+
+
+        if (shieldTakesDamage) {
+
+        }
+
+        event.setCanceled(true);
     }
 }
