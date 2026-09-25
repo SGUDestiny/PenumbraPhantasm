@@ -1,10 +1,15 @@
 package destiny.penumbra_phantasm.client.render.particle;
 
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 public class SwoonParticle extends TextureSheetParticle {
     public SwoonParticle(ClientLevel level, double x, double y, double z, SpriteSet sprite, double xSpeed, double ySpeed, double zSpeed) {
@@ -67,6 +72,51 @@ public class SwoonParticle extends TextureSheetParticle {
                 }
             }
         }
+    }
+
+    @Override
+    public void render(VertexConsumer consumer, Camera camera, float partialTick)
+    {
+        Vec3 cameraPos = camera.getPosition();
+        float renderX = (float)(Mth.lerp(partialTick, this.xo, this.x) - cameraPos.x());
+        float renderY = (float)(Mth.lerp(partialTick, this.yo, this.y) - cameraPos.y());
+        float renderZ = (float)(Mth.lerp(partialTick, this.zo, this.z) - cameraPos.z());
+
+        Quaternionf quaternion = new Quaternionf(camera.rotation());
+        if (this.roll != 0.0F) {
+            quaternion.rotateZ(Mth.lerp(partialTick, this.oRoll, this.roll));
+        }
+
+        Vector3f[] vertices = new Vector3f[]{
+                new Vector3f(-1.0F, -1.0F, 0.0F),
+                new Vector3f(-1.0F,  1.0F, 0.0F),
+                new Vector3f( 1.0F,  1.0F, 0.0F),
+                new Vector3f( 1.0F, -1.0F, 0.0F)
+        };
+
+        float baseSize = this.getQuadSize(partialTick);
+        for(int i = 0; i < 4; ++i)
+        {
+            Vector3f vertex = vertices[i];
+
+            //Strech And Squish here.
+            vertex.mul(1f, 1f, 1.0F);
+            vertex.mul(baseSize);
+
+            vertex.rotate(quaternion);
+            vertex.add(renderX, renderY, renderZ);
+        }
+
+        float minU = this.getU0();
+        float maxU = this.getU1();
+        float minV = this.getV0();
+        float maxV = this.getV1();
+        int light = this.getLightColor(partialTick);
+
+        consumer.vertex(vertices[0].x(), vertices[0].y(), vertices[0].z()).uv(maxU, maxV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        consumer.vertex(vertices[1].x(), vertices[1].y(), vertices[1].z()).uv(maxU, minV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        consumer.vertex(vertices[2].x(), vertices[2].y(), vertices[2].z()).uv(minU, minV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
+        consumer.vertex(vertices[3].x(), vertices[3].y(), vertices[3].z()).uv(minU, maxV).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(light).endVertex();
     }
 
     @Override
