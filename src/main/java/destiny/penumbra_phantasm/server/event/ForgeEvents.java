@@ -206,8 +206,6 @@ public class ForgeEvents {
 
         abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.SWOON_DELAY);
 
-        weaponStack.getOrCreateTag().putInt(SWOON_TICKER, -1);
-
         int swoonTicker = weaponStack.getTag().getInt(SWOON_TICKER);
         if (swoonTicker < SWOON_READY_TICK) return;
 
@@ -219,6 +217,8 @@ public class ForgeEvents {
 
             screenCap.swoonAnimationTicker = 0;
         }
+
+        weaponStack.getOrCreateTag().putInt(SWOON_TICKER, -1);
     }
 
     public static void attackWithRealKnife(Player attacker, Entity target, ItemStack weaponStack) {
