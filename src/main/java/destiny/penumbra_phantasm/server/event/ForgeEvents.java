@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
@@ -184,24 +185,33 @@ public class ForgeEvents {
         ItemStack stack = attacker.getMainHandItem();
         Entity target = event.getTarget();
 
+        if (target instanceof LivingEntity livingEntity && livingEntity.isDeadOrDying()) return;
+
         if (target instanceof Player player && (player.isCreative() || player.isSpectator())) return;
 
         if (stack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
             attackWithBlackKnife(level, attacker, target, stack);
+            event.setCanceled(true);
         } else if (stack.getItem() == ItemRegistry.REAL_KNIFE.get()) {
             attackWithRealKnife(attacker, target, stack);
+            event.setCanceled(true);
         }
-
-        event.setCanceled(true);
     }
 
     public static void attackWithBlackKnife(Level level, Player attacker, Entity target, ItemStack weaponStack) {
-        int swoonTicker = weaponStack.getTag().getInt(SWOON_TICKER);
+        AbilityCapability abilityCap = attacker.getCapability(CapabilityRegistry.ABILITY).resolve().orElse(null);
 
+        if (abilityCap == null) return;
+        if (!abilityCap.isDelayTickerFree(target.getUUID(), weaponStack)) return;
+
+        abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.SWOON_DELAY);
+
+        weaponStack.getOrCreateTag().putInt(SWOON_TICKER, -1);
+
+        int swoonTicker = weaponStack.getTag().getInt(SWOON_TICKER);
         if (swoonTicker < SWOON_READY_TICK) return;
 
         AABB playerBox = new AABB(attacker.blockPosition()).inflate(16);
-
         for (ServerPlayer serverPlayer : level.getEntitiesOfClass(ServerPlayer.class, playerBox)) {
             ScreenAnimationCapability screenCap = serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve().orElse(null);
 
@@ -209,18 +219,16 @@ public class ForgeEvents {
 
             screenCap.swoonAnimationTicker = 0;
         }
-
-        AbilityCapability abilityCap = attacker.getCapability(CapabilityRegistry.ABILITY).resolve().orElse(null);
-
-        if (abilityCap == null) return;
-
-        DelayTicker delayTicker = new DelayTicker(target.getUUID(), weaponStack, DelayTicker.SWOON_DELAY, 0);
-        abilityCap.delayTickers.add(delayTicker);
-
-        weaponStack.getOrCreateTag().putInt(SWOON_TICKER, -1);
     }
 
     public static void attackWithRealKnife(Player attacker, Entity target, ItemStack weaponStack) {
+        AbilityCapability abilityCap = attacker.getCapability(CapabilityRegistry.ABILITY).resolve().orElse(null);
+
+        if (abilityCap == null) return;
+        if (!abilityCap.isDelayTickerFree(target.getUUID(), weaponStack)) return;
+
+        abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.REAL_KNIFE_DELAY);
+
         Vec3 particleVec = new Vec3(target.getX(), target.getEyeY(), target.getZ());
 
         particleVec.add(attacker.getX(), attacker.getEyeY(), attacker.getZ());
@@ -233,13 +241,6 @@ public class ForgeEvents {
                 new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.REAL_KNIFE_SLASH.get()),
                         particleVec.x, particleVec.y, particleVec.z, 0, 0, 0, 1)
         );
-
-        AbilityCapability abilityCap = attacker.getCapability(CapabilityRegistry.ABILITY).resolve().orElse(null);
-
-        if (abilityCap == null) return;
-
-        DelayTicker delayTicker = new DelayTicker(target.getUUID(), weaponStack, DelayTicker.REAL_KNIFE_DELAY, 0);
-        abilityCap.delayTickers.add(delayTicker);
     }
 
 /*    @SubscribeEvent
