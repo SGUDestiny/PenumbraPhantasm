@@ -181,18 +181,25 @@ public class ForgeEvents {
 
         if (level.isClientSide()) return;
 
-        ItemStack stack = attacker.getMainHandItem();
+        ItemStack weaponStack = attacker.getMainHandItem();
         Entity target = event.getTarget();
 
         if (target instanceof LivingEntity livingEntity && livingEntity.isDeadOrDying()) return;
 
         if (target instanceof Player player && (player.isCreative() || player.isSpectator())) return;
 
-        if (stack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
-            attackWithBlackKnife(level, attacker, target, stack);
-            event.setCanceled(true);
-        } else if (stack.getItem() == ItemRegistry.REAL_KNIFE.get()) {
-            attackWithRealKnife(attacker, target, stack);
+        if (weaponStack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
+            int swoonTicker = weaponStack.getTag().getInt(SWOON_TICKER);
+
+            if (swoonTicker == SWOON_READY_TICK) {
+                attackWithBlackKnife(level, attacker, target, weaponStack);
+
+                weaponStack.getOrCreateTag().putInt(SWOON_TICKER, -1);
+
+                event.setCanceled(true);
+            }
+        } else if (weaponStack.getItem() == ItemRegistry.REAL_KNIFE.get()) {
+            attackWithRealKnife(attacker, target, weaponStack);
             event.setCanceled(true);
         }
     }
@@ -205,9 +212,6 @@ public class ForgeEvents {
 
         abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.SWOON_DELAY);
 
-        int swoonTicker = weaponStack.getTag().getInt(SWOON_TICKER);
-        if (swoonTicker != 40) return;
-
         AABB playerBox = new AABB(attacker.blockPosition()).inflate(16);
         for (ServerPlayer serverPlayer : level.getEntitiesOfClass(ServerPlayer.class, playerBox)) {
             ScreenAnimationCapability screenCap = serverPlayer.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve().orElse(null);
@@ -216,8 +220,6 @@ public class ForgeEvents {
 
             screenCap.swoonAnimationTicker = 0;
         }
-
-        weaponStack.getOrCreateTag().putInt(SWOON_TICKER, -1);
     }
 
     public static void attackWithRealKnife(Player attacker, Entity target, ItemStack weaponStack) {

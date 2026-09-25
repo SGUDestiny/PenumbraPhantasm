@@ -36,9 +36,9 @@ public class BlackKnifeItem extends KnifeItem implements GeoItem {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, @NotNull InteractionHand hand) {
-        ItemStack stack = player.getItemInHand(hand);
+        super.use(level, player, hand);
 
-        if (!DarkWorldUtil.isDarkWorld(level)) super.use(level, player, hand);
+        ItemStack stack = player.getItemInHand(hand);
 
         if (!level.isClientSide()) {
             if (ServerConfig.blackKnifeOP) {
