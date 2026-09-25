@@ -74,6 +74,9 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> FOUNTAIN_SEAL_DEPTHS = registerSoundEvent("fountain_seal_depths");
     public static RegistryObject<SoundEvent> FOUNTAIN_MUSIC_DEPTHS = registerSoundEvent("fountain_music_depths");
 
+    public static RegistryObject<SoundEvent> KNIGHT_POWERUP = registerSoundEvent("knight_powerup");
+    public static RegistryObject<SoundEvent> KNIGHT_SWOON = registerSoundEvent("knight_swoon");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
     {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));

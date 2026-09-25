@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "penumbra_phantasm:injection_prick",
+    "penumbra_phantasm:injection_drain",
+    "penumbra_phantasm:injection_overdose",
+    "penumbra_phantasm:soul_damage_1",
+    "penumbra_phantasm:soul_damage_2",
+    "penumbra_phantasm:petrification",
+    "penumbra_phantasm:swoon",
+    "penumbra_phantasm:real_knife"
+  ]
+}

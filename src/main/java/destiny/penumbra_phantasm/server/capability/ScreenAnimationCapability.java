@@ -4,9 +4,6 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.client.network.ClientBoundAnimationPacket;
-import destiny.penumbra_phantasm.server.item.DarkWorldFoodFlavorItem;
-import destiny.penumbra_phantasm.server.item.DarkWorldFoodItem;
-import destiny.penumbra_phantasm.server.item.DeterminationInjectionItem;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
@@ -17,9 +14,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -44,6 +38,8 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
     public int sealShineTicker = -1;
 
     public int depthsEntryTicker = -1;
+
+    public int swoonAnimationTicker = -1;
 
     public void tick(Level level, Player player) {
         if (darknessLandTicker >= 40) {
@@ -72,6 +68,13 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         }
         if (depthsEntryTicker >= 0) {
             depthsEntryTicker++;
+        }
+
+        if (swoonAnimationTicker >= 55) {
+            swoonAnimationTicker = -1;
+        }
+        if (swoonAnimationTicker >= 0) {
+            swoonAnimationTicker++;
         }
 
         //Location title stuff below this point
@@ -134,7 +137,7 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
 
     public void syncToClient(ServerPlayer serverPlayer) {
         PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundAnimationPacket(darknessLandTicker,
-                darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker, depthsEntryTicker));
+                darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker, depthsEntryTicker, swoonAnimationTicker));
     }
 
     @Override
@@ -155,5 +158,6 @@ public class ScreenAnimationCapability implements INBTSerializable<CompoundTag> 
         this.titleAlphaTicker = cap.titleAlphaTicker;
         this.sealShineTicker = cap.sealShineTicker;
         this.depthsEntryTicker = cap.depthsEntryTicker;
+        this.swoonAnimationTicker = cap.swoonAnimationTicker;
     }
 }

@@ -32,8 +32,8 @@ public class RealKnifeHitParticle extends TextureSheetParticle {
         this.xo = this.x;
         this.yo = this.y;
         this.zo = this.z;
-        int ageAt = this.lifetime - 7;
-        int sprite = this.age >= ageAt ? Math.min(this.age - ageAt, 7) : 0;
+        int currentAge = this.lifetime - 7;
+        int sprite = this.age >= currentAge ? Math.min(this.age - currentAge, 7) : 0;
         this.setSprite(sprites.get(sprite, 6));
 
         if (this.age++ >= this.lifetime) {

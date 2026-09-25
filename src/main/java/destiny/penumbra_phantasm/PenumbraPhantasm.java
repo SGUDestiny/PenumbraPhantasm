@@ -162,6 +162,7 @@ public class PenumbraPhantasm {
             event.registerAboveAll("location_title", LocationTitleOverlay.OVERLAY);
             event.registerAboveAll("depths_entry", DepthsEntryOverlay.OVERLAY);
             event.registerAboveAll("determination_bar", DeterminationBarOverlay.OVERLAY);
+            event.registerAboveAll("swoon", SwoonOverlay.OVERLAY);
         }
 
         @SubscribeEvent
@@ -230,6 +231,7 @@ public class PenumbraPhantasm {
             event.registerSpriteSet(ParticleTypeRegistry.LUMINESCENT_PARTICLE.get(), LuminescentParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.ICHOR_FIRE_FLAME.get(), FlameParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.FRIEND_DISAPPEAR.get(), FriendDisappearParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.SWOON_PARTICLE.get(), SwoonParticle.Provider::new);
         }
 
         @SubscribeEvent

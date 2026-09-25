@@ -611,7 +611,7 @@ public class ClientEvents {
 			event.setCanceled(true);
 			renderDarkWorldCrosshair(gui, window, mc);
 		} else if(overlay == VanillaGuiOverlay.PLAYER_HEALTH.type()) {
-			if(DarkWorldDialogue.shouldHideHud()) {
+			if(DarkWorldDialogue.isActive()) {
 				event.setCanceled(true);
 				return;
 			}
@@ -622,7 +622,7 @@ public class ClientEvents {
 			event.setCanceled(true);
 			renderDarkWorldHealth(mc, gui, window, mc.player, soulType);
 		} else if(overlay == VanillaGuiOverlay.HOTBAR.type()) {
-			if(DarkWorldDialogue.shouldHideHud()) {
+			if(DarkWorldDialogue.isActive()) {
 				event.setCanceled(true);
 				return;
 			}
@@ -630,7 +630,7 @@ public class ClientEvents {
 			event.setCanceled(true);
 			renderDarkWorldHotbar(mc, gui, window, mc.player);
 		} else if(overlay == VanillaGuiOverlay.EXPERIENCE_BAR.type()) {
-			if(DarkWorldDialogue.shouldHideHud()) {
+			if(DarkWorldDialogue.isActive()) {
 				event.setCanceled(true);
 				return;
 			}

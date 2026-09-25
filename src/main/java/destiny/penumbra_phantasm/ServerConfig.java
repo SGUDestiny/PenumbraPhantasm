@@ -14,6 +14,11 @@ public class ServerConfig {
             .comment("Default: false")
             .define("real_knife_op", false);
 
+    private static final ForgeConfigSpec.BooleanValue BLACK_KNIFE_OP = BUILDER
+            .comment("Should Black Knife have swoon mechanic")
+            .comment("Default: false")
+            .define("black_knife_op", false);
+
     private static final ForgeConfigSpec.IntValue MAX_ROOM_VOLUME = BUILDER
             .comment("Maximum total darkness blocks across all connected rooms for a Dark Fountain")
             .comment("Default: 2048")
@@ -55,6 +60,7 @@ public class ServerConfig {
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean realKnifeOP;
+    public static boolean blackKnifeOP;
     public static int maxRoomVolume;
     public static int rescanInterval;
     public static int dissipationRate;
@@ -66,10 +72,10 @@ public class ServerConfig {
 
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event) {
-        if (event.getConfig().getSpec() != SPEC) {
-            return;
-        }
+        if (event.getConfig().getSpec() != SPEC) return;
+
         realKnifeOP = REAL_KNIFE_OP.get();
+        blackKnifeOP = BLACK_KNIFE_OP.get();
         maxRoomVolume = MAX_ROOM_VOLUME.get();
         rescanInterval = RESCAN_INTERVAL.get();
         dissipationRate = DISSIPATION_RATE.get();

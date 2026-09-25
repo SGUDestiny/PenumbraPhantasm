@@ -153,10 +153,6 @@ public final class DarkWorldDialogue {
 		return Minecraft.getInstance().options.keyRight.getKey().getValue() == key;
 	}
 
-	public static boolean shouldHideHud() {
-		return isActive();
-	}
-
 	public static boolean shouldBlockSneak() {
 		if (!isActive()) {
 			return false;

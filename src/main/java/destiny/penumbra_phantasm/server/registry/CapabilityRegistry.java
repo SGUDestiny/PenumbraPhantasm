@@ -26,10 +26,11 @@ public class CapabilityRegistry {
     });
     public static final Capability<VerticalBarCapability> VERTICAL_BAR = CapabilityManager.get(new CapabilityToken<>() {
     });
+    public static final Capability<AbilityCapability> ABILITY = CapabilityManager.get(new CapabilityToken<>() {
+    });
 
     @SubscribeEvent
-    public static void register(RegisterCapabilitiesEvent event)
-    {
+    public static void register(RegisterCapabilitiesEvent event) {
         event.register(DarkFountainCapability.class);
         event.register(SoulCapability.class);
         event.register(ScreenAnimationCapability.class);
@@ -37,5 +38,6 @@ public class CapabilityRegistry {
         event.register(CheshireChestCapability.class);
         event.register(FireDoorsCapability.class);
         event.register(VerticalBarCapability.class);
+        event.register(AbilityCapability.class);
     }
 }

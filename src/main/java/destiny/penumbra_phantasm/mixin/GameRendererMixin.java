@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm.mixin;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.ModShaders;
 import destiny.penumbra_phantasm.client.render.fluid.NegativePhotonsRenderUtil;
@@ -13,6 +14,8 @@ import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
 import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.client.render.textbox.DarkWorldDialogue;
 import destiny.penumbra_phantasm.client.render.textbox.TextBoxWriter;
+import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
+import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.FluidTypeRegistry;
@@ -26,12 +29,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -43,7 +46,8 @@ import static destiny.penumbra_phantasm.client.render.overlay.TextBoxOverlay.*;
 
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
-	@Shadow public abstract void render(float pPartialTicks, long pNanoTime, boolean pRenderLevel);
+	@Unique
+	private static final ResourceLocation SWOON = ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "textures/misc/swoon.png");
 
 	@Inject(method = "renderItemInHand", at = @At("HEAD"), cancellable = true)
 	private void penumbraPhantasm$hideEggRoomHands(PoseStack poseStack, Camera camera, float partialTick, CallbackInfo ci) {
@@ -88,36 +92,41 @@ public abstract class GameRendererMixin {
 			FountainHueShiftRenderer.render(minecraft, (GameRenderer) (Object) this, partialTick);
 		}
 
-		float landAlpha = 0f;
-		float fountainAlpha = 0f;
-		int sealShineTick = -1;
-		int determination = -1;
+		ScreenAnimationCapability screenCap = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve().orElse(null);
+		if (screenCap == null) return;
 
-		int darknessLandTicker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve()
-				.map(cap -> cap.darknessLandTicker).orElse(-1);
+		int darknessLandTicker = screenCap.darknessLandTicker;
+
+		float landAlpha = 0f;
 		if (darknessLandTicker >= 0 && darknessLandTicker < 40) {
 			landAlpha = darknessLandTicker < 20 ? 1f : Mth.lerp(darknessLandTicker / 40f, 1f, 0f);
 		}
 
-		int darknessOverlayTicker = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve()
-				.map(cap -> cap.darknessOverlayTicker).orElse(0);
+		int darknessOverlayTicker = screenCap.darknessOverlayTicker;
+
+		float transitionAlpha = 0f;
 		if (darknessOverlayTicker > 0) {
-			fountainAlpha = Math.min(Mth.lerp(darknessOverlayTicker / 100f, 0f, 3f), 2.5f);
+			transitionAlpha = Math.min(Mth.lerp(darknessOverlayTicker / 100f, 0f, 3f), 2.5f);
 		}
 
+		SoulCapability soulCap = minecraft.player.getCapability(CapabilityRegistry.SOUL).resolve().orElse(null);
+		if (soulCap == null) return;
+
+		int determination = soulCap.determination;
+
 		float petrificationAlpha = 0f;
-
-		determination = minecraft.player.getCapability(CapabilityRegistry.SOUL).resolve().map(cap -> cap.determination).orElse(0);
-
 		if (DarkWorldUtil.isDepths(minecraft.level) && determination <= 25) {
 			float erosionDelta = (25 - determination) / 25f;
 
 			petrificationAlpha = Math.min(Mth.lerp(erosionDelta, 0f, 1f), 2.5f);
 		}
 
-		fountainAlpha = Math.max(fountainAlpha, petrificationAlpha);
-		sealShineTick = minecraft.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).resolve()
-				.map(cap -> cap.sealShineTicker).orElse(-1);
+		transitionAlpha = Math.max(transitionAlpha, petrificationAlpha);
+
+		int sealShineTick = screenCap.sealShineTicker;
+		int swoonTicker = screenCap.swoonAnimationTicker;
+
+
 
 		minecraft.getMainRenderTarget().bindWrite(false);
 		RenderSystem.disableDepthTest();
@@ -148,8 +157,9 @@ public abstract class GameRendererMixin {
 		renderTextBox(graphics, minecraft, level, player, scaledWidth, scaledHeight);
 
 		renderLandScreenFadeOut(graphics, scaledWidth, scaledHeight, landAlpha);
-		renderTransitionFadeOut(graphics, scaledWidth, scaledHeight, fountainAlpha);
+		renderTransitionFadeOut(graphics, scaledWidth, scaledHeight, transitionAlpha);
 		renderSealShine(graphics, scaledWidth, scaledHeight, sealShineTick);
+		renderSwoon(graphics, scaledWidth, scaledHeight, swoonTicker);
 
 		graphics.flush();
 
@@ -165,6 +175,25 @@ public abstract class GameRendererMixin {
 		if (landAlpha > 0f) {
 			graphics.fill(0, 0, width, height, (int)(landAlpha * 255) << 24);
 		}
+	}
+
+	@Unique
+	private void renderSwoon(GuiGraphics graphics, int width, int height, int swoonTicker) {
+		if (swoonTicker == -1) return;
+
+		graphics.fill(0, 0, width, height, FastColor.ARGB32.color(255, 0, 0, 0));
+
+		PoseStack pose = graphics.pose();
+		int spriteWidth = 262 * 2;
+		int spriteHeight = 18 * 2;
+
+		pose.pushPose();
+
+		pose.translate((width - spriteWidth) / 2f, (height - spriteHeight) / 2f, 0);
+
+		graphics.blit(SWOON, 0, 0, 0, 0, 0, spriteWidth, spriteHeight, spriteWidth, spriteHeight);
+
+		pose.popPose();
 	}
 
 	@Unique
@@ -246,6 +275,7 @@ public abstract class GameRendererMixin {
 		pose.popPose();
 	}
 
+	@Unique
 	private void renderNegativePhotonsOverlay(Minecraft minecraft, ClientLevel level, LocalPlayer player, int width, int height) {
 		if (player.getEyeInFluidType() != FluidTypeRegistry.NEGATIVE_PHOTONS.get()) return;
 
@@ -279,6 +309,7 @@ public abstract class GameRendererMixin {
 		BufferUploader.drawWithShader(builder.end());
 	}
 
+	@Unique
 	private void renderTextBox(GuiGraphics guiGraphics, Minecraft minecraft, ClientLevel level, LocalPlayer player, int width, int height) {
 		if (!DarkWorldUtil.isDarkWorld(level)) return;
 

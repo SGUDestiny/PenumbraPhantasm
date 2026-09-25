@@ -9,7 +9,7 @@ import net.minecraftforge.network.NetworkEvent;
 import java.util.function.Supplier;
 
 public record ClientBoundAnimationPacket(int darknessLandTicker, int darknessOverlayTicker, String previousLocation,
-                                         String currentLocation, int titleAlphaTicker, int sealShineTicker, int depthsEntryTicker) {
+                                         String currentLocation, int titleAlphaTicker, int sealShineTicker, int depthsEntryTicker, int swoonTicker) {
 
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeInt(darknessLandTicker);
@@ -19,6 +19,7 @@ public record ClientBoundAnimationPacket(int darknessLandTicker, int darknessOve
         buffer.writeInt(titleAlphaTicker);
         buffer.writeInt(sealShineTicker);
         buffer.writeInt(depthsEntryTicker);
+        buffer.writeInt(swoonTicker);
     }
 
     public static ClientBoundAnimationPacket decode(FriendlyByteBuf buffer) {
@@ -29,13 +30,15 @@ public record ClientBoundAnimationPacket(int darknessLandTicker, int darknessOve
         int titleAlphaTicker = buffer.readInt();
         int sealShineTicker = buffer.readInt();
         int depthsEntryTicker = buffer.readInt();
+        int swoonTicker = buffer.readInt();
 
-        return new ClientBoundAnimationPacket(darknessLandTicker, darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker, depthsEntryTicker);
+        return new ClientBoundAnimationPacket(darknessLandTicker, darknessOverlayTicker, previousLocation, currentLocation, titleAlphaTicker, sealShineTicker, depthsEntryTicker, swoonTicker);
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             LocalPlayer player = Minecraft.getInstance().player;
+
             if (player != null) {
                 player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> {
                     cap.darknessLandTicker = darknessLandTicker;
@@ -45,6 +48,7 @@ public record ClientBoundAnimationPacket(int darknessLandTicker, int darknessOve
                     cap.titleAlphaTicker = titleAlphaTicker;
                     cap.sealShineTicker = sealShineTicker;
                     cap.depthsEntryTicker = depthsEntryTicker;
+                    cap.swoonAnimationTicker = swoonTicker;
                 });
             }
         });

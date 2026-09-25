@@ -343,5 +343,17 @@
     [
       "penumbra_phantasm:fountain_music_depths"
     ]
+  },
+  "knight_powerup": {
+    "sounds":
+    [
+      "penumbra_phantasm:knight_powerup"
+    ]
+  },
+  "knight_swoon": {
+    "sounds":
+    [
+      "penumbra_phantasm:knight_swoon"
+    ]
   }
 }
