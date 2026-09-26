@@ -75,7 +75,7 @@ public class KnifeItem extends SwordItem {
     public static final int STAB_DELAY = 8;
 
     public boolean isSingleUse;
-    private final int damage;
+    public final int damage;
 
     public KnifeItem(Tier tier, int damage, float speed, boolean isSingleUse, Properties properties) {
         super(tier, damage, speed, properties);
