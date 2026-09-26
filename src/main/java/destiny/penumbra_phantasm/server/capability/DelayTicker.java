@@ -4,7 +4,9 @@ import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.server.item.RealKnifeItem;
 import destiny.penumbra_phantasm.server.registry.*;
+import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
@@ -48,10 +50,17 @@ public class DelayTicker {
 
         if (weaponStack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
             target.setDeltaMovement(0, 0, 0);
-            attacker.setDeltaMovement(0, 0, 0);
 
             if (target instanceof Mob mob) {
                 mob.setNoAi(true);
+            } else if (target instanceof ServerPlayer serverPlayer) {
+                serverPlayer.setDeltaMovement(0, 0, 0);
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+            }
+
+            if (attacker instanceof ServerPlayer serverPlayer) {
+                serverPlayer.setDeltaMovement(0, 0, 0);
+                serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
             }
 
             if (!wasInvulnerable) {
