@@ -2,11 +2,13 @@ package destiny.penumbra_phantasm.server.capability;
 
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
+import destiny.penumbra_phantasm.server.item.RealKnifeItem;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
@@ -76,7 +78,9 @@ public class DelayTicker {
             );
         }
 
-        int damage = ServerConfig.realKnifeOP ? Integer.MAX_VALUE : weaponStack.getMaxDamage();
+        RealKnifeItem knife = (RealKnifeItem) weaponStack.getItem();
+
+        int damage = ServerConfig.realKnifeOP ? Integer.MAX_VALUE : RealKnifeItem.getActualDamage(knife);
 
         target.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.REAL_KNIFE), damage);
     }
