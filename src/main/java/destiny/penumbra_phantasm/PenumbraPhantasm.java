@@ -90,23 +90,21 @@ public class PenumbraPhantasm {
         PacketHandlerRegistry.register();
         AdvancementRegistry.register();
 
-        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) ->
-            {
-                event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null);
-                event.dataPackRegistry(DarkWorldItemTransforms.REGISTRY_KEY, DarkWorldItemTransforms.CODEC, null);
-                event.dataPackRegistry(DarkWorldEntityTransforms.REGISTRY_KEY, DarkWorldEntityTransforms.CODEC, null);
-                event.dataPackRegistry(DarkWorldRecipeSeparation.REGISTRY_KEY, DarkWorldRecipeSeparation.CODEC, DarkWorldRecipeSeparation.CODEC);
-                event.dataPackRegistry(BiomeMusicType.REGISTRY_KEY, BiomeMusicType.CODEC, BiomeMusicType.CODEC);
-            });
+        modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) -> {
+            event.dataPackRegistry(DarkWorldType.REGISTRY_KEY, DarkWorldType.CODEC, null);
+            event.dataPackRegistry(DarkWorldItemTransforms.REGISTRY_KEY, DarkWorldItemTransforms.CODEC, null);
+            event.dataPackRegistry(DarkWorldEntityTransforms.REGISTRY_KEY, DarkWorldEntityTransforms.CODEC, null);
+            event.dataPackRegistry(DarkWorldRecipeSeparation.REGISTRY_KEY, DarkWorldRecipeSeparation.CODEC, DarkWorldRecipeSeparation.CODEC);
+            event.dataPackRegistry(BiomeMusicType.REGISTRY_KEY, BiomeMusicType.CODEC, BiomeMusicType.CODEC);
+        });
         modEventBus.addListener(PenumbraPhantasm::commonSetup);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ServerConfig.SPEC);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.SPEC);
 
         MinecraftForge.EVENT_BUS.register(this);
 
-        ModList.get().getModContainerById("fusion").ifPresent(container ->
-                {
+        ModList.get().getModContainerById("fusion").ifPresent(container -> {
                     try {
                         Class.forName("com.supermartijn642.fusion.Fusion");
                     } catch (ClassNotFoundException e) {
@@ -179,8 +177,7 @@ public class PenumbraPhantasm {
         }
 
         @SubscribeEvent
-        public static void registerTooltip(RegisterClientTooltipComponentFactoriesEvent event)
-        {
+        public static void registerTooltip(RegisterClientTooltipComponentFactoriesEvent event) {
             event.register(DarkMoneyTooltipComponent.class, Function.identity());
         }
 
@@ -196,9 +193,9 @@ public class PenumbraPhantasm {
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());
                 ItemProperties.register(ItemRegistry.SOUL_HEARTH.get(), new ResourceLocation(MODID, SOUL_TYPE), new SoulHearthItemProperty());
                 ItemProperties.register(ItemRegistry.HEARTH_SOUL.get(), new ResourceLocation(MODID, SOUL_TYPE), new SoulHearthItemProperty());
-                ItemProperties.register(ItemRegistry.DELTA_SHIELD.get(), new ResourceLocation("blocking"), (stack, level, entity, duration) -> {
-                    return entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F;
-                });
+                ItemProperties.register(ItemRegistry.DELTA_SHIELD.get(), new ResourceLocation("blocking"),
+                        (stack, level, entity, duration) ->
+                                entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F);
                 ItemProperties.register(ItemRegistry.ROSEGOLD_LIGHTER.get(), new ResourceLocation(MODID, "open"), new RosegoldLighterItemProperty());
                 ItemProperties.register(ItemRegistry.DARK_WALLET.get(), new ResourceLocation(MODID, "money"), new DarkWalletItemProperty());
 
