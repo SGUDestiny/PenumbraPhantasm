@@ -498,7 +498,7 @@ public class BlockRegistry {
     public static final RegistryObject<Block> TITANSTONE = registerBlock("titanstone",
             () -> new UnbreakableDarknessBlock(BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_GRAY).strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)
-                    .sound(SoundTypeRegistry.CLIFF).noParticlesOnBreak()));
+                    .sound(SoundTypeRegistry.CLIFF)));
 
     public static final RegistryObject<Block> VANTAROSE = registerBlock("vantarose",
             () -> new DepthsFlowerBlock(() -> MobEffects.DARKNESS, 20, BlockBehaviour.Properties.copy(Blocks.POPPY)

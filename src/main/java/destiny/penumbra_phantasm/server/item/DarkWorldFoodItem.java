@@ -83,7 +83,8 @@ public class DarkWorldFoodItem extends Item {
                 mutableComponent.append(Component.literal("-"));
             }
 
-            mutableComponent.append(Component.literal(determinationDifference + " ")
+            mutableComponent.append(Component.literal(determinationDifference + "")
+                    .append(Component.literal("% "))
                     .append(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.soul_type.1"))
                     .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))));
 

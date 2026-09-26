@@ -80,11 +80,10 @@ public class DarkWorldFoodFlavorItem extends FlavorTooltipItem {
 
             if (determinationDifference > 0) {
                 mutableComponent.append(Component.literal("+"));
-            } else {
-                mutableComponent.append(Component.literal("-"));
             }
 
-            mutableComponent.append(Component.literal(determinationDifference + " ")
+            mutableComponent.append(Component.literal(determinationDifference + "")
+                    .append(Component.literal("% "))
                     .append(Component.translatable("tooltip.penumbra_phantasm.soul_hearth.soul_type.1"))
                     .withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))));
 

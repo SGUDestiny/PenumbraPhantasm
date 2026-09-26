@@ -65,7 +65,7 @@ public class ItemRegistry {
 
     //Consumables
     public static final RegistryObject<Item> TENSION_BIT = ITEMS.register("tension_bit",
-            () -> new FlavorTooltipItem(new Item.Properties().stacksTo(16)));
+            () -> new TensionItem(new Item.Properties().stacksTo(1), (int) (32 * 2.5), SoundRegistry.HEAL.get()));
 
     public static final RegistryObject<Item> DOOR_KEY = ITEMS.register("door_key",
             () -> new FlavorTooltipItem(new Item.Properties().stacksTo(1)));

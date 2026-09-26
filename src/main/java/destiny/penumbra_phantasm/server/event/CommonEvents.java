@@ -2,41 +2,40 @@ package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
+import destiny.penumbra_phantasm.client.render.dimension.DepthsSkyLightning;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
-import destiny.penumbra_phantasm.server.capability.AbilityCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomManager;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
+import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.item.FractalMirrorItem;
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
+import destiny.penumbra_phantasm.server.registry.ItemRegistry;
+import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
+import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import destiny.penumbra_phantasm.server.transformations.inventory.StorageData;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
-import destiny.penumbra_phantasm.client.render.dimension.DepthsSkyLightning;
-import destiny.penumbra_phantasm.server.fountain.GreatDoor;
-import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
-import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.level.ChunkEvent;
+import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -220,6 +219,9 @@ public class CommonEvents {
 
         original.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(cap ->
                 player.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(copyCap -> copyCap.sync(cap)));
+
+        original.getCapability(CapabilityRegistry.ABILITY).ifPresent(cap -> player.getCapability(CapabilityRegistry.ABILITY)
+                .ifPresent(copyCap -> copyCap.sync(cap)));
 
         original.invalidateCaps();
 
