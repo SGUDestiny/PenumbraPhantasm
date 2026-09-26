@@ -59,7 +59,7 @@ public class BlockRegistry {
             () -> new NonTallGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS)
                     .mapColor(MapColor.COLOR_MAGENTA).sound(SoundType.GRASS)));
     public static final RegistryObject<Block> ECHO_FLOWER = registerBlock("echo_flower",
-            () -> new TallFlowerBlock(BlockBehaviour.Properties.copy(Blocks.SUNFLOWER)
+            () -> new EchoFlowerBlock(BlockBehaviour.Properties.copy(Blocks.SUNFLOWER)
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.PINK_PETALS)));
     public static final RegistryObject<Block> STARTAIL = registerBlock("startail",
             () -> new StartailBlock(BlockBehaviour.Properties.copy(Blocks.SUNFLOWER)

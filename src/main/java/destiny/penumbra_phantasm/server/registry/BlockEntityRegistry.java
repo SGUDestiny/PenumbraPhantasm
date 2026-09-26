@@ -22,4 +22,5 @@ public class BlockEntityRegistry {
     public static final RegistryObject<BlockEntityType<HearthBlockEntity>> HEARTH_ENTITY = BLOCK_ENTITIES.register("hearth", () -> BlockEntityType.Builder.of(HearthBlockEntity::new, BlockRegistry.HEARTH.get()).build(null));
     public static final RegistryObject<BlockEntityType<RoaringEyeBlockEntity>> ROARING_EYE_BLOCK_ENTITY = BLOCK_ENTITIES.register("roaring_eye_block_entity", () -> BlockEntityType.Builder.of(RoaringEyeBlockEntity::new, BlockRegistry.ROARING_EYE.get()).build(null));
     public static final RegistryObject<BlockEntityType<DarkGeyserBlockEntity>> DARK_GEYSER_BLOCK_ENTITY = BLOCK_ENTITIES.register("dark_geyser_block_entity", () -> BlockEntityType.Builder.of(DarkGeyserBlockEntity::new, BlockRegistry.DARK_GEYSER.get()).build(null));
+    public static final RegistryObject<BlockEntityType<EchoFlowerBlockEntity>> ECHO_FLOWER_BLOCK_ENTITY = BLOCK_ENTITIES.register("echo_flower_block_entity", () -> BlockEntityType.Builder.of(EchoFlowerBlockEntity::new, BlockRegistry.ECHO_FLOWER.get()).build(null));
 }

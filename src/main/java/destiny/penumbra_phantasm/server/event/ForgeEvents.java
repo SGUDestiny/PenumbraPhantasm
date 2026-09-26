@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.server.block.LuminescentWaterFluidBlock;
 import destiny.penumbra_phantasm.server.block.NegativePhotonsFluidBlock;
+import destiny.penumbra_phantasm.server.block.entity.EchoFlowerBlockEntity;
 import destiny.penumbra_phantasm.server.capability.*;
 import destiny.penumbra_phantasm.server.fountain.GenericProvider;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
@@ -12,8 +13,10 @@ import destiny.penumbra_phantasm.server.item.EggItem;
 import destiny.penumbra_phantasm.server.item.ScarletBucketItem;
 import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,6 +31,7 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -302,6 +306,35 @@ public class ForgeEvents {
 
         if (isSwooning) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onChatMessage(ServerChatEvent event) {
+        ServerPlayer player = event.getPlayer();
+        Level level = player.level();
+
+        if (!DarkWorldUtil.isDarkWorld(level)) return;
+
+        Component message = event.getMessage();
+        AABB scanBox = new AABB(player.blockPosition());
+        scanBox.inflate(4);
+
+        BlockPos minPos = new BlockPos(
+                Mth.floor(scanBox.minX),
+                Mth.floor(scanBox.minY),
+                Mth.floor(scanBox.minZ)
+        );
+        BlockPos maxPos = new BlockPos(
+                Mth.floor(scanBox.maxX),
+                Mth.floor(scanBox.maxY),
+                Mth.floor(scanBox.maxZ)
+        );
+
+        for (BlockPos pos : BlockPos.betweenClosed(minPos, maxPos)) {
+            if (level.getBlockEntity(pos) instanceof EchoFlowerBlockEntity echoFlower) {
+
+            }
         }
     }
 }
