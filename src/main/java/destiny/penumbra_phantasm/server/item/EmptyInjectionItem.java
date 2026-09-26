@@ -11,7 +11,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -38,7 +37,7 @@ public class EmptyInjectionItem extends Item {
 
             if (soulCap.determination < 100) return InteractionResult.FAIL;
 
-            targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_DRAIN), targetPlayer.getMaxHealth() / 2);
+            targetPlayer.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.INJECTION_DRAIN), targetPlayer.getMaxHealth() / 2);
             soulCap.determination = 0;
 
             level.playSound(null, targetPlayer.getOnPos(), SoundEvents.PLAYER_BIG_FALL, SoundSource.PLAYERS, 1, 1);
@@ -75,7 +74,7 @@ public class EmptyInjectionItem extends Item {
             TriggerCriterions.DETERMINATION_INJECTION_DEATH.trigger((ServerPlayer) player);
         }
 
-        player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_DRAIN), player.getMaxHealth() / 2);
+        player.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.INJECTION_DRAIN), player.getMaxHealth() / 2);
         soulCap.determination = 0;
 
         level.playSound(null, player.getOnPos(), SoundEvents.PLAYER_BIG_FALL, SoundSource.PLAYERS, 1, 1);

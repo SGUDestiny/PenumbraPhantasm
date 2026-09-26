@@ -1,19 +1,46 @@
 package destiny.penumbra_phantasm.mixin;
 
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
+import destiny.penumbra_phantasm.server.registry.DamageTypeRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import javax.annotation.Nullable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
+/*	@Shadow
+	protected abstract boolean isAlwaysExperienceDropper();
+
+	@Shadow
+	@Nullable
+	private DamageSource lastDamageSource;
+
+	@Shadow
+	@Nullable
+	protected Player lastHurtByPlayer;
+
+	@Shadow
+	protected int lastHurtByPlayerTime;*/
+
 	@Inject(method = "setSprinting", at = @At("HEAD"), cancellable = true)
 	private void penumbraPhantasm$blockEggRoomSprint(boolean sprinting, CallbackInfo ci) {
 		if (!sprinting) {
@@ -60,4 +87,22 @@ public abstract class LivingEntityMixin {
 		player.calculateEntityAnimation(false);
 		ci.cancel();
 	}
+
+/*	@Inject(method = "dropExperience", at = @At("HEAD"), cancellable = true)
+	private void dropExperience(CallbackInfo ci) {
+		Level level = ((LivingEntity)(Object) this).level();
+		Vec3 position = ((LivingEntity)(Object) this).position();
+		boolean shouldDropExperience = ((LivingEntity)(Object) this).shouldDropExperience();
+		boolean wasExperienceConsumed = ((LivingEntity)(Object) this).wasExperienceConsumed();
+
+		if (this.lastDamageSource != null && (this.lastDamageSource.type() == DamageTypeRegistry.getSource(level, DamageTypeRegistry.REAL_KNIFE).type()
+				|| this.lastDamageSource.type() == DamageTypeRegistry.getSource(level, DamageTypeRegistry.SWOON).type())) {
+			if (level instanceof ServerLevel && wasExperienceConsumed && (this.isAlwaysExperienceDropper() || lastHurtByPlayerTime > 0 && shouldDropExperience && level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
+				int reward = ForgeEventFactory.getExperienceDrop((LivingEntity)(Object) this, this.lastHurtByPlayer, ((LivingEntity)(Object) this).getExperienceReward());
+				ExperienceOrb.award((ServerLevel)level, position, reward);
+
+				ci.cancel();
+			}
+		}
+	}*/
 }

@@ -8,9 +8,11 @@ import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
@@ -49,13 +51,15 @@ public class DelayTicker {
         boolean wasInvulnerable = attacker.isCreative() || attacker.isSpectator();
 
         if (weaponStack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
-            target.setDeltaMovement(0, 0, 0);
-
             if (target instanceof Mob mob) {
                 mob.setNoAi(true);
-            } else if (target instanceof ServerPlayer serverPlayer) {
+            }
+
+            if (target instanceof ServerPlayer serverPlayer) {
                 serverPlayer.setDeltaMovement(0, 0, 0);
                 serverPlayer.connection.send(new ClientboundSetEntityMotionPacket(serverPlayer));
+            } else {
+                target.setDeltaMovement(0, 0, 0);
             }
 
             if (attacker instanceof ServerPlayer serverPlayer) {
@@ -101,7 +105,7 @@ public class DelayTicker {
         RealKnifeItem knife = (RealKnifeItem) weaponStack.getItem();
         int damage = ServerConfig.realKnifeOP ? Integer.MAX_VALUE : knife.damage;
 
-        target.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.REAL_KNIFE), damage);
+        target.hurt(DamageTypeRegistry.getSourceCaused(level, DamageTypeRegistry.REAL_KNIFE, target, attacker), damage);
     }
 
     public void finishAttackWithBlackKnife(Level level, Entity target, Player attacker, boolean wasInvulnerable) {
@@ -117,6 +121,6 @@ public class DelayTicker {
             attacker.setInvulnerable(false);
         }
 
-        target.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.SWOON), Integer.MAX_VALUE);
+        target.hurt(DamageTypeRegistry.getSourceCaused(level, DamageTypeRegistry.SWOON, target, attacker), Integer.MAX_VALUE);
     }
 }

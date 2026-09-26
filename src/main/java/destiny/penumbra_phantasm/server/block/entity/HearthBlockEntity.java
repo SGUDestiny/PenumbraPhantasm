@@ -15,7 +15,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.PacketDistributor;
@@ -65,23 +64,23 @@ public class HearthBlockEntity extends BlockEntity {
 
             if (hearth.soulRipTicker == 23) {
                 level.playSound(null, player.getOnPos(), SoundRegistry.SOUL_GRAB.get(), SoundSource.PLAYERS, 0.5f, 1);
-                player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, SOUL_DAMAGE_1), 1);
+                player.hurt(DamageTypeRegistry.getSource(level, SOUL_DAMAGE_1), 1);
             }
             if (hearth.soulRipTicker == 2 * 20) {
-                player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, SOUL_DAMAGE_1), 1);
+                player.hurt(DamageTypeRegistry.getSource(level, SOUL_DAMAGE_1), 1);
             }
             if (hearth.soulRipTicker == 2.75 * 20) {
-                player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, SOUL_DAMAGE_1), 1);
+                player.hurt(DamageTypeRegistry.getSource(level, SOUL_DAMAGE_1), 1);
             }
             if (hearth.soulRipTicker == 3.25 * 20) {
-                player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, SOUL_DAMAGE_1), 1);
+                player.hurt(DamageTypeRegistry.getSource(level, SOUL_DAMAGE_1), 1);
             }
             if (hearth.soulRipTicker == 3.63 * 20) {
-                player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, SOUL_DAMAGE_1), 1);
+                player.hurt(DamageTypeRegistry.getSource(level, SOUL_DAMAGE_1), 1);
             }
             if (hearth.soulRipTicker == 4 * 20) {
                 level.playSound(null, player.getOnPos(), SoundRegistry.SOUL_GRAB.get(), SoundSource.PLAYERS, 0.5f, 1);
-                player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, SOUL_DAMAGE_2), 1);
+                player.hurt(DamageTypeRegistry.getSource(level, SOUL_DAMAGE_2), 1);
             }
             hearth.setChanged();
 

@@ -52,9 +52,9 @@ public class DeterminationInjectionItem extends Item {
             if (soulCap.determination >= 100) {
                 TriggerCriterions.DETERMINATION_INJECTION_CAUSE_OVERDOSE.trigger((ServerPlayer) pPlayer);
 
-                targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_OVERDOSE), targetPlayer.getMaxHealth());
+                targetPlayer.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.INJECTION_OVERDOSE), targetPlayer.getMaxHealth());
             } else {
-                targetPlayer.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_PRICK), targetPlayer.getMaxHealth() / 2);
+                targetPlayer.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.INJECTION_PRICK), targetPlayer.getMaxHealth() / 2);
             }
 
             VerticalBarCapability verticalBarCap = targetPlayer.getCapability(CapabilityRegistry.VERTICAL_BAR).orElse(null);
@@ -141,14 +141,14 @@ public class DeterminationInjectionItem extends Item {
                 if (soulCap.determination >= 100) {
                     TriggerCriterions.DETERMINATION_INJECTION_OVERDOSE.trigger((ServerPlayer) player);
 
-                    player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_OVERDOSE), player.getMaxHealth());
+                    player.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.INJECTION_OVERDOSE), player.getMaxHealth());
                 } else {
                     if (!player.isCreative()) {
                         if (player.getHealth() < player.getMaxHealth() / 2) {
                             TriggerCriterions.DETERMINATION_INJECTION_DEATH.trigger((ServerPlayer) player);
                         }
 
-                        player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.INJECTION_PRICK), player.getMaxHealth() / 2);
+                        player.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.INJECTION_PRICK), player.getMaxHealth() / 2);
                     }
                 }
 

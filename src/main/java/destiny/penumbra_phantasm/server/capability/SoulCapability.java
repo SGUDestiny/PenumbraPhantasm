@@ -8,7 +8,6 @@ import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -17,9 +16,7 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
@@ -145,7 +142,7 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
                 player.getFoodData().setSaturation(0f);
 
                 if (level.getGameTime() % 60 == 0) {
-                    player.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.PETRIFICATION), 6);
+                    player.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.PETRIFICATION), 6);
                 }
             }
         }
