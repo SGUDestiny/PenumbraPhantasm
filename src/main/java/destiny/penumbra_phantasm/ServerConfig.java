@@ -15,7 +15,7 @@ public class ServerConfig {
             .define("real_knife_op", false);
 
     private static final ForgeConfigSpec.BooleanValue BLACK_KNIFE_OP = BUILDER
-            .comment("Should Black Knife have swoon mechanic")
+            .comment("Should Black Knife have swoon mechanic (RMB-triggered")
             .comment("Default: false")
             .define("black_knife_op", false);
 
