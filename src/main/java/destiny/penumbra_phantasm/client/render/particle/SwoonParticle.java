@@ -12,6 +12,9 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 public class SwoonParticle extends TextureSheetParticle {
+    public float xSize = 1f;
+    public float ySize = 1f;
+
     public SwoonParticle(ClientLevel level, double x, double y, double z, SpriteSet sprite, double xSpeed, double ySpeed, double zSpeed) {
         super(level, x, y, z, 0, 0, 0);
         this.friction = 1f;
@@ -45,7 +48,8 @@ public class SwoonParticle extends TextureSheetParticle {
                 if (this.age >= 30) {
                     float fadeDelta = (this.age - 30) / 15f;
                     this.alpha = 1 - fadeDelta;
-                    this.quadSize = Mth.lerp(fadeDelta, 1f, 1.25f);
+                    this.ySize = Mth.lerp(fadeDelta, 1f, 2.5f);
+                    this.xSize = Mth.lerp(fadeDelta, 1f, 0.5f);
                 }
             } else {
                 this.yd -= 0.04 * (double)this.gravity;
@@ -75,32 +79,30 @@ public class SwoonParticle extends TextureSheetParticle {
     }
 
     @Override
-    public void render(VertexConsumer consumer, Camera camera, float partialTick)
-    {
+    public void render(VertexConsumer consumer, Camera camera, float partialTick) {
         Vec3 cameraPos = camera.getPosition();
         float renderX = (float)(Mth.lerp(partialTick, this.xo, this.x) - cameraPos.x());
         float renderY = (float)(Mth.lerp(partialTick, this.yo, this.y) - cameraPos.y());
         float renderZ = (float)(Mth.lerp(partialTick, this.zo, this.z) - cameraPos.z());
 
         Quaternionf quaternion = new Quaternionf(camera.rotation());
-        if (this.roll != 0.0F) {
+        if (this.roll != 0f) {
             quaternion.rotateZ(Mth.lerp(partialTick, this.oRoll, this.roll));
         }
 
         Vector3f[] vertices = new Vector3f[]{
-                new Vector3f(-1.0F, -1.0F, 0.0F),
-                new Vector3f(-1.0F,  1.0F, 0.0F),
-                new Vector3f( 1.0F,  1.0F, 0.0F),
-                new Vector3f( 1.0F, -1.0F, 0.0F)
+                new Vector3f(-1f, -1f, 0f),
+                new Vector3f(-1f,  1f, 0f),
+                new Vector3f( 1f,  1f, 0f),
+                new Vector3f( 1f, -1f, 0f)
         };
 
         float baseSize = this.getQuadSize(partialTick);
-        for(int i = 0; i < 4; ++i)
-        {
+        for(int i = 0; i < 4; ++i) {
             Vector3f vertex = vertices[i];
 
             //Strech And Squish here.
-            vertex.mul(1f, 1f, 1.0F);
+            vertex.mul(xSize, ySize, 1f);
             vertex.mul(baseSize);
 
             vertex.rotate(quaternion);
