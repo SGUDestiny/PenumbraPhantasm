@@ -134,9 +134,10 @@ public class ClientEvents {
 
 	@SubscribeEvent
 	public static void levelRender(RenderLevelStageEvent event) {
-		boolean renderSkyPass = event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY);
-		boolean renderShockwavePass = event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS);
-		if(renderSkyPass || renderShockwavePass) {
+		boolean afterSky = event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_SKY);
+		boolean afterTranslucentBlocks = event.getStage().equals(RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS);
+
+		if(afterSky || afterTranslucentBlocks) {
 			ClientLevel level = Minecraft.getInstance().level;
 
 			if(level == null) return;
@@ -153,7 +154,7 @@ public class ClientEvents {
 
 			GL11.glEnable(GL_DEPTH_CLAMP);
 
-			if(renderSkyPass && CardKingdomDimensionEffects.isCardKingdomDarkWorld(level)) {
+			if(afterSky && CardKingdomDimensionEffects.isCardKingdomDarkWorld(level)) {
 				CardKingdomDimensionEffects cardKingdomDimensionEffects = CardKingdomDimensionEffects.getInstance();
 
 				if(cardKingdomDimensionEffects != null) {
@@ -173,7 +174,7 @@ public class ClientEvents {
 								fountain.getFountainPos().getY() - camera.getPosition().y(),
 								fountain.getFountainPos().getZ() - camera.getPosition().z());
 
-						if(renderSkyPass) {
+						if(afterSky) {
 							if(openingTick < FountainRenderUtil.OPENING_POSTERIZE_TICK_END && openingTick >= 0) {
 								FountainRenderUtil.renderOpeningFountain(openingTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
 							} else {
@@ -185,7 +186,7 @@ public class ClientEvents {
 							}
 						}
 
-						if(renderShockwavePass) {
+						if(afterTranslucentBlocks) {
 							FountainRenderUtil.renderShockwaves(fountain, pose, buffer, OverlayTexture.NO_OVERLAY, partialTick);
 						}
 
@@ -206,19 +207,19 @@ public class ClientEvents {
 
 						pose.scale(distanceScale, distanceScale, distanceScale);
 
-						if(renderSkyPass) {
+						if(afterSky) {
 							double fadeDistance = ClientConfig.fountainLodDistance;
 							float fade = (float) ((distance2d - fadeDistance) / fadeDistance);
 							fade = Math.max(0f, Math.min(1f, fade));
 							FountainRenderUtil.renderDepthsFountain(fountain, pose, buffer, camera, distance2d, partialTick, fade);
 						}
 
-						if(renderShockwavePass) {
+						if(afterTranslucentBlocks) {
 							FountainRenderUtil.renderDepthsFountainBeam(fountain, pose, buffer, camera, distance2d);
 						}
 
 						pose.popPose();
-					} else if(renderSkyPass) {
+					} else if(afterSky) {
 						pose.pushPose();
 						pose.translate(fountain.getFountainPos().getX() - camera.getPosition().x(),
 								fountain.getFountainPos().getY() - camera.getPosition().y(),
@@ -269,7 +270,7 @@ public class ClientEvents {
 					if(Minecraft.getInstance().level.isLoaded(greatDoor.greatDoorPos)) {
 						int packedLight = LevelRenderer.getLightColor(level, greatDoor.greatDoorPos);
 
-						if(renderShockwavePass) {
+						if(afterTranslucentBlocks) {
 							if(greatDoor.isOpen) {
 								GreatDoorRenderUtil.renderOpenGreatDoor(greatDoor, pose, buffer, packedLight,
 										OverlayTexture.NO_OVERLAY);
@@ -284,7 +285,7 @@ public class ClientEvents {
 				}
 			});
 
-			if(renderShockwavePass)
+			if(afterTranslucentBlocks)
 			{
 				NegativePhotonsRenderUtil.renderNegativePhotonsBlocks(Minecraft.getInstance().level, camera, pose,
 						event.getProjectionMatrix());

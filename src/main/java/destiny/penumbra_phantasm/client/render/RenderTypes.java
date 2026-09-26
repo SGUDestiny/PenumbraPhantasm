@@ -39,8 +39,8 @@ public class RenderTypes extends RenderType {
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
-                        .setDepthTestState(NO_DEPTH_TEST)
-                        .setWriteMaskState(COLOR_WRITE)
+                        .setDepthTestState(LEQUAL_DEPTH_TEST)
+                        .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
                         .setCullState(NO_CULL)
                         .createCompositeState(true));
     }
