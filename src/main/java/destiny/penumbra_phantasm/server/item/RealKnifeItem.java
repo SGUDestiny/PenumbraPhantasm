@@ -36,8 +36,4 @@ public class RealKnifeItem extends KnifeItem {
         }
         return super.getAttributeModifiers(slot, stack);
     }
-
-    public static int getActualDamage(RealKnifeItem knife) {
-        return knife.damage;
-    }
 }

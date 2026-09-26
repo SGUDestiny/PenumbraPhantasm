@@ -79,8 +79,7 @@ public class DelayTicker {
         }
 
         RealKnifeItem knife = (RealKnifeItem) weaponStack.getItem();
-
-        int damage = ServerConfig.realKnifeOP ? Integer.MAX_VALUE : RealKnifeItem.getActualDamage(knife);
+        int damage = knife.damage;
 
         target.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.REAL_KNIFE), damage);
     }
