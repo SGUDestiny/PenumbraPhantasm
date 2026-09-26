@@ -7,8 +7,8 @@ import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
@@ -44,15 +44,26 @@ public class DelayTicker {
             return;
         }
 
+        boolean wasInvulnerable = attacker.isCreative() || attacker.isSpectator();
+
         if (weaponStack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
             target.setDeltaMovement(0, 0, 0);
+            attacker.setDeltaMovement(0, 0, 0);
+
+            if (target instanceof Mob mob) {
+                mob.setNoAi(true);
+            }
+
+            if (!wasInvulnerable) {
+                attacker.setInvulnerable(true);
+            }
         }
 
         if (delayTicker >= delayGoal) {
             if (weaponStack.getItem() == ItemRegistry.REAL_KNIFE.get()) {
                 finishAttackWithRealKnife(level, attacker, target);
             } else if (weaponStack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
-                finishAttackWithBlackKnife(level, target);
+                finishAttackWithBlackKnife(level, target, attacker, wasInvulnerable);
             }
 
             delayTicker = -1;
@@ -84,7 +95,7 @@ public class DelayTicker {
         target.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.REAL_KNIFE), damage);
     }
 
-    public void finishAttackWithBlackKnife(Level level, Entity target) {
+    public void finishAttackWithBlackKnife(Level level, Entity target, Player attacker, boolean wasInvulnerable) {
         PacketHandlerRegistry.INSTANCE.send(
                 PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(target.getX(), target.getY(), target.getZ(),
                         32, target.level().dimension())),
@@ -92,6 +103,10 @@ public class DelayTicker {
                         target.getX(), target.getY() + 1, target.getZ(),
                         -0.15 + level.random.nextDouble() * 0.3, 0.3, -0.15 + level.random.nextDouble() * 0.3, 1)
         );
+
+        if (!wasInvulnerable) {
+            attacker.setInvulnerable(false);
+        }
 
         target.hurt(DamageTypeRegistry.getSimpleDamageSource(level, DamageTypeRegistry.SWOON), Integer.MAX_VALUE);
     }

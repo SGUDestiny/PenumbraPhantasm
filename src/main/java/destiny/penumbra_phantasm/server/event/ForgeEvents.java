@@ -14,10 +14,10 @@ import destiny.penumbra_phantasm.server.registry.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
@@ -28,9 +28,10 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.living.LivingHealEvent;
-import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -39,10 +40,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 import static destiny.penumbra_phantasm.server.item.BlackKnifeItem.SWOON_READY_TICK;
 import static destiny.penumbra_phantasm.server.item.BlackKnifeItem.SWOON_TICKER;
@@ -208,7 +205,7 @@ public class ForgeEvents {
         AbilityCapability abilityCap = attacker.getCapability(CapabilityRegistry.ABILITY).resolve().orElse(null);
 
         if (abilityCap == null) return;
-        if (!abilityCap.isDelayTickerFree(target.getUUID(), weaponStack)) return;
+        if (abilityCap.hasDelayTicker(target.getUUID(), weaponStack)) return;
 
         abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.SWOON_DELAY);
 
@@ -226,7 +223,7 @@ public class ForgeEvents {
         AbilityCapability abilityCap = attacker.getCapability(CapabilityRegistry.ABILITY).resolve().orElse(null);
 
         if (abilityCap == null) return;
-        if (!abilityCap.isDelayTickerFree(target.getUUID(), weaponStack)) return;
+        if (abilityCap.hasDelayTicker(target.getUUID(), weaponStack)) return;
 
         abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.REAL_KNIFE_DELAY);
 
@@ -263,4 +260,48 @@ public class ForgeEvents {
 
         event.setCanceled(true);
     }*/
+
+    //If player is swooning, prevent mob targeting
+    @SubscribeEvent
+    public void livingChangeTarget(LivingChangeTargetEvent event) {
+        Entity newTarget = event.getNewTarget();
+
+        if (newTarget == null) return;
+
+        Entity potentialPlayer = event.getOriginalTarget();
+
+        if (!(potentialPlayer instanceof Player player)) return;
+        if (player.level().isClientSide()) return;
+
+        AbilityCapability abilityCap = player.getCapability(CapabilityRegistry.ABILITY).resolve().orElse(null);
+        if (abilityCap == null) return;
+
+        boolean isSwooning = abilityCap.hasDelayTickerOfItem(ItemRegistry.BLACK_KNIFE.get().asItem());
+
+        if (isSwooning) {
+            event.setCanceled(true);
+        }
+    }
+
+    //If mob has swooning player, remove target
+    @SubscribeEvent
+    public void livingTick(LivingEvent.LivingTickEvent event) {
+        Entity entity = event.getEntity();
+
+        if (entity.level().isClientSide()) return;
+        if (!(entity instanceof Mob mob)) return;
+
+        Entity potentialPlayer = mob.getTarget();
+
+        if (!(potentialPlayer instanceof Player player)) return;
+
+        AbilityCapability abilityCap = player.getCapability(CapabilityRegistry.ABILITY).resolve().orElse(null);
+        if (abilityCap == null) return;
+
+        boolean isSwooning = abilityCap.hasDelayTickerOfItem(ItemRegistry.BLACK_KNIFE.get().asItem());
+
+        if (isSwooning) {
+            event.setCanceled(true);
+        }
+    }
 }

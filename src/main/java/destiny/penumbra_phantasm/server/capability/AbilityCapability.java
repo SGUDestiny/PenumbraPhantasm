@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.capability;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -12,35 +13,40 @@ public class AbilityCapability implements INBTSerializable<CompoundTag> {
     public List<DelayTicker> delayTickers = new ArrayList<>();
 
     public void tick(Level level, Player attacker) {
-        List<Integer> tickersToRemove = new ArrayList<>();
+        List<DelayTicker> tickersToRemove = new ArrayList<>();
 
-        for (int i = 0; i < delayTickers.size(); i++) {
-            DelayTicker delayTicker = delayTickers.get(i);
-
+        for (DelayTicker delayTicker : delayTickers) {
             if (delayTicker.delayTicker == -1) {
-                tickersToRemove.add(i);
+                tickersToRemove.add(delayTicker);
             } else {
                 delayTicker.tick(level, attacker);
             }
         }
 
-        for (int index : tickersToRemove) {
-            if (index >= delayTickers.size()) continue;
-            if (delayTickers.get(index) == null) continue;
-
-            delayTickers.remove(index);
+        for (DelayTicker delayTicker : tickersToRemove) {
+            delayTickers.remove(delayTicker);
         }
     }
 
-    public boolean isDelayTickerFree(UUID targetEntity, ItemStack weaponStack) {
+    public boolean hasDelayTicker(UUID targetEntity, ItemStack weaponStack) {
         for (DelayTicker ticker : delayTickers) {
             UUID tickerEntity = ticker.targetEntity;
             ItemStack tickerWeapon = ticker.weaponStack;
 
-            if (tickerEntity.equals(targetEntity) && tickerWeapon.getItem() == weaponStack.getItem()) return false;
+            if (tickerEntity.equals(targetEntity) && tickerWeapon.getItem() == weaponStack.getItem()) return true;
         }
 
-        return true;
+        return false;
+    }
+
+    public boolean hasDelayTickerOfItem(Item weaponItem) {
+        for (DelayTicker ticker : delayTickers) {
+            Item tickerWeapon = ticker.weaponStack.getItem();
+
+            if (tickerWeapon == weaponItem) return true;
+        }
+
+        return false;
     }
 
     public void createDelayTicker(UUID targetEntity, ItemStack weaponStack, int delayGoal) {
