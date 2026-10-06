@@ -21,8 +21,8 @@ public class ServerConfig {
 
     private static final ForgeConfigSpec.IntValue MAX_ROOM_VOLUME = BUILDER
             .comment("Maximum total darkness blocks across all connected rooms for a Dark Fountain")
-            .comment("Default: 2048")
-            .defineInRange("max_room_volume", 2048, 1, 8000);
+            .comment("Default: 4096")
+            .defineInRange("max_room_volume", 4096, 1, 16384);
 
     private static final ForgeConfigSpec.IntValue RESCAN_INTERVAL = BUILDER
             .comment("Ticks between room integrity re-scan cycles")
