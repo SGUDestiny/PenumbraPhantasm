@@ -32,6 +32,20 @@
 			}
 		},
 		{
+			"name": "inner_bottom",
+			"from": [0, 0.25, 0],
+			"to": [16, 0.25, 16],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [-24, 16, 8]},
+			"faces": {
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"}
+			}
+		},
+		{
 			"name": "outer",
 			"from": [-0.5, -0.5, -0.5],
 			"to": [16.5, 16.5, 16.5],
