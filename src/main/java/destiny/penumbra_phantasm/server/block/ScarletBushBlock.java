@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -17,6 +18,9 @@ import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 public class ScarletBushBlock extends Block implements SimpleWaterloggedBlock {
@@ -38,13 +42,14 @@ public class ScarletBushBlock extends Block implements SimpleWaterloggedBlock {
             return this.name;
         }
     }
+
     public static final BooleanProperty TALL = BooleanProperty.create("tall");
     public static final EnumProperty<HoleStates> HOLE = EnumProperty.create("hole", HoleStates.class);
 
     public ScarletBushBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(TALL, false).setValue(HOLE, HoleStates.NONE).setValue(BlockStateProperties.WATERLOGGED, false));
-
+        this.registerDefaultState(this.defaultBlockState().setValue(TALL, false).setValue(HOLE, HoleStates.NONE)
+                .setValue(BlockStateProperties.WATERLOGGED, false));
     }
 
     @Override
@@ -85,8 +90,12 @@ public class ScarletBushBlock extends Block implements SimpleWaterloggedBlock {
     }
 
     @Override
-    public FluidState getFluidState(BlockState state)
-    {
+    public FluidState getFluidState(BlockState state) {
         return state.getValue(BlockStateProperties.WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+    }
+
+    @Override
+    public VoxelShape getCollisionShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
+        return Shapes.empty();
     }
 }
