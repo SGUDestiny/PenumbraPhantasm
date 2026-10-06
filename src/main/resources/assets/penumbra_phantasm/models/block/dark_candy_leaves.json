@@ -2,44 +2,68 @@
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/block",
-	"render_type": "minecraft:cutout",
 	"ambientocclusion": false,
+	"render_type": "minecraft:cutout",
 	"textures": {
 		"0": "penumbra_phantasm:block/dark_candy_leaves_inner",
 		"1": "penumbra_phantasm:block/dark_candy_leaves_outer",
+		"2": "penumbra_phantasm:block/dark_candy_outline",
 		"particle": "penumbra_phantasm:block/dark_candy_leaves_outer"
 	},
 	"elements": [
 		{
+			"name": "outer",
 			"from": [-0.5, -0.5, -0.5],
 			"to": [16.5, 16.5, 16.5],
 			"forge_data": {
 				"block_light": 15,
 				"sky_light": 15
 			},
+			"shade": false,
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "south"},
 				"west": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#1"}
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "west"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "down"}
 			}
 		},
 		{
+			"name": "inner",
 			"from": [0, 0, 0],
 			"to": [16, 16, 16],
 			"forge_data": {
 				"block_light": 15,
 				"sky_light": 15
 			},
+			"shade": false,
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "down"}
+			}
+		},
+		{
+			"name": "outline",
+			"from": [17, 17, 17],
+			"to": [-1, -1, -1],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [18, 18, 18]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "south"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "west"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "north"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "east"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "down"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "up"}
 			}
 		}
 	]

@@ -2,6 +2,7 @@
 	"format_version": "1.21.6",
 	"credit": "Made with Blockbench",
 	"parent": "minecraft:block/block",
+	"ambientocclusion": false,
 	"render_type": "minecraft:cutout",
 	"textures": {
 		"0": "penumbra_phantasm:block/scarlet_log_inner",
@@ -10,6 +11,7 @@
 		"4": "penumbra_phantasm:block/scarlet_log_outer_top",
 		"5": "penumbra_phantasm:block/scarlet_log_mysterious_door_outer_lower",
 		"6": "penumbra_phantasm:block/scarlet_log_mysterious_door_inner_lower",
+		"7": "penumbra_phantasm:block/scarlet_outline",
 		"particle": "penumbra_phantasm:block/scarlet_log_inner"
 	},
 	"elements": [
@@ -18,12 +20,12 @@
 			"from": [0, 0, 0],
 			"to": [16, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#6"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#0"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#2"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#2"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#6", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#2", "cullface": "down"}
 			}
 		},
 		{
@@ -34,13 +36,33 @@
 				"block_light": 15,
 				"sky_light": 15
 			},
+			"shade": false,
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#5"},
-				"east": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#3"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#4"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#4"}
+				"north": {"uv": [0, 0, 16, 16], "texture": "#5", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#3", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#4", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#4", "cullface": "down"}
+			}
+		},
+		{
+			"name": "outline",
+			"from": [17, 17, 17],
+			"to": [-1, -1, -1],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [18, 18, 18]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#7", "cullface": "south"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#7", "cullface": "west"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#7", "cullface": "north"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#7", "cullface": "east"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#7", "cullface": "down"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#7", "cullface": "up"}
 			}
 		}
 	]

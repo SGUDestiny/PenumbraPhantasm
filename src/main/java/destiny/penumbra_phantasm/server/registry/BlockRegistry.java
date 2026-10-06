@@ -5,14 +5,18 @@ import destiny.penumbra_phantasm.server.block.*;
 import destiny.penumbra_phantasm.server.worldgen.DarkCandyGrower;
 import destiny.penumbra_phantasm.server.worldgen.ScarletGrower;
 import destiny.penumbra_phantasm.server.block.TenebralithSpikeBlock;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.material.MapColor;
@@ -124,8 +128,8 @@ public class BlockRegistry {
             () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.SCARLET_ROSE,
                     BlockBehaviour.Properties.copy(Blocks.POTTED_POPPY).noOcclusion()));
     public static final RegistryObject<Block> SCARLET_LEAVES = registerBlock("scarlet_leaves",
-            () -> new ScarletLeavesBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES).isSuffocating((state, level, pos) -> false)
+            () -> new ScarletLeavesBlock(occludingLeaves().mapColor(MapColor.COLOR_PINK).sound(SoundType.AZALEA_LEAVES)
+                    .isSuffocating((state, level, pos) -> false)
                     .isRedstoneConductor((state, level, pos) -> false)));
     public static final RegistryObject<Block> FALLEN_SCARLET_LEAVES = BLOCKS.register("fallen_scarlet_leaves",
             () -> new FallenLeafBlock(BlockBehaviour.Properties.copy(Blocks.PINK_PETALS)
@@ -171,10 +175,9 @@ public class BlockRegistry {
     //Dark candy misc
     public static final RegistryObject<Block> DARK_CANDY_BLOCK = registerBlock("dark_candy_block",
             () -> new DarkCandyBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission().noOcclusion().instabreak().randomTicks()));
+                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission().instabreak().randomTicks()));
     public static final RegistryObject<Block> DARK_CANDY_LEAVES = registerBlock("dark_candy_leaves",
-            () -> new DarkCandyLeaves(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()
+            () -> new DarkCandyLeaves(occludingLeaves().mapColor(MapColor.COLOR_PURPLE).sound(SoundType.AZALEA_LEAVES).randomTicks()
                     .isSuffocating((state, level, pos) -> false)
                     .isRedstoneConductor((state, level, pos) -> false)));
     public static final RegistryObject<Block> FALLEN_DARK_CANDY_LEAVES = BLOCKS.register("fallen_dark_candy_leaves",
@@ -514,13 +517,25 @@ public class BlockRegistry {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.POPPY).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
 
-    private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
+    public static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
         return toReturn;
     }
 
-    private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, Supplier<T> block) {
+    public static <T extends Block> RegistryObject<Item> registerBlockItem(String name, Supplier<T> block) {
         return ItemRegistry.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+    public static BlockBehaviour.Properties occludingLeaves() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2F).randomTicks().isValidSpawn(BlockRegistry::ocelotOrParrot).isSuffocating(BlockRegistry::never).isViewBlocking(BlockRegistry::never).ignitedByLava().pushReaction(PushReaction.DESTROY).isRedstoneConductor(BlockRegistry::never);
+    }
+
+    private static boolean never(BlockState blockState, BlockGetter getter, BlockPos pos) {
+        return false;
+    }
+
+    public static Boolean ocelotOrParrot(BlockState blockState, BlockGetter getter, BlockPos pos, EntityType<?> entityType) {
+        return entityType == EntityType.OCELOT || entityType == EntityType.PARROT;
     }
 }

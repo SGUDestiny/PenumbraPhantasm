@@ -1,6 +1,44 @@
 {
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "penumbra_phantasm:block/darkness"
-  }
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"ambientocclusion": false,
+	"textures": {
+		"0": "penumbra_phantasm:block/darkness",
+		"1": "penumbra_phantasm:block/darkness_outline",
+		"particle": "penumbra_phantasm:block/darkness"
+	},
+	"elements": [
+		{
+			"name": "inner",
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "up"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0", "cullface": "down"}
+			}
+		},
+		{
+			"name": "outer",
+			"from": [17, 17, 17],
+			"to": [-1, -1, -1],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
+			"shade": false,
+			"rotation": {"angle": 0, "axis": "y", "origin": [18, 18, 18]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "south"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "west"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "north"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "east"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "down"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#1", "cullface": "up"}
+			}
+		}
+	]
 }
