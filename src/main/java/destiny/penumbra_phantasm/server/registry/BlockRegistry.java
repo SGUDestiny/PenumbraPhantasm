@@ -115,8 +115,7 @@ public class BlockRegistry {
 
     //Scarlet misc
     public static final RegistryObject<Block> SCARLET_BUSH = registerBlock("scarlet_bush",
-            () -> new ScarletBushBlock(BlockBehaviour.Properties.copy(Blocks.AZALEA_LEAVES)
-                    .mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission()
+            () -> new ScarletBushBlock(occludingLeaves().mapColor(MapColor.COLOR_RED).sound(SoundType.AZALEA_LEAVES).noCollission()
                     .isViewBlocking((state, level, pos) -> false)));
     public static final RegistryObject<Block> TALL_SCARLET_BUSH = registerBlock("tall_scarlet_bush",
             () -> new SlowingDoublePlantBlock(BlockBehaviour.Properties.copy(Blocks.PEONY)

@@ -53,6 +53,10 @@
 			"name": "outline",
 			"from": [17, 17, 17],
 			"to": [-1, -1, -1],
+			"forge_data": {
+				"block_light": 15,
+				"sky_light": 15
+			},
 			"shade": false,
 			"rotation": {"angle": 0, "axis": "y", "origin": [18, 18, 18]},
 			"faces": {
