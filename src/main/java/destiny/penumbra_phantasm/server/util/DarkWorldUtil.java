@@ -38,9 +38,12 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorPresets;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -643,12 +646,20 @@ public class DarkWorldUtil {
 		ServerLevel existingLevel = server.getLevel(key);
 		if (existingLevel != null) return existingLevel;
 
-
 		long seed = createUniqueDarkWorldSeed(server, key);
+		ChunkGenerator chunkGenerator;
 
-		RandomState randomState = RandomState.create(server.registryAccess().asGetterLookup(), getNoiseGeneratorKey(type.noiseSettings()), seed);
-		ChunkGenerator chunkGenerator = new SeededNoiseBasedChunkGenerator(type.source(),
-				getNoiseGenerator(server, type.noiseSettings()), randomState, seed);
+		if (type.noiseSettings().isPresent()) {
+			if (!type.source().isPresent()) return null;
+
+			RandomState randomState = RandomState.create(server.registryAccess().asGetterLookup(), getNoiseGeneratorKey(type.noiseSettings().get()), seed);
+
+			chunkGenerator = new SeededNoiseBasedChunkGenerator(type.source().get(), getNoiseGenerator(server, type.noiseSettings().get()), randomState, seed);
+		} else {
+			if (!type.flatLevelGeneratorSettings().isPresent()) return null;
+
+			chunkGenerator = new FlatLevelSource(type.flatLevelGeneratorSettings().get());
+		}
 
 		LevelStem stem = new LevelStem(getDimensionType(server, type.dimensionType()), chunkGenerator);
 
@@ -699,9 +710,6 @@ public class DarkWorldUtil {
 		return darkWorlds;
 	}
 
-	public static final ResourceKey<Level> DEPTHS = ResourceKey.create(Registries.DIMENSION,
-			new ResourceLocation(PenumbraPhantasm.MODID, "depths"));
-
 	public static boolean isDepths(Level level) {
 		return isDepthsKey(level.dimension());
 	}
@@ -710,9 +718,19 @@ public class DarkWorldUtil {
 		return levelResourceKey.location().getPath().contains("depths");
 	}
 
+	public static boolean isMindscape(Level level) {
+		return isMindscapeKey(level.dimension());
+	}
+
+	public static boolean isMindscapeKey(ResourceKey<Level> levelResourceKey) {
+		return levelResourceKey.location().getPath().contains("mindscape");
+	}
+
 	@Nullable
 	public static ServerLevel getDepths(MinecraftServer server) {
-		return server.getLevel(DEPTHS);
+		ResourceKey<Level> depthsKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "depths"));
+
+		return server.getLevel(depthsKey);
 	}
 
 	public static List<ResourceLocation> getAllDarkWorldAllowedRecipes(RegistryAccess registryAccess) {

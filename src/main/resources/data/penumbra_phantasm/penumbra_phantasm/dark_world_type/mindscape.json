@@ -1,0 +1,21 @@
+{
+  "block_tag": "penumbra_phantasm:influences_mindscape",
+  "block_amount": 8,
+  "flat_level_generator_settings": {
+    "biome": "penumbra_phantasm:blank_slate",
+    "lakes": false,
+    "features": true,
+    "layers": [
+      {
+        "height": 1,
+        "block": "penumbra_phantasm:unbreakable_darkness"
+      },
+      {
+        "height": 31,
+        "block": "penumbra_phantasm:tenebralith"
+      }
+    ],
+    "structure_overrides": []
+  },
+  "dimension_type": "penumbra_phantasm:mindscape_dimension_type"
+}

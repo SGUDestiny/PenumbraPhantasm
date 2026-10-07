@@ -100,7 +100,7 @@ public class LocationTitleOverlay {
         pose.translate(width / 2f, height / 2f, 0f);
         pose.scale(3f, 3f, 1f);
         pose.translate(-width / 2f, -height / 2f, 0f);
-        if (!DarkWorldUtil.isDepths(level)) {
+        if (!DarkWorldUtil.isDepths(level) && !DarkWorldUtil.isMindscape(level)) {
             drawCenteredString(guiGraphics, Component.translatable(currentLocation), width / 2, (int) (height / 2.65f), color, titleAlpha);
         } else {
             drawCenteredStringOutlined(guiGraphics, Component.translatable(currentLocation), width / 2, (int) (height / 2.65f), 0x000000, 0xFFFFFF, titleAlpha);

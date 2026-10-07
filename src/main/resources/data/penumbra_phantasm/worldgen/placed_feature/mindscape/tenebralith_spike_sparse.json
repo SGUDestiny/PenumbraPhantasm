@@ -1,0 +1,56 @@
+{
+  "feature": "penumbra_phantasm:depths/tenebralith_spike",
+  "placement": [
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 4,
+          "min_inclusive": 2
+        }
+      }
+    },
+    {
+      "type": "minecraft:in_square"
+    },
+    {
+      "type": "minecraft:heightmap",
+      "heightmap": "WORLD_SURFACE_WG"
+    },
+    {
+      "type": "minecraft:count",
+      "count": {
+        "type": "minecraft:uniform",
+        "value": {
+          "max_inclusive": 5,
+          "min_inclusive": 1
+        }
+      }
+    },
+    {
+      "type": "minecraft:random_offset",
+      "xz_spread": {
+        "type": "minecraft:clamped_normal",
+        "value": {
+          "deviation": 3,
+          "max_inclusive": 10,
+          "mean": 0,
+          "min_inclusive": -10
+        }
+      },
+      "y_spread": {
+        "type": "minecraft:clamped_normal",
+        "value": {
+          "deviation": 0.6,
+          "max_inclusive": 2,
+          "mean": 0,
+          "min_inclusive": -2
+        }
+      }
+    },
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -3,6 +3,7 @@ package destiny.penumbra_phantasm;
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.KeyBindings;
 import destiny.penumbra_phantasm.client.render.blockentity.*;
+import destiny.penumbra_phantasm.client.render.dimension.*;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
 import destiny.penumbra_phantasm.client.render.model.*;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorBacksideModel;
@@ -19,10 +20,6 @@ import destiny.penumbra_phantasm.server.item.property.DarkWalletItemProperty;
 import destiny.penumbra_phantasm.server.item.property.RosegoldLighterItemProperty;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.client.render.model.item.DeltashieldModel;
-import destiny.penumbra_phantasm.client.render.dimension.CardKingdomDimensionEffects;
-import destiny.penumbra_phantasm.client.render.dimension.DarkWorldDimensionEffects;
-import destiny.penumbra_phantasm.client.render.dimension.DepthsDimensionEffects;
-import destiny.penumbra_phantasm.client.render.dimension.EggRoomDimensionEffects;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
 import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
@@ -169,11 +166,13 @@ public class PenumbraPhantasm {
             CardKingdomDimensionEffects cardKingdomDimensionEffects = new CardKingdomDimensionEffects();
             EggRoomDimensionEffects eggRoomDimensionEffects = new EggRoomDimensionEffects();
             DepthsDimensionEffects depthsDimensionEffects = new DepthsDimensionEffects();
+            MindscapeDimensionEffects mindscapeDimensionEffects = new MindscapeDimensionEffects();
 
             event.register(DarkWorldDimensionEffects.DARK_WORLD_DIMENSION_EFFECTS, darkWorldDimensionEffects);
             event.register(CardKingdomDimensionEffects.CARD_KINGDOM_DIMENSION_EFFECTS, cardKingdomDimensionEffects);
             event.register(EggRoomDimensionEffects.EGG_ROOM_DIMENSION_EFFECTS, eggRoomDimensionEffects);
             event.register(DepthsDimensionEffects.DEPTHS_DIMENSION_EFFECTS, depthsDimensionEffects);
+            event.register(MindscapeDimensionEffects.MINDSCAPE_DIMENSION_EFFECTS, mindscapeDimensionEffects);
         }
 
         @SubscribeEvent
