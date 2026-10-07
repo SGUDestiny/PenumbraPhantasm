@@ -500,11 +500,12 @@ public class KnifeItem extends SwordItem {
         }
 
         //Prepare dark world chunk to put the fountain in
-        ChunkPos darkChunkPos = new ChunkPos(fountainPos);
+        BlockPos tempDarkFountainPos = new BlockPos(0, fountainPos.getY(), 0);
+        ChunkPos darkChunkPos = new ChunkPos(tempDarkFountainPos);
         targetLevel.setChunkForced(darkChunkPos.x, darkChunkPos.z, true);
 
         //Create dark world fountain position in target level, account for worldgen
-        BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, fountainPos);
+        BlockPos darkFountainPos = targetLevel.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, tempDarkFountainPos);
 
         //Unload the dark world chunk
         targetLevel.setChunkForced(darkChunkPos.x, darkChunkPos.z, false);
@@ -536,6 +537,7 @@ public class KnifeItem extends SwordItem {
             return;
         }
 
+        //Create dark world fountain
         darkCap.addDarkFountain(darkFountainPos, targetLevel.dimension(), fountainPos, level.dimension(), 0, 0, 0, 0, new HashSet<>(), new ArrayList<>(), -1, -1, 0);
 
         //Depths fountain
