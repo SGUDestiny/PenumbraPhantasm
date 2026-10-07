@@ -176,10 +176,10 @@ public class PacketHandlerRegistry {
                 .consumerMainThread(ServerBoundTextBoxChoicePacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(ClientBoundRemoveFountainPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(ClientBoundRemoveFountainPacket::encode)
-                .decoder(ClientBoundRemoveFountainPacket::decode)
-                .consumerMainThread(ClientBoundRemoveFountainPacket::handle)
+        INSTANCE.messageBuilder(ClientBoundFountainRemovePacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundFountainRemovePacket::encode)
+                .decoder(ClientBoundFountainRemovePacket::decode)
+                .consumerMainThread(ClientBoundFountainRemovePacket::handle)
                 .add();
 
         INSTANCE.messageBuilder(ClientBoundEggRoomCoverPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)

@@ -10,32 +10,24 @@ import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class ClientBoundRemoveFountainPacket {
-    public final BlockPos fountainPos;
-
-    public ClientBoundRemoveFountainPacket(BlockPos fountainPos) {
-        this.fountainPos = fountainPos;
-    }
-
+public record ClientBoundFountainRemovePacket(BlockPos fountainPos) {
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(fountainPos);
     }
 
-    public static ClientBoundRemoveFountainPacket decode(FriendlyByteBuf buffer) {
-        return new ClientBoundRemoveFountainPacket(buffer.readBlockPos());
+    public static ClientBoundFountainRemovePacket decode(FriendlyByteBuf buffer) {
+        return new ClientBoundFountainRemovePacket(buffer.readBlockPos());
     }
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ClientLevel level = Minecraft.getInstance().level;
-            if (level == null) {
-                return;
-            }
+            if (level == null) return;
+
             level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
                 DarkFountain fountain = cap.darkFountains.remove(fountainPos);
-                if (fountain == null) {
-                    return;
-                }
+                if (fountain == null) return;
+
                 if (fountain.windSound != null) {
                     fountain.windSound.stopSound();
                 }

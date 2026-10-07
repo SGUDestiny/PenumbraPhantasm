@@ -1,6 +1,6 @@
 package destiny.penumbra_phantasm.server.capability;
 
-import destiny.penumbra_phantasm.client.network.ClientBoundRemoveFountainPacket;
+import destiny.penumbra_phantasm.client.network.ClientBoundFountainRemovePacket;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -134,7 +134,7 @@ public class DarkFountainCapability implements INBTSerializable<CompoundTag> {
         if (level instanceof ServerLevel serverLevel) {
             serverLevel.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> cap.darkFountains.remove(fountainPos));
 
-            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(serverLevel::dimension), new ClientBoundRemoveFountainPacket(fountainPos));
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.DIMENSION.with(serverLevel::dimension), new ClientBoundFountainRemovePacket(fountainPos));
         }
     }
 
