@@ -202,7 +202,7 @@ public class FountainRenderUtil {
 		float vx = (float) (cameraPos.x - fountainCenterX);
 		float vz = (float) (cameraPos.z - fountainCenterZ);
 		float vLen = Mth.sqrt(vx * vx + vz * vz);
-		if (vLen < 1.0e-5f) {
+		if (vLen < 0.01) {
 			vx = 0f;
 			vz = 1f;
 		} else {

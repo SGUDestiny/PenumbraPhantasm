@@ -230,7 +230,7 @@ public class ClientEvents {
 
 						double distance3d = fountain.getFountainPos().getCenter().distanceTo(camera.getPosition());
 						double distance2d = Mth.sqrt(fountain2dPos.distanceToSqr(camera2dPos));
-						double referenceDistance = 64;
+						double referenceDistance = 32;
 						float distanceScale = (float) (distance2d / referenceDistance);
 
 						distanceScale = Math.max(distanceScale, 1);
