@@ -127,15 +127,13 @@ public class FountainRenderUtil {
 		return cachedVortexModel;
 	}
 
-	private static void renderFountainCross(PoseStack poseStack, VertexConsumer consumer,
-											float r, float g, float b, float a,
-											float halfWidthPixels, float tileHeightPixels, int tileCount, float deformation) {
+	private static void renderFountainCross(PoseStack poseStack, VertexConsumer consumer, float r, float g, float b, float a, float halfWidthPixels,
+											float tileHeightPixels, int tileCount, float deformation) {
 		renderFountainCross(poseStack, consumer, r, g, b, a, halfWidthPixels, tileHeightPixels, tileCount, deformation, 0f);
 	}
 
-	private static void renderFountainCross(PoseStack poseStack, VertexConsumer consumer,
-											float r, float g, float b, float a,
-											float halfWidthPixels, float tileHeightPixels, int tileCount, float deformation, float vOffset) {
+	private static void renderFountainCross(PoseStack poseStack, VertexConsumer consumer, float r, float g, float b, float a, float halfWidthPixels,
+											float tileHeightPixels, int tileCount, float deformation, float vOffset) {
 		Matrix4f matrix = poseStack.last().pose();
 		float hw = (halfWidthPixels + deformation) / 16f;
 		float tileHeight = tileHeightPixels / 16f;
@@ -177,20 +175,26 @@ public class FountainRenderUtil {
 		return Mth.frac((fountain.getFrameTick() + partialTick) / (27f * 3f));
 	}
 
-	private static void renderFountainCrossSorted(PoseStack poseStack, VertexConsumer consumer,
-												  float r, float g, float b, float a,
-												  float halfWidthPixels, float tileHeightPixels, int tileCount, float deformation,
-												  Vec3 cameraPos, BlockPos fountainPos) {
+	private static void renderFountainCrossSorted(PoseStack poseStack, VertexConsumer consumer, float r, float g, float b, float a, float halfWidthPixels,
+												  float tileHeightPixels, int tileCount, float deformation, Vec3 cameraPos, BlockPos fountainPos) {
 		Matrix4f matrix = poseStack.last().pose();
 		float hw = (halfWidthPixels + deformation) / 16f;
 		float tileHeight = tileHeightPixels / 16f;
 		float off = deformation / 16f;
 
 		float[][] faces = {
-				{ hw * COS45, -hw * COS45,  COS45, COS45,  1f },
-				{ hw * COS45, -hw * COS45,  COS45, COS45, -1f },
-				{ hw * COS45,  hw * COS45, -COS45, COS45,  1f },
-				{ hw * COS45,  hw * COS45, -COS45, COS45, -1f }
+				{
+					hw * COS45, -hw * COS45, COS45, COS45, 1f
+				},
+				{
+					hw * COS45, -hw * COS45, COS45, COS45, -1f
+				},
+				{
+					hw * COS45, hw * COS45, -COS45, COS45, 1f
+				},
+				{
+					hw * COS45, hw * COS45, -COS45, COS45, -1f
+				}
 		};
 
 		float fountainCenterX = fountainPos.getX() + 0.5f;
@@ -242,6 +246,36 @@ public class FountainRenderUtil {
 			for (int tile = 0; tile < tileCount; tile++) {
 				float yBot = tile * tileHeight;
 				float yTop = (tile + 1) * tileHeight;
+
+				if (tile == 0) {
+					if (sign > 0f) {
+						consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(r, g, b, a).uv(0f, 0f).endVertex();
+						consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(r, g, b, a).uv(0.5f, 0f).endVertex();
+						consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(0, 0, 0, 0).uv(0.5f, 1f).endVertex();
+						consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(0, 0, 0, 0).uv(0f, 1f).endVertex();
+					} else {
+						consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(r, g, b, a).uv(0f, 0f).endVertex();
+						consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(r, g, b, a).uv(0.5f, 0f).endVertex();
+						consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(0, 0, 0, 0).uv(0.5f, 1f).endVertex();
+						consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(0, 0, 0, 0).uv(0f, 1f).endVertex();
+					}
+					continue;
+				}
+
+				if (tile == tileCount - 1) {
+					if (sign > 0f) {
+						consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(0, 0, 0, 0).uv(0f, 0f).endVertex();
+						consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(0, 0, 0, 0).uv(0.5f, 0f).endVertex();
+						consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(r, g, b, a).uv(0.5f, 1f).endVertex();
+						consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(r, g, b, a).uv(0f, 1f).endVertex();
+					} else {
+						consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(0, 0, 0, 0).uv(0f, 0f).endVertex();
+						consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(0, 0, 0, 0).uv(0.5f, 0f).endVertex();
+						consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(r, g, b, a).uv(0.5f, 1f).endVertex();
+						consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(r, g, b, a).uv(0f, 1f).endVertex();
+					}
+					continue;
+				}
 
 				if (sign > 0f) {
 					consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(r, g, b, a).uv(0f, 0f).endVertex();
@@ -343,7 +377,8 @@ public class FountainRenderUtil {
 		}
 	}
 
-	public static void renderOpenFountain(DarkFountain fountain, Level level, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha) {
+	public static void renderOpenFountain(DarkFountain fountain, Level level, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack,
+										  MultiBufferSource buffer, int overlay, float alpha) {
 		int frame = fountain.getFrame();
 		float middleUvOffset = getMiddleUvOffset(fountain, partialTick);
 
@@ -476,7 +511,8 @@ public class FountainRenderUtil {
 		poseStack.popPose();
 	}
 
-	public static void renderSealingFountain(DarkFountain fountain, Level level, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha) {
+	public static void renderSealingFountain(DarkFountain fountain, Level level, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack,
+											 MultiBufferSource buffer, int overlay, float alpha) {
 		int frame = fountain.getFrame();
 		float sealDelta = Mth.clamp((fountain.sealingTick + partialTick) / SEAL_DURATION, 0f, 1f);
 		float middleUvOffset = getMiddleUvOffset(fountain, partialTick);
@@ -754,7 +790,8 @@ public class FountainRenderUtil {
 		poseStack.popPose();
 	}
 
-	public static void renderOpenFountainOptimized(DarkFountain fountain, int length, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha, Vec3 cameraPos) {
+	public static void renderOpenFountainOptimized(DarkFountain fountain, int length, PoseStack poseStack, MultiBufferSource buffer, int overlay, float alpha,
+												   Vec3 cameraPos) {
 		int frameOptimized = fountain.frameOptimized;
 		ResourceLocation textureMiddleOptimized = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/fountain_middle_" + frameOptimized + ".png");
 		ResourceLocation textureVortexLower = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/vortex/fountain_vortex_lower.png");
