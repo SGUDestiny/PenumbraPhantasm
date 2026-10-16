@@ -1,6 +1,6 @@
 package destiny.penumbra_phantasm.mixin;
 
-import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
+import destiny.penumbra_phantasm.client.render.screen.DEVICE_INTRO_SCREEN;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -18,7 +18,7 @@ public class MusicSuppressionMixin {
         Minecraft mc = (Minecraft) (Object) this;
         LocalPlayer player = mc.player;
 
-        if (player != null && DarkWorldUtil.isDarkWorld(player.level()) || mc.screen instanceof IntroScreen) {
+        if (player != null && DarkWorldUtil.isDarkWorld(player.level()) || mc.screen instanceof DEVICE_INTRO_SCREEN) {
             cir.setReturnValue(new Music(SoundEvents.MUSIC_GAME, Integer.MAX_VALUE, Integer.MAX_VALUE, false));
         }
     }

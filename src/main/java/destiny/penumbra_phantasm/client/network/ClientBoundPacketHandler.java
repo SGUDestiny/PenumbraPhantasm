@@ -1,12 +1,12 @@
 package destiny.penumbra_phantasm.client.network;
 
+import destiny.penumbra_phantasm.client.render.screen.DEVICE_INTRO_SCREEN;
 import destiny.penumbra_phantasm.client.render.textbox.DarkWorldDialogue;
 import destiny.penumbra_phantasm.client.render.textbox.TextBoxConstants;
 import destiny.penumbra_phantasm.client.render.textbox.TextBoxScript;
 import destiny.penumbra_phantasm.client.render.screen.DarknessFallScreen;
 import destiny.penumbra_phantasm.client.render.screen.EggRoomCoverScreen;
 import destiny.penumbra_phantasm.client.render.screen.FireDoorScreen;
-import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
@@ -34,7 +34,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -51,7 +50,7 @@ public class ClientBoundPacketHandler
 	{
 		Minecraft minecraft = Minecraft.getInstance();
 
-		minecraft.setScreen(new IntroScreen(() -> {
+		minecraft.setScreen(new DEVICE_INTRO_SCREEN(() -> {
 			minecraft.setScreen(null);
 			PacketHandlerRegistry.INSTANCE.sendToServer(new ServerBoundIntroPacket(pos, dim));
 		}));

@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class IntroScreen extends Screen {
+public class DEVICE_INTRO_SCREEN extends Screen {
     private static final int WORLD_THUMBNAIL_DELAY_TICKS = 20;
     private static final float REFERENCE_GUI_SCALE = 2f;
     private static Path worldThumbnailPath;
@@ -152,7 +152,7 @@ public class IntroScreen extends Screen {
     public TypewriterText line29 = new TypewriterText(Component.translatable("screen.penumbra_phantasm.intro.line.29").withStyle(Style.EMPTY.withFont(new ResourceLocation(PenumbraPhantasm.MODID, "8_bit_operator"))),
             1, 90 * 20, 0).syncTransparency(line28);
 
-    public IntroScreen(Runnable runnable) {
+    public DEVICE_INTRO_SCREEN(Runnable runnable) {
         super(GameNarrator.NO_TITLE);
         this.onFinished = runnable;
     }

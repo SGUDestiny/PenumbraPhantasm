@@ -147,7 +147,7 @@ public class BlockRegistry {
                     .mapColor(MapColor.COLOR_RED).sound(SoundType.CHERRY_WOOD)));
     public static final RegistryObject<Block> SCARLET_LOG_MYSTERIOUS_DOOR = registerBlock("scarlet_log_mysterious_door",
             () -> new ScarletLogMysteriousDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD)
-                    .mapColor(MapColor.COLOR_PINK).noOcclusion().noLootTable()));
+                    .mapColor(MapColor.COLOR_PINK).noLootTable()));
     public static final RegistryObject<Block> SCARLET_SAPLING = registerBlock("scarlet_sapling",
             () -> new DarkWorldSaplingBlock(new ScarletGrower(), BlockBehaviour.Properties.copy(Blocks.CHERRY_SAPLING)
                     .mapColor(MapColor.COLOR_PINK).sound(SoundType.CHERRY_SAPLING)));

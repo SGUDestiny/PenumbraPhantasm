@@ -11,7 +11,7 @@ import destiny.penumbra_phantasm.client.render.fountain.FountainHueShiftRenderer
 import destiny.penumbra_phantasm.client.render.fountain.FountainOpeningPosterizeRenderer;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.overlay.FountainDarknessOverlay;
-import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
+import destiny.penumbra_phantasm.client.render.screen.DEVICE_INTRO_SCREEN;
 import destiny.penumbra_phantasm.client.render.textbox.DarkWorldDialogue;
 import destiny.penumbra_phantasm.client.render.textbox.TextBoxWriter;
 import destiny.penumbra_phantasm.server.capability.ScreenAnimationCapability;
@@ -250,7 +250,7 @@ public abstract class GameRendererMixin {
 		pose.scale(endingSizeX3, 1, 1);
 		pose.translate(-width / 2f, -height / 2f, 0);
 
-		RenderBlitUtil.blit(IntroScreen.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha3, 0, 0, width, height, width, height);
+		RenderBlitUtil.blit(DEVICE_INTRO_SCREEN.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha3, 0, 0, width, height, width, height);
 
 		pose.popPose();
 
@@ -260,7 +260,7 @@ public abstract class GameRendererMixin {
 		pose.scale(endingSizeX2, 1, 1);
 
 		pose.translate(-width / 2f, -height / 2f, 0);
-		RenderBlitUtil.blit(IntroScreen.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha2, 0, 0, width, height, width, height);
+		RenderBlitUtil.blit(DEVICE_INTRO_SCREEN.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha2, 0, 0, width, height, width, height);
 
 		pose.popPose();
 
@@ -270,7 +270,7 @@ public abstract class GameRendererMixin {
 		pose.scale(endingSizeX1, 1, 1);
 		pose.translate(-width / 2f, -height / 2f, 0);
 
-		RenderBlitUtil.blit(IntroScreen.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha1, 0, 0, width, height, width, height);
+		RenderBlitUtil.blit(DEVICE_INTRO_SCREEN.WHITE_SCREEN, pose, 0, 0, 1, 1, 1, endingAlpha1, 0, 0, width, height, width, height);
 
 		pose.popPose();
 	}

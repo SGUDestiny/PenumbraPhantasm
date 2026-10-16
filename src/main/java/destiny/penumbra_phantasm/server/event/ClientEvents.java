@@ -12,11 +12,7 @@ import destiny.penumbra_phantasm.client.render.dimension.CardKingdomDimensionEff
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.render.GreatDoorRenderUtil;
 import destiny.penumbra_phantasm.client.render.fluid.NegativePhotonsRenderUtil;
-import destiny.penumbra_phantasm.client.render.screen.DarkWorldInventoryScreen;
-import destiny.penumbra_phantasm.client.render.screen.DarkWorldLanScreen;
-import destiny.penumbra_phantasm.client.render.screen.DarkWorldPauseScreen;
-import destiny.penumbra_phantasm.client.render.screen.EggRoomCoverScreen;
-import destiny.penumbra_phantasm.client.render.screen.IntroScreen;
+import destiny.penumbra_phantasm.client.render.screen.*;
 import destiny.penumbra_phantasm.client.KeyBindings;
 import destiny.penumbra_phantasm.client.render.textbox.DarkWorldDialogue;
 import destiny.penumbra_phantasm.client.render.tooltip.DarkMoneyTooltipComponent;
@@ -33,10 +29,7 @@ import net.minecraft.client.AttackIndicatorStatus;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.PauseScreen;
-import net.minecraft.client.gui.screens.ReceivingLevelScreen;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.ShareToLanScreen;
+import net.minecraft.client.gui.screens.*;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.SectionPos;
@@ -389,7 +382,7 @@ public class ClientEvents {
 	@SubscribeEvent
 	public static void clientTick(TickEvent.ClientTickEvent event) {
 		if(event.phase == TickEvent.Phase.END) {
-			IntroScreen.tickWorldThumbnail(Minecraft.getInstance());
+			DEVICE_INTRO_SCREEN.tickWorldThumbnail(Minecraft.getInstance());
 			MusicManager.getInstance().tick();
 			Minecraft minecraft = Minecraft.getInstance();
 
@@ -524,31 +517,31 @@ public class ClientEvents {
 			return;
 		}
 
-		if(minecraft.screen instanceof IntroScreen introScreen) {
-			if(event.getAction() != 1 || !introScreen.isChoosing) return;
+		if(minecraft.screen instanceof DEVICE_INTRO_SCREEN DEVICEINTROSCREEN) {
+			if(event.getAction() != 1 || !DEVICEINTROSCREEN.isChoosing) return;
 
 			if(InputConstants.getKey(InputConstants.KEY_W, event.getScanCode()).equals(InputConstants.getKey(event.getKey(), event.getScanCode()))) {
-				introScreen.incrementChoice(-1);
+				DEVICEINTROSCREEN.incrementChoice(-1);
 			}
 
 			if(InputConstants.getKey(InputConstants.KEY_S, event.getScanCode()).equals(InputConstants.getKey(event.getKey(), event.getScanCode()))) {
-				introScreen.incrementChoice(1);
+				DEVICEINTROSCREEN.incrementChoice(1);
 			}
 
 			if(InputConstants.getKey(InputConstants.KEY_RETURN, event.getScanCode()).equals(InputConstants.getKey(event.getKey(), event.getScanCode()))) {
-				introScreen.pickChoice();
+				DEVICEINTROSCREEN.pickChoice();
 			}
 
 			if(InputConstants.getKey(InputConstants.KEY_UP, event.getScanCode()).equals(InputConstants.getKey(event.getKey(), event.getScanCode()))) {
-				introScreen.incrementChoice(-1);
+				DEVICEINTROSCREEN.incrementChoice(-1);
 			}
 
 			if(InputConstants.getKey(InputConstants.KEY_DOWN, event.getScanCode()).equals(InputConstants.getKey(event.getKey(), event.getScanCode()))) {
-				introScreen.incrementChoice(1);
+				DEVICEINTROSCREEN.incrementChoice(1);
 			}
 
 			if(InputConstants.getKey(InputConstants.KEY_Z, event.getScanCode()).equals(InputConstants.getKey(event.getKey(), event.getScanCode()))) {
-				introScreen.pickChoice();
+				DEVICEINTROSCREEN.pickChoice();
 			}
 		}
 	}
@@ -600,6 +593,10 @@ public class ClientEvents {
 				return;
 			}
 		}
+
+/*		if(newScreen instanceof TitleScreen) {
+			event.setNewScreen(new DEVICE_MAIN_MENU());
+		}*/
 
 		Minecraft minecraft = Minecraft.getInstance();
 		Player player = minecraft.player;
