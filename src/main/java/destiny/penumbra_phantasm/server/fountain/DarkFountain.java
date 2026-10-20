@@ -1182,30 +1182,39 @@ public class DarkFountain {
             return new Vec2(originPos.x, originPos.y);
         }
 
-        List<Vec2> fountainsTooClose = new ArrayList<>();
+        int attempts = 0;
+        Vec2 startPos = new Vec2(originPos.x, originPos.y);
 
-        for (DarkFountain fountain : capability.darkFountains.values()) {
-            Vec2 fountainPos = new Vec2(fountain.fountainPos.getX(), fountain.fountainPos.getZ());
-            float distance = originPos.distanceToSqr(fountainPos);
+        while (attempts < 64) {
+            List<Vec2> fountainsTooClose = new ArrayList<>();
 
-            if (distance < Mth.square(32)) {
-                fountainsTooClose.add(fountainPos);
+            for (DarkFountain fountain : capability.darkFountains.values()) {
+                Vec2 fountainPos = new Vec2(fountain.fountainPos.getX(), fountain.fountainPos.getZ());
+                float distance = startPos.distanceToSqr(fountainPos);
+
+                if (distance < Mth.square(32)) {
+                    fountainsTooClose.add(fountainPos);
+                }
             }
+
+            if (fountainsTooClose.isEmpty()) {
+                return startPos;
+            }
+
+            Vec2 combinedAwayVec = Vec2.ZERO;
+            for (Vec2 conflictPos : fountainsTooClose) {
+                Vec2 awayVec = new Vec2(startPos.x - conflictPos.x, startPos.y - conflictPos.y);
+
+                awayVec = awayVec.normalized();
+                combinedAwayVec = combinedAwayVec.add(awayVec);
+            }
+
+            startPos = startPos.add(combinedAwayVec.normalized().scale(32));
+
+            attempts++;
         }
 
-        if (fountainsTooClose.isEmpty()) {
-            return new Vec2(originPos.x, originPos.y);
-        }
-
-        Vec2 combinedAwayVec = Vec2.ZERO;
-        for (Vec2 conflictPos : fountainsTooClose) {
-            Vec2 awayVec = new Vec2(originPos.x - conflictPos.x, originPos.y - conflictPos.y);
-
-            awayVec = awayVec.normalized();
-            combinedAwayVec = combinedAwayVec.add(awayVec);
-        }
-
-        return originPos.add(combinedAwayVec.normalized().scale(32));
+        return startPos;
     }
 
     public static BlockPos getHeightmappedDepthsPos(ServerLevel depths, Vec2 originXZ) {
