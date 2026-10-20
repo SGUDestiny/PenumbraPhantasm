@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "penumbra_phantasm:block/discarded_vessel_1",
+        "weight": 33
+      },
+      {
+        "model": "penumbra_phantasm:block/discarded_vessel_2",
+        "weight": 33
+      },
+      {
+        "model": "penumbra_phantasm:block/discarded_vessel_3",
+        "weight": 34
+      }
+    ]
+  }
+}

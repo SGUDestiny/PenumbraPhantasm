@@ -378,6 +378,8 @@ public class CreativeTabRegistry {
             .displayItems((parameters, output) -> {
                 output.accept(ItemRegistry.ANCHOR_OF_LIGHT.get());
 
+                output.accept(BlockRegistry.DISCARDED_VESSEL.get());
+
                 output.accept(BlockRegistry.VANTAROSE.get());
                 output.accept(BlockRegistry.ROARING_EYE.get());
                 output.accept(BlockRegistry.TENEBRALITH_SPIKE.get());

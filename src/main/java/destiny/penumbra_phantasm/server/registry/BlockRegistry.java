@@ -523,6 +523,9 @@ public class BlockRegistry {
             () -> new AnchorOfLightPartBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).noOcclusion().noParticlesOnBreak()));
 
+    public static final RegistryObject<Block> DISCARDED_VESSEL = registerBlock("discarded_vessel",
+            () -> new FallingBlock(BlockBehaviour.Properties.copy(Blocks.GRAY_WOOL).mapColor(DyeColor.GRAY).sound(SoundType.HONEY_BLOCK)));
+
     public static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
