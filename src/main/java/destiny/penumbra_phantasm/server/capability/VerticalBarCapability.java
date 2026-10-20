@@ -60,8 +60,10 @@ public class VerticalBarCapability implements INBTSerializable<CompoundTag> {
 
         ScreenAnimationCapability animCap = player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).orElse(null);
         int darknessOverlayTicker = animCap.darknessOverlayTicker;
+        AnchorOfLightCapability anchorCap = level.getCapability(CapabilityRegistry.ANCHOR_OF_LIGHT).orElse(null);
+        boolean isProtectedByAnchor = anchorCap.isProtectedByAnchor(anchorCap, player.blockPosition());
 
-        if (DarkWorldUtil.isDepths(level) && darknessOverlayTicker == -1) {
+        if (DarkWorldUtil.isDepths(level) && darknessOverlayTicker == -1 && !isProtectedByAnchor) {
             if (determinationAppearTicker < 10) {
                 determinationAppearTicker++;
             }

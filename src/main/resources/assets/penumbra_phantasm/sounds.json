@@ -355,5 +355,11 @@
     [
       "penumbra_phantasm:knight_swoon"
     ]
+  },
+  "anchor_of_light_place": {
+    "sounds":
+    [
+      "penumbra_phantasm:anchor_of_light_place"
+    ]
   }
 }

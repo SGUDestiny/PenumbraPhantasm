@@ -56,6 +56,8 @@ public class ForgeEvents {
                 new DarkFountainCapability()));
         event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "great_doors"), new GenericProvider<>(CapabilityRegistry.GREAT_DOOR,
                 new GreatDoorCapability()));
+        event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "anchor_of_light"), new GenericProvider<>(CapabilityRegistry.ANCHOR_OF_LIGHT,
+                new AnchorOfLightCapability()));
     }
 
     @SubscribeEvent

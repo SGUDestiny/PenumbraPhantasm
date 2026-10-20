@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.server.item.*;
+import destiny.penumbra_phantasm.server.item.EggItem;
 import net.minecraft.core.Direction;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
@@ -104,6 +105,8 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> ITEM_MUSIC_MEDIUM_THE_HOLY = ITEMS.register("item_music_medium_the_holy",
             () -> new MusicMediumItem(6, SoundRegistry.FOUNTAIN_MUSIC_DISC, basicItem(), (int) (53.333 * 20)));
+    public static final RegistryObject<Item> EGG = ITEMS.register("egg",
+            () -> new EggItem(new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> DARK_CANDY_STICK = ITEMS.register("dark_candy_stick",
             () -> new Item(new Item.Properties()));
@@ -186,6 +189,6 @@ public class ItemRegistry {
             () -> new CheshireChestItem(BlockRegistry.CHESHIRE_CHEST.get(), new Item.Properties()));
     public static final RegistryObject<Item> ICHOR_BLOCK = ITEMS.register("ichor_block",
             () -> new FuelBlockItem(BlockRegistry.ICHOR_BLOCK.get(), new Item.Properties(), 2400 * 9));
-    public static final RegistryObject<Item> EGG = ITEMS.register("egg",
-            () -> new destiny.penumbra_phantasm.server.item.EggItem(new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> ANCHOR_OF_LIGHT = ITEMS.register("anchor_of_light",
+            () -> new AnchorOfLightBlockItem(new Item.Properties()));
 }

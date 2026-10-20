@@ -1,4 +1,4 @@
-package destiny.penumbra_phantasm.client.render.model;
+package destiny.penumbra_phantasm.client.render.model.fountain;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -11,12 +11,12 @@ import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 
-public class DarkFountainOpeningModel extends EntityModel<Entity> {
+public class DarkFountainGroundCrackModel extends EntityModel<Entity> {
     // This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_opening_model"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(PenumbraPhantasm.MODID, "dark_fountain_crack_model"), "main");
     private final ModelPart main;
 
-    public DarkFountainOpeningModel(ModelPart root) {
+    public DarkFountainGroundCrackModel(ModelPart root) {
         this.main = root.getChild("main");
     }
 
@@ -24,13 +24,9 @@ public class DarkFountainOpeningModel extends EntityModel<Entity> {
         MeshDefinition meshdefinition = new MeshDefinition();
         PartDefinition partdefinition = meshdefinition.getRoot();
 
-        PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create().texOffs(-48, 0).addBox(-24.0F, -0.25F, -24.0F, 48.0F, 0.0F, 48.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        PartDefinition cube_r1 = main.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, -64).addBox(0.0F, -80.0F, -32.0F, 0.0F, 80.0F, 64.0F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -2.3562F, 0.0F));
-
-        PartDefinition cube_r2 = main.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(0, -64).addBox(0.0F, -80.0F, -32.0F, 0.0F, 80.0F, 64.0F, new CubeDeformation(0F)), PartPose.offsetAndRotation(0.0F, 0.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
-
-        return LayerDefinition.create(meshdefinition, 128, -80);
+        return LayerDefinition.create(meshdefinition, 96, -48);
     }
 
     @Override
@@ -43,3 +39,4 @@ public class DarkFountainOpeningModel extends EntityModel<Entity> {
         main.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
     }
 }
+

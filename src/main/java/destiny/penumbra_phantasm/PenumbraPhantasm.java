@@ -5,7 +5,8 @@ import destiny.penumbra_phantasm.client.KeyBindings;
 import destiny.penumbra_phantasm.client.render.blockentity.*;
 import destiny.penumbra_phantasm.client.render.dimension.*;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
-import destiny.penumbra_phantasm.client.render.model.*;
+import destiny.penumbra_phantasm.client.render.model.block.CheshireChestModel;
+import destiny.penumbra_phantasm.client.render.model.fountain.*;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorBacksideModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorClosedModel;
 import destiny.penumbra_phantasm.client.render.model.great_door.GreatDoorOpenModel;
@@ -234,6 +235,7 @@ public class PenumbraPhantasm {
             event.registerBlockEntityRenderer(BlockEntityRegistry.DUST_BLOCK_ENTITY.get(), DustBlockEntityRenderer::new);
             event.registerBlockEntityRenderer(BlockEntityRegistry.CHESHIRE_CHEST_BLOCK_ENTITY.get(), CheshireChestBlockEntityRenderer::new);
             event.registerBlockEntityRenderer(BlockEntityRegistry.ROARING_EYE_BLOCK_ENTITY.get(), RoaringEyeBlockEntityRenderer::new);
+            event.registerBlockEntityRenderer(BlockEntityRegistry.ANCHOR_OF_LIGHT_BLOCK_ENTITY.get(), context -> new AnchorOfLightBlockEntityRenderer());
         }
     }
 }

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidType;
@@ -86,63 +87,67 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
                 }
             }
         } else {
-            if (determination > 0) {
-                if (isInNegativePhotons(level, player)) {
-                    if (!player.isCreative() && !player.isSpectator()) {
-                        if (level.getGameTime() % 5 == 0) {
-                            if (determination > 0) {
-                                determination = determination - 1;
-                            }
-                        }
-                    }
-                } else {
-                    DarkFountainCapability fountainCapability = null;
-                    LazyOptional<DarkFountainCapability> lazyFountainCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
-                    if (lazyFountainCapability.isPresent() && lazyFountainCapability.resolve().isPresent()) {
-                        fountainCapability = lazyFountainCapability.resolve().get();
-                    }
+            AnchorOfLightCapability anchorCapability = level.getCapability(CapabilityRegistry.ANCHOR_OF_LIGHT).resolve().orElse(null);
 
-                    if (fountainCapability != null) {
-                        BlockPos playerPos = player.blockPosition();
-                        List<BlockPos> fountainPoses = new ArrayList<>();
-
-                        for (Map.Entry<BlockPos, DarkFountain> entry : fountainCapability.darkFountains.entrySet()) {
-                            BlockPos fountainPos = entry.getKey();
-
-                            fountainPoses.add(fountainPos);
-                        }
-
-                        fountainPoses.sort((Comparator.comparingDouble(pos -> pos.getCenter().distanceTo(playerPos.getCenter()))));
-
-                        if (fountainPoses.isEmpty() || playerPos.distSqr(fountainPoses.get(0)) > Mth.square(96)) {
-                            if (!player.isCreative() && !player.isSpectator()) {
-                                if (level.getGameTime() % (5 * 20) == 0) {
+            if (anchorCapability == null || !anchorCapability.isProtectedByAnchor(anchorCapability, player.blockPosition())) {
+                if (determination > 0) {
+                    if (isInNegativePhotons(level, player)) {
+                        if (!player.isCreative() && !player.isSpectator()) {
+                            if (level.getGameTime() % 5 == 0) {
+                                if (determination > 0) {
                                     determination = determination - 1;
                                 }
                             }
                         }
+                    } else {
+                        DarkFountainCapability fountainCapability = null;
+                        LazyOptional<DarkFountainCapability> lazyFountainCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
+                        if (lazyFountainCapability.isPresent() && lazyFountainCapability.resolve().isPresent()) {
+                            fountainCapability = lazyFountainCapability.resolve().get();
+                        }
+
+                        if (fountainCapability != null) {
+                            BlockPos playerPos = player.blockPosition();
+                            List<BlockPos> fountainPoses = new ArrayList<>();
+
+                            for (Map.Entry<BlockPos, DarkFountain> entry : fountainCapability.darkFountains.entrySet()) {
+                                BlockPos fountainPos = entry.getKey();
+
+                                fountainPoses.add(fountainPos);
+                            }
+
+                            fountainPoses.sort((Comparator.comparingDouble(pos -> pos.getCenter().distanceTo(playerPos.getCenter()))));
+
+                            if (fountainPoses.isEmpty() || playerPos.distSqr(fountainPoses.get(0)) > Mth.square(96)) {
+                                if (!player.isCreative() && !player.isSpectator()) {
+                                    if (level.getGameTime() % (5 * 20) == 0) {
+                                        determination = determination - 1;
+                                    }
+                                }
+                            }
+                        }
                     }
-                }
-            } else {
-                //Remove all potentially beneficial effects so players suffer
-                List<MobEffect> effectsToRemove = new ArrayList<>();
-                for (MobEffectInstance effect : player.getActiveEffects()) {
-                    MobEffectCategory category = effect.getEffect().getCategory();
+                } else {
+                    //Remove all potentially beneficial effects so players suffer
+                    List<MobEffect> effectsToRemove = new ArrayList<>();
+                    for (MobEffectInstance effect : player.getActiveEffects()) {
+                        MobEffectCategory category = effect.getEffect().getCategory();
 
-                    if (category == MobEffectCategory.BENEFICIAL || category == MobEffectCategory.NEUTRAL) {
-                        effectsToRemove.add(effect.getEffect());
+                        if (category == MobEffectCategory.BENEFICIAL || category == MobEffectCategory.NEUTRAL) {
+                            effectsToRemove.add(effect.getEffect());
+                        }
                     }
-                }
 
-                for (MobEffect mobEffect : effectsToRemove) {
-                    player.removeEffect(mobEffect);
-                }
+                    for (MobEffect mobEffect : effectsToRemove) {
+                        player.removeEffect(mobEffect);
+                    }
 
-                //Remove saturation so players suffer even more
-                player.getFoodData().setSaturation(0f);
+                    //Remove saturation so players suffer even more
+                    player.getFoodData().setSaturation(0f);
 
-                if (level.getGameTime() % 60 == 0) {
-                    player.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.PETRIFICATION), 6);
+                    if (level.getGameTime() % 60 == 0) {
+                        player.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.PETRIFICATION), 6);
+                    }
                 }
             }
         }

@@ -8,7 +8,10 @@ import java.util.Map;
 import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.client.render.ModShaders;
 import destiny.penumbra_phantasm.client.render.RenderTypes;
-import destiny.penumbra_phantasm.client.render.model.*;
+import destiny.penumbra_phantasm.client.render.model.fountain.DarkFountainGroundCrackModel;
+import destiny.penumbra_phantasm.client.render.model.fountain.DarkFountainMiddleModel;
+import destiny.penumbra_phantasm.client.render.model.fountain.DarkFountainOpeningModel;
+import destiny.penumbra_phantasm.client.render.model.fountain.DarkFountainVortexModel;
 import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 

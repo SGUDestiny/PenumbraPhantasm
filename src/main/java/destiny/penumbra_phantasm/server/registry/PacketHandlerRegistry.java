@@ -205,5 +205,11 @@ public class PacketHandlerRegistry {
                 .decoder(ServerBoundEggRoomInteractPacket::decode)
                 .consumerMainThread(ServerBoundEggRoomInteractPacket::handle)
                 .add();
+
+        INSTANCE.messageBuilder(ClientBoundAnchorOfLightSyncPacket.class, index++, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(ClientBoundAnchorOfLightSyncPacket::encode)
+                .decoder(ClientBoundAnchorOfLightSyncPacket::decode)
+                .consumerMainThread(ClientBoundAnchorOfLightSyncPacket::handle)
+                .add();
     }
 }

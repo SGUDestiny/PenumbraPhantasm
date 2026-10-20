@@ -1,0 +1,86 @@
+{
+	"format_version": "1.12.0",
+	"minecraft:geometry": [
+		{
+			"description": {
+				"identifier": "geometry.unknown",
+				"texture_width": 128,
+				"texture_height": 128,
+				"visible_bounds_width": 5,
+				"visible_bounds_height": 8,
+				"visible_bounds_offset": [0, 3, 0]
+			},
+			"bones": [
+				{
+					"name": "Chain",
+					"pivot": [0, 80, 0],
+					"cubes": [
+						{"origin": [-4, 70.5, -1.5], "size": [8, 12, 3], "uv": [60, 62]}
+					]
+				},
+				{
+					"name": "Chain1",
+					"parent": "Chain",
+					"pivot": [0, 73.5, 0],
+					"cubes": [
+						{"origin": [-4, 62.5, -1.5], "size": [8, 12, 3], "pivot": [0, 68.5, 0], "rotation": [0, -90, 0], "uv": [60, 62]}
+					]
+				},
+				{
+					"name": "Chain2",
+					"parent": "Chain1",
+					"pivot": [0, 65.5, 0],
+					"cubes": [
+						{"origin": [-4, 54.5, -1.5], "size": [8, 12, 3], "uv": [60, 62]}
+					]
+				},
+				{
+					"name": "Chain3",
+					"parent": "Chain2",
+					"pivot": [0, 57.5, 0],
+					"cubes": [
+						{"origin": [-4, 46.5, -1.5], "size": [8, 12, 3], "pivot": [0, 52.5, 0], "rotation": [0, -90, 0], "uv": [60, 62]}
+					]
+				},
+				{
+					"name": "Chain4",
+					"parent": "Chain3",
+					"pivot": [0, 49.5, 0],
+					"cubes": [
+						{"origin": [-4, 38.5, -1.5], "size": [8, 12, 3], "uv": [60, 62]}
+					]
+				},
+				{
+					"name": "Anchor",
+					"parent": "Chain4",
+					"pivot": [0, -11, 0],
+					"cubes": [
+						{"origin": [-4.5, 14.5, -3], "size": [9, 21, 6], "uv": [42, 0]}
+					]
+				},
+				{
+					"name": "Tilt",
+					"parent": "Anchor",
+					"pivot": [0, -11, 0],
+					"rotation": [0, 0, 45],
+					"cubes": [
+						{"origin": [-12, -11, -5], "size": [12, 12, 10], "uv": [0, 28]},
+						{"origin": [-40, 18, -5], "size": [11, 11, 10], "uv": [0, 0]},
+						{"origin": [-10, 1, -4], "size": [8, 26, 8], "uv": [44, 28]},
+						{"origin": [-29, -18, -4], "size": [8, 26, 8], "pivot": [-25, -5, 0], "rotation": [0, 0, 90], "uv": [0, 62]},
+						{"origin": [-27, -10, -4], "size": [6, 6, 8], "pivot": [-25, 3, 0], "rotation": [0, 0, 90], "uv": [32, 62]},
+						{"origin": [-5, 12, -4], "size": [6, 6, 8], "pivot": [-3, 25, 0], "rotation": [0, 0, 90], "uv": [76, 28]}
+					]
+				},
+				{
+					"name": "Middle",
+					"parent": "Tilt",
+					"pivot": [0, 0, 0],
+					"cubes": [
+						{"origin": [-22, -5, -6], "size": [16, 16, 12], "uv": [72, 0]}
+					]
+				}
+			]
+		}
+	]
+}

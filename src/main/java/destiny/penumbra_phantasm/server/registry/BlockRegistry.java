@@ -516,6 +516,13 @@ public class BlockRegistry {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.POPPY).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
 
+    public static final RegistryObject<Block> ANCHOR_OF_LIGHT = BLOCKS.register("anchor_of_light",
+            () -> new AnchorOfLightBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).offsetType(BlockBehaviour.OffsetType.NONE)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).lightLevel(state -> 15).noOcclusion().noParticlesOnBreak()));
+    public static final RegistryObject<Block> ANCHOR_OF_LIGHT_PART = BLOCKS.register("anchor_of_light_part",
+            () -> new AnchorOfLightPartBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).offsetType(BlockBehaviour.OffsetType.NONE)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).noOcclusion().noParticlesOnBreak()));
+
     public static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);

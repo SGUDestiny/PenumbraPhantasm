@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
@@ -375,6 +376,8 @@ public class CreativeTabRegistry {
             .title(Component.translatable("itemGroup.penumbra_phantasm.the_depths"))
             .withTabsBefore(CARD_KINGDOM.getKey())
             .displayItems((parameters, output) -> {
+                output.accept(ItemRegistry.ANCHOR_OF_LIGHT.get());
+
                 output.accept(BlockRegistry.VANTAROSE.get());
                 output.accept(BlockRegistry.ROARING_EYE.get());
                 output.accept(BlockRegistry.TENEBRALITH_SPIKE.get());

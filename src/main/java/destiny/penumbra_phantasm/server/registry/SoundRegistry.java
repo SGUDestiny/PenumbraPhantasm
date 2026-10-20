@@ -77,8 +77,9 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> KNIGHT_POWERUP = registerSoundEvent("knight_powerup");
     public static RegistryObject<SoundEvent> KNIGHT_SWOON = registerSoundEvent("knight_swoon");
 
-    private static RegistryObject<SoundEvent> registerSoundEvent(String sound)
-    {
+    public static RegistryObject<SoundEvent> ANCHOR_OF_LIGHT_PLACE = registerSoundEvent("anchor_of_light_place");
+
+    private static RegistryObject<SoundEvent> registerSoundEvent(String sound) {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));
     }
 }
