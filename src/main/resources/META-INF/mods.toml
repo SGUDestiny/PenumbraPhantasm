@@ -1,6 +1,6 @@
 modLoader="javafml"
 loaderVersion="[46,)"
-license="MIT License"
+license="PolyForm Strict License 1.0.0"
 
 [[mods]]
 modId="penumbra_phantasm"
