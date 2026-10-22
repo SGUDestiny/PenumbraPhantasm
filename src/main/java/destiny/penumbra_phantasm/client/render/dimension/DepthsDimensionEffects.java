@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 import static destiny.penumbra_phantasm.client.render.dimension.CardKingdomDimensionEffects.SKY_DISC_HEIGHT;
@@ -65,7 +65,7 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
     private final VertexBuffer flashesBackgroundBuffer;
 
     private long spriteSeed = Long.MIN_VALUE;
-    private List<Sprite> sprites = List.of();
+    private List<Sprite> sprites = new ArrayList<>();
 
     public DepthsDimensionEffects() {
         super(Float.NaN, false, SkyType.NONE, false, false);
@@ -133,57 +133,47 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
             return;
         }
 
-        List<Sprite> sprites = new ArrayList<>();
         sprites.addAll(createTitanSprites(seed));
         sprites.addAll(createDebrisSprites(seed));
 
-        this.sprites = sprites;
         this.spriteSeed = seed;
     }
 
     private List<Sprite> createTitanSprites(long seed) {
         RandomSource random = RandomSource.create(seed);
         int count = Mth.nextInt(random, MIN_TITAN_COUNT, MAX_TITAN_COUNT);
-        List<Sprite> placed = new ArrayList<>(count);
+        List<Sprite> placed = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-            float azimuth = random.nextFloat() * ((float) (Math.PI * 2));
             int textureIndex = random.nextInt(TITAN_TEXTURES.length);
 
-            Vec3 center = new Vec3(Mth.cos(azimuth) * CYLINDER_RADIUS, HORIZON_OFFSET + SPRITE_SIZE, Mth.sin(azimuth) * CYLINDER_RADIUS);
-
-            placed.add(new Sprite(center, SPRITE_SIZE, SPRITE_SIZE, true, textureIndex));
-        }
-
-        return placed;
-    }
-
-    private List<Sprite> createTitanSpritesNew(long seed) {
-        RandomSource random = RandomSource.create(seed);
-        int count = Mth.nextInt(random, MIN_TITAN_COUNT, MAX_TITAN_COUNT);
-        List<Sprite> placed = new ArrayList<>(count);
-
-        for (int i = 0; i < count; i++) {
-            float azimuth = random.nextFloat() * ((float) (Math.PI * 2));
-
-            int textureIndex = random.nextInt(TITAN_TEXTURES.length);
-
-            boolean shouldPlace = false;
-            for (Sprite sprite : placed) {
-                if (shouldPlace) break;
-
+            int attempts = 0;
+            while (attempts < 64) {
+                float azimuth = random.nextFloat() * ((float) (Math.PI * 2));
                 Vec3 center = new Vec3(Mth.cos(azimuth) * CYLINDER_RADIUS, HORIZON_OFFSET + SPRITE_SIZE, Mth.sin(azimuth) * CYLINDER_RADIUS);
 
-                for (int tries = 0; tries < 15; tries++) {
-                    if (center.distanceTo(sprite.center) < 20) {
-                        azimuth = random.nextFloat() * ((float) (Math.PI * 2));
-                        center = new Vec3(Mth.cos(azimuth) * CYLINDER_RADIUS, HORIZON_OFFSET + SPRITE_SIZE, Mth.sin(azimuth) * CYLINDER_RADIUS);
-                    } else {
-                        placed.add(new Sprite(center, SPRITE_SIZE, SPRITE_SIZE, true, textureIndex));
-                        shouldPlace = true;
+                boolean shouldPlace = true;
+
+                for (Sprite sprite : placed) {
+                    if (sprite.center.distanceTo(center) < 20) {
+                        shouldPlace = false;
                         break;
                     }
                 }
+
+                for (Sprite sprite : sprites) {
+                    if (sprite.center.distanceTo(center) < 20) {
+                        shouldPlace = false;
+                        break;
+                    }
+                }
+
+                if (shouldPlace) {
+                    placed.add(new Sprite(center, SPRITE_SIZE, SPRITE_SIZE, TITAN_TEXTURES[textureIndex]));
+                    break;
+                }
+
+                attempts++;
             }
         }
 
@@ -193,15 +183,39 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
     private List<Sprite> createDebrisSprites(long seed) {
         RandomSource random = RandomSource.create(seed);
         int count = Mth.nextInt(random, MIN_DEBRIS_COUNT, MAX_DEBRIS_COUNT);
-        List<Sprite> placed = new ArrayList<>(count);
+        List<Sprite> placed = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
-            float azimuth = random.nextFloat() * ((float) (Math.PI * 2));
             int textureIndex = random.nextInt(DEBRIS_TEXTURES.length);
 
-            Vec3 center = new Vec3(Mth.cos(azimuth) * CYLINDER_RADIUS, HORIZON_OFFSET + SPRITE_SIZE, Mth.sin(azimuth) * CYLINDER_RADIUS);
+            int attempts = 0;
+            while (attempts < 64) {
+                float azimuth = random.nextFloat() * ((float) (Math.PI * 2));
+                Vec3 center = new Vec3(Mth.cos(azimuth) * CYLINDER_RADIUS, HORIZON_OFFSET + SPRITE_SIZE, Mth.sin(azimuth) * CYLINDER_RADIUS);
 
-            placed.add(new Sprite(center, SPRITE_SIZE, SPRITE_SIZE, false, textureIndex));
+                boolean shouldPlace = true;
+
+                for (Sprite sprite : placed) {
+                    if (sprite.center.distanceTo(center) < 20) {
+                        shouldPlace = false;
+                        break;
+                    }
+                }
+
+                for (Sprite sprite : sprites) {
+                    if (sprite.center.distanceTo(center) < 20) {
+                        shouldPlace = false;
+                        break;
+                    }
+                }
+
+                if (shouldPlace) {
+                    placed.add(new Sprite(center, SPRITE_SIZE, SPRITE_SIZE, DEBRIS_TEXTURES[textureIndex]));
+                    break;
+                }
+
+                attempts++;
+            }
         }
 
         return placed;
@@ -319,8 +333,7 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         for (Sprite sprite : sprites) {
-            int textureIndex = sprite.textureIndex;
-            ResourceLocation texture = sprite.isTitan ? TITAN_TEXTURES[textureIndex] : DEBRIS_TEXTURES[textureIndex];
+            ResourceLocation texture = sprite.spriteLocation;
 
             RenderSystem.setShaderTexture(0, texture);
             bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
@@ -354,7 +367,7 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
             }
 
             float alpha = event.peak() * (1f - (float) eventTime);
-            if (alpha > 0F && (active == null || alpha > active.alpha)) {
+            if (alpha > 0 && (active == null || alpha > active.alpha)) {
                 active = new ActiveFlash(event, alpha);
             }
         }
@@ -446,7 +459,7 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
     private record Basis(Vec3 right, Vec3 up) {
     }
 
-    private record Sprite(Vec3 center, float width, float height, boolean isTitan, int textureIndex) {
+    private record Sprite(Vec3 center, float width, float height, ResourceLocation spriteLocation) {
     }
 
     private record ActiveFlash(DepthsSkyLightning.FlashEvent event, float alpha) {
