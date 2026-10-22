@@ -59,7 +59,7 @@ public class RoaringEyeBlockEntityRenderer implements BlockEntityRenderer<Roarin
         int overlay = OverlayTexture.NO_OVERLAY;
         Matrix4f matrix = poseStack.last().pose();
         Matrix3f normalMatrix = poseStack.last().normal();
-        VertexConsumer consumer = bufferSource.getBuffer(RenderTypes.fountain(textureLocation));
+        VertexConsumer consumer = bufferSource.getBuffer(RenderTypes.getEmissiveRenderType(textureLocation));
 
         consumer.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(i).normal(normalMatrix, 0, 0, 1).endVertex();
         consumer.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(1, 1).overlayCoords(overlay).uv2(i).normal(normalMatrix, 0, 0, 1).endVertex();

@@ -77,6 +77,8 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> KNIGHT_POWERUP = registerSoundEvent("knight_powerup");
     public static RegistryObject<SoundEvent> KNIGHT_SWOON = registerSoundEvent("knight_swoon");
 
+    public static RegistryObject<SoundEvent> LUCIRAMIC_BREAK = registerSoundEvent("luciramic_break");
+    public static RegistryObject<SoundEvent> LUCIRAMIC_STEP = registerSoundEvent("luciramic_step");
     public static RegistryObject<SoundEvent> ANCHOR_OF_LIGHT_PLACE = registerSoundEvent("anchor_of_light_place");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound) {

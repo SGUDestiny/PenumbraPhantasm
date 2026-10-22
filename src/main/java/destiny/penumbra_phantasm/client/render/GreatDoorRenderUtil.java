@@ -63,7 +63,7 @@ public class GreatDoorRenderUtil {
 
         getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(finalTexture)),
                 packedLight, overlay, 1, 1, 1, 1);
-        getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityTranslucentEmissive(finalTexture)),
+        getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.getEmissiveRenderType(finalTexture)),
                 LightTexture.FULL_BRIGHT, overlay, 1, 1, 1, 1);
         pose.popPose();
     }

@@ -20,4 +20,12 @@ public class SoundTypeRegistry {
             () -> SoundEvents.SOUL_SAND_HIT,
             () -> SoundEvents.SOUL_SAND_FALL
     );
+
+    public static final SoundType LUCIRAMIC = new ForgeSoundType(1.0F, 1.0F,
+            () -> SoundRegistry.LUCIRAMIC_BREAK.get(),
+            () -> SoundRegistry.LUCIRAMIC_STEP.get(),
+            () -> SoundRegistry.LUCIRAMIC_BREAK.get(),
+            () -> SoundRegistry.LUCIRAMIC_STEP.get(),
+            () -> SoundRegistry.LUCIRAMIC_STEP.get()
+    );
 }

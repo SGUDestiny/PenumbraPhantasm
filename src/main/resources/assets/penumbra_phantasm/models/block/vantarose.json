@@ -1,5 +1,6 @@
 {
   "parent": "penumbra_phantasm:block/template_cross_layered_emissive",
+  "render_type": "minecraft:translucent",
   "textures": {
     "cross": "penumbra_phantasm:block/vantarose",
     "cross_emissive": "penumbra_phantasm:block/vantarose_emissive"

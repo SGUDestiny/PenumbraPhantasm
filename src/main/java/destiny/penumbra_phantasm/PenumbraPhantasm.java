@@ -2,6 +2,7 @@ package destiny.penumbra_phantasm;
 
 import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.KeyBindings;
+import destiny.penumbra_phantasm.client.render.RenderTypes;
 import destiny.penumbra_phantasm.client.render.blockentity.*;
 import destiny.penumbra_phantasm.client.render.dimension.*;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
@@ -32,6 +33,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.ModList;

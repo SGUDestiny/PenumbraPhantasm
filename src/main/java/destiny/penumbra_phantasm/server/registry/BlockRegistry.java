@@ -516,11 +516,15 @@ public class BlockRegistry {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.POPPY).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
 
+    public static final RegistryObject<Block> LUCIRAMIC_WING = registerBlock("luciramic_wing",
+            () -> new LuciramicWingBlock(BlockBehaviour.Properties.of().destroyTime(3f).offsetType(BlockBehaviour.OffsetType.XZ)
+                    .mapColor(DyeColor.WHITE).sound(SoundTypeRegistry.LUCIRAMIC).requiresCorrectToolForDrops().pushReaction(PushReaction.IGNORE)
+                    .dynamicShape().lightLevel((state) -> 8)));
     public static final RegistryObject<Block> ANCHOR_OF_LIGHT = BLOCKS.register("anchor_of_light",
             () -> new AnchorOfLightBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).lightLevel(state -> 15).noOcclusion().noParticlesOnBreak()));
     public static final RegistryObject<Block> ANCHOR_OF_LIGHT_PART = BLOCKS.register("anchor_of_light_part",
-            () -> new AnchorOfLightPartBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).offsetType(BlockBehaviour.OffsetType.NONE)
+            () -> new AnchorOfLightPartBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).destroyTime(5f).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).noOcclusion().noParticlesOnBreak()));
 
     public static final RegistryObject<Block> DISCARDED_VESSEL = registerBlock("discarded_vessel",

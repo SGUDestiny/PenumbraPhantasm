@@ -81,6 +81,8 @@
 
   "item.penumbra_phantasm.egg": "Egg",
 
+  "item.penumbra_phantasm.luciramic": "Luciramic",
+
   "block.penumbra_phantasm.twilight_grass": "Twilight Grass",
   "block.penumbra_phantasm.twilight_grass_block": "Twilight Grass Block",
   "block.penumbra_phantasm.night_grass": "Night Grass",
@@ -390,6 +392,7 @@
   "block.penumbra_phantasm.potted_vantarose": "Potted Vantarose",
   "block.penumbra_phantasm.roaring_eye": "Roaring Eye",
 
+  "block.penumbra_phantasm.luciramic_wing": "Luciramic Wing",
   "block.penumbra_phantasm.anchor_of_light": "Anchor of Light",
   "block.penumbra_phantasm.anchor_of_light_part": "Anchor of Light Part",
 

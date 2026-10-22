@@ -174,6 +174,9 @@ public class ItemRegistry {
     public static final RegistryObject<Item> NEGATIVE_PHOTONS_BUCKET = ITEMS.register("negative_photons_bucket",
             () -> new ScarletBucketItem(FluidRegistry.SOURCE_NEGATIVE_PHOTONS.get(), new Item.Properties().stacksTo(1).craftRemainder(ItemRegistry.DARK_CANDY_BUCKET.get())));
 
+    public static final RegistryObject<Item> LUCIRAMIC = ITEMS.register("luciramic",
+            () -> new Item(new Item.Properties()));
+
     //Block items
     public static final RegistryObject<Item> FALLEN_DARK_CANDY_LEAVES = ITEMS.register("fallen_dark_candy_leaves",
             () -> new ScalableHorizontalPlaneBlockItem(BlockRegistry.FALLEN_DARK_CANDY_LEAVES.get(), new Item.Properties()));
