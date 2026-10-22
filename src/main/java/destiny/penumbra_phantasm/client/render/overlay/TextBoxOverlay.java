@@ -5,15 +5,11 @@ import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.render.RenderBlitUtil;
 import destiny.penumbra_phantasm.client.render.textbox.DarkWorldDialogue;
 import destiny.penumbra_phantasm.client.render.textbox.TextBoxWriter;
-import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -80,66 +76,14 @@ public class TextBoxOverlay {
             Font font = minecraft.font;
             List<String> lines = writer.visibleLines();
             for (int i = 0; i < lines.size(); i++) {
-                drawGridLine(guiGraphics, font, lines.get(i), TEXT_ORIGIN_X, TEXT_ORIGIN_Y + i * VERTICAL_SPACE);
+                //drawGridLine(guiGraphics, font, lines.get(i), TEXT_ORIGIN_X, TEXT_ORIGIN_Y + i * VERTICAL_SPACE);
             }
 
             if (writer.isChoosing()) {
-                drawChoices(guiGraphics, font, writer);
+                //drawChoices(guiGraphics, font, writer);
             }
 
             pose.popPose();
         }
     });
-
-    public static void drawGridLine(GuiGraphics graphics, Font font, String text, int x, int y) {
-        drawGridLine(graphics, font, text, x, y, 0xFFFFFFFF);
-    }
-
-    public static void drawGridLine(GuiGraphics graphics, Font font, String text, int x, int y, int color) {
-        Style style = TextBoxWriter.FONT_STYLE;
-        int cursor = x;
-        for (int i = 0; i < text.length(); i++) {
-            String ch = String.valueOf(text.charAt(i));
-            Component component = Component.literal(ch).withStyle(style);
-
-            graphics.drawString(font, component, cursor + 1, y + 1, 0xFF111133, false);
-            graphics.drawString(font, component, cursor, y, color, false);
-
-            cursor += HORIZONTAL_SPACE;
-        }
-    }
-
-    public static void drawChoices(GuiGraphics graphics, Font font, TextBoxWriter writer) {
-        int yesW = writer.yesLabel().getString().length() * HORIZONTAL_SPACE;
-        int noW = writer.noLabel().getString().length() * HORIZONTAL_SPACE;
-        int yesX = BOX_WIDTH / 4 - yesW / 2;
-        int noX = BOX_WIDTH * 3 / 4 - noW / 2;
-        int y = (BOX_HEIGHT - 8) / 2;
-        int choice = writer.choiceIndex();
-        int yesColor = choice == 0 ? CHOICE_SELECTED_COLOR : 0xFFFFFFFF;
-        int noColor = choice == 1 ? CHOICE_SELECTED_COLOR : 0xFFFFFFFF;
-
-        drawGridLine(graphics, font, writer.yesLabel().getString(), yesX, y, yesColor);
-        drawGridLine(graphics, font, writer.noLabel().getString(), noX, y, noColor);
-
-        int soulSize = SOUL_SIZE;
-        int soulX;
-        int soulY = (BOX_HEIGHT - soulSize) / 2;
-
-        if (choice < 0) {
-            soulX = BOX_WIDTH / 2 - soulSize / 2;
-        } else {
-            int labelX = choice == 0 ? yesX : noX;
-            soulX = labelX - soulSize - CHOICE_SOUL_GAP;
-        }
-
-        int soulType = 1;
-        if (Minecraft.getInstance().player != null) {
-            soulType = Minecraft.getInstance().player.getCapability(CapabilityRegistry.SOUL)
-                    .map(cap -> Mth.clamp(cap.soulType, 1, 7)).orElse(1);
-        }
-
-        ResourceLocation soul = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/soul_shatter/soul_" + soulType + ".png");
-        graphics.blit(soul, soulX, soulY, soulSize, soulSize, 0, 0, 15, 15, 15, 15);
-    }
 }

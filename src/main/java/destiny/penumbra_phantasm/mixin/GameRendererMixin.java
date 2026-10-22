@@ -29,6 +29,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
@@ -151,14 +153,15 @@ public abstract class GameRendererMixin {
 
 		int scaledWidth = minecraft.getWindow().getGuiScaledWidth();
 		int scaledHeight = minecraft.getWindow().getGuiScaledHeight();
+		PoseStack pose = graphics.pose();
 
 		renderNegativePhotonsOverlay(minecraft, level, player, scaledWidth, scaledHeight);
 
 		renderTextBox(graphics, minecraft, level, player, scaledWidth, scaledHeight);
 
 		renderLandScreenFadeOut(graphics, scaledWidth, scaledHeight, landAlpha);
-		renderTransitionFadeOut(graphics, scaledWidth, scaledHeight, transitionAlpha);
-		renderSealShine(graphics, scaledWidth, scaledHeight, sealShineTick);
+		renderTransitionFadeOut(pose, scaledWidth, scaledHeight, transitionAlpha);
+		renderSealShine(pose, scaledWidth, scaledHeight, sealShineTick);
 		renderSwoon(graphics, scaledWidth, scaledHeight, swoonTicker);
 
 		graphics.flush();
@@ -197,19 +200,14 @@ public abstract class GameRendererMixin {
 	}
 
 	@Unique
-	private void renderTransitionFadeOut(GuiGraphics graphics, int width, int height, float fountainAlpha) {
+	private void renderTransitionFadeOut(PoseStack pose, int width, int height, float fountainAlpha) {
 		if (fountainAlpha > 0f) {
-			RenderSystem.setShader(GameRenderer::getPositionTexShader);
-			RenderSystem.setShaderColor(1f, 1f, 1f, fountainAlpha);
-
-			graphics.blit(FountainDarknessOverlay.DARKNESS, 0, 0, 0, 0, 0, width, height, width, height);
+			RenderBlitUtil.blit(FountainDarknessOverlay.DARKNESS, pose, 0, 1, 1, 1, 1, fountainAlpha, 0, 0, width, height, width, height);
 		}
 	}
 
 	@Unique
-	private void renderSealShine(GuiGraphics graphics, int width, int height, int tick) {
-		PoseStack pose = graphics.pose();
-
+	private void renderSealShine(PoseStack pose, int width, int height, int tick) {
 		if (tick < 0) {
 			return;
 		}
@@ -322,7 +320,7 @@ public abstract class GameRendererMixin {
 
 		pose.translate((width - BOX_WIDTH) / 2f, height - BOX_HEIGHT, 0f);
 
-		guiGraphics.blit(TEXTURE, 0, 0, 0, 0, BOX_WIDTH, BOX_HEIGHT, TEXTURE_SIZE, TEXTURE_SIZE);
+		RenderBlitUtil.blit(TEXTURE, pose, 0, 0, 1, 1, 1, 1, 0, 0, BOX_WIDTH, BOX_HEIGHT, TEXTURE_SIZE, TEXTURE_SIZE);
 
 		float glowDelta = (float) (Util.getMillis() % GLOW_PERIOD_MS) / GLOW_PERIOD_MS;
 		float jewelAlpha = 1f - Mth.sin(glowDelta * Mth.PI);
@@ -337,13 +335,61 @@ public abstract class GameRendererMixin {
 		Font font = minecraft.font;
 		List<String> lines = writer.visibleLines();
 		for (int i = 0; i < lines.size(); i++) {
-			drawGridLine(guiGraphics, font, lines.get(i), TEXT_ORIGIN_X, TEXT_ORIGIN_Y + i * VERTICAL_SPACE);
+			drawGridLine(guiGraphics, font, lines.get(i), TEXT_ORIGIN_X, TEXT_ORIGIN_Y + i * VERTICAL_SPACE, 0xFFFFFF);
 		}
 
 		if (writer.isChoosing()) {
-			drawChoices(guiGraphics, font, writer);
+			drawChoices(guiGraphics, pose, font, writer);
 		}
 
 		pose.popPose();
+	}
+
+	private static void drawChoices(GuiGraphics graphics, PoseStack pose, Font font, TextBoxWriter writer) {
+		int yesW = writer.yesLabel().getString().length() * HORIZONTAL_SPACE;
+		int noW = writer.noLabel().getString().length() * HORIZONTAL_SPACE;
+		int yesX = BOX_WIDTH / 4 - yesW / 2;
+		int noX = BOX_WIDTH * 3 / 4 - noW / 2;
+		int y = (BOX_HEIGHT - 8) / 2;
+		int choice = writer.choiceIndex();
+		int yesColor = choice == 0 ? CHOICE_SELECTED_COLOR : 0xFFFFFFFF;
+		int noColor = choice == 1 ? CHOICE_SELECTED_COLOR : 0xFFFFFFFF;
+
+		drawGridLine(graphics, font, writer.yesLabel().getString(), yesX, y, yesColor);
+		drawGridLine(graphics, font, writer.noLabel().getString(), noX, y, noColor);
+
+		int soulSize = SOUL_SIZE;
+		int soulX;
+		int soulY = (BOX_HEIGHT - soulSize) / 2;
+
+		if (choice < 0) {
+			soulX = BOX_WIDTH / 2 - soulSize / 2;
+		} else {
+			int labelX = choice == 0 ? yesX : noX;
+			soulX = labelX - soulSize - CHOICE_SOUL_GAP;
+		}
+
+		int soulType = 1;
+		if (Minecraft.getInstance().player != null) {
+			soulType = Minecraft.getInstance().player.getCapability(CapabilityRegistry.SOUL)
+					.map(cap -> Mth.clamp(cap.soulType, 1, 7)).orElse(1);
+		}
+
+		ResourceLocation soul = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/soul_shatter/soul_" + soulType + ".png");
+		RenderBlitUtil.blit(soul, pose, soulX, soulY, 1, 1, 1, 1, 0, 0, 0, 0, 15, 15);
+	}
+
+	private static void drawGridLine(GuiGraphics graphics, Font font, String text, int x, int y, int color) {
+		Style style = TextBoxWriter.FONT_STYLE;
+		int cursor = x;
+		for (int i = 0; i < text.length(); i++) {
+			String ch = String.valueOf(text.charAt(i));
+			Component component = Component.literal(ch).withStyle(style);
+
+			graphics.drawString(font, component, cursor + 1, y + 1, 0xFF111133, false);
+			graphics.drawString(font, component, cursor, y, color, false);
+
+			cursor += HORIZONTAL_SPACE;
+		}
 	}
 }

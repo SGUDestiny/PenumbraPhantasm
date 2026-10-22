@@ -65,95 +65,100 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
     public int eggRoomFrontHint;
 
     public void tick(Level level, Player player) {
+        //Intro on first world login
         if (!seenIntro) {
-            if (player instanceof ServerPlayer serverPlayer) {
-                ServerLevel serverLevel = serverPlayer.serverLevel();
-                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundIntroPacket(player.getOnPos().above(), player.level().dimension()));
+            if (player instanceof ServerPlayer serverPlayer && level instanceof ServerLevel serverLevel) {
+                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+                        new ClientBoundIntroPacket(player.getOnPos().above(), level.dimension()));
+
                 serverLevel.getServer().execute(() -> {
                     if (!serverPlayer.hasDisconnected()) {
                         serverLevel.removePlayerImmediately(serverPlayer, Entity.RemovalReason.CHANGED_DIMENSION);
                     }
                 });
             }
+
             seenIntro = true;
         }
 
-        if (!DarkWorldUtil.isDepths(level)) {
-            if (hasOwnSoulHearth(player)) {
-                if (determination < 100) {
-                    if (level.getGameTime() % (5 * 20) == 0) {
-                        determination = determination + 1;
+        AnchorOfLightCapability anchorCapability = level.getCapability(CapabilityRegistry.ANCHOR_OF_LIGHT).resolve().orElse(null);
+
+        //If not depths, or in depths in vicinity of an anchor, tick determination up
+        if (!DarkWorldUtil.isDepths(level) && anchorCapability != null && anchorCapability.isProtectedByAnchor(anchorCapability, player.blockPosition())) {
+            increaseDetermination(level, player, 5 * 20);
+        } else {
+            //If in depths, tick determination down or if zero, deal petrification damage
+            if (determination > 0) {
+                //If not near fountain, tick determination down
+                if (isInNegativePhotons(level, player)) {
+                    decreaseDetermination(level, player, 5);
+                } else {
+                    //Else if in negative photons, tick determination down fast
+                    DarkFountainCapability fountainCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).resolve().orElse(null);
+
+                    //Get capability, sort fountains by distance to get closest fountain
+                    if (fountainCapability != null) {
+                        BlockPos playerPos = player.blockPosition();
+                        List<BlockPos> fountainPoses = new ArrayList<>();
+
+                        for (Map.Entry<BlockPos, DarkFountain> entry : fountainCapability.darkFountains.entrySet()) {
+                            BlockPos fountainPos = entry.getKey();
+
+                            fountainPoses.add(fountainPos);
+                        }
+
+                        fountainPoses.sort((Comparator.comparingDouble(pos -> pos.getCenter().distanceTo(playerPos.getCenter()))));
+
+                        //If not near a fountain, tick determination down
+                        if (fountainPoses.isEmpty() || playerPos.distSqr(fountainPoses.get(0)) > Mth.square(96)) {
+                            decreaseDetermination(level, player, 5 * 20);
+                        }
                     }
                 }
-            }
-        } else {
-            AnchorOfLightCapability anchorCapability = level.getCapability(CapabilityRegistry.ANCHOR_OF_LIGHT).resolve().orElse(null);
+            } else {
+                //Remove all potentially beneficial effects so players suffer
+                List<MobEffect> effectsToRemove = new ArrayList<>();
+                for (MobEffectInstance effect : player.getActiveEffects()) {
+                    MobEffectCategory category = effect.getEffect().getCategory();
 
-            if (anchorCapability == null || !anchorCapability.isProtectedByAnchor(anchorCapability, player.blockPosition())) {
-                if (determination > 0) {
-                    if (isInNegativePhotons(level, player)) {
-                        if (!player.isCreative() && !player.isSpectator()) {
-                            if (level.getGameTime() % 5 == 0) {
-                                if (determination > 0) {
-                                    determination = determination - 1;
-                                }
-                            }
-                        }
-                    } else {
-                        DarkFountainCapability fountainCapability = null;
-                        LazyOptional<DarkFountainCapability> lazyFountainCapability = level.getCapability(CapabilityRegistry.DARK_FOUNTAIN);
-                        if (lazyFountainCapability.isPresent() && lazyFountainCapability.resolve().isPresent()) {
-                            fountainCapability = lazyFountainCapability.resolve().get();
-                        }
-
-                        if (fountainCapability != null) {
-                            BlockPos playerPos = player.blockPosition();
-                            List<BlockPos> fountainPoses = new ArrayList<>();
-
-                            for (Map.Entry<BlockPos, DarkFountain> entry : fountainCapability.darkFountains.entrySet()) {
-                                BlockPos fountainPos = entry.getKey();
-
-                                fountainPoses.add(fountainPos);
-                            }
-
-                            fountainPoses.sort((Comparator.comparingDouble(pos -> pos.getCenter().distanceTo(playerPos.getCenter()))));
-
-                            if (fountainPoses.isEmpty() || playerPos.distSqr(fountainPoses.get(0)) > Mth.square(96)) {
-                                if (!player.isCreative() && !player.isSpectator()) {
-                                    if (level.getGameTime() % (5 * 20) == 0) {
-                                        determination = determination - 1;
-                                    }
-                                }
-                            }
-                        }
+                    if (category == MobEffectCategory.BENEFICIAL || category == MobEffectCategory.NEUTRAL) {
+                        effectsToRemove.add(effect.getEffect());
                     }
-                } else {
-                    //Remove all potentially beneficial effects so players suffer
-                    List<MobEffect> effectsToRemove = new ArrayList<>();
-                    for (MobEffectInstance effect : player.getActiveEffects()) {
-                        MobEffectCategory category = effect.getEffect().getCategory();
+                }
 
-                        if (category == MobEffectCategory.BENEFICIAL || category == MobEffectCategory.NEUTRAL) {
-                            effectsToRemove.add(effect.getEffect());
-                        }
-                    }
+                for (MobEffect mobEffect : effectsToRemove) {
+                    player.removeEffect(mobEffect);
+                }
 
-                    for (MobEffect mobEffect : effectsToRemove) {
-                        player.removeEffect(mobEffect);
-                    }
+                //Remove saturation so players suffer even more
+                player.getFoodData().setSaturation(0f);
 
-                    //Remove saturation so players suffer even more
-                    player.getFoodData().setSaturation(0f);
-
-                    if (level.getGameTime() % 60 == 0) {
-                        player.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.PETRIFICATION), 6);
-                    }
+                if (level.getGameTime() % 60 == 0) {
+                    player.hurt(DamageTypeRegistry.getSource(level, DamageTypeRegistry.PETRIFICATION), 6);
                 }
             }
         }
 
         if (player instanceof ServerPlayer serverPlayer) {
             PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new ClientBoundSoulSyncPacket(seenIntro, diedWithSoulHearth, soulType, determination, connectionLevel, eggRoomManGone, eggObtained));
+        }
+    }
+
+    public void increaseDetermination(Level level, Player player, int tickRate) {
+        if (hasOwnSoulHearth(player)) {
+            if (determination < 100) {
+                if (level.getGameTime() % tickRate == 0) {
+                    determination = determination + 1;
+                }
+            }
+        }
+    }
+
+    public void decreaseDetermination(Level level, Player player, int tickRate) {
+        if (!player.isCreative() && !player.isSpectator()) {
+            if (level.getGameTime() % tickRate == 0) {
+                determination = determination - 1;
+            }
         }
     }
 
@@ -182,8 +187,10 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
     public static boolean isInNegativePhotons(Level level, Player player) {
         FluidType fluidUp = player.getEyeInFluidType();
         FluidType fluidDown = level.getFluidState(player.getOnPos().above()).getFluidType();
+        FluidType fluidDowner = level.getFluidState(player.getOnPos()).getFluidType();
 
-        return fluidUp == FluidTypeRegistry.NEGATIVE_PHOTONS.get() || fluidDown == FluidTypeRegistry.NEGATIVE_PHOTONS.get();
+        return fluidUp == FluidTypeRegistry.NEGATIVE_PHOTONS.get() || fluidDown == FluidTypeRegistry.NEGATIVE_PHOTONS.get()
+                || fluidDowner == FluidTypeRegistry.NEGATIVE_PHOTONS.get();
     }
 
     @Override

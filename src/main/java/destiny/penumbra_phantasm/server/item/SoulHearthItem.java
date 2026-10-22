@@ -99,6 +99,7 @@ public class SoulHearthItem extends Item {
 
         if (stack.getTag() == null) return InteractionResultHolder.fail(stack);
         if (!DarkWorldUtil.isDarkWorld(level)) return InteractionResultHolder.pass(stack);
+        if (!player.getMainHandItem().isEmpty() && hand == InteractionHand.OFF_HAND) return InteractionResultHolder.pass(stack);
 
         //Player rejection textbox
         UUID ownerUuid = stack.getTag().getUUID(OWNER_UUID);

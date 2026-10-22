@@ -102,8 +102,7 @@ public class KnifeItem extends SwordItem {
         ItemStack stack = player.getItemInHand(hand);
         CompoundTag tag = stack.getOrCreateTag();
 
-        if (hand == InteractionHand.OFF_HAND)
-            return InteractionResultHolder.pass(stack);
+        if (hand == InteractionHand.OFF_HAND) return InteractionResultHolder.pass(stack);
 
         if (level.isClientSide()) {
             player.startUsingItem(hand);
@@ -112,9 +111,8 @@ public class KnifeItem extends SwordItem {
 
         ensureTagDefaults(tag);
 
-        if (tag.getInt(MAKING_TICK) >= 0) {
-            return InteractionResultHolder.pass(stack);
-        }
+        if (tag.getInt(MAKING_TICK) >= 0) return InteractionResultHolder.pass(stack);
+
 
         //Cancel making a fountain in depths
         if (DarkWorldUtil.isDepths(level)) {
@@ -122,6 +120,7 @@ public class KnifeItem extends SwordItem {
                 PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
                         new ClientBoundTextBoxPacket(ClientBoundTextBoxPacket.MAKING_FOUNTAIN_INSIDE_DEPTHS));
             }
+
             return InteractionResultHolder.fail(stack);
         }
 
@@ -131,6 +130,7 @@ public class KnifeItem extends SwordItem {
                 PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
                         new ClientBoundTextBoxPacket(ClientBoundTextBoxPacket.MAKING_FOUNTAIN_INSIDE_DARK_WORLD));
             }
+
             return InteractionResultHolder.fail(stack);
         }
 
