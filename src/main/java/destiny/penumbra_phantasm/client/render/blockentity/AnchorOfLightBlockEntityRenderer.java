@@ -11,11 +11,14 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3d;
+import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
 import software.bernie.geckolib.model.DefaultedBlockGeoModel;
@@ -35,7 +38,16 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
 
         poseStack.pushPose();
 
-        poseStack.translate(0.5f, 0.5f, 0.5f);
+        GeoBone middleBone = this.model.getBone("Middle").orElse(null);
+        if (middleBone == null) {
+            poseStack.popPose();
+            return;
+        }
+
+        poseStack.translate(0.5f, 0.5f, 0);
+
+        Vector3d localPos = middleBone.getLocalPosition();
+        poseStack.translate(localPos.x, localPos.y, localPos.z);
 
         poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
@@ -67,26 +79,30 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
 
     @Override
     public void renderRecursively(PoseStack poseStack, AnchorOfLightBlockEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        if (bone.isTrackingMatrices()) {
+            Matrix4f poseState = new Matrix4f(poseStack.last().pose());
+            Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.blockRenderTranslations);
+            Matrix4f worldState = new Matrix4f(localMatrix);
+            BlockPos pos = this.animatable.getBlockPos();
+            bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
+            bone.setLocalSpaceMatrix(localMatrix);
+            bone.setWorldSpaceMatrix(worldState.translate(new Vector3f((float)pos.getX(), (float)pos.getY(), (float)pos.getZ())));
+        }
+
         int soulType = animatable.soulType;
-
         ResourceLocation anchorTexture = ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "textures/block/anchor_of_light_" + soulType + ".png");
-
         RenderType emissiveType = RenderTypes.getEmissiveRenderType(anchorTexture);
         VertexConsumer emissiveConsumer = bufferSource.getBuffer(emissiveType);
 
         poseStack.pushPose();
-        RenderUtils.translateMatrixToBone(poseStack, bone);
-        RenderUtils.translateToPivotPoint(poseStack, bone);
-        RenderUtils.rotateMatrixAroundBone(poseStack, bone);
-        RenderUtils.scaleMatrixForBone(poseStack, bone);
-        RenderUtils.translateAwayFromPivotPoint(poseStack, bone);
-
+        RenderUtils.prepMatrixForBone(poseStack, bone);
         super.renderCubesOfBone(poseStack, bone, emissiveConsumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
 
-        for (GeoBone childBone : bone.getChildBones()) {
-            this.renderRecursively(poseStack, animatable, childBone, emissiveType, bufferSource, emissiveConsumer, isReRender, partialTick, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
+        if (!isReRender) {
+            this.applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
         }
 
+        this.renderChildBones(poseStack, animatable, bone, emissiveType, bufferSource, emissiveConsumer, isReRender, partialTick, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
         poseStack.popPose();
     }
 
