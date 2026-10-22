@@ -20,15 +20,18 @@ public class AnchorOfLightBlockItem extends BlockItem {
     }
 
     @Override
-    protected boolean canPlace(BlockPlaceContext pContext, BlockState pState) {
-        Level level = pContext.getLevel();
-        BlockPos pos = pContext.getClickedPos();
+    protected boolean canPlace(BlockPlaceContext context, BlockState state) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
 
-        boolean hasFreeSpace = level.getBlockState(pos).isAir() && level.getBlockState(pos.offset(0, -1, 0)).isAir() &&
+        BlockPos attachmentPos = pos.above();
+        BlockState attachmentState = level.getBlockState(attachmentPos);
+
+        if (context.getClickedFace() != Direction.DOWN || !attachmentState.isCollisionShapeFullBlock(level, attachmentPos)) return false;
+
+        return level.getBlockState(pos).isAir() && level.getBlockState(pos.offset(0, -1, 0)).isAir() &&
                 level.getBlockState(pos.offset(0, -2, 0)).isAir() && level.getBlockState(pos.offset(0, -3, 0)).isAir() &&
                 level.getBlockState(pos.offset(0, -4, 0)).isAir();
-
-        return hasFreeSpace && pContext.getClickedFace() == Direction.DOWN;
     }
 
     @Override

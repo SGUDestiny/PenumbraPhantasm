@@ -123,4 +123,19 @@ public class RenderTypes extends RenderType {
                         .createCompositeState(false)
         );
     }
+
+    public static RenderType getEmissiveNoCullRenderType(ResourceLocation texture) {
+        return RenderType.create("emissive_no_cull", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true,
+                RenderType.CompositeState.builder()
+                        .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+                        .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_SHADOW_SHADER)
+                        .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                        .setLightmapState(RenderStateShard.LIGHTMAP)
+                        .setOverlayState(RenderStateShard.NO_OVERLAY)
+                        .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
+                        .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+                        .setCullState(RenderStateShard.NO_CULL)
+                        .createCompositeState(false)
+        );
+    }
 }

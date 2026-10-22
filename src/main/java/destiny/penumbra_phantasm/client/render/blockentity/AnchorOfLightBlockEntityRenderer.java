@@ -38,13 +38,13 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
 
         poseStack.pushPose();
 
-        GeoBone middleBone = this.model.getBone("Middle").orElse(null);
+        GeoBone middleBone = model.getBone("Middle").orElse(null);
         if (middleBone == null) {
             poseStack.popPose();
             return;
         }
 
-        poseStack.translate(0.5f, 0.5f, 0);
+        //poseStack.translate(0.5f, 0.5f, 0);
 
         Vector3d localPos = middleBone.getLocalPosition();
         poseStack.translate(localPos.x, localPos.y, localPos.z);
@@ -69,21 +69,27 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
         Matrix3f normalMatrix = poseStack.last().normal();
         VertexConsumer consumer = bufferSource.getBuffer(RenderTypes.fountainShockwave(ANCHOR_OF_LIGHT_GLOW));
 
-        consumer.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-        consumer.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-        consumer.vertex(matrix, 0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(1, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
-        consumer.vertex(matrix, -0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(0, 0).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
+        consumer.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight)
+                .normal(normalMatrix, 0, 0, 1).endVertex();
+        consumer.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(1, 1).overlayCoords(overlay).uv2(packedLight)
+                .normal(normalMatrix, 0, 0, 1).endVertex();
+        consumer.vertex(matrix, 0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(1, 0).overlayCoords(overlay).uv2(packedLight)
+                .normal(normalMatrix, 0, 0, 1).endVertex();
+        consumer.vertex(matrix, -0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(0, 0).overlayCoords(overlay).uv2(packedLight)
+                .normal(normalMatrix, 0, 0, 1).endVertex();
 
         poseStack.popPose();
     }
 
     @Override
-    public void renderRecursively(PoseStack poseStack, AnchorOfLightBlockEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderRecursively(PoseStack poseStack, AnchorOfLightBlockEntity animatable, GeoBone bone, RenderType renderType, MultiBufferSource bufferSource,
+                                  VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green,
+                                  float blue, float alpha) {
         if (bone.isTrackingMatrices()) {
             Matrix4f poseState = new Matrix4f(poseStack.last().pose());
             Matrix4f localMatrix = RenderUtils.invertAndMultiplyMatrices(poseState, this.blockRenderTranslations);
             Matrix4f worldState = new Matrix4f(localMatrix);
-            BlockPos pos = this.animatable.getBlockPos();
+            BlockPos pos = animatable.getBlockPos();
             bone.setModelSpaceMatrix(RenderUtils.invertAndMultiplyMatrices(poseState, this.modelRenderTranslations));
             bone.setLocalSpaceMatrix(localMatrix);
             bone.setWorldSpaceMatrix(worldState.translate(new Vector3f((float)pos.getX(), (float)pos.getY(), (float)pos.getZ())));
@@ -91,7 +97,7 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
 
         int soulType = animatable.soulType;
         ResourceLocation anchorTexture = ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "textures/block/anchor_of_light_" + soulType + ".png");
-        RenderType emissiveType = RenderTypes.getEmissiveRenderType(anchorTexture);
+        RenderType emissiveType = RenderTypes.getEmissiveNoCullRenderType(anchorTexture);
         VertexConsumer emissiveConsumer = bufferSource.getBuffer(emissiveType);
 
         poseStack.pushPose();
@@ -99,10 +105,13 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
         super.renderCubesOfBone(poseStack, bone, emissiveConsumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
 
         if (!isReRender) {
-            this.applyRenderLayersForBone(poseStack, animatable, bone, renderType, bufferSource, buffer, partialTick, packedLight, packedOverlay);
+            this.applyRenderLayersForBone(poseStack, animatable, bone, emissiveType, bufferSource, emissiveConsumer, partialTick, LightTexture.FULL_BRIGHT,
+                    OverlayTexture.NO_OVERLAY);
         }
 
-        this.renderChildBones(poseStack, animatable, bone, emissiveType, bufferSource, emissiveConsumer, isReRender, partialTick, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
+        this.renderChildBones(poseStack, animatable, bone, emissiveType, bufferSource, emissiveConsumer, isReRender, partialTick, LightTexture.FULL_BRIGHT,
+                OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
+
         poseStack.popPose();
     }
 
