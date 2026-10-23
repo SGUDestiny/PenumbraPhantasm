@@ -33,57 +33,6 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
     }
 
     @Override
-    public void preRender(PoseStack poseStack, AnchorOfLightBlockEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
-        if(true)
-            return;
-
-        poseStack.pushPose();
-
-        GeoBone middleBone = model.getBone("Middle").orElse(null);
-        if (middleBone == null) {
-            poseStack.popPose();
-            return;
-        }
-
-//        poseStack.translate(0.5f, 0.5f, 0);
-
-        Vector3d localPos = middleBone.getLocalPosition();
-        poseStack.translate(localPos.x, localPos.y, localPos.z);
-
-        poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-        poseStack.mulPose(Axis.YP.rotationDegrees(180));
-
-        float animationTicker = animatable.animationTicker + partialTick;
-        float scale;
-        if (animationTicker <= 10) {
-            scale = Mth.lerp(animationTicker / 10f, 0f, 5f);
-        } else if (animationTicker < 17) {
-            scale = Mth.lerp((animationTicker - 10f) / 7f, 5f, 4f);
-        } else {
-            scale = 4f;
-        }
-
-        poseStack.scale(scale, scale, 1f);
-
-        int overlay = OverlayTexture.NO_OVERLAY;
-        Matrix4f matrix = poseStack.last().pose();
-        Matrix3f normalMatrix = poseStack.last().normal();
-        VertexConsumer consumer = bufferSource.getBuffer(RenderTypes.fountainShockwave(ANCHOR_OF_LIGHT_GLOW));
-
-        consumer.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight)
-                .normal(normalMatrix, 0, 0, 1).endVertex();
-        consumer.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(1, 1).overlayCoords(overlay).uv2(packedLight)
-                .normal(normalMatrix, 0, 0, 1).endVertex();
-        consumer.vertex(matrix, 0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(1, 0).overlayCoords(overlay).uv2(packedLight)
-                .normal(normalMatrix, 0, 0, 1).endVertex();
-        consumer.vertex(matrix, -0.5f, 0.5f, 0).color(255, 255, 255, 255).uv(0, 0).overlayCoords(overlay).uv2(packedLight)
-                .normal(normalMatrix, 0, 0, 1).endVertex();
-
-        poseStack.popPose();
-    }
-
-    @Override
     public void postRender(PoseStack poseStack, AnchorOfLightBlockEntity animatable, BakedGeoModel model,
                            MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick,
                            int packedLight, int packedOverlay, float red, float green, float blue, float alpha)
