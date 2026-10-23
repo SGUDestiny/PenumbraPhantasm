@@ -17,7 +17,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -33,28 +32,18 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
     }
 
     @Override
-    public void postRender(PoseStack poseStack, AnchorOfLightBlockEntity animatable, BakedGeoModel model,
+    public void preRender(PoseStack poseStack, AnchorOfLightBlockEntity animatable, BakedGeoModel model,
                            MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick,
-                           int packedLight, int packedOverlay, float red, float green, float blue, float alpha)
-    {
-        super.postRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight,
+                           int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight,
                 packedOverlay, red, green, blue, alpha);
 
         poseStack.pushPose();
 
-        GeoBone middleBone = model.getBone("Middle").orElse(null);
-        if (middleBone == null) {
-            poseStack.popPose();
-            return;
-        }
-
-        //        poseStack.translate(0.5f, 0.5f, 0);
-
-        Vector3d localPos = middleBone.getLocalPosition();
-        poseStack.translate(-localPos.x+1, localPos.y+0.5, localPos.z-1);
+        poseStack.translate(0.5f, 0.5f, 0.5f);
 
         poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
-        poseStack.mulPose(Axis.YP.rotationDegrees(90));
+        poseStack.mulPose(Axis.YP.rotationDegrees(180));
 
         float animationTicker = animatable.animationTicker + partialTick;
         float scale;
@@ -71,7 +60,7 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
         int overlay = OverlayTexture.NO_OVERLAY;
         Matrix4f matrix = poseStack.last().pose();
         Matrix3f normalMatrix = poseStack.last().normal();
-        VertexConsumer consumer = bufferSource.getBuffer(RenderTypes.fountainShockwave(ANCHOR_OF_LIGHT_GLOW));
+        VertexConsumer consumer = bufferSource.getBuffer(RenderTypes.getEmissiveRenderNoDepthRenderType(ANCHOR_OF_LIGHT_GLOW));
 
         consumer.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight)
                 .normal(normalMatrix, 0, 0, 1).endVertex();
@@ -101,7 +90,7 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
 
         int soulType = animatable.soulType;
         ResourceLocation anchorTexture = ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "textures/block/anchor_of_light_" + soulType + ".png");
-        RenderType emissiveType = RenderTypes.getEmissiveNoCullRenderType(anchorTexture);
+        RenderType emissiveType = RenderTypes.getEmissiveRenderType(anchorTexture);
         VertexConsumer emissiveConsumer = bufferSource.getBuffer(emissiveType);
 
         poseStack.pushPose();
@@ -109,11 +98,11 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
         super.renderCubesOfBone(poseStack, bone, emissiveConsumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
 
         if (!isReRender) {
-            this.applyRenderLayersForBone(poseStack, animatable, bone, emissiveType, bufferSource, emissiveConsumer, partialTick, LightTexture.FULL_BRIGHT,
+            super.applyRenderLayersForBone(poseStack, animatable, bone, emissiveType, bufferSource, emissiveConsumer, partialTick, LightTexture.FULL_BRIGHT,
                     OverlayTexture.NO_OVERLAY);
         }
 
-        this.renderChildBones(poseStack, animatable, bone, emissiveType, bufferSource, emissiveConsumer, isReRender, partialTick, LightTexture.FULL_BRIGHT,
+        super.renderChildBones(poseStack, animatable, bone, emissiveType, bufferSource, emissiveConsumer, isReRender, partialTick, LightTexture.FULL_BRIGHT,
                 OverlayTexture.NO_OVERLAY, red, green, blue, alpha);
 
         poseStack.popPose();

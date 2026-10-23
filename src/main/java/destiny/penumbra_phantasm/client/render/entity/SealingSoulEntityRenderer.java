@@ -62,7 +62,7 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
 
         Matrix4f soulMatrix = pose.last().pose();
         Matrix3f soulNormalMatrix = pose.last().normal();
-        VertexConsumer soulConsumer = buffer.getBuffer(RenderTypes.fountain(getTextureLocation(sealingSoulEntity)));
+        VertexConsumer soulConsumer = buffer.getBuffer(RenderTypes.getFountainRenderType(getTextureLocation(sealingSoulEntity)));
         int overlay = OverlayTexture.NO_OVERLAY;
 
         soulConsumer.vertex(soulMatrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(soulNormalMatrix, 0, 0, 1).endVertex();
@@ -81,7 +81,7 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
 
         Matrix4f matrix = pose.last().pose();
         Matrix3f normalMatrix = pose.last().normal();
-        VertexConsumer consumerA = buffer.getBuffer(RenderTypes.fountain(getTextureLocation(sealingSoulEntity)));
+        VertexConsumer consumerA = buffer.getBuffer(RenderTypes.getFountainRenderType(getTextureLocation(sealingSoulEntity)));
 
         consumerA.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, (int)(soulAlpha * 255)).uv(0, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();
         consumerA.vertex(matrix, 0.5f, -0.5f, 0).color(255, 255, 255, (int)(soulAlpha * 255)).uv(1, 1).overlayCoords(overlay).uv2(packedLight).normal(normalMatrix, 0, 0, 1).endVertex();

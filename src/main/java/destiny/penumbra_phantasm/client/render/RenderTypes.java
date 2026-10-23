@@ -11,29 +11,29 @@ public class RenderTypes extends RenderType {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
     }
 
-    public static RenderType fountain(ResourceLocation rl) {
+    public static RenderType getFountainRenderType(ResourceLocation texture) {
         return create("fountain", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
-                        .setTextureState(new TextureStateShard(rl, false, false))
+                        .setTextureState(new TextureStateShard(texture, false, false))
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setCullState(CULL)
                         .createCompositeState(true));
     }
 
-    public static RenderType fountainNoCull(ResourceLocation rl) {
+    public static RenderType getFountainNoCullRenderType(ResourceLocation texture) {
         return create("fountain_no_cull", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
-                        .setTextureState(new TextureStateShard(rl, false, false))
+                        .setTextureState(new TextureStateShard(texture, false, false))
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setCullState(NO_CULL)
                         .createCompositeState(true));
     }
 
-    public static RenderType fountainBeam() {
+    public static RenderType getFountainBeamRenderType() {
         return create("fountain_beam", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
@@ -45,12 +45,12 @@ public class RenderTypes extends RenderType {
                         .createCompositeState(true));
     }
 
-    public static RenderType fountainShockwave(ResourceLocation rl) {
+    public static RenderType getFountainShockwaveRenderType(ResourceLocation texture) {
         return create("fountain_shockwave", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
-                        .setTextureState(new TextureStateShard(rl, false, false))
+                        .setTextureState(new TextureStateShard(texture, false, false))
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setWriteMaskState(COLOR_WRITE)
                         .setCullState(CULL)
@@ -60,17 +60,17 @@ public class RenderTypes extends RenderType {
     private static final RenderStateShard.ShaderStateShard FOUNTAIN_MASKED_SHADER =
             new RenderStateShard.ShaderStateShard(() -> ModShaders.FOUNTAIN_MASKED);
 
-    public static RenderType fountainMaskedPortal(ResourceLocation maskTex, ResourceLocation flowTex, boolean depthWrite) {
+    public static RenderType getFountainMaskedRenderType(ResourceLocation maskTexture, ResourceLocation flowTexture, boolean shouldWriteDepth) {
         CompositeState.CompositeStateBuilder builder = RenderType.CompositeState.builder()
                 .setShaderState(FOUNTAIN_MASKED_SHADER)
                 .setTextureState(
                         RenderStateShard.MultiTextureStateShard.builder()
-                                .add(maskTex, false, false)
-                                .add(flowTex, false, false)
+                                .add(maskTexture, false, false)
+                                .add(flowTexture, false, false)
                                 .build()
                 )
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY);
-        if (!depthWrite)
+        if (!shouldWriteDepth)
             builder.setWriteMaskState(COLOR_WRITE);
 
         return RenderType.create(
@@ -84,18 +84,18 @@ public class RenderTypes extends RenderType {
         );
     }
 
-    public static RenderType negativePhotons(ResourceLocation maskTex, ResourceLocation flowTex, boolean depthWrite) {
+    public static RenderType getNegativePhotonsRenderType(ResourceLocation maskTexture, ResourceLocation flowTexture, boolean shouldWriteDepth) {
         CompositeState.CompositeStateBuilder builder = RenderType.CompositeState.builder()
                 .setShaderState(FOUNTAIN_MASKED_SHADER)
                 .setTextureState(
                         RenderStateShard.MultiTextureStateShard.builder()
-                                .add(maskTex, false, false)
-                                .add(flowTex, false, false)
+                                .add(maskTexture, false, false)
+                                .add(flowTexture, false, false)
                                 .build()
                 )
                 .setCullState(RenderStateShard.NO_CULL)
                 .setTransparencyState(TRANSLUCENT_TRANSPARENCY);
-        if (!depthWrite)
+        if (!shouldWriteDepth)
             builder.setWriteMaskState(COLOR_WRITE);
 
         return RenderType.create(
@@ -110,32 +110,26 @@ public class RenderTypes extends RenderType {
     }
 
     public static RenderType getEmissiveRenderType(ResourceLocation texture) {
-        return RenderType.create("emissive", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true,
+        return create("emissive", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
+                false, false,
                 RenderType.CompositeState.builder()
-                        .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
-                        .setShaderState(RenderStateShard.RENDERTYPE_EYES_SHADER)
-                        .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                        .setLightmapState(RenderStateShard.LIGHTMAP)
-                        .setOverlayState(RenderStateShard.NO_OVERLAY)
-                        .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
-                        .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
-                        .setCullState(RenderStateShard.CULL)
-                        .createCompositeState(false)
-        );
+                        .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
+                        .setTextureState(new TextureStateShard(texture, false, false))
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setWriteMaskState(COLOR_DEPTH_WRITE)
+                        .setCullState(CULL)
+                        .createCompositeState(true));
     }
 
-    public static RenderType getEmissiveNoCullRenderType(ResourceLocation texture) {
-        return RenderType.create("emissive_no_cull", DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS, 256, false, true,
+    public static RenderType getEmissiveRenderNoDepthRenderType(ResourceLocation texture) {
+        return create("emissive", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
+                false, false,
                 RenderType.CompositeState.builder()
-                        .setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
-                        .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_SHADOW_SHADER)
-                        .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                        .setLightmapState(RenderStateShard.LIGHTMAP)
-                        .setOverlayState(RenderStateShard.NO_OVERLAY)
-                        .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
-                        .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
-                        .setCullState(RenderStateShard.NO_CULL)
-                        .createCompositeState(false)
-        );
+                        .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
+                        .setTextureState(new TextureStateShard(texture, false, false))
+                        .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+                        .setWriteMaskState(COLOR_WRITE)
+                        .setCullState(CULL)
+                        .createCompositeState(true));
     }
 }

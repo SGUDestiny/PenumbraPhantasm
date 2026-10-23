@@ -10,7 +10,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -98,7 +97,7 @@ public class NegativePhotonsRenderUtil
             }
         }
 
-        RenderType renderType = RenderTypes.negativePhotons(WHITE_SCREEN, IMAGE_DEPTH, true);
+        RenderType renderType = RenderTypes.getNegativePhotonsRenderType(WHITE_SCREEN, IMAGE_DEPTH, true);
         renderType.setupRenderState();
 
         RenderSystem.setShader(() -> shaderInstance);
@@ -151,7 +150,7 @@ public class NegativePhotonsRenderUtil
             return;
         }
 
-        RenderType renderType = RenderTypes.negativePhotons(WHITE_SCREEN, IMAGE_DEPTH, true);
+        RenderType renderType = RenderTypes.getNegativePhotonsRenderType(WHITE_SCREEN, IMAGE_DEPTH, true);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, renderType.format());
