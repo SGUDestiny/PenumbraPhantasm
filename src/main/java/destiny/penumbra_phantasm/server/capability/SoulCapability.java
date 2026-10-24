@@ -84,7 +84,7 @@ public class SoulCapability implements INBTSerializable<CompoundTag> {
         AnchorOfLightCapability anchorCapability = level.getCapability(CapabilityRegistry.ANCHOR_OF_LIGHT).resolve().orElse(null);
 
         //If not depths, or in depths in vicinity of an anchor, tick determination up
-        if (!DarkWorldUtil.isDepths(level) && anchorCapability != null && anchorCapability.isProtectedByAnchor(anchorCapability, player.blockPosition())) {
+        if (!DarkWorldUtil.isDepths(level) || (anchorCapability != null && anchorCapability.isProtectedByAnchor(anchorCapability, player.blockPosition()))) {
             increaseDetermination(level, player, 5 * 20);
         } else {
             //If in depths, tick determination down or if zero, deal petrification damage
