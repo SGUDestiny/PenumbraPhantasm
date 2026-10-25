@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "D": {
+      "item": "penumbra_phantasm:dark_candy"
+    },
+    "L": {
+      "item": "penumbra_phantasm:luciramic"
+    }
+  },
+  "pattern": [
+    " L ",
+    "LDL",
+    "LLL"
+  ],
+  "result": {
+    "item": "penumbra_phantasm:anchor_of_light"
+  },
+  "show_notification": true
+}

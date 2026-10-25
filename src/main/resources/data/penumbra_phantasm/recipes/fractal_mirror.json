@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "L": {
+      "item": "penumbra_phantasm:luciramic"
+    },
+    "N": {
+      "item": "penumbra_phantasm:negative_photons_bucket"
+    },
+    "S": {
+      "item": "penumbra_phantasm:dark_candy_stick"
+    }
+  },
+  "pattern": [
+    "LLL",
+    "LNL",
+    "LSL"
+  ],
+  "result": {
+    "count": 1,
+    "item": "penumbra_phantasm:fractal_mirror"
+  },
+  "show_notification": true
+}

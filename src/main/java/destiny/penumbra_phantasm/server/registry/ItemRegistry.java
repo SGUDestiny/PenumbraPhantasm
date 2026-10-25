@@ -92,10 +92,10 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> SOUL_HEARTH = ITEMS.register("soul_hearth",
             () -> new SoulHearthItem(basicItem()));
-    public static final RegistryObject<Item> DETERMINATION_INJECTION = ITEMS.register("determination_injection",
-            () -> new DeterminationInjectionItem(basicItem()));
     public static final RegistryObject<Item> EMPTY_INJECTION = ITEMS.register("empty_injection",
             () -> new EmptyInjectionItem(new Item.Properties()));
+    public static final RegistryObject<Item> DETERMINATION_INJECTION = ITEMS.register("determination_injection",
+            () -> new DeterminationInjectionItem(basicItem().craftRemainder(ItemRegistry.EMPTY_INJECTION.get())));
     public static final RegistryObject<Item> DETERMINATION_CANISTER = ITEMS.register("determination_canister",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> HEARTH_SOUL = ITEMS.register("hearth_soul",
