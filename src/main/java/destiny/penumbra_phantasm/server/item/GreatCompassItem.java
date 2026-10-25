@@ -141,7 +141,7 @@ public class GreatCompassItem extends Item implements Vanishable {
                 ServerLevel serverLevel = (ServerLevel) pLevel;
                 GreatDoorCapability greatDoorCapability = pLevel.getCapability(CapabilityRegistry.GREAT_DOOR).resolve().orElse(null);
 
-                if (greatDoorCapability == null) return;
+                if (greatDoorCapability == null || greatDoorCapability.greatDoors.isEmpty()) return;
 
                 if (tag.get(TAG_GREAT_DOOR_POS) == null && tag.get(TAG_GREAT_DOOR_DIMENSION) == null) {
                     List<BlockPos> greatDoorsByDistance = new ArrayList<>();
