@@ -13,6 +13,7 @@ import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import destiny.penumbra_phantasm.server.util.ModUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.*;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.resources.ResourceKey;
@@ -397,6 +398,9 @@ public class GreatDoor {
                 Vec3 b = lightDoorSecondLower.getCenter();
                 destVec = new Vec3((a.x + b.x) * 0.5, (a.y + b.y) * 0.5, (a.z + b.z) * 0.5);
             }
+
+            Vec3 offsetVec = Vec3.atLowerCornerOf(lightDoorExitDirection.getNormal());
+            destVec.add(offsetVec.scale(0.5));
 
             float yaw = lightDoorExitDirection.toYRot();
             BlockPos darkAnchor = DarkWorldUtil.findDarkFountainPos(greatDoorLevel);
