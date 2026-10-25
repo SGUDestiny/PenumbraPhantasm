@@ -126,7 +126,9 @@ public class BlocksetServerProvider {
         String material = MODID + ":" + stoneSet.fullBlockMaterialItem();
         String name = MODID + ":" + baseName;
 
-        BlocksetJsonIO.writeIfAbsent(root, recipesFolder + baseName + stoneSet.addAtEndOfSingular() + ".json", parseRecipeFullBlock(material, name + stoneSet.addAtEndOfSingular(), 4));
+        if (!stoneSet.fullBlockMaterialItem().isEmpty()) {
+            BlocksetJsonIO.writeIfAbsent(root, recipesFolder + baseName + stoneSet.addAtEndOfSingular() + ".json", parseRecipeFullBlock(material, name + stoneSet.addAtEndOfSingular(), 4));
+        }
         BlocksetJsonIO.writeIfAbsent(root, recipesFolder + stoneSet.stairs() + ".json", parseRecipeStairs(name, MODID + ":" + stoneSet.stairs()));
         BlocksetJsonIO.writeIfAbsent(root, recipesFolder + stoneSet.slab() + ".json", parseRecipeSlab(name, MODID + ":" + stoneSet.slab()));
         BlocksetJsonIO.writeIfAbsent(root, recipesFolder + stoneSet.wall() + ".json", parseRecipeWall(name, MODID + ":" + stoneSet.wall()));
