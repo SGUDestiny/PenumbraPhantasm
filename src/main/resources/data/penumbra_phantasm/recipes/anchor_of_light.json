@@ -7,12 +7,18 @@
     },
     "L": {
       "item": "penumbra_phantasm:luciramic"
+    },
+    "C": {
+      "item": "penumbra_phantasm:chiseled_luciramic"
+    },
+    "B": {
+      "item": "penumbra_phantasm:luciramic_block"
     }
   },
   "pattern": [
     " L ",
-    "LDL",
-    "LLL"
+    "BDB",
+    " C "
   ],
   "result": {
     "item": "penumbra_phantasm:anchor_of_light"

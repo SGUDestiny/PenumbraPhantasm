@@ -206,6 +206,8 @@
     "penumbra_phantasm:luciramic_brick_slab",
     "penumbra_phantasm:luciramic_brick_wall",
     "penumbra_phantasm:luciramic_brick_button",
-    "penumbra_phantasm:luciramic_brick_pressure_plate"
+    "penumbra_phantasm:luciramic_brick_pressure_plate",
+    "penumbra_phantasm:chiseled_luciramic",
+    "penumbra_phantasm:luciramic_pillar"
   ]
 }

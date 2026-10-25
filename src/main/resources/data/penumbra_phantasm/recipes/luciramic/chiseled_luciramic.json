@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "#": {
+      "item": "penumbra_phantasm:luciramic_slab"
+    }
+  },
+  "pattern": [
+    "#",
+    "#"
+  ],
+  "result": {
+    "item": "penumbra_phantasm:chiseled_luciramic"
+  },
+  "show_notification": true
+}

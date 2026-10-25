@@ -389,6 +389,9 @@ public class CreativeTabRegistry {
                 output.accept(ItemRegistry.LUCIRAMIC.get());
                 output.accept(ItemRegistry.ANCHOR_OF_LIGHT.get());
 
+                output.accept(BlockRegistry.LUCIRAMIC_PILLAR.get());
+                output.accept(BlockRegistry.CHISELED_LUCIRAMIC.get());
+
                 output.accept(BlockRegistry.LUCIRAMIC_BLOCK.get());
                 output.accept(BlockRegistry.LUCIRAMIC_STAIRS.get());
                 output.accept(BlockRegistry.LUCIRAMIC_SLAB.get());

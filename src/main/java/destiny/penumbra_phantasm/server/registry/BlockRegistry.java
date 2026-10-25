@@ -661,6 +661,8 @@ public class BlockRegistry {
     public static final RegistryObject<Block> ANCHOR_OF_LIGHT_PART = BLOCKS.register("anchor_of_light_part",
             () -> new AnchorOfLightPartBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).destroyTime(5f).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).noOcclusion().noParticlesOnBreak()));
+    public static final RegistryObject<Block> LUCIRAMIC_PILLAR = registerBlock("luciramic_pillar", () -> new RotatedPillarBlock(LUCIRAMIC_PROPERTIES));
+    public static final RegistryObject<Block> CHISELED_LUCIRAMIC = registerBlock("chiseled_luciramic", () -> new Block(LUCIRAMIC_PROPERTIES));
 
     //Luciramic
     public static final RegistryObject<Block> LUCIRAMIC_BLOCK = registerBlock("luciramic_block", () -> new Block(LUCIRAMIC_PROPERTIES));

@@ -1,0 +1,14 @@
+{
+  "parent": "penumbra_phantasm:block/template_cube_column_emissive",
+  "loader": "fusion:model",
+  "type": "connecting",
+  "textures": {
+    "end": "penumbra_phantasm:block/luciramic_pillar_top",
+    "side": "penumbra_phantasm:block/luciramic_pillar"
+  },
+  "connections": {
+    "default": {
+      "type": "is_same_state"
+    }
+  }
+}
