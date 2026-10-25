@@ -187,6 +187,12 @@ public class ClientBoundPacketHandler
 			case ClientBoundTextBoxPacket.GREAT_DOOR_NOT_FOUNTAIN_DOOR -> textBox
 					.line(Component.translatable("textbox.penumbra_phantasm.great_door.not_fountain_door"));
 
+			//Great compass
+			case ClientBoundTextBoxPacket.GREAT_COMPASS_BOUND -> textBox
+					.line(Component.translatable("textbox.penumbra_phantasm.great_compass.bound"));
+			case ClientBoundTextBoxPacket.GREAT_COMPASS_UNBOUND -> textBox
+					.line(Component.translatable("textbox.penumbra_phantasm.great_compass.unbound"));
+
 			//Fire doors
 			case ClientBoundTextBoxPacket.FIRE_DOOR_LINK -> textBox
 					.line(Component.translatable("textbox.penumbra_phantasm.fire_door.link"));

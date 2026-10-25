@@ -23,11 +23,15 @@ public class ClientBoundTextBoxPacket {
 	//Dark fountain stuff
 	public static final String DARK_FOUNTAIN_PUSH_AWAY = "dark_fountain_push_away";
 
-	//Dark fountain stuff
+	//Great door stuff
 	public static final String GREAT_DOOR_NO_LIGHT_DOOR = "great_door_no_light_door";
 	public static final String GREAT_DOOR_NO_FOUNTAIN = "great_door_no_fountain";
 	public static final String GREAT_DOOR_NO_FOUNTAIN_DESTINATION = "great_door_no_fountain_destination";
 	public static final String GREAT_DOOR_NOT_FOUNTAIN_DOOR = "great_door_not_fountain_door";
+
+	//Great compass stuff
+	public static final String GREAT_COMPASS_BOUND = "great_compass_bound";
+	public static final String GREAT_COMPASS_UNBOUND = "great_compass_unbound";
 
 	//Fire door stuff
 	public static final String FIRE_DOOR_LINK = "fire_door_link";

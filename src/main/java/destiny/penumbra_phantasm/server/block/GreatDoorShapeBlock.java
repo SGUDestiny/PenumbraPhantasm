@@ -2,10 +2,12 @@ package destiny.penumbra_phantasm.server.block;
 
 import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
+import destiny.penumbra_phantasm.server.registry.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -38,7 +40,10 @@ public class GreatDoorShapeBlock extends BaseEntityBlock {
     public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos, @NotNull Player pPlayer,
                                           @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
         if (pLevel.getBlockEntity(pPos) instanceof GreatDoorShapeBlockEntity greatDoorShape) {
-            return greatDoorShape.cycleGreatDoorState(pLevel, pPos, greatDoorShape, pPlayer);
+            ItemStack stack = pPlayer.getItemInHand(pHand);
+
+            return stack.is(ItemRegistry.GREAT_COMPASS.get()) ? super.use(pState, pLevel, pPos, pPlayer, pHand, pHit)
+                    : greatDoorShape.cycleGreatDoorState(pLevel, pPos, greatDoorShape, pPlayer);
         } else {
             return InteractionResult.FAIL;
         }

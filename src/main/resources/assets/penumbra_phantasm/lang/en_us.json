@@ -636,16 +636,19 @@
 
   "textbox.penumbra_phantasm.dark_fountain.push_away": "The flow of darkness pushes you away...",
 
-  "textbox.penumbra_phantasm.great_door.no_light_door": "But the door wouldn't budge... (No unclaimed doors in the fountain rooms)",
-  "textbox.penumbra_phantasm.great_door.no_fountain": "But the door wouldn't budge... (This dark world doesn't have a fountain)",
-  "textbox.penumbra_phantasm.great_door.no_fountain_destination": "But the door wouldn't budge... (Destination dark world doesn't have a fountain)",
-  "textbox.penumbra_phantasm.great_door.not_fountain_door": "But the door wouldn't budge... (Light world door is not in the fountain's shell)",
+  "textbox.penumbra_phantasm.great_door.no_light_door": "But the door wouldn't budge... (No unclaimed doors in the fountain rooms.)",
+  "textbox.penumbra_phantasm.great_door.no_fountain": "But the door wouldn't budge... (This dark world doesn't have a fountain.)",
+  "textbox.penumbra_phantasm.great_door.no_fountain_destination": "But the door wouldn't budge... (Destination dark world doesn't have a fountain.)",
+  "textbox.penumbra_phantasm.great_door.not_fountain_door": "But the door wouldn't budge... (Light world door is not in the fountain's shell.)",
 
-  "textbox.penumbra_phantasm.fire_door.link": "Saved this Fire Door to your locations",
-  "textbox.penumbra_phantasm.fire_door.unlink": "Removed this fire door from your locations",
+  "textbox.penumbra_phantasm.great_compass.bound": "(Bound the compass to this great door.)",
+  "textbox.penumbra_phantasm.great_compass.unbound": "(Unbound the compass.)",
+
+  "textbox.penumbra_phantasm.fire_door.link": "(Saved this fire door to your locations.)",
+  "textbox.penumbra_phantasm.fire_door.unlink": "(Removed this fire door from your locations.)",
   "textbox.penumbra_phantasm.fire_door.limit_reached": "Can't save any more fire doors in this dark world...",
-  "textbox.penumbra_phantasm.fire_door.not_enough_doors": "Nowhere to warp to...",
-  "textbox.penumbra_phantasm.fire_door.depths": "But the handle wouldn't budge... (Cannot use in the depths)",
+  "textbox.penumbra_phantasm.fire_door.not_enough_doors": "Nowhere to warp to... (Save fire doors by interacting with them.)",
+  "textbox.penumbra_phantasm.fire_door.depths": "But the handle wouldn't budge... (Cannot use in the depths.)",
 
   "textbox.penumbra_phantasm.card_kingdom_egg_room.tree_front": "(He is behind the tree.)",
   "textbox.penumbra_phantasm.card_kingdom_egg_room.tree_front.gone": "(It is a tree.)",
