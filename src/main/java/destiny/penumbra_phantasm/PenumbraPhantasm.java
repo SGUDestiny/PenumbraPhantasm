@@ -18,16 +18,14 @@ import destiny.penumbra_phantasm.client.render.screen.DarkCandyCraftingTableScre
 import destiny.penumbra_phantasm.client.render.screen.UmbrastoneFurnaceScreen;
 import destiny.penumbra_phantasm.client.render.tooltip.DarkMoneyTooltipComponent;
 import destiny.penumbra_phantasm.server.datapack.*;
-import destiny.penumbra_phantasm.server.item.property.DarkWalletItemProperty;
-import destiny.penumbra_phantasm.server.item.property.RosegoldLighterItemProperty;
+import destiny.penumbra_phantasm.server.item.GreatCompassItem;
+import destiny.penumbra_phantasm.server.item.property.*;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.client.render.model.item.DeltashieldModel;
 import destiny.penumbra_phantasm.client.render.item.DeltaShieldRenderer;
 import destiny.penumbra_phantasm.client.sound.DarkWorldMusicReloadListener;
 import destiny.penumbra_phantasm.server.event.CommonEvents;
 import destiny.penumbra_phantasm.server.item.MusicMediumItem;
-import destiny.penumbra_phantasm.server.item.property.FriendItemProperty;
-import destiny.penumbra_phantasm.server.item.property.SoulHearthItemProperty;
 import destiny.penumbra_phantasm.server.transformations.inventory.StorageManager;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.particle.FlameParticle;
@@ -35,6 +33,9 @@ import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.item.ClampedItemPropertyFunction;
+import net.minecraft.client.renderer.item.CompassItemPropertyFunction;
+import net.minecraft.world.item.CompassItem;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DataPackRegistryEvent;
@@ -200,6 +201,8 @@ public class PenumbraPhantasm {
                                 entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1F : 0F);
                 ItemProperties.register(ItemRegistry.ROSEGOLD_LIGHTER.get(), new ResourceLocation(MODID, "open"), new RosegoldLighterItemProperty());
                 ItemProperties.register(ItemRegistry.DARK_WALLET.get(), new ResourceLocation(MODID, "money"), new DarkWalletItemProperty());
+                ItemProperties.register(ItemRegistry.GREAT_COMPASS.get(), new ResourceLocation(MODID,"angle"), new GreatCompassItemProperty(
+                        (level, stack, entity) -> GreatCompassItem.getGreatDoorPosition(stack.getOrCreateTag())));
 
                 MenuScreens.register(MenuRegistry.DARK_CANDY_CRAFTING_TABLE.get(), DarkCandyCraftingTableScreen::new);
                 MenuScreens.register(MenuRegistry.UMBRASTONE_FURNACE_MENU.get(), UmbrastoneFurnaceScreen::new);

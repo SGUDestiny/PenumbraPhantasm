@@ -164,6 +164,8 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> ROSEGOLD_LIGHTER = ITEMS.register("rosegold_lighter",
             () -> new RosegoldLighterItem(new Item.Properties().stacksTo(1).durability(-1)));
+    public static final RegistryObject<Item> GREAT_COMPASS = ITEMS.register("great_compass",
+            () -> new GreatCompassItem(new Item.Properties().stacksTo(1).durability(-1)));
 
     public static final RegistryObject<Item> DARK_CANDY_BUCKET = ITEMS.register("dark_candy_bucket",
             () -> new ScarletBucketItem(Fluids.EMPTY, new Item.Properties()));

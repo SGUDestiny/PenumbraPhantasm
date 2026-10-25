@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "penumbra_phantasm:ichor_candle"
+    },
+    "I": {
+      "item": "penumbra_phantasm:rosegold_ingot"
+    }
+  },
+  "pattern": [
+    " I ",
+    "ICI",
+    " I "
+  ],
+  "result": {
+    "item": "penumbra_phantasm:great_compass"
+  },
+  "show_notification": true
+}
