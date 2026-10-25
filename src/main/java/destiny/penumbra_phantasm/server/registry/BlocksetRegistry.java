@@ -1,12 +1,12 @@
 package destiny.penumbra_phantasm.server.registry;
 
-import destiny.penumbra_phantasm.server.datagen.BricksBlockset;
-import destiny.penumbra_phantasm.server.datagen.StoneBlockset;
-import destiny.penumbra_phantasm.server.datagen.WoodBlockset;
+import destiny.penumbra_phantasm.server.datagen.blocksets.BricksBlockset;
+import destiny.penumbra_phantasm.server.datagen.blocksets.StoneBlockset;
+import destiny.penumbra_phantasm.server.datagen.blocksets.WoodBlockset;
 
 import java.util.List;
 
-public final class BlocksetRegistry {
+public class BlocksetRegistry {
     public static final List<StoneBlockset> STONE_BLOCKSETS = List.of(
             new StoneBlockset(
                     "polished_umbrastone",
@@ -16,7 +16,8 @@ public final class BlocksetRegistry {
                     0,
                     false,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "umbrastone",
@@ -26,7 +27,8 @@ public final class BlocksetRegistry {
                     0,
                     false,
                     true,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "cobbled_umbrastone",
@@ -36,7 +38,8 @@ public final class BlocksetRegistry {
                     0,
                     false,
                     false,
-                    true
+                    true,
+                    ""
             ),
 
             new StoneBlockset(
@@ -47,7 +50,8 @@ public final class BlocksetRegistry {
                     0,
                     true,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "scarlet_marble",
@@ -57,7 +61,8 @@ public final class BlocksetRegistry {
                     0,
                     true,
                     true,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "cobbled_scarlet_marble",
@@ -67,7 +72,8 @@ public final class BlocksetRegistry {
                     0,
                     true,
                     false,
-                    true
+                    true,
+                    ""
             ),
 
             new StoneBlockset(
@@ -78,7 +84,8 @@ public final class BlocksetRegistry {
                     0,
                     true,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "dark_marble",
@@ -88,7 +95,8 @@ public final class BlocksetRegistry {
                     0,
                     true,
                     true,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "cobbled_dark_marble",
@@ -98,7 +106,8 @@ public final class BlocksetRegistry {
                     0,
                     true,
                     false,
-                    true
+                    true,
+                    ""
             ),
 
             new StoneBlockset(
@@ -109,7 +118,8 @@ public final class BlocksetRegistry {
                     1,
                     false,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "cliffrock",
@@ -119,7 +129,8 @@ public final class BlocksetRegistry {
                     1,
                     false,
                     true,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "cobbled_cliffrock",
@@ -129,7 +140,8 @@ public final class BlocksetRegistry {
                     1,
                     false,
                     false,
-                    true
+                    true,
+                    ""
             ),
 
             new StoneBlockset(
@@ -140,7 +152,8 @@ public final class BlocksetRegistry {
                     2,
                     false,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "tenebralith",
@@ -150,7 +163,8 @@ public final class BlocksetRegistry {
                     2,
                     false,
                     true,
-                    false
+                    false,
+                    ""
             ),
             new StoneBlockset(
                     "cobbled_tenebralith",
@@ -160,7 +174,8 @@ public final class BlocksetRegistry {
                     2,
                     false,
                     false,
-                    true
+                    true,
+                    ""
             ),
 
             new StoneBlockset(
@@ -171,7 +186,8 @@ public final class BlocksetRegistry {
                     2,
                     false,
                     false,
-                    false
+                    false,
+                    "_block"
             ),
             new StoneBlockset(
                     "ivory",
@@ -181,7 +197,19 @@ public final class BlocksetRegistry {
                     1,
                     false,
                     false,
-                    false
+                    false,
+                    "_block"
+            ),
+            new StoneBlockset(
+                    "luciramic",
+                    "luciramic_block",
+                    "luciramic",
+                    "",
+                    2,
+                    true,
+                    false,
+                    false,
+                    "_block"
             )
     );
 
@@ -194,7 +222,8 @@ public final class BlocksetRegistry {
                     0,
                     false,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new BricksBlockset(
                     "scarlet_marble_bricks",
@@ -204,7 +233,8 @@ public final class BlocksetRegistry {
                     0,
                     true,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new BricksBlockset(
                     "dark_marble_bricks",
@@ -214,7 +244,8 @@ public final class BlocksetRegistry {
                     0,
                     true,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new BricksBlockset(
                     "cliffrock_bricks",
@@ -224,7 +255,8 @@ public final class BlocksetRegistry {
                     1,
                     false,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new BricksBlockset(
                     "tenebralith_bricks",
@@ -234,7 +266,8 @@ public final class BlocksetRegistry {
                     2,
                     false,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new BricksBlockset(
                     "rosegold_bricks",
@@ -244,7 +277,8 @@ public final class BlocksetRegistry {
                     2,
                     false,
                     false,
-                    false
+                    false,
+                    ""
             ),
             new BricksBlockset(
                     "ivory_bricks",
@@ -254,7 +288,19 @@ public final class BlocksetRegistry {
                     1,
                     false,
                     false,
-                    false
+                    false,
+                    ""
+            ),
+            new BricksBlockset(
+                    "luciramic_bricks",
+                    "luciramic_bricks",
+                    "luciramic/bricks",
+                    "",
+                    2,
+                    true,
+                    false,
+                    false,
+                    ""
             )
     );
 

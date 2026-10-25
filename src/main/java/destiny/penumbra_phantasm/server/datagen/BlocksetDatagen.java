@@ -9,14 +9,15 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 @Mod.EventBusSubscriber(modid = PenumbraPhantasm.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
-public final class BlocksetDatagen {
-    private BlocksetDatagen() {
+public class BlocksetDatagen {
+    public BlocksetDatagen() {
     }
 
     @SubscribeEvent
     public static void onGatherData(GatherDataEvent event) {
         Path packOutput = event.getGenerator().getPackOutput().getOutputFolder();
         Path mainResources = packOutput.resolve("../../main/resources").normalize();
+
         try {
             if (event.includeClient()) {
                 BlocksetClientProvider.run(mainResources);

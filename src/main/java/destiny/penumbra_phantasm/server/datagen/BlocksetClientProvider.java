@@ -1,151 +1,189 @@
 package destiny.penumbra_phantasm.server.datagen;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.datagen.blocksets.BricksBlockset;
+import destiny.penumbra_phantasm.server.datagen.blocksets.StoneBlockset;
+import destiny.penumbra_phantasm.server.datagen.blocksets.StoneFamilyBlockset;
+import destiny.penumbra_phantasm.server.datagen.blocksets.WoodBlockset;
+import destiny.penumbra_phantasm.server.datagen.blockstates.BlockSetWoodDoorBlockstates;
+import destiny.penumbra_phantasm.server.datagen.blockstates.BlocksetStoneBlockstates;
+import destiny.penumbra_phantasm.server.datagen.blockstates.BlocksetWoodBlockstates;
+import destiny.penumbra_phantasm.server.datagen.models.BlocksetStoneModels;
+import destiny.penumbra_phantasm.server.datagen.models.BlocksetWoodModels;
 import destiny.penumbra_phantasm.server.registry.BlocksetRegistry;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-public final class BlocksetClientProvider {
-    private BlocksetClientProvider() {
+import static destiny.penumbra_phantasm.PenumbraPhantasm.MODID;
+
+public class BlocksetClientProvider {
+    public BlocksetClientProvider() {
     }
 
     public static void run(Path mainResourcesRoot) throws IOException {
-        for (StoneBlockset s : BlocksetRegistry.STONE_BLOCKSETS) {
-            emitStoneFamily(mainResourcesRoot, s);
+        for (StoneBlockset stoneSet : BlocksetRegistry.STONE_BLOCKSETS) {
+            createStoneFamily(mainResourcesRoot, stoneSet);
         }
-        for (BricksBlockset b : BlocksetRegistry.BRICKS_BLOCKSETS) {
-            emitStoneFamily(mainResourcesRoot, b);
+        for (BricksBlockset brickSet : BlocksetRegistry.BRICKS_BLOCKSETS) {
+            createStoneFamily(mainResourcesRoot, brickSet);
         }
-        for (WoodBlockset w : BlocksetRegistry.WOOD_BLOCKSETS) {
-            emitWood(mainResourcesRoot, w);
+        for (WoodBlockset woodSet : BlocksetRegistry.WOOD_BLOCKSETS) {
+            createWoodFamily(mainResourcesRoot, woodSet);
         }
     }
 
-    private static void emitStoneFamily(Path root, StoneFamilyBlockset s) throws IOException {
-        String mod = PenumbraPhantasm.MODID;
-        String tx = s.textureKey();
-        String b = s.baseName();
-        boolean em = s.isEmissive();
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + b + ".json", BlocksetStoneTemplates.fullBlockstate(s));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + s.stairs() + ".json", BlocksetStoneTemplates.stairBlockstate(s));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + s.slab() + ".json", BlocksetStoneTemplates.slabBlockstate(s));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + s.wall() + ".json", BlocksetStoneTemplates.wallBlockstate(s));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + s.button() + ".json", BlocksetStoneTemplates.buttonBlockstate(s));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + s.pressurePlate() + ".json", BlocksetStoneTemplates.pressurePlateBlockstate(s));
+    public static void createStoneFamily(Path root, StoneFamilyBlockset stoneSet) throws IOException {
+        String textureKey = stoneSet.textureKey();
+        String baseName = stoneSet.baseName();
+        boolean isEmissive = stoneSet.isEmissive();
+        String addAtEndOfSingular = stoneSet.addAtEndOfSingular();
 
-        writeModel(root, mod, b, BlocksetStoneModels.cubeAll(tx, em));
-        writeModel(root, mod, s.stairs(), BlocksetStoneModels.stairs(tx, em));
-        writeModel(root, mod, s.stairs() + "_inner", BlocksetStoneModels.stairsInner(tx, em));
-        writeModel(root, mod, s.stairs() + "_outer", BlocksetStoneModels.stairsOuter(tx, em));
-        writeModel(root, mod, s.slab(), BlocksetStoneModels.slab(tx, em));
-        writeModel(root, mod, s.slab() + "_top", BlocksetStoneModels.slabTop(tx, em));
-        writeModel(root, mod, s.wall() + "_post", BlocksetStoneModels.wallPost(tx, em));
-        writeModel(root, mod, s.wall() + "_side", BlocksetStoneModels.wallSide(tx, em));
-        writeModel(root, mod, s.wall() + "_side_tall", BlocksetStoneModels.wallSideTall(tx, em));
-        writeModel(root, mod, s.wall() + "_inventory", BlocksetStoneModels.wallInventory(tx, em));
-        writeModel(root, mod, s.button(), BlocksetStoneModels.button(tx, em));
-        writeModel(root, mod, s.button() + "_inventory", BlocksetStoneModels.buttonInventory(tx, em));
-        writeModel(root, mod, s.button() + "_pressed", BlocksetStoneModels.buttonPressed(tx, em));
-        writeModel(root, mod, s.pressurePlate(), BlocksetStoneModels.pressurePlateUp(tx, em));
-        writeModel(root, mod, s.pressurePlate() + "_down", BlocksetStoneModels.pressurePlateDown(tx, em));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + baseName + addAtEndOfSingular + ".json", BlocksetStoneBlockstates.makeFullBlockstate(stoneSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + stoneSet.stairs() + ".json", BlocksetStoneBlockstates.makeStairBlockstate(stoneSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + stoneSet.slab() + ".json", BlocksetStoneBlockstates.makeSlabBlockstate(stoneSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + stoneSet.wall() + ".json", BlocksetStoneBlockstates.makeWallBlockstate(stoneSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + stoneSet.button() + ".json", BlocksetStoneBlockstates.makeButtonBlockstate(stoneSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + stoneSet.pressurePlate() + ".json", BlocksetStoneBlockstates.makePressurePlateBlockstate(stoneSet));
 
-        for (String p : s.allPieces()) {
-            if (p.equals(s.wall())) {
-                JsonObject o = new JsonObject();
-                o.addProperty("parent", mod + ":block/" + s.wall() + "_inventory");
-                BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/item/" + p + ".json", o);
-            } else if (p.equals(s.button())) {
-                JsonObject o = new JsonObject();
-                o.addProperty("parent", mod + ":block/" + s.button() + "_inventory");
-                BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/item/" + p + ".json", o);
+        writeBlock(root, baseName + addAtEndOfSingular, BlocksetStoneModels.makeCubeAll(textureKey, isEmissive));
+
+        writeBlock(root, stoneSet.stairs(), BlocksetStoneModels.makeStairs(textureKey, isEmissive));
+        writeBlock(root, stoneSet.stairs() + "_inner", BlocksetStoneModels.makeStairsInner(textureKey, isEmissive));
+        writeBlock(root, stoneSet.stairs() + "_outer", BlocksetStoneModels.makeStairsOuter(textureKey, isEmissive));
+
+        writeBlock(root, stoneSet.slab(), BlocksetStoneModels.makeSlab(textureKey, isEmissive));
+        writeBlock(root, stoneSet.slab() + "_top", BlocksetStoneModels.makeSlabTop(textureKey, isEmissive));
+
+        writeBlock(root, stoneSet.wall() + "_post", BlocksetStoneModels.makeWallPost(textureKey, isEmissive));
+        writeBlock(root, stoneSet.wall() + "_side", BlocksetStoneModels.makeWallSide(textureKey, isEmissive));
+        writeBlock(root, stoneSet.wall() + "_side_tall", BlocksetStoneModels.makeWallSideTall(textureKey, isEmissive));
+        writeBlock(root, stoneSet.wall() + "_inventory", BlocksetStoneModels.makeWallInventory(textureKey, isEmissive));
+
+        writeBlock(root, stoneSet.button(), BlocksetStoneModels.makeButton(textureKey, isEmissive));
+        writeBlock(root, stoneSet.button() + "_inventory", BlocksetStoneModels.makeButtonInventory(textureKey, isEmissive));
+        writeBlock(root, stoneSet.button() + "_pressed", BlocksetStoneModels.makeButtonPressed(textureKey, isEmissive));
+
+        writeBlock(root, stoneSet.pressurePlate(), BlocksetStoneModels.makePressurePlateUp(textureKey, isEmissive));
+        writeBlock(root, stoneSet.pressurePlate() + "_down", BlocksetStoneModels.makePressurePlateDown(textureKey, isEmissive));
+
+        for (String piece : stoneSet.allPieces()) {
+            if (piece.equals(stoneSet.baseName() + addAtEndOfSingular)) {
+                JsonObject json = new JsonObject();
+
+                json.addProperty("parent", MODID + ":block/" + stoneSet.baseName() + addAtEndOfSingular);
+                BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/models/item/" + stoneSet.baseName() + addAtEndOfSingular + ".json", json);
+            } else if (piece.equals(stoneSet.wall())) {
+                JsonObject json = new JsonObject();
+
+                json.addProperty("parent", MODID + ":block/" + stoneSet.wall() + "_inventory");
+                BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/models/item/" + piece + ".json", json);
+            } else if (piece.equals(stoneSet.button())) {
+                JsonObject json = new JsonObject();
+
+                json.addProperty("parent", MODID + ":block/" + stoneSet.button() + "_inventory");
+                BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/models/item/" + piece + ".json", json);
             } else {
-                itemParentBlock(root, mod, p);
+                writeItemParentBlock(root, piece);
             }
         }
     }
 
-    private static void emitWood(Path root, WoodBlockset w) throws IOException {
-        String mod = PenumbraPhantasm.MODID;
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + w.planks() + ".json", BlocksetVanillaWoodSubst.json(WoodBlockstateTemplates2.PLANKS, w));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + w.stairs() + ".json", BlocksetStoneTemplates.stairBlockstateStem(w.stairs()));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + w.slab() + ".json", BlocksetVanillaWoodSubst.json(WoodBlockstateTemplates2.SLAB, w));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + w.fence() + ".json", BlocksetVanillaWoodSubst.json(WoodBlockstateTemplates.FENCE, w));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + w.fenceGate() + ".json", BlocksetVanillaWoodSubst.json(WoodBlockstateTemplates.FENCE_GATE, w));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + w.door() + ".json", WoodDoorBlockstate.asJson(w));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + w.trapdoor() + ".json", BlocksetVanillaWoodSubst.json(WoodBlockstateTemplates.TRAPDOOR, w));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + w.button() + ".json", BlocksetVanillaWoodSubst.json(WoodBlockstateTemplates2.BUTTON, w));
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/blockstates/" + w.pressurePlate() + ".json", BlocksetVanillaWoodSubst.json(WoodBlockstateTemplates2.PRESSURE_PLATE, w));
+    public static void createWoodFamily(Path root, WoodBlockset woodSet) throws IOException {
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + woodSet.planks() + ".json", BlocksetVanillaWoodReplace.replaceJson(BlocksetWoodBlockstates.PLANKS, woodSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + woodSet.stairs() + ".json", BlocksetStoneBlockstates.makeStairBlockstate(woodSet.stairs()));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + woodSet.slab() + ".json", BlocksetVanillaWoodReplace.replaceJson(BlocksetWoodBlockstates.SLAB, woodSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + woodSet.fence() + ".json", BlocksetVanillaWoodReplace.replaceJson(BlocksetWoodBlockstates.FENCE, woodSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + woodSet.fenceGate() + ".json", BlocksetVanillaWoodReplace.replaceJson(BlocksetWoodBlockstates.FENCE_GATE, woodSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + woodSet.door() + ".json", BlockSetWoodDoorBlockstates.asJson(woodSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + woodSet.trapdoor() + ".json", BlocksetVanillaWoodReplace.replaceJson(BlocksetWoodBlockstates.TRAPDOOR, woodSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + woodSet.button() + ".json", BlocksetVanillaWoodReplace.replaceJson(BlocksetWoodBlockstates.BUTTON, woodSet));
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/blockstates/" + woodSet.pressurePlate() + ".json", BlocksetVanillaWoodReplace.replaceJson(BlocksetWoodBlockstates.PRESSURE_PLATE, woodSet));
 
-        writeModel(root, mod, w.planks(), VanillaWoodBlockModels.planks(w));
-        writeModel(root, mod, w.stairs(), VanillaWoodBlockModels.stairs(w));
-        writeModel(root, mod, w.stairs() + "_inner", VanillaWoodBlockModels.stairsInner(w));
-        writeModel(root, mod, w.stairs() + "_outer", VanillaWoodBlockModels.stairsOuter(w));
-        writeModel(root, mod, w.slab(), VanillaWoodBlockModels.slab(w));
-        writeModel(root, mod, w.slab() + "_top", VanillaWoodBlockModels.slabTop(w));
-        writeModel(root, mod, w.fence() + "_post", VanillaWoodBlockModels.fencePost(w));
-        writeModel(root, mod, w.fence() + "_side", VanillaWoodBlockModels.fenceSide(w));
-        writeModel(root, mod, w.fence() + "_inventory", VanillaWoodBlockModels.fenceInventory(w));
-        writeModel(root, mod, w.fenceGate(), VanillaWoodBlockModels.fenceGate(w));
-        writeModel(root, mod, w.fenceGate() + "_open", VanillaWoodBlockModels.fenceGateOpen(w));
-        writeModel(root, mod, w.fenceGate() + "_wall", VanillaWoodBlockModels.fenceGateWall(w));
-        writeModel(root, mod, w.fenceGate() + "_wall_open", VanillaWoodBlockModels.fenceGateWallOpen(w));
-        String d = w.door();
-        writeModel(root, mod, d + "_bottom_left", VanillaWoodBlockModels.doorBottomLeft(w));
-        writeModel(root, mod, d + "_bottom_left_open", VanillaWoodBlockModels.doorBottomLeftOpen(w));
-        writeModel(root, mod, d + "_bottom_right", VanillaWoodBlockModels.doorBottomRight(w));
-        writeModel(root, mod, d + "_bottom_right_open", VanillaWoodBlockModels.doorBottomRightOpen(w));
-        writeModel(root, mod, d + "_top_left", VanillaWoodBlockModels.doorTopLeft(w));
-        writeModel(root, mod, d + "_top_left_open", VanillaWoodBlockModels.doorTopLeftOpen(w));
-        writeModel(root, mod, d + "_top_right", VanillaWoodBlockModels.doorTopRight(w));
-        writeModel(root, mod, d + "_top_right_open", VanillaWoodBlockModels.doorTopRightOpen(w));
-        writeModel(root, mod, w.trapdoor() + "_bottom", VanillaWoodBlockModels.trapdoorBottom(w));
-        writeModel(root, mod, w.trapdoor() + "_top", VanillaWoodBlockModels.trapdoorTop(w));
-        writeModel(root, mod, w.trapdoor() + "_open", VanillaWoodBlockModels.trapdoorOpen(w));
-        writeModel(root, mod, w.button() + "_inventory", VanillaWoodBlockModels.buttonInventory(w));
-        writeModel(root, mod, w.button(), VanillaWoodBlockModels.button(w));
-        writeModel(root, mod, w.button() + "_pressed", VanillaWoodBlockModels.buttonPressed(w));
-        writeModel(root, mod, w.pressurePlate(), VanillaWoodBlockModels.pressurePlateUp(w));
-        writeModel(root, mod, w.pressurePlate() + "_down", VanillaWoodBlockModels.pressurePlateDown(w));
+        writeBlock(root, woodSet.planks(), BlocksetWoodModels.planks(woodSet));
 
-        for (String p : w.allPieces()) {
-            if (p.equals(w.door())) {
-                itemDoor(root, mod, w.door());
-            } else if (p.equals(w.fence())) {
-                JsonObject o = new JsonObject();
-                o.addProperty("parent", mod + ":block/" + w.fence() + "_inventory");
-                BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/item/" + w.fence() + ".json", o);
-            } else if (p.equals(w.trapdoor())) {
-                JsonObject o = new JsonObject();
-                o.addProperty("parent", mod + ":block/" + w.trapdoor() + "_bottom");
-                BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/item/" + w.trapdoor() + ".json", o);
-            } else if (p.equals(w.button())) {
-                JsonObject o = new JsonObject();
-                o.addProperty("parent", mod + ":block/" + w.button() + "_inventory");
-                BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/item/" + w.button() + ".json", o);
+        writeBlock(root, woodSet.stairs(), BlocksetWoodModels.stairs(woodSet));
+        writeBlock(root, woodSet.stairs() + "_inner", BlocksetWoodModels.stairsInner(woodSet));
+        writeBlock(root, woodSet.stairs() + "_outer", BlocksetWoodModels.stairsOuter(woodSet));
+
+        writeBlock(root, woodSet.slab(), BlocksetWoodModels.slab(woodSet));
+        writeBlock(root, woodSet.slab() + "_top", BlocksetWoodModels.slabTop(woodSet));
+
+        writeBlock(root, woodSet.fence() + "_post", BlocksetWoodModels.fencePost(woodSet));
+        writeBlock(root, woodSet.fence() + "_side", BlocksetWoodModels.fenceSide(woodSet));
+        writeBlock(root, woodSet.fence() + "_inventory", BlocksetWoodModels.fenceInventory(woodSet));
+
+        writeBlock(root, woodSet.fenceGate(), BlocksetWoodModels.fenceGate(woodSet));
+        writeBlock(root, woodSet.fenceGate() + "_open", BlocksetWoodModels.fenceGateOpen(woodSet));
+        writeBlock(root, woodSet.fenceGate() + "_wall", BlocksetWoodModels.fenceGateWall(woodSet));
+        writeBlock(root, woodSet.fenceGate() + "_wall_open", BlocksetWoodModels.fenceGateWallOpen(woodSet));
+
+        String door = woodSet.door();
+        writeBlock(root, door + "_bottom_left", BlocksetWoodModels.doorBottomLeft(woodSet));
+        writeBlock(root, door + "_bottom_left_open", BlocksetWoodModels.doorBottomLeftOpen(woodSet));
+        writeBlock(root, door + "_bottom_right", BlocksetWoodModels.doorBottomRight(woodSet));
+        writeBlock(root, door + "_bottom_right_open", BlocksetWoodModels.doorBottomRightOpen(woodSet));
+        writeBlock(root, door + "_top_left", BlocksetWoodModels.doorTopLeft(woodSet));
+        writeBlock(root, door + "_top_left_open", BlocksetWoodModels.doorTopLeftOpen(woodSet));
+        writeBlock(root, door + "_top_right", BlocksetWoodModels.doorTopRight(woodSet));
+        writeBlock(root, door + "_top_right_open", BlocksetWoodModels.doorTopRightOpen(woodSet));
+
+        writeBlock(root, woodSet.trapdoor() + "_bottom", BlocksetWoodModels.trapdoorBottom(woodSet));
+        writeBlock(root, woodSet.trapdoor() + "_top", BlocksetWoodModels.trapdoorTop(woodSet));
+        writeBlock(root, woodSet.trapdoor() + "_open", BlocksetWoodModels.trapdoorOpen(woodSet));
+
+        writeBlock(root, woodSet.button() + "_inventory", BlocksetWoodModels.buttonInventory(woodSet));
+        writeBlock(root, woodSet.button(), BlocksetWoodModels.button(woodSet));
+        writeBlock(root, woodSet.button() + "_pressed", BlocksetWoodModels.buttonPressed(woodSet));
+
+        writeBlock(root, woodSet.pressurePlate(), BlocksetWoodModels.pressurePlateUp(woodSet));
+        writeBlock(root, woodSet.pressurePlate() + "_down", BlocksetWoodModels.pressurePlateDown(woodSet));
+
+        for (String piece : woodSet.allPieces()) {
+            if (piece.equals(woodSet.door())) {
+                writeItemDoor(root, woodSet.door());
+            } else if (piece.equals(woodSet.fence())) {
+                JsonObject json = new JsonObject();
+
+                json.addProperty("parent", MODID + ":block/" + woodSet.fence() + "_inventory");
+                BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/models/item/" + woodSet.fence() + ".json", json);
+            } else if (piece.equals(woodSet.trapdoor())) {
+                JsonObject json = new JsonObject();
+
+                json.addProperty("parent", MODID + ":block/" + woodSet.trapdoor() + "_bottom");
+                BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/models/item/" + woodSet.trapdoor() + ".json", json);
+            } else if (piece.equals(woodSet.button())) {
+                JsonObject json = new JsonObject();
+
+                json.addProperty("parent", MODID + ":block/" + woodSet.button() + "_inventory");
+                BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/models/item/" + woodSet.button() + ".json", json);
             } else {
-                itemParentBlock(root, mod, p);
+                writeItemParentBlock(root, piece);
             }
         }
     }
 
-    private static void writeModel(Path root, String mod, String name, com.google.gson.JsonElement json) throws IOException {
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/block/" + name + ".json", json);
+    public static void writeBlock(Path root, String name, JsonElement json) throws IOException {
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/models/block/" + name + ".json", json);
     }
 
-    private static void itemParentBlock(Path root, String mod, String name) throws IOException {
-        JsonObject o = new JsonObject();
-        o.addProperty("parent", mod + ":block/" + name);
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/item/" + name + ".json", o);
+    public static void writeItemParentBlock(Path root, String name) throws IOException {
+        JsonObject json = new JsonObject();
+
+        json.addProperty("parent", MODID + ":block/" + name);
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/models/item/" + name + ".json", json);
     }
 
-    private static void itemDoor(Path root, String mod, String doorName) throws IOException {
-        JsonObject o = new JsonObject();
-        o.addProperty("parent", "minecraft:item/generated");
-        JsonObject t = new JsonObject();
-        t.addProperty("layer0", mod + ":item/" + doorName);
-        o.add("textures", t);
-        BlocksetJsonIO.writeIfAbsent(root, "assets/" + mod + "/models/item/" + doorName + ".json", o);
+    public static void writeItemDoor(Path root, String doorName) throws IOException {
+        JsonObject json = new JsonObject();
+
+        json.addProperty("parent", "minecraft:item/generated");
+
+        JsonObject textures = new JsonObject();
+        textures.addProperty("layer0", MODID + ":item/" + doorName);
+        json.add("textures", textures);
+
+        BlocksetJsonIO.writeIfAbsent(root, "assets/" + MODID + "/models/item/" + doorName + ".json", json);
     }
 }

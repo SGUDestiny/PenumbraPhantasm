@@ -41,6 +41,7 @@ public class BlockRegistry {
     public static final BlockBehaviour.Properties TENEBRALITH_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().sound(SoundType.DEEPSLATE);
     public static final BlockBehaviour.Properties ROSEGOLD_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().sound(SoundType.METAL);
     public static final BlockBehaviour.Properties IVORY_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().sound(SoundType.BONE_BLOCK);
+    public static final BlockBehaviour.Properties LUCIRAMIC_PROPERTIES = BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(DyeColor.WHITE).requiresCorrectToolForDrops().sound(SoundTypeRegistry.LUCIRAMIC);
 
     public static final BlockSetType SCARLET_MARBLE_BLOCKSET = new BlockSetType("scarlet_marble", true, SoundType.CALCITE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
     public static final BlockSetType DARK_MARBLE_BLOCKSET = new BlockSetType("dark_marble", true, SoundType.CALCITE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
@@ -48,6 +49,7 @@ public class BlockRegistry {
     public static final BlockSetType TENEBRALITH_BLOCKSET = new BlockSetType("tenebralith", true, SoundType.DEEPSLATE, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
     public static final BlockSetType ROSEGOLD_BLOCKSET = new BlockSetType("rosegold", true, SoundType.METAL, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
     public static final BlockSetType IVORY_BLOCKSET = new BlockSetType("ivory", true, SoundType.BONE_BLOCK, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
+    public static final BlockSetType LUCIRAMIC_BLOCKSET = new BlockSetType("luciramic", true, SoundType.BONE_BLOCK, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.STONE_PRESSURE_PLATE_CLICK_OFF, SoundEvents.STONE_PRESSURE_PLATE_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF, SoundEvents.STONE_BUTTON_CLICK_ON);
 
     public static final RegistryObject<Block> TWILIGHT_GRASS_BLOCK = registerBlock("twilight_grass_block",
             () -> new TwilightGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)
@@ -77,39 +79,61 @@ public class BlockRegistry {
     //Umbrastone misc
     public static final RegistryObject<Block> UMBRASTONE_PILLAR = registerBlock("umbrastone_pillar", () -> new RotatedPillarBlock(UMBRASTONE_PROPERTIES));
     public static final RegistryObject<Block> CHISELED_UMBRASTONE = registerBlock("chiseled_umbrastone", () -> new Block(UMBRASTONE_PROPERTIES));
-    public static final RegistryObject<Block> UMBRASTONE_FURNACE = registerBlock("umbrastone_furnace", () -> new UmbrastoneFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().lightLevel(state -> state.getValue(LIT) ? 10 : 0)));
+    public static final RegistryObject<Block> UMBRASTONE_FURNACE = registerBlock("umbrastone_furnace",
+            () -> new UmbrastoneFurnaceBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops()
+                    .lightLevel(state -> state.getValue(LIT) ? 10 : 0)));
 
     //Polished umbrastone
     public static final RegistryObject<Block> POLISHED_UMBRASTONE = registerBlock("polished_umbrastone", () -> new Block(UMBRASTONE_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_UMBRASTONE_STAIRS = registerBlock("polished_umbrastone_stairs", () -> new StairBlock(BlockRegistry.POLISHED_UMBRASTONE.get().defaultBlockState(), UMBRASTONE_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_UMBRASTONE_STAIRS = registerBlock("polished_umbrastone_stairs",
+            () -> new StairBlock(BlockRegistry.POLISHED_UMBRASTONE.get().defaultBlockState(), UMBRASTONE_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_UMBRASTONE_SLAB = registerBlock("polished_umbrastone_slab", () -> new SlabBlock(UMBRASTONE_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_UMBRASTONE_WALL = registerBlock("polished_umbrastone_wall", () -> new WallBlock(UMBRASTONE_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_UMBRASTONE_BUTTON = registerBlock("polished_umbrastone_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> POLISHED_UMBRASTONE_PRESSURE_PLATE = registerBlock("polished_umbrastone_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET));
+    public static final RegistryObject<Block> POLISHED_UMBRASTONE_BUTTON = registerBlock("polished_umbrastone_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(),
+                    UMBRASTONE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> POLISHED_UMBRASTONE_PRESSURE_PLATE = registerBlock("polished_umbrastone_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA)
+                    .requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET));
 
     //Umbrastone bricks
     public static final RegistryObject<Block> UMBRASTONE_BRICKS = registerBlock("umbrastone_bricks", () -> new Block(UMBRASTONE_PROPERTIES));
-    public static final RegistryObject<Block> UMBRASTONE_BRICK_STAIRS = registerBlock("umbrastone_brick_stairs", () -> new StairBlock(BlockRegistry.UMBRASTONE_BRICKS.get().defaultBlockState(), UMBRASTONE_PROPERTIES));
+    public static final RegistryObject<Block> UMBRASTONE_BRICK_STAIRS = registerBlock("umbrastone_brick_stairs",
+            () -> new StairBlock(BlockRegistry.UMBRASTONE_BRICKS.get().defaultBlockState(), UMBRASTONE_PROPERTIES));
     public static final RegistryObject<Block> UMBRASTONE_BRICK_SLAB = registerBlock("umbrastone_brick_slab", () -> new SlabBlock(UMBRASTONE_PROPERTIES));
     public static final RegistryObject<Block> UMBRASTONE_BRICK_WALL = registerBlock("umbrastone_brick_wall", () -> new WallBlock(UMBRASTONE_PROPERTIES));
-    public static final RegistryObject<Block> UMBRASTONE_BRICK_BUTTON = registerBlock("umbrastone_brick_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> UMBRASTONE_BRICK_PRESSURE_PLATE = registerBlock("umbrastone_brick_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET));
+    public static final RegistryObject<Block> UMBRASTONE_BRICK_BUTTON = registerBlock("umbrastone_brick_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(),
+                    UMBRASTONE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> UMBRASTONE_BRICK_PRESSURE_PLATE = registerBlock("umbrastone_brick_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA)
+                    .requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET));
 
     //Umbrastone
     public static final RegistryObject<Block> UMBRASTONE = registerBlock("umbrastone", () -> new Block(UMBRASTONE_PROPERTIES));
-    public static final RegistryObject<Block> UMBRASTONE_STAIRS = registerBlock("umbrastone_stairs", () -> new StairBlock(BlockRegistry.UMBRASTONE.get().defaultBlockState(), UMBRASTONE_PROPERTIES));
+    public static final RegistryObject<Block> UMBRASTONE_STAIRS = registerBlock("umbrastone_stairs",
+            () -> new StairBlock(BlockRegistry.UMBRASTONE.get().defaultBlockState(), UMBRASTONE_PROPERTIES));
     public static final RegistryObject<Block> UMBRASTONE_SLAB = registerBlock("umbrastone_slab", () -> new SlabBlock(UMBRASTONE_PROPERTIES));
     public static final RegistryObject<Block> UMBRASTONE_WALL = registerBlock("umbrastone_wall", () -> new WallBlock(UMBRASTONE_PROPERTIES));
-    public static final RegistryObject<Block> UMBRASTONE_BUTTON = registerBlock("umbrastone_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> UMBRASTONE_PRESSURE_PLATE = registerBlock("umbrastone_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET));
+    public static final RegistryObject<Block> UMBRASTONE_BUTTON = registerBlock("umbrastone_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(),
+                    UMBRASTONE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> UMBRASTONE_PRESSURE_PLATE = registerBlock("umbrastone_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA)
+                    .requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET));
 
     //Cobbled umbrastone
     public static final RegistryObject<Block> COBBLED_UMBRASTONE = registerBlock("cobbled_umbrastone", () -> new Block(UMBRASTONE_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_UMBRASTONE_STAIRS = registerBlock("cobbled_umbrastone_stairs", () -> new StairBlock(BlockRegistry.COBBLED_UMBRASTONE.get().defaultBlockState(), UMBRASTONE_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_UMBRASTONE_STAIRS = registerBlock("cobbled_umbrastone_stairs",
+            () -> new StairBlock(BlockRegistry.COBBLED_UMBRASTONE.get().defaultBlockState(), UMBRASTONE_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_UMBRASTONE_SLAB = registerBlock("cobbled_umbrastone_slab", () -> new SlabBlock(UMBRASTONE_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_UMBRASTONE_WALL = registerBlock("cobbled_umbrastone_wall", () -> new WallBlock(UMBRASTONE_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_UMBRASTONE_BUTTON = registerBlock("cobbled_umbrastone_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> COBBLED_UMBRASTONE_PRESSURE_PLATE = registerBlock("cobbled_umbrastone_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET));
+    public static final RegistryObject<Block> COBBLED_UMBRASTONE_BUTTON = registerBlock("cobbled_umbrastone_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA).requiresCorrectToolForDrops().noCollission(),
+                    UMBRASTONE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> COBBLED_UMBRASTONE_PRESSURE_PLATE = registerBlock("cobbled_umbrastone_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_MAGENTA)
+                    .requiresCorrectToolForDrops().noCollission(), UMBRASTONE_BLOCKSET));
 
 
 
@@ -156,18 +180,29 @@ public class BlockRegistry {
                     BlockBehaviour.Properties.copy(Blocks.POTTED_ACACIA_SAPLING).noOcclusion()));
 
     public static final RegistryObject<Block> SCARLET_LADDER = registerBlock("scarlet_ladder",
-            () -> new LadderBlock(BlockBehaviour.Properties.of().forceSolidOff().strength(0.4F).sound(SoundType.CHERRY_WOOD).mapColor(MapColor.COLOR_PINK).noOcclusion().pushReaction(PushReaction.DESTROY)));
+            () -> new LadderBlock(BlockBehaviour.Properties.of().forceSolidOff().strength(0.4F).sound(SoundType.CHERRY_WOOD).mapColor(MapColor.COLOR_PINK)
+                    .noOcclusion().pushReaction(PushReaction.DESTROY)));
 
     //Scarlet planks
     public static final RegistryObject<Block> SCARLET_PLANKS = registerBlock("scarlet_planks", () -> new Block(SCARLET_PROPERTIES));
-    public static final RegistryObject<Block> SCARLET_STAIRS = registerBlock("scarlet_stairs", () -> new StairBlock(SCARLET_PLANKS.get().defaultBlockState(), SCARLET_PROPERTIES));
+    public static final RegistryObject<Block> SCARLET_STAIRS = registerBlock("scarlet_stairs", () -> new StairBlock(SCARLET_PLANKS.get().defaultBlockState(),
+            SCARLET_PROPERTIES));
     public static final RegistryObject<Block> SCARLET_SLAB = registerBlock("scarlet_slab", () -> new SlabBlock(SCARLET_PROPERTIES));
-    public static final RegistryObject<Block> SCARLET_DOOR = registerBlock("scarlet_door", () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion(), BlockSetType.CHERRY));
-    public static final RegistryObject<Block> SCARLET_TRAPDOOR = registerBlock("scarlet_trapdoor", () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion(), BlockSetType.CHERRY));
+    public static final RegistryObject<Block> SCARLET_DOOR = registerBlock("scarlet_door",
+            () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion(),
+                    BlockSetType.CHERRY));
+    public static final RegistryObject<Block> SCARLET_TRAPDOOR = registerBlock("scarlet_trapdoor",
+            () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion(),
+                    BlockSetType.CHERRY));
     public static final RegistryObject<Block> SCARLET_FENCE = registerBlock("scarlet_fence", () -> new FenceBlock(SCARLET_PROPERTIES));
-    public static final RegistryObject<Block> SCARLET_FENCE_GATE = registerBlock("scarlet_fence_gate", () -> new FenceGateBlock(SCARLET_PROPERTIES, WoodType.CHERRY));
-    public static final RegistryObject<Block> SCARLET_BUTTON = registerBlock("scarlet_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_PINK).requiresCorrectToolForDrops().noCollission(), BlockSetType.CHERRY, 30, true));
-    public static final RegistryObject<Block> SCARLET_PRESSURE_PLATE = registerBlock("scarlet_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_PINK).requiresCorrectToolForDrops().noCollission(), BlockSetType.CHERRY));
+    public static final RegistryObject<Block> SCARLET_FENCE_GATE = registerBlock("scarlet_fence_gate", () -> new FenceGateBlock(SCARLET_PROPERTIES,
+            WoodType.CHERRY));
+    public static final RegistryObject<Block> SCARLET_BUTTON = registerBlock("scarlet_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_PINK).requiresCorrectToolForDrops().noCollission(),
+                    BlockSetType.CHERRY, 30, true));
+    public static final RegistryObject<Block> SCARLET_PRESSURE_PLATE = registerBlock("scarlet_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_PINK)
+                    .requiresCorrectToolForDrops().noCollission(), BlockSetType.CHERRY));
 
 
 
@@ -204,18 +239,29 @@ public class BlockRegistry {
     public static final RegistryObject<Block> DARK_CANDY_CRAFTING_TABLE = registerBlock("dark_candy_crafting_table",
             () -> new DarkCandyCraftingTableBlock(DARK_CANDY_PROPERTIES));
     public static final RegistryObject<Block> DARK_CANDY_LADDER = registerBlock("dark_candy_ladder",
-            () -> new LadderBlock(BlockBehaviour.Properties.of().forceSolidOff().strength(0.4F).sound(SoundType.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).noOcclusion().pushReaction(PushReaction.DESTROY)));
+            () -> new LadderBlock(BlockBehaviour.Properties.of().forceSolidOff().strength(0.4F).sound(SoundType.CHERRY_WOOD).mapColor(MapColor.COLOR_RED)
+                    .noOcclusion().pushReaction(PushReaction.DESTROY)));
 
     //Dark candy planks
     public static final RegistryObject<Block> DARK_CANDY_PLANKS = registerBlock("dark_candy_planks", () -> new Block(DARK_CANDY_PROPERTIES));
-    public static final RegistryObject<Block> DARK_CANDY_STAIRS = registerBlock("dark_candy_stairs", () -> new StairBlock(DARK_CANDY_PLANKS.get().defaultBlockState(), DARK_CANDY_PROPERTIES));
+    public static final RegistryObject<Block> DARK_CANDY_STAIRS = registerBlock("dark_candy_stairs",
+            () -> new StairBlock(DARK_CANDY_PLANKS.get().defaultBlockState(), DARK_CANDY_PROPERTIES));
     public static final RegistryObject<Block> DARK_CANDY_SLAB = registerBlock("dark_candy_slab", () -> new SlabBlock(DARK_CANDY_PROPERTIES));
-    public static final RegistryObject<Block> DARK_CANDY_DOOR = registerBlock("dark_candy_door", () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion(), BlockSetType.CHERRY));
-    public static final RegistryObject<Block> DARK_CANDY_TRAPDOOR = registerBlock("dark_candy_trapdoor", () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion(), BlockSetType.CHERRY));
+    public static final RegistryObject<Block> DARK_CANDY_DOOR = registerBlock("dark_candy_door",
+            () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion(),
+                    BlockSetType.CHERRY));
+    public static final RegistryObject<Block> DARK_CANDY_TRAPDOOR = registerBlock("dark_candy_trapdoor",
+            () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion(),
+                    BlockSetType.CHERRY));
     public static final RegistryObject<Block> DARK_CANDY_FENCE = registerBlock("dark_candy_fence", () -> new FenceBlock(DARK_CANDY_PROPERTIES));
-    public static final RegistryObject<Block> DARK_CANDY_FENCE_GATE = registerBlock("dark_candy_fence_gate", () -> new FenceGateBlock(DARK_CANDY_PROPERTIES, WoodType.CHERRY));
-    public static final RegistryObject<Block> DARK_CANDY_BUTTON = registerBlock("dark_candy_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), BlockSetType.CHERRY, 30, true));
-    public static final RegistryObject<Block> DARK_CANDY_PRESSURE_PLATE = registerBlock("dark_candy_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), BlockSetType.CHERRY));
+    public static final RegistryObject<Block> DARK_CANDY_FENCE_GATE = registerBlock("dark_candy_fence_gate",
+            () -> new FenceGateBlock(DARK_CANDY_PROPERTIES, WoodType.CHERRY));
+    public static final RegistryObject<Block> DARK_CANDY_BUTTON = registerBlock("dark_candy_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(),
+                    BlockSetType.CHERRY, 30, true));
+    public static final RegistryObject<Block> DARK_CANDY_PRESSURE_PLATE = registerBlock("dark_candy_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CHERRY_WOOD).mapColor(MapColor.COLOR_RED)
+                    .requiresCorrectToolForDrops().noCollission(), BlockSetType.CHERRY));
 
 
 
@@ -225,35 +271,54 @@ public class BlockRegistry {
 
     //Polished scarlet marble
     public static final RegistryObject<Block> POLISHED_SCARLET_MARBLE = registerBlock("polished_scarlet_marble", () -> new Block(SCARLET_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_SCARLET_MARBLE_STAIRS = registerBlock("polished_scarlet_marble_stairs", () -> new StairBlock(BlockRegistry.POLISHED_SCARLET_MARBLE.get().defaultBlockState(), SCARLET_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_SCARLET_MARBLE_STAIRS = registerBlock("polished_scarlet_marble_stairs",
+            () -> new StairBlock(BlockRegistry.POLISHED_SCARLET_MARBLE.get().defaultBlockState(), SCARLET_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_SCARLET_MARBLE_SLAB = registerBlock("polished_scarlet_marble_slab", () -> new SlabBlock(SCARLET_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_SCARLET_MARBLE_WALL = registerBlock("polished_scarlet_marble_wall", () -> new WallBlock(SCARLET_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_SCARLET_MARBLE_BUTTON = registerBlock("polished_scarlet_marble_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> POLISHED_SCARLET_MARBLE_PRESSURE_PLATE = registerBlock("polished_scarlet_marble_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET));
+    public static final RegistryObject<Block> POLISHED_SCARLET_MARBLE_BUTTON = registerBlock("polished_scarlet_marble_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(),
+                    SCARLET_MARBLE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> POLISHED_SCARLET_MARBLE_PRESSURE_PLATE = registerBlock("polished_scarlet_marble_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED)
+                    .requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET));
 
     //Scarlet marble bricks
     public static final RegistryObject<Block> SCARLET_MARBLE_BRICKS = registerBlock("scarlet_marble_bricks", () -> new Block(SCARLET_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> SCARLET_MARBLE_BRICK_STAIRS = registerBlock("scarlet_marble_brick_stairs", () -> new StairBlock(BlockRegistry.SCARLET_MARBLE_BRICKS.get().defaultBlockState(), SCARLET_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> SCARLET_MARBLE_BRICK_STAIRS = registerBlock("scarlet_marble_brick_stairs",
+            () -> new StairBlock(BlockRegistry.SCARLET_MARBLE_BRICKS.get().defaultBlockState(), SCARLET_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> SCARLET_MARBLE_BRICK_SLAB = registerBlock("scarlet_marble_brick_slab", () -> new SlabBlock(SCARLET_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> SCARLET_MARBLE_BRICK_WALL = registerBlock("scarlet_marble_brick_wall", () -> new WallBlock(SCARLET_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> SCARLET_MARBLE_BRICK_BUTTON = registerBlock("scarlet_marble_brick_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> SCARLET_MARBLE_BRICK_PRESSURE_PLATE = registerBlock("scarlet_marble_brick_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET));
+    public static final RegistryObject<Block> SCARLET_MARBLE_BRICK_BUTTON = registerBlock("scarlet_marble_brick_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(),
+                    SCARLET_MARBLE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> SCARLET_MARBLE_BRICK_PRESSURE_PLATE = registerBlock("scarlet_marble_brick_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED)
+                    .requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET));
 
     //Scarlet marble
     public static final RegistryObject<Block> SCARLET_MARBLE = registerBlock("scarlet_marble", () -> new Block(SCARLET_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> SCARLET_MARBLE_STAIRS = registerBlock("scarlet_marble_stairs", () -> new StairBlock(BlockRegistry.SCARLET_MARBLE.get().defaultBlockState(), SCARLET_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> SCARLET_MARBLE_SLAB = registerBlock("scarlet_marble_slab", () -> new SlabBlock(SCARLET_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> SCARLET_MARBLE_WALL = registerBlock("scarlet_marble_wall", () -> new WallBlock(SCARLET_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> SCARLET_MARBLE_BUTTON = registerBlock("scarlet_marble_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> SCARLET_MARBLE_PRESSURE_PLATE = registerBlock("scarlet_marble_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET));
+    public static final RegistryObject<Block> SCARLET_MARBLE_BUTTON = registerBlock("scarlet_marble_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(),
+                    SCARLET_MARBLE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> SCARLET_MARBLE_PRESSURE_PLATE = registerBlock("scarlet_marble_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED)
+                    .requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET));
 
     //Cobbled scarlet marble
     public static final RegistryObject<Block> COBBLED_SCARLET_MARBLE = registerBlock("cobbled_scarlet_marble", () -> new Block(SCARLET_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_SCARLET_MARBLE_STAIRS = registerBlock("cobbled_scarlet_marble_stairs", () -> new StairBlock(BlockRegistry.COBBLED_SCARLET_MARBLE.get().defaultBlockState(), SCARLET_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_SCARLET_MARBLE_STAIRS = registerBlock("cobbled_scarlet_marble_stairs",
+            () -> new StairBlock(BlockRegistry.COBBLED_SCARLET_MARBLE.get().defaultBlockState(), SCARLET_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_SCARLET_MARBLE_SLAB = registerBlock("cobbled_scarlet_marble_slab", () -> new SlabBlock(SCARLET_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_SCARLET_MARBLE_WALL = registerBlock("cobbled_scarlet_marble_wall", () -> new WallBlock(SCARLET_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_SCARLET_MARBLE_BUTTON = registerBlock("cobbled_scarlet_marble_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> COBBLED_SCARLET_MARBLE_PRESSURE_PLATE = registerBlock("cobbled_scarlet_marble_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET));
+    public static final RegistryObject<Block> COBBLED_SCARLET_MARBLE_BUTTON = registerBlock("cobbled_scarlet_marble_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noCollission(),
+                    SCARLET_MARBLE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> COBBLED_SCARLET_MARBLE_PRESSURE_PLATE = registerBlock("cobbled_scarlet_marble_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED)
+                    .requiresCorrectToolForDrops().noCollission(), SCARLET_MARBLE_BLOCKSET));
 
     //Scarlet marble chess
     public static final RegistryObject<Block> SCARLET_MARBLE_PAWN = registerBlock("scarlet_marble_pawn", () -> new ChessPawnBlock(SCARLET_MARBLE_PROPERTIES));
@@ -271,35 +336,54 @@ public class BlockRegistry {
 
     //Polished dark marble
     public static final RegistryObject<Block> POLISHED_DARK_MARBLE = registerBlock("polished_dark_marble", () -> new Block(DARK_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_DARK_MARBLE_STAIRS = registerBlock("polished_dark_marble_stairs", () -> new StairBlock(BlockRegistry.POLISHED_DARK_MARBLE.get().defaultBlockState(), DARK_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_DARK_MARBLE_STAIRS = registerBlock("polished_dark_marble_stairs",
+            () -> new StairBlock(BlockRegistry.POLISHED_DARK_MARBLE.get().defaultBlockState(), DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_DARK_MARBLE_SLAB = registerBlock("polished_dark_marble_slab", () -> new SlabBlock(DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_DARK_MARBLE_WALL = registerBlock("polished_dark_marble_wall", () -> new WallBlock(DARK_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_DARK_MARBLE_BUTTON = registerBlock("polished_dark_marble_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollission(), DARK_MARBLE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> POLISHED_DARK_MARBLE_PRESSURE_PLATE = registerBlock("polished_dark_marble_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollission(), DARK_MARBLE_BLOCKSET));
+    public static final RegistryObject<Block> POLISHED_DARK_MARBLE_BUTTON = registerBlock("polished_dark_marble_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollission(),
+                    DARK_MARBLE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> POLISHED_DARK_MARBLE_PRESSURE_PLATE = registerBlock("polished_dark_marble_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY)
+                    .requiresCorrectToolForDrops().noCollission(), DARK_MARBLE_BLOCKSET));
 
     //Dark marble bricks
     public static final RegistryObject<Block> DARK_MARBLE_BRICKS = registerBlock("dark_marble_bricks", () -> new Block(DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> DARK_MARBLE_BRICK_STAIRS = registerBlock("dark_marble_brick_stairs", () -> new StairBlock(BlockRegistry.DARK_MARBLE_BRICKS.get().defaultBlockState(), DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> DARK_MARBLE_BRICK_SLAB = registerBlock("dark_marble_brick_slab", () -> new SlabBlock(DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> DARK_MARBLE_BRICK_WALL = registerBlock("dark_marble_brick_wall", () -> new WallBlock(DARK_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> DARK_MARBLE_BRICK_BUTTON = registerBlock("dark_marble_brick_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollission(), DARK_MARBLE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> DARK_MARBLE_BRICK_PRESSURE_PLATE = registerBlock("dark_marble_brick_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollission(), DARK_MARBLE_BLOCKSET));
+    public static final RegistryObject<Block> DARK_MARBLE_BRICK_BUTTON = registerBlock("dark_marble_brick_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noCollission(),
+                    DARK_MARBLE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> DARK_MARBLE_BRICK_PRESSURE_PLATE = registerBlock("dark_marble_brick_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY)
+                    .requiresCorrectToolForDrops().noCollission(), DARK_MARBLE_BLOCKSET));
 
     //Dark marble
     public static final RegistryObject<Block> DARK_MARBLE = registerBlock("dark_marble", () -> new Block(DARK_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> DARK_MARBLE_STAIRS = registerBlock("dark_marble_stairs", () -> new StairBlock(BlockRegistry.DARK_MARBLE.get().defaultBlockState(), DARK_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> DARK_MARBLE_STAIRS = registerBlock("dark_marble_stairs",
+            () -> new StairBlock(BlockRegistry.DARK_MARBLE.get().defaultBlockState(), DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> DARK_MARBLE_SLAB = registerBlock("dark_marble_slab", () -> new SlabBlock(DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> DARK_MARBLE_WALL = registerBlock("dark_marble_wall", () -> new WallBlock(DARK_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> DARK_MARBLE_BUTTON = registerBlock("dark_marble_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).noCollission(), DARK_MARBLE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> DARK_MARBLE_PRESSURE_PLATE = registerBlock("dark_marble_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).noCollission(), DARK_MARBLE_BLOCKSET));
+    public static final RegistryObject<Block> DARK_MARBLE_BUTTON = registerBlock("dark_marble_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).noCollission(),
+                    DARK_MARBLE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> DARK_MARBLE_PRESSURE_PLATE = registerBlock("dark_marble_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY)
+                    .noCollission(), DARK_MARBLE_BLOCKSET));
 
     //Cobbled dark marble
     public static final RegistryObject<Block> COBBLED_DARK_MARBLE = registerBlock("cobbled_dark_marble", () -> new Block(DARK_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_STAIRS = registerBlock("cobbled_dark_marble_stairs", () -> new StairBlock(BlockRegistry.COBBLED_DARK_MARBLE.get().defaultBlockState(), DARK_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_STAIRS = registerBlock("cobbled_dark_marble_stairs",
+            () -> new StairBlock(BlockRegistry.COBBLED_DARK_MARBLE.get().defaultBlockState(), DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_DARK_MARBLE_SLAB = registerBlock("cobbled_dark_marble_slab", () -> new SlabBlock(DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_DARK_MARBLE_WALL = registerBlock("cobbled_dark_marble_wall", () -> new WallBlock(DARK_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_BUTTON = registerBlock("cobbled_dark_marble_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).noCollission(), DARK_MARBLE_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_PRESSURE_PLATE = registerBlock("cobbled_dark_marble_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).noCollission(), DARK_MARBLE_BLOCKSET));
+    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_BUTTON = registerBlock("cobbled_dark_marble_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).noCollission(),
+                    DARK_MARBLE_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> COBBLED_DARK_MARBLE_PRESSURE_PLATE = registerBlock("cobbled_dark_marble_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY)
+                    .noCollission(), DARK_MARBLE_BLOCKSET));
 
     //Dark marble chess
     public static final RegistryObject<Block> DARK_MARBLE_PAWN = registerBlock("dark_marble_pawn", () -> new ChessPawnBlock(DARK_MARBLE_PROPERTIES));
@@ -313,118 +397,198 @@ public class BlockRegistry {
 
     //Cliffrock misc
     public static final RegistryObject<Block> CLIFFROCK_PATH = registerBlock("cliffrock_path", () -> new Block(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> CLIFFROCK_SLIDE = registerBlock("cliffrock_slide", () -> new CliffrockSlideBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noOcclusion()));
+    public static final RegistryObject<Block> CLIFFROCK_SLIDE = registerBlock("cliffrock_slide",
+            () -> new CliffrockSlideBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops()
+                    .sound(SoundTypeRegistry.CLIFF).noOcclusion()));
     public static final RegistryObject<Block> CLIFFROCK_PILLAR = registerBlock("cliffrock_pillar", () -> new RotatedPillarBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CHISELED_CLIFFROCK = registerBlock("chiseled_cliffrock", () -> new Block(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> DUST_BLOCK = registerBlock("dust_block", () -> new DustBlock(BlockBehaviour.Properties.copy(Blocks.BLACK_WOOL).mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundTypeRegistry.DUST).noOcclusion().instabreak().noCollission()));
-    public static final RegistryObject<Block> DUST_BLOCK_GHOST = BLOCKS.register("dust_block_ghost", () -> new Block(BlockBehaviour.Properties.copy(Blocks.BLACK_WOOL).mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundTypeRegistry.DUST).noOcclusion().instabreak().noCollission()));
+    public static final RegistryObject<Block> DUST_BLOCK = registerBlock("dust_block", () -> new DustBlock(BlockBehaviour.Properties.copy(Blocks.BLACK_WOOL)
+            .mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundTypeRegistry.DUST).noOcclusion().instabreak().noCollission()));
+    public static final RegistryObject<Block> DUST_BLOCK_GHOST = BLOCKS.register("dust_block_ghost",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.BLACK_WOOL).mapColor(MapColor.COLOR_LIGHT_GRAY).sound(SoundTypeRegistry.DUST).noOcclusion()
+                    .instabreak().noCollission()));
 
     public static final RegistryObject<Block> CLIFFROCK_EYE = registerBlock("cliffrock_eye", () -> new GenericHorizontalOrientableBlock(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> WEEPING_EYE = registerBlock("weeping_eye", () -> new WeepingEyeBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().sound(SoundType.HONEY_BLOCK).randomTicks()));
-    public static final RegistryObject<Block> LEAKING_ICHOR = registerBlock("leaking_ichor", () -> new LeakingIchorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().sound(SoundType.HONEY_BLOCK)));
-    public static final RegistryObject<Block> ICHOR_PUDDLE = BLOCKS.register("ichor_puddle", () -> new ScalableHorizontalPlaneBlock(BlockBehaviour.Properties.copy(Blocks.HONEY_BLOCK).mapColor(MapColor.COLOR_BLACK).sound(SoundType.HONEY_BLOCK).noOcclusion().instabreak(), 2f));
-    public static final RegistryObject<Block> ICHOR_BLOCK = BLOCKS.register("ichor_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.HONEY_BLOCK).mapColor(MapColor.COLOR_BLACK).sound(SoundType.HONEY_BLOCK)));
-    public static final RegistryObject<Block> ICHOR_TORCH = BLOCKS.register("ichor_torch", () -> new TorchBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8), ParticleTypes.SOUL_FIRE_FLAME));
-    public static final RegistryObject<Block> ICHOR_WALL_TORCH = BLOCKS.register("ichor_wall_torch", () -> new WallTorchBlock(BlockBehaviour.Properties.copy(Blocks.WALL_TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8), ParticleTypes.SOUL_FIRE_FLAME));
-    public static final RegistryObject<Block> ICHOR_LANTERN = registerBlock("ichor_lantern", () -> new LanternBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_LANTERN).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 12)));
-    public static final RegistryObject<Block> ICHOR_CANDLE = BLOCKS.register("ichor_candle", () -> new IchorCandleBlock(BlockBehaviour.Properties.copy(Blocks.CANDLE).mapColor(MapColor.COLOR_BLACK).sound(SoundType.LANTERN).lightLevel(state -> state.getValue(LIT) ? 12 : 0)));
-    public static final RegistryObject<Block> ICHOR_FIRE = BLOCKS.register("ichor_fire", () -> new IchorFireBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_FIRE).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(state -> 12)));
+    public static final RegistryObject<Block> WEEPING_EYE = registerBlock("weeping_eye",
+            () -> new WeepingEyeBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops()
+                    .sound(SoundType.HONEY_BLOCK).randomTicks()));
+    public static final RegistryObject<Block> LEAKING_ICHOR = registerBlock("leaking_ichor",
+            () -> new LeakingIchorBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops()
+                    .sound(SoundType.HONEY_BLOCK)));
+    public static final RegistryObject<Block> ICHOR_PUDDLE = BLOCKS.register("ichor_puddle",
+            () -> new ScalableHorizontalPlaneBlock(BlockBehaviour.Properties.copy(Blocks.HONEY_BLOCK).mapColor(MapColor.COLOR_BLACK).sound(SoundType.HONEY_BLOCK)
+                    .noOcclusion().instabreak(), 2f));
+    public static final RegistryObject<Block> ICHOR_BLOCK = BLOCKS.register("ichor_block",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.HONEY_BLOCK).mapColor(MapColor.COLOR_BLACK).sound(SoundType.HONEY_BLOCK)));
+    public static final RegistryObject<Block> ICHOR_TORCH = BLOCKS.register("ichor_torch",
+            () -> new TorchBlock(BlockBehaviour.Properties.copy(Blocks.TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8),
+                    ParticleTypes.SOUL_FIRE_FLAME));
+    public static final RegistryObject<Block> ICHOR_WALL_TORCH = BLOCKS.register("ichor_wall_torch",
+            () -> new WallTorchBlock(BlockBehaviour.Properties.copy(Blocks.WALL_TORCH).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 8),
+                    ParticleTypes.SOUL_FIRE_FLAME));
+    public static final RegistryObject<Block> ICHOR_LANTERN = registerBlock("ichor_lantern",
+            () -> new LanternBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_LANTERN).mapColor(MapColor.COLOR_CYAN).lightLevel(state -> 12)));
+    public static final RegistryObject<Block> ICHOR_CANDLE = BLOCKS.register("ichor_candle",
+            () -> new IchorCandleBlock(BlockBehaviour.Properties.copy(Blocks.CANDLE).mapColor(MapColor.COLOR_BLACK).sound(SoundType.LANTERN)
+                    .lightLevel(state -> state.getValue(LIT) ? 12 : 0)));
+    public static final RegistryObject<Block> ICHOR_FIRE = BLOCKS.register("ichor_fire",
+            () -> new IchorFireBlock(BlockBehaviour.Properties.copy(Blocks.SOUL_FIRE).mapColor(MapColor.COLOR_LIGHT_BLUE).lightLevel(state -> 12)));
 
     //Polished cliffrock
     public static final RegistryObject<Block> POLISHED_CLIFFROCK = registerBlock("polished_cliffrock", () -> new Block(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_CLIFFROCK_STAIRS = registerBlock("polished_cliffrock_stairs", () -> new StairBlock(BlockRegistry.POLISHED_CLIFFROCK.get().defaultBlockState(), CLIFFROCK_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_CLIFFROCK_STAIRS = registerBlock("polished_cliffrock_stairs",
+            () -> new StairBlock(BlockRegistry.POLISHED_CLIFFROCK.get().defaultBlockState(), CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_CLIFFROCK_SLAB = registerBlock("polished_cliffrock_slab", () -> new SlabBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_CLIFFROCK_WALL = registerBlock("polished_cliffrock_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_CLIFFROCK_BUTTON = registerBlock("polished_cliffrock_button", () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
-    public static final RegistryObject<Block> POLISHED_CLIFFROCK_PRESSURE_PLATE = registerBlock("polished_cliffrock_pressure_plate", () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(), SoundRegistry.CLIFFROCK_UNPRESS.get()));
+    public static final RegistryObject<Block> POLISHED_CLIFFROCK_BUTTON = registerBlock("polished_cliffrock_button",
+            () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops()
+                    .sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
+    public static final RegistryObject<Block> POLISHED_CLIFFROCK_PRESSURE_PLATE = registerBlock("polished_cliffrock_pressure_plate",
+            () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(),
+                    SoundRegistry.CLIFFROCK_UNPRESS.get()));
 
     //Cliffrock bricks
     public static final RegistryObject<Block> CLIFFROCK_BRICKS = registerBlock("cliffrock_bricks", () -> new Block(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> CLIFFROCK_BRICK_STAIRS = registerBlock("cliffrock_brick_stairs", () -> new StairBlock(BlockRegistry.CLIFFROCK_BRICKS.get().defaultBlockState(), CLIFFROCK_PROPERTIES));
+    public static final RegistryObject<Block> CLIFFROCK_BRICK_STAIRS = registerBlock("cliffrock_brick_stairs",
+            () -> new StairBlock(BlockRegistry.CLIFFROCK_BRICKS.get().defaultBlockState(), CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_BRICK_SLAB = registerBlock("cliffrock_brick_slab", () -> new SlabBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_BRICK_WALL = registerBlock("cliffrock_brick_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> CLIFFROCK_BRICK_BUTTON = registerBlock("cliffrock_brick_button", () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
-    public static final RegistryObject<Block> CLIFFROCK_BRICK_PRESSURE_PLATE = registerBlock("cliffrock_brick_pressure_plate", () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(), SoundRegistry.CLIFFROCK_UNPRESS.get()));
+    public static final RegistryObject<Block> CLIFFROCK_BRICK_BUTTON = registerBlock("cliffrock_brick_button",
+            () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops()
+                    .sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
+    public static final RegistryObject<Block> CLIFFROCK_BRICK_PRESSURE_PLATE = registerBlock("cliffrock_brick_pressure_plate",
+            () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(),
+                    SoundRegistry.CLIFFROCK_UNPRESS.get()));
 
     //Cliffrock
-    public static final RegistryObject<Block> CLIFFROCK = registerBlock("cliffrock", () -> new PathableBlock(CLIFFROCK_PROPERTIES, BlockRegistry.CLIFFROCK_PATH.get()));
-    public static final RegistryObject<Block> CLIFFROCK_STAIRS = registerBlock("cliffrock_stairs", () -> new StairBlock(BlockRegistry.CLIFFROCK.get().defaultBlockState(), CLIFFROCK_PROPERTIES));
+    public static final RegistryObject<Block> CLIFFROCK = registerBlock("cliffrock", () -> new PathableBlock(CLIFFROCK_PROPERTIES,
+            BlockRegistry.CLIFFROCK_PATH.get()));
+    public static final RegistryObject<Block> CLIFFROCK_STAIRS = registerBlock("cliffrock_stairs", () -> new StairBlock(BlockRegistry.CLIFFROCK.get()
+            .defaultBlockState(), CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_SLAB = registerBlock("cliffrock_slab", () -> new SlabBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> CLIFFROCK_WALL = registerBlock("cliffrock_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> CLIFFROCK_BUTTON = registerBlock("cliffrock_button", () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
-    public static final RegistryObject<Block> CLIFFROCK_PRESSURE_PLATE = registerBlock("cliffrock_pressure_plate", () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(), SoundRegistry.CLIFFROCK_UNPRESS.get()));
+    public static final RegistryObject<Block> CLIFFROCK_BUTTON = registerBlock("cliffrock_button",
+            () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops()
+                    .sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
+    public static final RegistryObject<Block> CLIFFROCK_PRESSURE_PLATE = registerBlock("cliffrock_pressure_plate",
+            () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(),
+                    SoundRegistry.CLIFFROCK_UNPRESS.get()));
 
     //Cobbled cliffrock
     public static final RegistryObject<Block> COBBLED_CLIFFROCK = registerBlock("cobbled_cliffrock", () -> new Block(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_CLIFFROCK_STAIRS = registerBlock("cobbled_cliffrock_stairs", () -> new StairBlock(BlockRegistry.COBBLED_CLIFFROCK.get().defaultBlockState(), CLIFFROCK_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_CLIFFROCK_STAIRS = registerBlock("cobbled_cliffrock_stairs",
+            () -> new StairBlock(BlockRegistry.COBBLED_CLIFFROCK.get().defaultBlockState(), CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_CLIFFROCK_SLAB = registerBlock("cobbled_cliffrock_slab", () -> new SlabBlock(CLIFFROCK_PROPERTIES));
     public static final RegistryObject<Block> COBBLED_CLIFFROCK_WALL = registerBlock("cobbled_cliffrock_wall", () -> new WallBlock(CLIFFROCK_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_CLIFFROCK_BUTTON = registerBlock("cobbled_cliffrock_button", () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
-    public static final RegistryObject<Block> COBBLED_CLIFFROCK_PRESSURE_PLATE = registerBlock("cobbled_cliffrock_pressure_plate", () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(), SoundRegistry.CLIFFROCK_UNPRESS.get()));
+    public static final RegistryObject<Block> COBBLED_CLIFFROCK_BUTTON = registerBlock("cobbled_cliffrock_button",
+            () -> new CliffrockButtonBlock(BlockBehaviour.Properties.copy(Blocks.STONE).mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops()
+                    .sound(SoundTypeRegistry.CLIFF).noCollission(), 30, false));
+    public static final RegistryObject<Block> COBBLED_CLIFFROCK_PRESSURE_PLATE = registerBlock("cobbled_cliffrock_pressure_plate",
+            () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .mapColor(MapColor.COLOR_LIGHT_GRAY).requiresCorrectToolForDrops().noCollission(), SoundTypeRegistry.CLIFF, SoundRegistry.CLIFFROCK_PRESS.get(),
+                    SoundRegistry.CLIFFROCK_UNPRESS.get()));
 
 
 
     //Tenebralith misc
     public static final RegistryObject<Block> TENEBRALITH_SPIKE = registerBlock("tenebralith_spike", () -> new TenebralithSpikeBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> TENEBRALITH_PATH = registerBlock("tenebralith_path", () -> new Block(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> DARK_SAND = registerBlock("dark_sand", () -> new FallingBlock(BlockBehaviour.Properties.copy(Blocks.SAND).mapColor(DyeColor.BLACK).sound(SoundType.SOUL_SAND).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> DARK_SAND = registerBlock("dark_sand", () -> new FallingBlock(BlockBehaviour.Properties.copy(Blocks.SAND)
+            .mapColor(DyeColor.BLACK).sound(SoundType.SOUL_SAND).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TENEBRALITH_PILLAR = registerBlock("tenebralith_pillar", () -> new RotatedPillarBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> CHISELED_TENEBRALITH = registerBlock("chiseled_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> DARK_GEYSER = registerBlock("dark_geyser", () -> new DarkGeyserBlock(TENEBRALITH_PROPERTIES));
 
     //Polished tenebralith
     public static final RegistryObject<Block> POLISHED_TENEBRALITH = registerBlock("polished_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_TENEBRALITH_STAIRS = registerBlock("polished_tenebralith_stairs", () -> new StairBlock(BlockRegistry.POLISHED_TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> POLISHED_TENEBRALITH_STAIRS = registerBlock("polished_tenebralith_stairs",
+            () -> new StairBlock(BlockRegistry.POLISHED_TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_TENEBRALITH_SLAB = registerBlock("polished_tenebralith_slab", () -> new SlabBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> POLISHED_TENEBRALITH_WALL = registerBlock("polished_tenebralith_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> POLISHED_TENEBRALITH_BUTTON = registerBlock("polished_tenebralith_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> POLISHED_TENEBRALITH_PRESSURE_PLATE = registerBlock("polished_tenebralith_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET));
+    public static final RegistryObject<Block> POLISHED_TENEBRALITH_BUTTON = registerBlock("polished_tenebralith_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(),
+                    TENEBRALITH_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> POLISHED_TENEBRALITH_PRESSURE_PLATE = registerBlock("polished_tenebralith_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK)
+                    .requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET));
 
     //Tenebralith bricks
     public static final RegistryObject<Block> TENEBRALITH_BRICKS = registerBlock("tenebralith_bricks", () -> new Block(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> TENEBRALITH_BRICK_STAIRS = registerBlock("tenebralith_brick_stairs", () -> new StairBlock(BlockRegistry.TENEBRALITH_BRICKS.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH_BRICK_STAIRS = registerBlock("tenebralith_brick_stairs",
+            () -> new StairBlock(BlockRegistry.TENEBRALITH_BRICKS.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> TENEBRALITH_BRICK_SLAB = registerBlock("tenebralith_brick_slab", () -> new SlabBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> TENEBRALITH_BRICK_WALL = registerBlock("tenebralith_brick_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> TENEBRALITH_BRICK_BUTTON = registerBlock("tenebralith_brick_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> TENEBRALITH_BRICK_PRESSURE_PLATE = registerBlock("tenebralith_brick_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET));
+    public static final RegistryObject<Block> TENEBRALITH_BRICK_BUTTON = registerBlock("tenebralith_brick_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).requiresCorrectToolForDrops().noCollission(),
+                    TENEBRALITH_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> TENEBRALITH_BRICK_PRESSURE_PLATE = registerBlock("tenebralith_brick_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK)
+                    .requiresCorrectToolForDrops().noCollission(), TENEBRALITH_BLOCKSET));
 
     //Tenebralith
-    public static final RegistryObject<Block> TENEBRALITH = registerBlock("tenebralith", () -> new PathableBlock(TENEBRALITH_PROPERTIES, BlockRegistry.TENEBRALITH_PATH.get()));
-    public static final RegistryObject<Block> TENEBRALITH_STAIRS = registerBlock("tenebralith_stairs", () -> new StairBlock(BlockRegistry.TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> TENEBRALITH = registerBlock("tenebralith",
+            () -> new PathableBlock(TENEBRALITH_PROPERTIES, BlockRegistry.TENEBRALITH_PATH.get()));
+    public static final RegistryObject<Block> TENEBRALITH_STAIRS = registerBlock("tenebralith_stairs",
+            () -> new StairBlock(BlockRegistry.TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> TENEBRALITH_SLAB = registerBlock("tenebralith_slab", () -> new SlabBlock(TENEBRALITH_PROPERTIES));
     public static final RegistryObject<Block> TENEBRALITH_WALL = registerBlock("tenebralith_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> TENEBRALITH_BUTTON = registerBlock("tenebralith_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> TENEBRALITH_PRESSURE_PLATE = registerBlock("tenebralith_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET));
+    public static final RegistryObject<Block> TENEBRALITH_BUTTON = registerBlock("tenebralith_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(),
+                    TENEBRALITH_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> TENEBRALITH_PRESSURE_PLATE = registerBlock("tenebralith_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK)
+                    .noCollission(), TENEBRALITH_BLOCKSET));
 
     //Cobbled tenebralith
     public static final RegistryObject<Block> COBBLED_TENEBRALITH = registerBlock("cobbled_tenebralith", () -> new Block(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_TENEBRALITH_STAIRS = registerBlock("cobbled_tenebralith_stairs", () -> new StairBlock(BlockRegistry.COBBLED_TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_TENEBRALITH_SLAB = registerBlock("cobbled_tenebralith_slab", () -> new SlabBlock(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_TENEBRALITH_WALL = registerBlock("cobbled_tenebralith_wall", () -> new WallBlock(TENEBRALITH_PROPERTIES));
-    public static final RegistryObject<Block> COBBLED_TENEBRALITH_BUTTON = registerBlock("cobbled_tenebralith_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> COBBLED_TENEBRALITH_PRESSURE_PLATE = registerBlock("cobbled_tenebralith_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(), TENEBRALITH_BLOCKSET));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_STAIRS = registerBlock("cobbled_tenebralith_stairs",
+            () -> new StairBlock(BlockRegistry.COBBLED_TENEBRALITH.get().defaultBlockState(), TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_SLAB = registerBlock("cobbled_tenebralith_slab",
+            () -> new SlabBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_WALL = registerBlock("cobbled_tenebralith_wall",
+            () -> new WallBlock(TENEBRALITH_PROPERTIES));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_BUTTON = registerBlock("cobbled_tenebralith_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK).noCollission(),
+                    TENEBRALITH_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> COBBLED_TENEBRALITH_PRESSURE_PLATE = registerBlock("cobbled_tenebralith_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.DEEPSLATE).mapColor(MapColor.COLOR_BLACK)
+                    .noCollission(), TENEBRALITH_BLOCKSET));
 
 
 
     //Rosegold misc
     public static final RegistryObject<Block> ROSEGOLD_PILLAR = registerBlock("rosegold_pillar", () -> new RotatedPillarBlock(ROSEGOLD_PROPERTIES));
-    public static final RegistryObject<Block> UMBRASTONE_ROSEGOLD_ORE = registerBlock("umbrastone_rosegold_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.GOLD_ORE).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().sound(SoundType.STONE)));
+    public static final RegistryObject<Block> UMBRASTONE_ROSEGOLD_ORE = registerBlock("umbrastone_rosegold_ore",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.GOLD_ORE).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().sound(SoundType.STONE)));
 
     //Rosegold
     public static final RegistryObject<Block> ROSEGOLD_BLOCK = registerBlock("rosegold_block", () -> new Block(ROSEGOLD_PROPERTIES));
-    public static final RegistryObject<Block> ROSEGOLD_STAIRS = registerBlock("rosegold_stairs", () -> new StairBlock(BlockRegistry.ROSEGOLD_BLOCK.get().defaultBlockState(), ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_STAIRS = registerBlock("rosegold_stairs", () -> new StairBlock(BlockRegistry.ROSEGOLD_BLOCK.get()
+            .defaultBlockState(), ROSEGOLD_PROPERTIES));
     public static final RegistryObject<Block> ROSEGOLD_SLAB = registerBlock("rosegold_slab", () -> new SlabBlock(ROSEGOLD_PROPERTIES));
     public static final RegistryObject<Block> ROSEGOLD_WALL = registerBlock("rosegold_wall", () -> new WallBlock(ROSEGOLD_PROPERTIES));
-    public static final RegistryObject<Block> ROSEGOLD_BUTTON = registerBlock("rosegold_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> ROSEGOLD_PRESSURE_PLATE = registerBlock("rosegold_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET));
+    public static final RegistryObject<Block> ROSEGOLD_BUTTON = registerBlock("rosegold_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(),
+                    ROSEGOLD_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> ROSEGOLD_PRESSURE_PLATE = registerBlock("rosegold_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW)
+                    .requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET));
 
     //Rosegold bricks
     public static final RegistryObject<Block> ROSEGOLD_BRICKS = registerBlock("rosegold_bricks", () -> new Block(ROSEGOLD_PROPERTIES));
-    public static final RegistryObject<Block> ROSEGOLD_BRICK_STAIRS = registerBlock("rosegold_brick_stairs", () -> new StairBlock(BlockRegistry.ROSEGOLD_BRICKS.get().defaultBlockState(), ROSEGOLD_PROPERTIES));
+    public static final RegistryObject<Block> ROSEGOLD_BRICK_STAIRS = registerBlock("rosegold_brick_stairs",
+            () -> new StairBlock(BlockRegistry.ROSEGOLD_BRICKS.get().defaultBlockState(), ROSEGOLD_PROPERTIES));
     public static final RegistryObject<Block> ROSEGOLD_BRICK_SLAB = registerBlock("rosegold_brick_slab", () -> new SlabBlock(ROSEGOLD_PROPERTIES));
     public static final RegistryObject<Block> ROSEGOLD_BRICK_WALL = registerBlock("rosegold_brick_wall", () -> new WallBlock(ROSEGOLD_PROPERTIES));
-    public static final RegistryObject<Block> ROSEGOLD_BRICK_BUTTON = registerBlock("rosegold_brick_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> ROSEGOLD_BRICK_PRESSURE_PLATE = registerBlock("rosegold_brick_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET));
+    public static final RegistryObject<Block> ROSEGOLD_BRICK_BUTTON = registerBlock("rosegold_brick_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW).requiresCorrectToolForDrops().noCollission(),
+                    ROSEGOLD_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> ROSEGOLD_BRICK_PRESSURE_PLATE = registerBlock("rosegold_brick_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.GOLD_BLOCK).mapColor(MapColor.COLOR_YELLOW)
+                    .requiresCorrectToolForDrops().noCollission(), ROSEGOLD_BLOCKSET));
 
 
 
@@ -434,32 +598,47 @@ public class BlockRegistry {
     public static final RegistryObject<Block> YELLOW_CHECK = registerBlock("yellow_check", () -> new CheckBlock(DARK_MARBLE_PROPERTIES));
     public static final RegistryObject<Block> BLUE_CHECK = registerBlock("blue_check", () -> new CheckBlock(DARK_MARBLE_PROPERTIES));
 
-    public static final RegistryObject<Block> DARK_MARBLE_IVORY_ORE = registerBlock("dark_marble_ivory_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_ORE).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().sound(SoundType.STONE)));
-    public static final RegistryObject<Block> SCARLET_MARBLE_IVORY_ORE = registerBlock("scarlet_marble_ivory_ore", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_ORE).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().sound(SoundType.STONE)));
+    public static final RegistryObject<Block> DARK_MARBLE_IVORY_ORE = registerBlock("dark_marble_ivory_ore",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_ORE).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().sound(SoundType.STONE)));
+    public static final RegistryObject<Block> SCARLET_MARBLE_IVORY_ORE = registerBlock("scarlet_marble_ivory_ore",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_ORE).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().sound(SoundType.STONE)));
 
     public static final RegistryObject<Block> IVORY_PILLAR = registerBlock("ivory_pillar", () -> new RotatedPillarBlock(IVORY_PROPERTIES));
     public static final RegistryObject<Block> CHISELED_IVORY = registerBlock("chiseled_ivory", () -> new Block(IVORY_PROPERTIES));
 
     public static final RegistryObject<Block> DARK_MARBLE_DICE = registerBlock("dark_marble_dice", () -> new DarkMarbleDiceBlock(DARK_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> SCARLET_MARBLE_DICE = registerBlock("scarlet_marble_dice", () -> new ScarletMarbleDiceBlock(SCARLET_MARBLE_PROPERTIES));
-    public static final RegistryObject<Block> DARK_MARBLE_DICE_GHOST = BLOCKS.register("dark_marble_dice_ghost", () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noOcclusion()));
-    public static final RegistryObject<Block> SCARLET_MARBLE_DICE_GHOST = BLOCKS.register("scarlet_marble_dice_ghost", () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion()));
+    public static final RegistryObject<Block> SCARLET_MARBLE_DICE = registerBlock("scarlet_marble_dice",
+            () -> new ScarletMarbleDiceBlock(SCARLET_MARBLE_PROPERTIES));
+    public static final RegistryObject<Block> DARK_MARBLE_DICE_GHOST = BLOCKS.register("dark_marble_dice_ghost",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops().noOcclusion()));
+    public static final RegistryObject<Block> SCARLET_MARBLE_DICE_GHOST = BLOCKS.register("scarlet_marble_dice_ghost",
+            () -> new Block(BlockBehaviour.Properties.copy(Blocks.CALCITE).mapColor(MapColor.COLOR_RED).requiresCorrectToolForDrops().noOcclusion()));
 
     //Ivory
     public static final RegistryObject<Block> IVORY_BLOCK = registerBlock("ivory_block", () -> new Block(IVORY_PROPERTIES));
-    public static final RegistryObject<Block> IVORY_STAIRS = registerBlock("ivory_stairs", () -> new StairBlock(BlockRegistry.IVORY_BLOCK.get().defaultBlockState(), IVORY_PROPERTIES));
+    public static final RegistryObject<Block> IVORY_STAIRS = registerBlock("ivory_stairs",
+            () -> new StairBlock(BlockRegistry.IVORY_BLOCK.get().defaultBlockState(), IVORY_PROPERTIES));
     public static final RegistryObject<Block> IVORY_SLAB = registerBlock("ivory_slab", () -> new SlabBlock(IVORY_PROPERTIES));
     public static final RegistryObject<Block> IVORY_WALL = registerBlock("ivory_wall", () -> new WallBlock(IVORY_PROPERTIES));
-    public static final RegistryObject<Block> IVORY_BUTTON = registerBlock("ivory_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().noCollission(), IVORY_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> IVORY_PRESSURE_PLATE = registerBlock("ivory_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().noCollission(), IVORY_BLOCKSET));
+    public static final RegistryObject<Block> IVORY_BUTTON = registerBlock("ivory_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().noCollission(),
+                    IVORY_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> IVORY_PRESSURE_PLATE = registerBlock("ivory_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK)
+                    .mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().noCollission(), IVORY_BLOCKSET));
 
     //Ivory bricks
     public static final RegistryObject<Block> IVORY_BRICKS = registerBlock("ivory_bricks", () -> new Block(IVORY_PROPERTIES));
-    public static final RegistryObject<Block> IVORY_BRICK_STAIRS = registerBlock("ivory_brick_stairs", () -> new StairBlock(BlockRegistry.IVORY_BRICKS.get().defaultBlockState(), IVORY_PROPERTIES));
+    public static final RegistryObject<Block> IVORY_BRICK_STAIRS = registerBlock("ivory_brick_stairs",
+            () -> new StairBlock(BlockRegistry.IVORY_BRICKS.get().defaultBlockState(), IVORY_PROPERTIES));
     public static final RegistryObject<Block> IVORY_BRICK_SLAB = registerBlock("ivory_brick_slab", () -> new SlabBlock(IVORY_PROPERTIES));
     public static final RegistryObject<Block> IVORY_BRICK_WALL = registerBlock("ivory_brick_wall", () -> new WallBlock(IVORY_PROPERTIES));
-    public static final RegistryObject<Block> IVORY_BRICK_BUTTON = registerBlock("ivory_brick_button", () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().noCollission(), IVORY_BLOCKSET, 30, false));
-    public static final RegistryObject<Block> IVORY_BRICK_PRESSURE_PLATE = registerBlock("ivory_brick_pressure_plate", () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().noCollission(), IVORY_BLOCKSET));
+    public static final RegistryObject<Block> IVORY_BRICK_BUTTON = registerBlock("ivory_brick_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().noCollission(),
+                    IVORY_BLOCKSET, 30, false));
+    public static final RegistryObject<Block> IVORY_BRICK_PRESSURE_PLATE = registerBlock("ivory_brick_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK)
+                    .mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().noCollission(), IVORY_BLOCKSET));
 
     public static final RegistryObject<LiquidBlock> LUMINESCENT_WATER = BLOCKS.register("luminescent_water",
             () -> new LuminescentWaterFluidBlock(FluidRegistry.SOURCE_LUMINESCENT_WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()
@@ -469,11 +648,55 @@ public class BlockRegistry {
     public static final RegistryObject<LiquidBlock> NEGATIVE_PHOTONS = BLOCKS.register("negative_photons",
             () -> new NegativePhotonsFluidBlock(FluidRegistry.SOURCE_NEGATIVE_PHOTONS, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
 
+
+
+    //Luciramic misc
+    public static final RegistryObject<Block> LUCIRAMIC_WING = registerBlock("luciramic_wing",
+            () -> new LuciramicWingBlock(BlockBehaviour.Properties.of().destroyTime(3f).offsetType(BlockBehaviour.OffsetType.XZ)
+                    .mapColor(DyeColor.WHITE).sound(SoundTypeRegistry.LUCIRAMIC).requiresCorrectToolForDrops().pushReaction(PushReaction.IGNORE)
+                    .dynamicShape().lightLevel((state) -> 8)));
+    public static final RegistryObject<Block> ANCHOR_OF_LIGHT = BLOCKS.register("anchor_of_light",
+            () -> new AnchorOfLightBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).offsetType(BlockBehaviour.OffsetType.NONE)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).lightLevel(state -> 15).noOcclusion().noParticlesOnBreak()));
+    public static final RegistryObject<Block> ANCHOR_OF_LIGHT_PART = BLOCKS.register("anchor_of_light_part",
+            () -> new AnchorOfLightPartBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).destroyTime(5f).offsetType(BlockBehaviour.OffsetType.NONE)
+                    .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).noOcclusion().noParticlesOnBreak()));
+
+    //Luciramic
+    public static final RegistryObject<Block> LUCIRAMIC_BLOCK = registerBlock("luciramic_block", () -> new Block(LUCIRAMIC_PROPERTIES));
+    public static final RegistryObject<Block> LUCIRAMIC_STAIRS = registerBlock("luciramic_stairs", () -> new StairBlock(BlockRegistry.LUCIRAMIC_BLOCK.get()
+            .defaultBlockState(), LUCIRAMIC_PROPERTIES));
+    public static final RegistryObject<Block> LUCIRAMIC_SLAB = registerBlock("luciramic_slab", () -> new SlabBlock(LUCIRAMIC_PROPERTIES));
+    public static final RegistryObject<Block> LUCIRAMIC_WALL = registerBlock("luciramic_wall", () -> new WallBlock(LUCIRAMIC_PROPERTIES));
+    public static final RegistryObject<Block> LUCIRAMIC_BUTTON = registerBlock("luciramic_button",
+            () -> new LuciramicButtonBlock(BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(DyeColor.WHITE).requiresCorrectToolForDrops()
+                    .noCollission().sound(SoundTypeRegistry.LUCIRAMIC), 30, false));
+    public static final RegistryObject<Block> LUCIRAMIC_PRESSURE_PLATE = registerBlock("luciramic_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK)
+                    .mapColor(DyeColor.WHITE).requiresCorrectToolForDrops().noCollission().sound(SoundTypeRegistry.LUCIRAMIC), LUCIRAMIC_BLOCKSET));
+
+    //Luciramic bricks
+    public static final RegistryObject<Block> LUCIRAMIC_BRICKS = registerBlock("luciramic_bricks", () -> new Block(LUCIRAMIC_PROPERTIES));
+    public static final RegistryObject<Block> LUCIRAMIC_BRICK_STAIRS = registerBlock("luciramic_brick_stairs",
+            () -> new StairBlock(BlockRegistry.LUCIRAMIC_BRICKS.get().defaultBlockState(), LUCIRAMIC_PROPERTIES));
+    public static final RegistryObject<Block> LUCIRAMIC_BRICK_SLAB = registerBlock("luciramic_brick_slab", () -> new SlabBlock(LUCIRAMIC_PROPERTIES));
+    public static final RegistryObject<Block> LUCIRAMIC_BRICK_WALL = registerBlock("luciramic_brick_wall", () -> new WallBlock(LUCIRAMIC_PROPERTIES));
+    public static final RegistryObject<Block> LUCIRAMIC_BRICK_BUTTON = registerBlock("luciramic_brick_button",
+            () -> new LuciramicButtonBlock(BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK).mapColor(DyeColor.WHITE).requiresCorrectToolForDrops().noCollission()
+                    .sound(SoundTypeRegistry.LUCIRAMIC), 30, false));
+    public static final RegistryObject<Block> LUCIRAMIC_BRICK_PRESSURE_PLATE = registerBlock("luciramic_brick_pressure_plate",
+            () -> new GenericPressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING, BlockBehaviour.Properties.copy(Blocks.BONE_BLOCK)
+                    .mapColor(DyeColor.WHITE).requiresCorrectToolForDrops().noCollission().sound(SoundTypeRegistry.LUCIRAMIC), SoundTypeRegistry.LUCIRAMIC, SoundEvents.STONE_BUTTON_CLICK_ON, SoundEvents.STONE_BUTTON_CLICK_OFF));
+
+
+
     //Common
     public static final RegistryObject<Block> GREAT_DOOR_SPAWNER = registerBlock("great_door_spawner",
-            () -> new GreatDoorSpawnerBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable().pushReaction(PushReaction.BLOCK)));
+            () -> new GreatDoorSpawnerBlock(BlockBehaviour.Properties.of().strength(-1.0F, 3600000.0F).noLootTable()
+                    .pushReaction(PushReaction.BLOCK)));
     public static final RegistryObject<Block> CHESHIRE_CHEST = BLOCKS.register("cheshire_chest",
-            () -> new CheshireChestBlock(BlockBehaviour.Properties.copy(Blocks.ENDER_CHEST).noOcclusion().sound(SoundType.COPPER).strength(5F).lightLevel(state -> 0)));
+            () -> new CheshireChestBlock(BlockBehaviour.Properties.copy(Blocks.ENDER_CHEST).noOcclusion().sound(SoundType.COPPER).strength(5F)
+                    .lightLevel(state -> 0)));
     public static final RegistryObject<Block> FIRE_DOOR = registerBlock("fire_door",
             () -> new FireDoorBlock(BlockBehaviour.Properties.copy(Blocks.IRON_DOOR).noOcclusion().sound(SoundType.COPPER).noLootTable()));
 
@@ -516,17 +739,6 @@ public class BlockRegistry {
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.POPPY).offsetType(BlockBehaviour.OffsetType.NONE)
                     .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission()));
 
-    public static final RegistryObject<Block> LUCIRAMIC_WING = registerBlock("luciramic_wing",
-            () -> new LuciramicWingBlock(BlockBehaviour.Properties.of().destroyTime(3f).offsetType(BlockBehaviour.OffsetType.XZ)
-                    .mapColor(DyeColor.WHITE).sound(SoundTypeRegistry.LUCIRAMIC).requiresCorrectToolForDrops().pushReaction(PushReaction.IGNORE)
-                    .dynamicShape().lightLevel((state) -> 8)));
-    public static final RegistryObject<Block> ANCHOR_OF_LIGHT = BLOCKS.register("anchor_of_light",
-            () -> new AnchorOfLightBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).offsetType(BlockBehaviour.OffsetType.NONE)
-                    .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).lightLevel(state -> 15).noOcclusion().noParticlesOnBreak()));
-    public static final RegistryObject<Block> ANCHOR_OF_LIGHT_PART = BLOCKS.register("anchor_of_light_part",
-            () -> new AnchorOfLightPartBlock(BlockBehaviour.Properties.copy(Blocks.CHAIN).destroyTime(5f).offsetType(BlockBehaviour.OffsetType.NONE)
-                    .mapColor(DyeColor.WHITE).sound(SoundType.CHAIN).noOcclusion().noParticlesOnBreak()));
-
     public static final RegistryObject<Block> DISCARDED_VESSEL = registerBlock("discarded_vessel",
             () -> new FallingBlock(BlockBehaviour.Properties.copy(Blocks.GRAY_WOOL).mapColor(DyeColor.GRAY).sound(SoundType.HONEY_BLOCK)));
 
@@ -541,7 +753,9 @@ public class BlockRegistry {
     }
 
     public static BlockBehaviour.Properties occludingLeaves() {
-        return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2F).randomTicks().isValidSpawn(BlockRegistry::ocelotOrParrot).isSuffocating(BlockRegistry::never).isViewBlocking(BlockRegistry::never).ignitedByLava().pushReaction(PushReaction.DESTROY).isRedstoneConductor(BlockRegistry::never);
+        return BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).strength(0.2F).randomTicks().isValidSpawn(BlockRegistry::ocelotOrParrot)
+                .isSuffocating(BlockRegistry::never).isViewBlocking(BlockRegistry::never).ignitedByLava().pushReaction(PushReaction.DESTROY)
+                .isRedstoneConductor(BlockRegistry::never);
     }
 
     private static boolean never(BlockState blockState, BlockGetter getter, BlockPos pos) {

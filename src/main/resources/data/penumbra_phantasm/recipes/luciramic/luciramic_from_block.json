@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "penumbra_phantasm:luciramic_block"
+    },
+    {
+      "item": "penumbra_phantasm:luciramic"
+    }
+  ],
+  "result": {
+    "count": 5,
+    "item": "penumbra_phantasm:luciramic"
+  }
+}

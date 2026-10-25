@@ -383,6 +383,24 @@
   "block.penumbra_phantasm.ivory_brick_button": "Ivory Brick Button",
   "block.penumbra_phantasm.ivory_brick_pressure_plate": "Ivory Brick Pressure Plate",
 
+  "block.penumbra_phantasm.luciramic_wing": "Luciramic Wing",
+  "block.penumbra_phantasm.anchor_of_light": "Anchor of Light",
+  "block.penumbra_phantasm.anchor_of_light_part": "Anchor of Light Part",
+
+  "block.penumbra_phantasm.luciramic_block": "Luciramic Block",
+  "block.penumbra_phantasm.luciramic_stairs": "Luciramic Stairs",
+  "block.penumbra_phantasm.luciramic_slab": "Luciramic Slab",
+  "block.penumbra_phantasm.luciramic_wall": "Luciramic Wall",
+  "block.penumbra_phantasm.luciramic_button": "Luciramic Button",
+  "block.penumbra_phantasm.luciramic_pressure_plate": "Luciramic Pressure Plate",
+
+  "block.penumbra_phantasm.luciramic_bricks": "Luciramic Bricks",
+  "block.penumbra_phantasm.luciramic_brick_stairs": "Luciramic Brick Stairs",
+  "block.penumbra_phantasm.luciramic_brick_slab": "Luciramic Brick Slab",
+  "block.penumbra_phantasm.luciramic_brick_wall": "Luciramic Brick Wall",
+  "block.penumbra_phantasm.luciramic_brick_button": "Luciramic Brick Button",
+  "block.penumbra_phantasm.luciramic_brick_pressure_plate": "Luciramic Brick Pressure Plate",
+
   "block.penumbra_phantasm.great_door_shape": "Great Door",
   "block.penumbra_phantasm.scarlet_log_mysterious_door": "Mysterious Door",
   "block.penumbra_phantasm.unbreakable_darkness": "Darkness",
@@ -392,10 +410,6 @@
   "block.penumbra_phantasm.vantarose": "Vantarose",
   "block.penumbra_phantasm.potted_vantarose": "Potted Vantarose",
   "block.penumbra_phantasm.roaring_eye": "Roaring Eye",
-
-  "block.penumbra_phantasm.luciramic_wing": "Luciramic Wing",
-  "block.penumbra_phantasm.anchor_of_light": "Anchor of Light",
-  "block.penumbra_phantasm.anchor_of_light_part": "Anchor of Light Part",
 
   "block.penumbra_phantasm.discarded_vessel": "Discarded Vessel",
 

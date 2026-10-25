@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "penumbra_phantasm:block/luciramic_slab"
+    },
+    "type=double": {
+      "model": "penumbra_phantasm:block/luciramic_block"
+    },
+    "type=top": {
+      "model": "penumbra_phantasm:block/luciramic_slab_top"
+    }
+  }
+}

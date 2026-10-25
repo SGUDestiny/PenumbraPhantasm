@@ -377,20 +377,37 @@ public class CreativeTabRegistry {
             .title(Component.translatable("itemGroup.penumbra_phantasm.the_depths"))
             .withTabsBefore(CARD_KINGDOM.getKey())
             .displayItems((parameters, output) -> {
-                output.accept(ItemRegistry.ANCHOR_OF_LIGHT.get());
-
                 output.accept(BlockRegistry.DISCARDED_VESSEL.get());
 
-                output.accept(BlockRegistry.LUCIRAMIC_WING.get());
-                output.accept(ItemRegistry.LUCIRAMIC.get());
 
                 output.accept(BlockRegistry.VANTAROSE.get());
                 output.accept(BlockRegistry.ROARING_EYE.get());
-                output.accept(BlockRegistry.TENEBRALITH_SPIKE.get());
-                output.accept(BlockRegistry.TENEBRALITH_PATH.get());
+
+                output.accept(ItemRegistry.NEGATIVE_PHOTONS_BUCKET.get());
+
+                output.accept(BlockRegistry.LUCIRAMIC_WING.get());
+                output.accept(ItemRegistry.LUCIRAMIC.get());
+                output.accept(ItemRegistry.ANCHOR_OF_LIGHT.get());
+
+                output.accept(BlockRegistry.LUCIRAMIC_BLOCK.get());
+                output.accept(BlockRegistry.LUCIRAMIC_STAIRS.get());
+                output.accept(BlockRegistry.LUCIRAMIC_SLAB.get());
+                output.accept(BlockRegistry.LUCIRAMIC_WALL.get());
+                output.accept(BlockRegistry.LUCIRAMIC_BUTTON.get());
+                output.accept(BlockRegistry.LUCIRAMIC_PRESSURE_PLATE.get());
+
+                output.accept(BlockRegistry.LUCIRAMIC_BRICKS.get());
+                output.accept(BlockRegistry.LUCIRAMIC_BRICK_STAIRS.get());
+                output.accept(BlockRegistry.LUCIRAMIC_BRICK_SLAB.get());
+                output.accept(BlockRegistry.LUCIRAMIC_BRICK_WALL.get());
+                output.accept(BlockRegistry.LUCIRAMIC_BRICK_BUTTON.get());
+                output.accept(BlockRegistry.LUCIRAMIC_BRICK_PRESSURE_PLATE.get());
+
                 output.accept(BlockRegistry.DARK_SAND.get());
                 output.accept(BlockRegistry.DARK_GEYSER.get());
-                output.accept(ItemRegistry.NEGATIVE_PHOTONS_BUCKET.get());
+                output.accept(BlockRegistry.TENEBRALITH_SPIKE.get());
+                output.accept(BlockRegistry.TENEBRALITH_PATH.get());
+
                 output.accept(BlockRegistry.TENEBRALITH_PILLAR.get());
                 output.accept(BlockRegistry.CHISELED_TENEBRALITH.get());
 

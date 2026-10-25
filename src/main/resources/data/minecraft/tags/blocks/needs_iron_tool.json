@@ -49,6 +49,18 @@
     "penumbra_phantasm:dark_geyser",
     "penumbra_phantasm:anchor_of_light",
     "penumbra_phantasm:anchor_of_light_part",
-    "penumbra_phantasm:luciramic_wing"
+    "penumbra_phantasm:luciramic_wing",
+    "penumbra_phantasm:luciramic_block",
+    "penumbra_phantasm:luciramic_stairs",
+    "penumbra_phantasm:luciramic_slab",
+    "penumbra_phantasm:luciramic_wall",
+    "penumbra_phantasm:luciramic_button",
+    "penumbra_phantasm:luciramic_pressure_plate",
+    "penumbra_phantasm:luciramic_bricks",
+    "penumbra_phantasm:luciramic_brick_stairs",
+    "penumbra_phantasm:luciramic_brick_slab",
+    "penumbra_phantasm:luciramic_brick_wall",
+    "penumbra_phantasm:luciramic_brick_button",
+    "penumbra_phantasm:luciramic_brick_pressure_plate"
   ]
 }

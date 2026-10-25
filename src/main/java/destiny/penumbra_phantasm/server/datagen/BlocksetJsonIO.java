@@ -12,17 +12,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public final class BlocksetJsonIO {
-    private static final Gson PRETTY = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+public class BlocksetJsonIO {
+    public static final Gson PRETTY_PRINTING = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    private BlocksetJsonIO() {
+    public BlocksetJsonIO() {
     }
 
-    public static void writeIfAbsent(Path root, String relative, JsonElement json) throws IOException {
-        Path path = root.resolve(relative);
-        if (Files.exists(path)) {
-            return;
-        }
+    public static void writeIfAbsent(Path root, String relativePath, JsonElement json) throws IOException {
+        Path path = root.resolve(relativePath);
+
+        if (Files.exists(path)) return;
+
         writeJson(path, json);
     }
 
@@ -30,54 +30,56 @@ public final class BlocksetJsonIO {
         if (path.getParent() != null) {
             Files.createDirectories(path.getParent());
         }
-        Files.writeString(path, PRETTY.toJson(json), StandardCharsets.UTF_8);
+
+        Files.writeString(path, PRETTY_PRINTING.toJson(json), StandardCharsets.UTF_8);
     }
 
-    public static void mergeTag(Path root, String relative, Iterable<String> ids) throws IOException {
-        Path path = root.resolve(relative);
-        JsonObject obj;
+    public static void mergeTag(Path root, String relativePath, Iterable<String> idsToAdd) throws IOException {
+        Path path = root.resolve(relativePath);
+        JsonObject json;
+
         if (Files.exists(path)) {
-            obj = JsonParser.parseString(Files.readString(path, StandardCharsets.UTF_8)).getAsJsonObject();
+            json = JsonParser.parseString(Files.readString(path, StandardCharsets.UTF_8)).getAsJsonObject();
         } else {
-            obj = new JsonObject();
+            json = new JsonObject();
         }
-        obj.addProperty("replace", false);
-        JsonArray values = obj.has("values") && obj.get("values").isJsonArray()
-                ? obj.getAsJsonArray("values").deepCopy()
-                : new JsonArray();
-        for (String id : ids) {
-            if (!valuesContainsEntry(values, id)) {
+
+        json.addProperty("replace", false);
+        JsonArray values = json.has("values") && json.get("values").isJsonArray() ? json.getAsJsonArray("values").deepCopy() : new JsonArray();
+
+        for (String id : idsToAdd) {
+            if (!valuesContainEntry(values, id)) {
                 values.add(id);
             }
         }
-        obj.add("values", values);
-        writeJson(path, obj);
+
+        json.add("values", values);
+        writeJson(path, json);
     }
 
     public static void mergeTagBlockAndItem(Path root, String blockTagRelative, Iterable<String> ids) throws IOException {
         mergeTag(root, blockTagRelative, ids);
-        if (blockTagRelative.contains("/mineable/")) {
-            return;
-        }
-        String itemRel = blockTagRelative.replace("tags/blocks/", "tags/items/");
-        if (itemRel.equals(blockTagRelative)) {
-            return;
-        }
-        mergeTag(root, itemRel, ids);
+
+        if (blockTagRelative.contains("/mineable/")) return;
+
+        String itemRelative = blockTagRelative.replace("tags/blocks/", "tags/items/");
+
+        if (itemRelative.equals(blockTagRelative)) return;
+
+        mergeTag(root, itemRelative, ids);
     }
 
-    private static boolean valuesContainsEntry(JsonArray values, String id) {
-        for (JsonElement e : values) {
-            if (e.isJsonPrimitive() && e.getAsString().equals(id)) {
-                return true;
-            }
-            if (e.isJsonObject()) {
-                JsonObject o = e.getAsJsonObject();
-                if (o.has("id") && o.get("id").isJsonPrimitive() && id.equals(o.get("id").getAsString())) {
-                    return true;
-                }
+    public static boolean valuesContainEntry(JsonArray values, String id) {
+        for (JsonElement jsonElement : values) {
+            if (jsonElement.isJsonPrimitive() && jsonElement.getAsString().equals(id)) return true;
+
+            if (jsonElement.isJsonObject()) {
+                JsonObject json = jsonElement.getAsJsonObject();
+
+                if (json.has("id") && json.get("id").isJsonPrimitive() && id.equals(json.get("id").getAsString())) return true;
             }
         }
+
         return false;
     }
 }
