@@ -388,6 +388,10 @@ public class CreativeTabRegistry {
                 output.accept(BlockRegistry.LUCIRAMIC_WING.get());
                 output.accept(ItemRegistry.LUCIRAMIC.get());
                 output.accept(ItemRegistry.ANCHOR_OF_LIGHT.get());
+                output.accept(ItemRegistry.BLACK_AXE.get());
+                output.accept(ItemRegistry.BLACK_PICKAXE.get());
+                output.accept(ItemRegistry.BLACK_SHOVEL.get());
+                output.accept(ItemRegistry.BLACK_HOE.get());
 
                 output.accept(BlockRegistry.LUCIRAMIC_PILLAR.get());
                 output.accept(BlockRegistry.CHISELED_LUCIRAMIC.get());

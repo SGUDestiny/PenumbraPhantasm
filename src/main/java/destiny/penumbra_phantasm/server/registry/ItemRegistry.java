@@ -167,6 +167,20 @@ public class ItemRegistry {
     public static final RegistryObject<Item> GREAT_COMPASS = ITEMS.register("great_compass",
             () -> new GreatCompassItem(new Item.Properties().stacksTo(1).durability(-1)));
 
+
+
+    public static final RegistryObject<Item> LUCIRAMIC = ITEMS.register("luciramic",
+            () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> BLACK_AXE = ITEMS.register("black_axe",
+            () -> new AxeItem(Tiers.DIAMOND, 7, -2.5f, new Item.Properties()));
+    public static final RegistryObject<Item> BLACK_PICKAXE = ITEMS.register("black_pickaxe",
+            () -> new PickaxeItem(Tiers.DIAMOND, 2, -2, new Item.Properties()));
+    public static final RegistryObject<Item> BLACK_SHOVEL = ITEMS.register("black_shovel",
+            () -> new ShovelItem(Tiers.DIAMOND, 1, -1.5f, new Item.Properties()));
+    public static final RegistryObject<Item> BLACK_HOE = ITEMS.register("black_hoe",
+            () -> new HoeItem(Tiers.DIAMOND, 0, 0.5f, new Item.Properties()));
+
     public static final RegistryObject<Item> DARK_CANDY_BUCKET = ITEMS.register("dark_candy_bucket",
             () -> new ScarletBucketItem(Fluids.EMPTY, new Item.Properties()));
     public static final RegistryObject<Item> LUMINESCENT_WATER_BUCKET = ITEMS.register("luminescent_water_bucket",
@@ -175,10 +189,6 @@ public class ItemRegistry {
             () -> new ScarletBucketItem(FluidRegistry.SOURCE_PURE_DARKNESS.get(), new Item.Properties().stacksTo(1).craftRemainder(ItemRegistry.DARK_CANDY_BUCKET.get())));
     public static final RegistryObject<Item> NEGATIVE_PHOTONS_BUCKET = ITEMS.register("negative_photons_bucket",
             () -> new ScarletBucketItem(FluidRegistry.SOURCE_NEGATIVE_PHOTONS.get(), new Item.Properties().stacksTo(1).craftRemainder(ItemRegistry.DARK_CANDY_BUCKET.get())));
-
-    public static final RegistryObject<Item> LUCIRAMIC = ITEMS.register("luciramic",
-            () -> new Item(new Item.Properties()));
-
     //Block items
     public static final RegistryObject<Item> FALLEN_DARK_CANDY_LEAVES = ITEMS.register("fallen_dark_candy_leaves",
             () -> new ScalableHorizontalPlaneBlockItem(BlockRegistry.FALLEN_DARK_CANDY_LEAVES.get(), new Item.Properties()));
