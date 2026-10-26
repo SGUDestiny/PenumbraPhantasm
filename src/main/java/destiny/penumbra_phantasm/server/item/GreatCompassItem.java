@@ -155,8 +155,15 @@ public class GreatCompassItem extends Item implements Vanishable {
                     }
 
                     greatDoorsByDistance.sort((Comparator.comparingDouble(pos -> pos.getCenter().distanceTo(pEntity.position()))));
-                    BlockPos closestGreatDoorPos = greatDoorsByDistance.get(0);
 
+                    if (greatDoorsByDistance.isEmpty()) {
+                        tag.remove(TAG_GREAT_DOOR_POS);
+                        tag.remove(TAG_GREAT_DOOR_DIMENSION);
+
+                        return;
+                    }
+
+                    BlockPos closestGreatDoorPos = greatDoorsByDistance.get(0);
                     ResourceKey<Level> greatDoorDimension = pEntity.level().dimension();
 
                     tag.put(TAG_GREAT_DOOR_POS, NbtUtils.writeBlockPos(closestGreatDoorPos));
