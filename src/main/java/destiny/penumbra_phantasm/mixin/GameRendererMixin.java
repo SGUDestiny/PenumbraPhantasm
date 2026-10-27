@@ -376,7 +376,7 @@ public abstract class GameRendererMixin {
 		}
 
 		ResourceLocation soul = new ResourceLocation(PenumbraPhantasm.MODID, "textures/misc/soul_shatter/soul_" + soulType + ".png");
-		RenderBlitUtil.blit(soul, pose, soulX, soulY, 1, 1, 1, 1, 0, 0, 0, 0, 15, 15);
+		RenderBlitUtil.blit(soul, pose, soulX, soulY, 1, 1, 1, 1, 0, 0, SOUL_SIZE, SOUL_SIZE, SOUL_SIZE, SOUL_SIZE);
 	}
 
 	private static void drawGridLine(GuiGraphics graphics, Font font, String text, int x, int y, int color) {
