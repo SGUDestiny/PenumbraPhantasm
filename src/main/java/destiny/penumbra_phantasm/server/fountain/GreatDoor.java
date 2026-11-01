@@ -394,13 +394,13 @@ public class GreatDoor {
             if (lightDoorSecondLower == null) {
                 destVec = lightDoorPos.getCenter();
             } else {
-                Vec3 a = lightDoorPos.getCenter();
-                Vec3 b = lightDoorSecondLower.getCenter();
-                destVec = new Vec3((a.x + b.x) * 0.5, (a.y + b.y) * 0.5, (a.z + b.z) * 0.5);
+                Vec3 doorPos = lightDoorPos.getCenter();
+                Vec3 secondDoorPos = lightDoorSecondLower.getCenter();
+                destVec = doorPos.lerp(secondDoorPos, 0.5);
             }
 
             Vec3 offsetVec = Vec3.atLowerCornerOf(lightDoorExitDirection.getNormal());
-            destVec.add(offsetVec.scale(0.5));
+            destVec.add(offsetVec.scale(1.5));
 
             float yaw = lightDoorExitDirection.toYRot();
             BlockPos darkAnchor = DarkWorldUtil.findDarkFountainPos(greatDoorLevel);
