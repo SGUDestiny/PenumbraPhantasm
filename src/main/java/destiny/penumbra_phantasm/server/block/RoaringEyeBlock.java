@@ -26,11 +26,10 @@ public class RoaringEyeBlock extends BaseEntityBlock {
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.INVISIBLE;
     }
-
     @Override
     public BlockState updateShape(BlockState pState, Direction pDirection, BlockState pNeighborState, LevelAccessor pLevel, BlockPos pPos, BlockPos pNeighborPos) {
         if (!isOnBlock(pLevel, pPos)) {
-            pLevel.destroyBlock(pPos, true);
+            pLevel.destroyBlock(pPos, false);
         }
 
         return super.updateShape(pState, pDirection, pNeighborState, pLevel, pPos, pNeighborPos);
@@ -38,13 +37,7 @@ public class RoaringEyeBlock extends BaseEntityBlock {
 
     @Override
     public boolean canSurvive(BlockState pState, LevelReader pLevel, BlockPos pPos) {
-        BlockPos blockpos = pPos.below();
-
-        return mayPlaceOn(pLevel.getBlockState(blockpos), pLevel, blockpos);
-    }
-
-    protected boolean mayPlaceOn(BlockState pState, BlockGetter pLevel, BlockPos pPos) {
-        return isOnBlock(pLevel, pPos);
+        return this.isOnBlock(pLevel, pPos);
     }
 
     public boolean isOnBlock(LevelAccessor pLevel, BlockPos pPos) {

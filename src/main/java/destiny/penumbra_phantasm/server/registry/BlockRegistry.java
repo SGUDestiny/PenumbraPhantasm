@@ -728,7 +728,7 @@ public class BlockRegistry {
                     .sound(SoundTypeRegistry.CLIFF)));
 
     public static final RegistryObject<Block> VANTAROSE = registerBlock("vantarose",
-            () -> new DepthsFlowerBlock(() -> MobEffects.DARKNESS, 20, BlockBehaviour.Properties.copy(Blocks.POPPY)
+            () -> new VantaroseBlock(() -> MobEffects.DARKNESS, 20, BlockBehaviour.Properties.copy(Blocks.POPPY)
                     .mapColor(DyeColor.WHITE).sound(SoundType.SOUL_SAND).noCollission().lightLevel((state) -> 15)));
     public static final RegistryObject<Block> POTTED_VANTAROSE = BLOCKS.register("potted_vantarose",
             () -> new FlowerPotBlock(() -> ((FlowerPotBlock) Blocks.FLOWER_POT), BlockRegistry.VANTAROSE,

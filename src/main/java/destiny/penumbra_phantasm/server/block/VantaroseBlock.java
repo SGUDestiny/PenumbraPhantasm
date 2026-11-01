@@ -10,8 +10,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Supplier;
 
-public class DepthsFlowerBlock extends FlowerBlock {
-    public DepthsFlowerBlock(Supplier<MobEffect> effectSupplier, int p_53513_, Properties p_53514_) {
+public class VantaroseBlock extends FlowerBlock {
+    public VantaroseBlock(Supplier<MobEffect> effectSupplier, int p_53513_, Properties p_53514_) {
         super(effectSupplier, p_53513_, p_53514_);
     }
 
