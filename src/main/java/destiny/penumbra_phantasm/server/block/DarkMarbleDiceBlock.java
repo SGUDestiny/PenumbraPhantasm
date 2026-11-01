@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.block;
 
 import destiny.penumbra_phantasm.server.block.entity.DarkMarbleDiceBlockEntity;
-import destiny.penumbra_phantasm.server.block.entity.ScarletMarbleDiceBlockEntity;
 import destiny.penumbra_phantasm.server.registry.BlockEntityRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
 import net.minecraft.core.BlockPos;
@@ -63,7 +62,7 @@ public class DarkMarbleDiceBlock extends BaseEntityBlock {
     public int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         BlockEntity be = level.getBlockEntity(pos);
 
-        if (!(be instanceof ScarletMarbleDiceBlockEntity dice))
+        if (!(be instanceof DarkMarbleDiceBlockEntity dice))
             return 0;
 
         Quaternionf rotation = new Quaternionf().rotateX((float) Math.toRadians(dice.rotationX)).rotateY((float) Math.toRadians(dice.rotationY))
