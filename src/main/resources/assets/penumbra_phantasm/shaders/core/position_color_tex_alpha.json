@@ -4,8 +4,8 @@
     "srcrgb": "srcalpha",
     "dstrgb": "1-srcalpha"
   },
-  "vertex": "position_color_tex",
-  "fragment": "position_color_tex",
+  "vertex": "penumbra_phantasm:position_color_tex_alpha",
+  "fragment": "penumbra_phantasm:position_color_tex_alpha",
   "attributes": [
     "Position",
     "Color",
