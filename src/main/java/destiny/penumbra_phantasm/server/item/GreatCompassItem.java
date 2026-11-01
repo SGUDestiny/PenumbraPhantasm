@@ -179,10 +179,12 @@ public class GreatCompassItem extends Item implements Vanishable {
                         return;
                     }
 
+                    if (doorLevelKey != pLevel.dimension()) return;
+
                     BlockPos doorPos = NbtUtils.readBlockPos(tag.getCompound(TAG_GREAT_DOOR_POS));
                     GreatDoor savedDoor = greatDoorCapability.greatDoors.get(doorPos);
 
-                    if (!DarkWorldUtil.isLightDoorValidForFountain(serverLevel, savedDoor.lightDoorPos, savedDoor.lightDoorDimension)) {
+                    if (savedDoor != null && !DarkWorldUtil.isLightDoorValidForFountain(serverLevel, savedDoor.lightDoorPos, savedDoor.lightDoorDimension)) {
                         tag.remove(TAG_GREAT_DOOR_POS);
                         tag.remove(TAG_GREAT_DOOR_DIMENSION);
                     }
