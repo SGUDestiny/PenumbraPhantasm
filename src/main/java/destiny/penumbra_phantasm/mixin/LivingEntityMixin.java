@@ -1,29 +1,17 @@
 package destiny.penumbra_phantasm.mixin;
 
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
-import destiny.penumbra_phantasm.server.registry.DamageTypeRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.event.ForgeEventFactory;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import javax.annotation.Nullable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
@@ -86,6 +74,13 @@ public abstract class LivingEntityMixin {
 
 		player.calculateEntityAnimation(false);
 		ci.cancel();
+	}
+
+	@ModifyArg(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"), index = 1)
+	private byte penumbraPhantasm$deltaShieldBlockSound(byte pState)
+	{
+		//TODO do your thing instead idk
+		return 1;
 	}
 
 /*	@Inject(method = "dropExperience", at = @At("HEAD"), cancellable = true)

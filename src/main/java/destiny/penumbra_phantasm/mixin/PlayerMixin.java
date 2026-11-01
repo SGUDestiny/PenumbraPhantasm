@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
@@ -25,5 +26,12 @@ public abstract class PlayerMixin {
             ((Entity)(Object)this).playSound(SoundRegistry.SOUL_SHATTER.get(), 1F, 1F);
             cir.cancel();
         }
+    }
+
+    @ModifyArg(method = "disableShield(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"), index = 1)
+    private byte dontBreakShieldSound(byte pState)
+    {
+        //TODO Do your hting
+        return 1;
     }
 }

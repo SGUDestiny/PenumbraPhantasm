@@ -37,6 +37,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.level.LevelEvent;
@@ -345,5 +346,11 @@ public class CommonEvents {
             bootPlayerFromDarkWorldsWithoutFountain(player);
             CardKingdomEggRoomManager.tickPlayer(player);
         }
+    }
+
+    @SubscribeEvent
+    public void shieldBlock(ShieldBlockEvent event)
+    {
+
     }
 }
