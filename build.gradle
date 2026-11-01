@@ -43,7 +43,7 @@ plugins {
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
-version = '1.20.1-1.0'
+version = '1.20.1-1.0-BE41'
 group = 'destiny.penumbra_phantasm'
 
 base {
@@ -200,11 +200,10 @@ dependencies {
     minecraft "net.minecraftforge:forge:1.20.1-47.2.6"
 
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
-
-    // Fusion
-    implementation fg.deobf("maven.modrinth:fusion-connected-textures:1.2.12-forge-mc1.20.1")
-
+    implementation fg.deobf("curse.maven:fusion-connected-textures-854949:9070201")
     implementation fg.deobf("curse.maven:playeranimator-658587:4587214")
+    implementation fg.deobf("curse.maven:infiniverse-568341:4597298")
+    implementation fg.deobf("maven.modrinth:playeranimatorapi:9E2JcodV")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
@@ -222,15 +221,7 @@ dependencies {
         jarJar.ranged(it, "[0.4.1,)")
     }
 
-    implementation fg.deobf("curse.maven:infiniverse-568341:4597298")
-    implementation fg.deobf("maven.modrinth:playeranimatorapi:9E2JcodV")
-    //implementation fg.deobf("curse.maven:epic-fight-mod-405076:4922094")
-
     //implementation fg.deobf("dev.kosmx.player-anim:player-animation-lib-forge:1.0.2-rc1+1.20")
-
-    //implementation fg.deobf('maven.modrinth:better-combat:1.8.5+1.20.1-forge')
-
-    //implementation fg.deobf("me.shedaniel.cloth:cloth-config-forge:13.0.121")
 
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

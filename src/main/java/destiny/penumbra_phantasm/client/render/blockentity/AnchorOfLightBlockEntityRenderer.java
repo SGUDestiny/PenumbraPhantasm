@@ -17,6 +17,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector3d;
 import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -41,6 +42,15 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
         poseStack.pushPose();
 
         poseStack.translate(0.5f, 0.5f, 0.5f);
+
+/*        GeoBone middleBone = model.getBone("Middle").orElse(null);
+        if (middleBone == null) {
+            poseStack.popPose();
+            return;
+        }
+
+        Vector3d localPos = middleBone.getLocalPosition();
+        poseStack.translate(localPos.x, localPos.y, localPos.z);*/
 
         poseStack.mulPose(Minecraft.getInstance().getEntityRenderDispatcher().cameraOrientation());
         poseStack.mulPose(Axis.YP.rotationDegrees(180));

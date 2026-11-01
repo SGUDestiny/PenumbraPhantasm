@@ -4,7 +4,7 @@ license="PolyForm Strict License 1.0.0"
 
 [[mods]]
 modId="penumbra_phantasm"
-version="1.0"
+version="1.0-BE41"
 displayName="PENUMBRA PHANTASM"
 authors="Destiny"
 logoFile="assets/penumbra_phantasm/textures/misc/penumbra_phantasm_logo.png"
@@ -27,7 +27,7 @@ description='''AT 'SHADOW'S EDGE,' SHATTER THE TWILIGHT REVERIE.'''
 [[dependencies.penumbra_phantasm]]
     modId="geckolib"
     mandatory=true
-    versionRange="[4.4.9, )"
+    versionRange="[4.8.4, )"
     ordering="NONE"
     side="BOTH"
 
@@ -55,6 +55,6 @@ description='''AT 'SHADOW'S EDGE,' SHATTER THE TWILIGHT REVERIE.'''
 [[dependencies.penumbra_phantasm]]
     modId="fusion"
     mandatory=true
-    versionRange="[1.2.12, )"
+    versionRange="[1.3.16, )"
     ordering="NONE"
     side="CLIENT"
