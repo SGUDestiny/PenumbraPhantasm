@@ -3,7 +3,7 @@ package destiny.penumbra_phantasm.client.render.item;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.render.RenderTypes;
+import destiny.penumbra_phantasm.client.render.RenderTypeRegistry;
 import destiny.penumbra_phantasm.server.item.BlackKnifeItem;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -62,7 +62,7 @@ public class BlackKnifeItemRenderer extends GeoItemRenderer<BlackKnifeItem> {
         for (GeoBone bone : model.topLevelBones()) {
             if (bone.getName().contains("emissive")) {
                 if (animationTicker > -1) {
-                    RenderType translucentType = RenderTypes.getEmissiveRenderType(BLACK_KNIFE_POWERUP);
+                    RenderType translucentType = RenderTypeRegistry.getEmissiveRenderType(BLACK_KNIFE_POWERUP);
                     VertexConsumer translucentConsumer = bufferSource.getBuffer(translucentType);
 
                     renderCubesOfBone(poseStack, bone, translucentConsumer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, red, green, blue, brightnessProgress);

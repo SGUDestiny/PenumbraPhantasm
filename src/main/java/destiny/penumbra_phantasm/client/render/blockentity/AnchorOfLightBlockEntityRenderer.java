@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.render.RenderTypes;
+import destiny.penumbra_phantasm.client.render.RenderTypeRegistry;
 import destiny.penumbra_phantasm.server.block.entity.AnchorOfLightBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
@@ -17,7 +17,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
-import org.joml.Vector3d;
 import org.joml.Vector3f;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.cache.object.GeoBone;
@@ -70,7 +69,7 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
         int overlay = OverlayTexture.NO_OVERLAY;
         Matrix4f matrix = poseStack.last().pose();
         Matrix3f normalMatrix = poseStack.last().normal();
-        VertexConsumer consumer = bufferSource.getBuffer(RenderTypes.getEmissiveRenderNoDepthRenderType(ANCHOR_OF_LIGHT_GLOW));
+        VertexConsumer consumer = bufferSource.getBuffer(RenderTypeRegistry.getEmissiveRenderNoDepthRenderType(ANCHOR_OF_LIGHT_GLOW));
 
         consumer.vertex(matrix, -0.5f, -0.5f, 0).color(255, 255, 255, 255).uv(0, 1).overlayCoords(overlay).uv2(packedLight)
                 .normal(normalMatrix, 0, 0, 1).endVertex();
@@ -100,7 +99,7 @@ public class AnchorOfLightBlockEntityRenderer extends GeoBlockRenderer<AnchorOfL
 
         int soulType = animatable.soulType;
         ResourceLocation anchorTexture = ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "textures/block/anchor_of_light_" + soulType + ".png");
-        RenderType emissiveType = RenderTypes.getEmissiveRenderType(anchorTexture);
+        RenderType emissiveType = RenderTypeRegistry.getEmissiveRenderType(anchorTexture);
         VertexConsumer emissiveConsumer = bufferSource.getBuffer(emissiveType);
 
         poseStack.pushPose();

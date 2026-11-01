@@ -3,8 +3,8 @@ package destiny.penumbra_phantasm.client.render.fluid;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.render.ModShaders;
-import destiny.penumbra_phantasm.client.render.RenderTypes;
+import destiny.penumbra_phantasm.client.render.RenderTypeRegistry;
+import destiny.penumbra_phantasm.client.render.ShaderRegistry;
 import destiny.penumbra_phantasm.server.registry.FluidTypeRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -69,7 +69,7 @@ public class NegativePhotonsRenderUtil
             return;
 
         Color middleColor = Color.getHSBColor(0f, 0f, 0.05f);
-        ShaderInstance shaderInstance = ModShaders.FOUNTAIN_MASKED;
+        ShaderInstance shaderInstance = ShaderRegistry.FOUNTAIN_MASKED;
 
         if (shaderInstance != null)
         {
@@ -97,7 +97,7 @@ public class NegativePhotonsRenderUtil
             }
         }
 
-        RenderType renderType = RenderTypes.getNegativePhotonsRenderType(WHITE_SCREEN, IMAGE_DEPTH, true);
+        RenderType renderType = RenderTypeRegistry.getNegativePhotonsRenderType(WHITE_SCREEN, IMAGE_DEPTH, true);
         renderType.setupRenderState();
 
         RenderSystem.setShader(() -> shaderInstance);
@@ -150,7 +150,7 @@ public class NegativePhotonsRenderUtil
             return;
         }
 
-        RenderType renderType = RenderTypes.getNegativePhotonsRenderType(WHITE_SCREEN, IMAGE_DEPTH, true);
+        RenderType renderType = RenderTypeRegistry.getNegativePhotonsRenderType(WHITE_SCREEN, IMAGE_DEPTH, true);
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder builder = tesselator.getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, renderType.format());

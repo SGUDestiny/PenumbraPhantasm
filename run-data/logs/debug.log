@@ -697,7 +697,7 @@ java.lang.IllegalAccessException: class io.netty.util.internal.PlatformDependent
 [26Oct2026 01:02:08.018] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Attempting to inject @EventBusSubscriber classes into the eventbus for penumbra_phantasm
 [26Oct2026 01:02:08.018] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.client.ClientConfig to MOD
 [26Oct2026 01:02:08.018] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.client.light.SoulHearthLightEvents to FORGE
-[26Oct2026 01:02:08.020] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.client.render.ModShaders to MOD
+[26Oct2026 01:02:08.020] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.client.render.ShaderRegistry to MOD
 [26Oct2026 01:02:08.021] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.PenumbraPhantasm$ClientModEvents to MOD
 [26Oct2026 01:02:08.034] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.PlayerAnimator to MOD
 [26Oct2026 01:02:08.035] [modloading-worker-0/DEBUG] [net.minecraftforge.fml.javafmlmod.AutomaticEventSubscriber/LOADING]: Auto-subscribing destiny.penumbra_phantasm.server.datagen.BlocksetDatagen to MOD

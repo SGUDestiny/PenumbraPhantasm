@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
-import destiny.penumbra_phantasm.client.render.ModShaders;
+import destiny.penumbra_phantasm.client.render.ShaderRegistry;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -23,9 +23,6 @@ import org.joml.Matrix4f;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
-
-import static destiny.penumbra_phantasm.client.render.dimension.CardKingdomDimensionEffects.SKY_DISC_HEIGHT;
-import static destiny.penumbra_phantasm.client.render.dimension.DarkWorldDimensionEffects.createSkyBuffer;
 
 public class DepthsDimensionEffects extends DimensionSpecialEffects {
     public static final ResourceLocation DEPTHS_DIMENSION_EFFECTS = new ResourceLocation(PenumbraPhantasm.MODID, "depths_dimension_effects");
@@ -282,7 +279,7 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
         this.flashesBackgroundBuffer.upload(renderedBuffer);
 
         Color middleColor = Color.getHSBColor(0f, 0f, 0.1f);
-        ShaderInstance shaderInstance = ModShaders.FOUNTAIN_MASKED;
+        ShaderInstance shaderInstance = ShaderRegistry.FOUNTAIN_MASKED;
 
         if (shaderInstance != null) {
             float shadertime = (level.getGameTime()) * 0.01f;
@@ -321,7 +318,7 @@ public class DepthsDimensionEffects extends DimensionSpecialEffects {
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
-        this.flashesBackgroundBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, ModShaders.FOUNTAIN_MASKED);
+        this.flashesBackgroundBuffer.drawWithShader(poseStack.last().pose(), projectionMatrix, ShaderRegistry.FOUNTAIN_MASKED);
 
         VertexBuffer.unbind();
     }

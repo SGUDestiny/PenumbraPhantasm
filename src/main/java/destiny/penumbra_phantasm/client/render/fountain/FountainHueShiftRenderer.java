@@ -10,7 +10,7 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexSorting;
-import destiny.penumbra_phantasm.client.render.ModShaders;
+import destiny.penumbra_phantasm.client.render.ShaderRegistry;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -38,7 +38,7 @@ public final class FountainHueShiftRenderer {
     public static void render(Minecraft minecraft, GameRenderer gameRenderer, float partialTick) {
         if (!(minecraft.level instanceof ClientLevel)) return;
 
-        ShaderInstance shader = ModShaders.HUE_SHIFT;
+        ShaderInstance shader = ShaderRegistry.HUE_SHIFT;
         if (shader == null) return;
 
         ClientLevel level = minecraft.level;

@@ -61,9 +61,9 @@ public class GreatDoorRenderUtil {
             finalTexture = greatDoorLightWorldTexture;
         }
 
-        getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(finalTexture)),
+        getGreatDoorOpenModel().renderToBuffer(pose, buffer.getBuffer(RenderTypeRegistry.entityCutout(finalTexture)),
                 packedLight, overlay, 1, 1, 1, 1);
-        getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.getEmissiveRenderType(finalTexture)),
+        getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(finalTexture)),
                 LightTexture.FULL_BRIGHT, overlay, 1, 1, 1, 1);
         pose.popPose();
     }
@@ -89,9 +89,9 @@ public class GreatDoorRenderUtil {
             finalTexture = greatDoorLightWorldTexture;
         }
 
-        getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityCutout(finalTexture)),
+        getGreatDoorClosedModel().renderToBuffer(pose, buffer.getBuffer(RenderTypeRegistry.entityCutout(finalTexture)),
                 packedLight, overlay, 1, 1, 1, 1);
-        getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypes.entityTranslucentEmissive(finalTexture)),
+        getGreatDoorBacksideModel().renderToBuffer(pose, buffer.getBuffer(RenderTypeRegistry.entityTranslucentEmissive(finalTexture)),
                 LightTexture.FULL_BRIGHT, overlay, 1, 1, 1, 1);
         pose.popPose();
     }

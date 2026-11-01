@@ -162,28 +162,30 @@ public class ClientEvents {
 					float openingTick = fountain.getOpeningTick(partialTick);
 
 					if(!DarkWorldUtil.isDarkWorld(level)) {
-						pose.pushPose();
-						pose.translate(fountain.getFountainPos().getX() - camera.getPosition().x(),
-								fountain.getFountainPos().getY() - camera.getPosition().y(),
-								fountain.getFountainPos().getZ() - camera.getPosition().z());
+						if (Minecraft.getInstance().level.isLoaded(fountain.getFountainPos())) {
+							pose.pushPose();
+							pose.translate(fountain.getFountainPos().getX() - camera.getPosition().x(),
+									fountain.getFountainPos().getY() - camera.getPosition().y(),
+									fountain.getFountainPos().getZ() - camera.getPosition().z());
 
-						if(afterSky) {
-							if(openingTick < FountainRenderUtil.OPENING_POSTERIZE_TICK_END && openingTick >= 0) {
-								FountainRenderUtil.renderOpeningFountain(openingTick, length, textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
-							} else {
-								double viewDistance = event.getLevelRenderer().getLastViewDistance();
+							if (afterSky) {
+								if (openingTick < FountainRenderUtil.OPENING_POSTERIZE_TICK_END && openingTick >= 0) {
+									FountainRenderUtil.renderOpeningFountain(openingTick, length, textureCrack, pose, buffer);
+								} else {
+									double viewDistance = event.getLevelRenderer().getLastViewDistance();
 
-								if(fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
-									FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, pose, buffer, OverlayTexture.NO_OVERLAY);
+									if (fountain.getFountainPos().getCenter().distanceTo(camera.getPosition()) < viewDistance * 16) {
+										FountainRenderUtil.renderLightWorldOpenFountain(textureCrack, pose, buffer);
+									}
 								}
 							}
-						}
 
-						if(afterTranslucentBlocks) {
-							FountainRenderUtil.renderShockwaves(fountain, pose, buffer, OverlayTexture.NO_OVERLAY, partialTick);
-						}
+							if (afterTranslucentBlocks) {
+								FountainRenderUtil.renderShockwaves(fountain, pose, buffer, partialTick);
+							}
 
-						pose.popPose();
+							pose.popPose();
+						}
 					} else if(DarkWorldUtil.isDepths(level)) {
 						pose.pushPose();
 						pose.translate(fountain.getFountainPos().getX() - camera.getPosition().x(),
@@ -236,16 +238,14 @@ public class ClientEvents {
 
 						if(fade < 1) {
 							if(fountain.sealingTick >= 0) {
-								FountainRenderUtil.renderSealingFountain(fountain, level, length, textureCrack, partialTick, pose, buffer,
-										OverlayTexture.NO_OVERLAY, 1 - fade);
+								FountainRenderUtil.renderSealingFountain(fountain, level, length, textureCrack, partialTick, pose, buffer, 1 - fade);
 							} else {
-								FountainRenderUtil.renderOpenFountain(fountain, level, length, textureCrack, partialTick, pose, buffer,
-										OverlayTexture.NO_OVERLAY, 1 - fade);
+								FountainRenderUtil.renderOpenFountain(fountain, level, length, textureCrack, partialTick, pose, buffer, 1 - fade);
 							}
 						}
 
 						if(fade > 0) {
-							FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, OverlayTexture.NO_OVERLAY, fade, camera.getPosition());
+							FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, fade, camera.getPosition());
 						}
 
 						pose.popPose();

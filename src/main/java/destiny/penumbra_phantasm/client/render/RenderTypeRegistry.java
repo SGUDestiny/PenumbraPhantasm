@@ -6,20 +6,23 @@ import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
-public class RenderTypes extends RenderType {
-    public RenderTypes(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
+public class RenderTypeRegistry extends RenderType {
+    public RenderTypeRegistry(String pName, VertexFormat pFormat, VertexFormat.Mode pMode, int pBufferSize, boolean pAffectsCrumbling, boolean pSortOnUpload, Runnable pSetupState, Runnable pClearState) {
         super(pName, pFormat, pMode, pBufferSize, pAffectsCrumbling, pSortOnUpload, pSetupState, pClearState);
     }
+
+    private static final RenderStateShard.ShaderStateShard POSITION_COLOR_TEX_ALPHA =
+            new RenderStateShard.ShaderStateShard(() -> ShaderRegistry.POSITION_COLOR_TEX_ALPHA);
 
     public static RenderType getFountainRenderType(ResourceLocation texture) {
         return create("fountain", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
+                        .setShaderState(POSITION_COLOR_TEX_ALPHA)
                         .setTextureState(new TextureStateShard(texture, false, false))
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setCullState(CULL)
-                        .createCompositeState(true));
+                        .createCompositeState(false));
     }
 
     public static RenderType getFountainNoCullRenderType(ResourceLocation texture) {
@@ -58,7 +61,7 @@ public class RenderTypes extends RenderType {
     }
 
     private static final RenderStateShard.ShaderStateShard FOUNTAIN_MASKED_SHADER =
-            new RenderStateShard.ShaderStateShard(() -> ModShaders.FOUNTAIN_MASKED);
+            new RenderStateShard.ShaderStateShard(() -> ShaderRegistry.FOUNTAIN_MASKED);
 
     public static RenderType getFountainMaskedRenderType(ResourceLocation maskTexture, ResourceLocation flowTexture, boolean shouldWriteDepth) {
         CompositeState.CompositeStateBuilder builder = RenderType.CompositeState.builder()

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.client.ClientConfig;
-import destiny.penumbra_phantasm.client.render.ModShaders;
+import destiny.penumbra_phantasm.client.render.ShaderRegistry;
 import destiny.penumbra_phantasm.client.render.fluid.NegativePhotonsRenderUtil;
 import destiny.penumbra_phantasm.client.render.fountain.FountainHueShiftRenderer;
 import destiny.penumbra_phantasm.client.render.fountain.FountainOpeningPosterizeRenderer;
@@ -277,7 +277,7 @@ public abstract class GameRendererMixin {
 	private void renderNegativePhotonsOverlay(Minecraft minecraft, ClientLevel level, LocalPlayer player, int width, int height) {
 		if (player.getEyeInFluidType() != FluidTypeRegistry.NEGATIVE_PHOTONS.get()) return;
 
-		ShaderInstance shaderInstance = ModShaders.FOUNTAIN_MASKED;
+		ShaderInstance shaderInstance = ShaderRegistry.FOUNTAIN_MASKED;
 
 		if (shaderInstance == null) return;
 
@@ -289,7 +289,7 @@ public abstract class GameRendererMixin {
 		shaderInstance.safeGetUniform("AspectRatio").set(aspectRatio);
 		shaderInstance.safeGetUniform("TintColor").set(1f, 1f, 1f, 1f);
 
-		RenderSystem.setShader(() -> ModShaders.FOUNTAIN_MASKED);
+		RenderSystem.setShader(() -> ShaderRegistry.FOUNTAIN_MASKED);
 		RenderSystem.setShaderTexture(0, NegativePhotonsRenderUtil.WHITE_SCREEN);
 		RenderSystem.setShaderTexture(1, NegativePhotonsRenderUtil.IMAGE_DEPTH);
 
