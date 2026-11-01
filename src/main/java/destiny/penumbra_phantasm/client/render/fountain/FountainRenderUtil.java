@@ -387,7 +387,7 @@ public class FountainRenderUtil {
 		poseStack.pushPose();
 
 		poseStack.translate(0.5f, 0.5f, 0.5f);
-		poseStack.translate(0f, 10f, 0f);
+		poseStack.translate(0f, 6f, 0f);
 		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 
 		getOpeningStartModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureFountainOpeningStart)),
@@ -398,9 +398,9 @@ public class FountainRenderUtil {
         poseStack.translate(0f, 2f - (1f / 16) * 8, 0f);
 
 		VertexConsumer endConsumer = buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureFountainOpeningEnd));
-		renderFountainCrossFading(poseStack, endConsumer, 1f, 1f, 1f, 1f, 48, 96, 0, 0);
+		renderFountainCrossFading(poseStack, endConsumer, 1f, 1f, 1f, 1f, 48, 160, 0, 0);
 		VertexConsumer endShadowConsumer = buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureFountainOpeningEndShadow));
-		renderFountainCrossFading(poseStack, endShadowConsumer, 1f, 1f, 1f, alphaDark, 48, 96, 0, 0);
+		renderFountainCrossFading(poseStack, endShadowConsumer, 1f, 1f, 1f, alphaDark, 48, 160, 0, 0);
 
 		poseStack.popPose();
 	}

@@ -29,7 +29,7 @@ public class RenderTypeRegistry extends RenderType {
         return create("fountain_no_cull", DefaultVertexFormat.POSITION_COLOR_TEX, VertexFormat.Mode.QUADS, 256,
                 false, false,
                 RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.POSITION_COLOR_TEX_SHADER)
+                        .setShaderState(POSITION_COLOR_TEX_ALPHA)
                         .setTextureState(new TextureStateShard(texture, false, false))
                         .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
                         .setCullState(NO_CULL)

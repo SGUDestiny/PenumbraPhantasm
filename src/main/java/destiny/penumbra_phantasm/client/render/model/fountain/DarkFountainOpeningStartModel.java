@@ -25,11 +25,11 @@ public class DarkFountainOpeningStartModel extends EntityModel<Entity> {
 
         PartDefinition main = partdefinition.addOrReplaceChild("main", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        PartDefinition cube_r1 = main.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, -96).addBox(0.0F, -96.0F, -48.0F, 0.0F, 192.0F, 96.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -96.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
+        PartDefinition cube_r1 = main.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, -96).addBox(0.0F, -64.0F, -48.0F, 0.0F, 128.0F, 96.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -64.0F, 0.0F, 0.0F, 0.7854F, 0.0F));
 
-        PartDefinition cube_r2 = main.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(0, -96).addBox(0.0F, -96.0F, -48.0F, 0.0F, 192.0F, 96.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -96.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
+        PartDefinition cube_r2 = main.addOrReplaceChild("cube_r2", CubeListBuilder.create().texOffs(0, -96).addBox(0.0F, -64.0F, -48.0F, 0.0F, 128.0F, 96.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, -64.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 
-        return LayerDefinition.create(meshdefinition, 192, -192);
+        return LayerDefinition.create(meshdefinition, 192, -128);
     }
 
     @Override
