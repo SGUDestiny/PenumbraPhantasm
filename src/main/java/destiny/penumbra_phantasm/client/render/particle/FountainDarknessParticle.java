@@ -32,23 +32,23 @@ public class FountainDarknessParticle extends TextureSheetParticle {
         if (this.age++ >= this.lifetime) {
             this.remove();
         } else {
-            int sprite = this.age / (this.lifetime / 6);
-            this.setSprite(sprites.get(sprite, 6));
+            int sprite = this.age / (this.lifetime / 13);
+            this.setSprite(sprites.get(sprite, 13));
 
-            float reduction = 0.00001f * this.age;
+            float horizontalReduction = 0.00001f * this.age;
 
             if (this.xd > 0) {
-                this.xd = Math.max(this.xd - reduction, 0);
+                this.xd = Math.max(this.xd - horizontalReduction, 0);
             } else if (this.xd < 0) {
-                this.xd = Math.min(this.xd + reduction, 0);
+                this.xd = Math.min(this.xd + horizontalReduction, 0);
             }
 
             this.yd += 0.0005f * this.age;
 
             if (this.zd > 0) {
-                this.zd = Math.max(this.zd - reduction, 0);
+                this.zd = Math.max(this.zd - horizontalReduction, 0);
             } else if (this.zd < 0) {
-                this.zd = Math.min(this.zd + reduction, 0);
+                this.zd = Math.min(this.zd + horizontalReduction, 0);
             }
 
             this.move(this.xd, this.yd, this.zd);
