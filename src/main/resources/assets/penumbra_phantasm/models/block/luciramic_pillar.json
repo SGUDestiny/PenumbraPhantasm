@@ -10,5 +10,8 @@
     "default": {
       "type": "is_same_state"
     }
-  }
+  },
+  "shade": true,
+  "ambient_occlusion": true,
+  "emissive": true
 }
