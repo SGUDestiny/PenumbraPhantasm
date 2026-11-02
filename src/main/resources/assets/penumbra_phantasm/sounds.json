@@ -381,5 +381,17 @@
       "penumbra_phantasm:luciramic_step_4",
       "penumbra_phantasm:luciramic_step_5"
     ]
+  },
+  "shield_block": {
+    "sounds":
+    [
+      "penumbra_phantasm:shield_block"
+    ]
+  },
+  "shield_parry": {
+    "sounds":
+    [
+      "penumbra_phantasm:shield_parry"
+    ]
   }
 }

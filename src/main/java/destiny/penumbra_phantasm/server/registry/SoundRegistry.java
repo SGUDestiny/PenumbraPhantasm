@@ -81,6 +81,9 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> LUCIRAMIC_STEP = registerSoundEvent("luciramic_step");
     public static RegistryObject<SoundEvent> ANCHOR_OF_LIGHT_PLACE = registerSoundEvent("anchor_of_light_place");
 
+    public static RegistryObject<SoundEvent> SHIELD_BLOCK = registerSoundEvent("shield_block");
+    public static RegistryObject<SoundEvent> SHIELD_PARRY = registerSoundEvent("shield_parry");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound) {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));
     }

@@ -1,34 +1,22 @@
 package destiny.penumbra_phantasm.mixin;
 
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
+import destiny.penumbra_phantasm.server.registry.ItemRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ToolActions;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
-/*	@Shadow
-	protected abstract boolean isAlwaysExperienceDropper();
-
-	@Shadow
-	@Nullable
-	private DamageSource lastDamageSource;
-
-	@Shadow
-	@Nullable
-	protected Player lastHurtByPlayer;
-
-	@Shadow
-	protected int lastHurtByPlayerTime;*/
-
 	@Inject(method = "setSprinting", at = @At("HEAD"), cancellable = true)
 	private void penumbraPhantasm$blockEggRoomSprint(boolean sprinting, CallbackInfo ci) {
 		if (!sprinting) {
@@ -79,25 +67,29 @@ public abstract class LivingEntityMixin {
 	@ModifyArg(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"), index = 1)
 	private byte penumbraPhantasm$deltaShieldBlockSound(byte pState)
 	{
-		//TODO do your thing instead idk
 		return 1;
 	}
 
-/*	@Inject(method = "dropExperience", at = @At("HEAD"), cancellable = true)
-	private void dropExperience(CallbackInfo ci) {
-		Level level = ((LivingEntity)(Object) this).level();
-		Vec3 position = ((LivingEntity)(Object) this).position();
-		boolean shouldDropExperience = ((LivingEntity)(Object) this).shouldDropExperience();
-		boolean wasExperienceConsumed = ((LivingEntity)(Object) this).wasExperienceConsumed();
+	@Redirect(method = "isDamageSourceBlocked", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isBlocking()Z"))
+	private boolean setShieldUseDelay(LivingEntity instance) {
+		ItemStack shieldItem = instance.getUseItem();
 
-		if (this.lastDamageSource != null && (this.lastDamageSource.type() == DamageTypeRegistry.getSource(level, DamageTypeRegistry.REAL_KNIFE).type()
-				|| this.lastDamageSource.type() == DamageTypeRegistry.getSource(level, DamageTypeRegistry.SWOON).type())) {
-			if (level instanceof ServerLevel && wasExperienceConsumed && (this.isAlwaysExperienceDropper() || lastHurtByPlayerTime > 0 && shouldDropExperience && level.getGameRules().getBoolean(GameRules.RULE_DOMOBLOOT))) {
-				int reward = ForgeEventFactory.getExperienceDrop((LivingEntity)(Object) this, this.lastHurtByPlayer, ((LivingEntity)(Object) this).getExperienceReward());
-				ExperienceOrb.award((ServerLevel)level, position, reward);
-
-				ci.cancel();
+		if (shieldItem.getItem() == ItemRegistry.DELTA_SHIELD.get()) {
+			if (instance.isUsingItem() && !shieldItem.isEmpty()) {
+                return shieldItem.canPerformAction(ToolActions.SHIELD_BLOCK);
+			} else {
+				return false;
+			}
+		} else {
+			if (instance.isUsingItem() && !shieldItem.isEmpty()) {
+				if (!shieldItem.canPerformAction(ToolActions.SHIELD_BLOCK)) {
+					return false;
+				} else {
+					return shieldItem.getUseDuration() - instance.useItemRemaining >= 5;
+				}
+			} else {
+				return false;
 			}
 		}
-	}*/
+	}
 }

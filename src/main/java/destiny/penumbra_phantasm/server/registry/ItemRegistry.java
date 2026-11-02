@@ -37,7 +37,7 @@ public class ItemRegistry {
             () -> new FamiliarAxItem(Tiers.NETHERITE, 6, -3, basicItem()));
 
     public static final RegistryObject<Item> DELTA_SHIELD = ITEMS.register("delta_shield",
-            () -> new DeltaShieldItem(basicItem()));
+            () -> new DeltaShieldItem(basicItem().durability(512)));
 
     public static final RegistryObject<Item> SHADOW_CRYSTAL = ITEMS.register("shadow_crystal",
             () -> new Item(basicItem()));

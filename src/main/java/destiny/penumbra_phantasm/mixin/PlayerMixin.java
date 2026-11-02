@@ -31,7 +31,6 @@ public abstract class PlayerMixin {
     @ModifyArg(method = "disableShield(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"), index = 1)
     private byte dontBreakShieldSound(byte pState)
     {
-        //TODO Do your hting
         return 1;
     }
 }

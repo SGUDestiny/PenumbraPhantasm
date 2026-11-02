@@ -26,13 +26,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.jfr.event.WorldLoadFinishedEvent;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -45,6 +49,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 
 import java.util.*;
+
+import static destiny.penumbra_phantasm.server.item.DeltaShieldItem.PARRY_TICKER;
 
 public class CommonEvents {
     private static final Map<ResourceKey<Level>, Set<ChunkPos>> pendingGreatDoorSpawnerChunks = new HashMap<>();
@@ -349,8 +355,56 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void shieldBlock(ShieldBlockEvent event)
-    {
+    public void shieldBlock(ShieldBlockEvent event) {
+        LivingEntity blocker = event.getEntity();
+        Level level = blocker.level();
 
+        if (level.isClientSide()) return;
+        if (!(blocker instanceof ServerPlayer player)) return;
+
+        ItemStack mainHand = player.getMainHandItem();
+        ItemStack offHand = player.getOffhandItem();
+
+        if (mainHand.getItem() != ItemRegistry.DELTA_SHIELD.get() && offHand.getItem() != ItemRegistry.DELTA_SHIELD.get()) return;
+
+        ItemStack shield = mainHand.getItem() == ItemRegistry.DELTA_SHIELD.get() ? mainHand : offHand;
+        InteractionHand hand = mainHand.getItem() == ItemRegistry.DELTA_SHIELD.get() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
+        int parryTicker = shield.getOrCreateTag().getInt(PARRY_TICKER);
+
+        if (parryTicker == -1) {
+            level.playSound(null, player.blockPosition(), SoundRegistry.SHIELD_BLOCK.get(), SoundSource.PLAYERS, 1, 1);
+        } else {
+            DamageSource damageSource = event.getDamageSource();
+            Entity attacker = damageSource.getEntity();
+
+            if (attacker instanceof Projectile projectile) {
+                Entity owner = projectile.getOwner();
+
+                if (owner == null) return;
+
+                owner.hurt(damageSource, event.getOriginalBlockedDamage());
+            } else if (attacker instanceof LivingEntity livingEntity) {
+                livingEntity.hurt(damageSource, event.getOriginalBlockedDamage());
+            } else {
+                if (attacker == null) return;
+
+                attacker.hurt(damageSource, event.getOriginalBlockedDamage());
+            }
+
+            Vec3 attackerVec = attacker.position().add(0, 0.3, 0);
+            Vec3 awayVec = blocker.position().vectorTo(attackerVec);
+            awayVec = awayVec.normalize();
+            awayVec = awayVec.scale(2);
+
+            attacker.setDeltaMovement(awayVec.x, awayVec.y, awayVec.z);
+
+            shield.getOrCreateTag().putInt(PARRY_TICKER, -1);
+            player.getCooldowns().addCooldown(shield.getItem(), 20);
+            player.releaseUsingItem();
+
+            level.playSound(null, player.blockPosition(), SoundRegistry.SHIELD_PARRY.get(), SoundSource.PLAYERS, 1, 1);
+        }
+
+        shield.hurtAndBreak(1, player, player1 -> player1.broadcastBreakEvent(hand));
     }
 }
