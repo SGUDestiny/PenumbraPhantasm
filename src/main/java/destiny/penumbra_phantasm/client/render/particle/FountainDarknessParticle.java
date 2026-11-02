@@ -32,8 +32,8 @@ public class FountainDarknessParticle extends TextureSheetParticle {
         if (this.age++ >= this.lifetime) {
             this.remove();
         } else {
-            int sprite = this.age / (this.lifetime / 13);
-            this.setSprite(sprites.get(sprite, 13));
+            int sprite = Math.min((this.age / (this.lifetime / 16)), 16);
+            this.setSprite(sprites.get(sprite, 16));
 
             float horizontalReduction = 0.00001f * this.age;
 

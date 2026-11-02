@@ -227,6 +227,7 @@ public class PenumbraPhantasm {
             event.registerSpriteSet(ParticleTypeRegistry.ICHOR_FIRE_FLAME.get(), FlameParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.FRIEND_DISAPPEAR.get(), FriendDisappearParticle.Provider::new);
             event.registerSpriteSet(ParticleTypeRegistry.SWOON_PARTICLE.get(), SwoonParticle.Provider::new);
+            event.registerSpriteSet(ParticleTypeRegistry.SHIELD_PARRY.get(), ShieldParryParticle.Provider::new);
         }
 
         @SubscribeEvent

@@ -75,11 +75,7 @@ public abstract class LivingEntityMixin {
 		ItemStack shieldItem = instance.getUseItem();
 
 		if (shieldItem.getItem() == ItemRegistry.DELTA_SHIELD.get()) {
-			if (instance.isUsingItem() && !shieldItem.isEmpty()) {
-                return shieldItem.canPerformAction(ToolActions.SHIELD_BLOCK);
-			} else {
-				return false;
-			}
+            return instance.isUsingItem() && !shieldItem.isEmpty();
 		} else {
 			if (instance.isUsingItem() && !shieldItem.isEmpty()) {
 				if (!shieldItem.canPerformAction(ToolActions.SHIELD_BLOCK)) {

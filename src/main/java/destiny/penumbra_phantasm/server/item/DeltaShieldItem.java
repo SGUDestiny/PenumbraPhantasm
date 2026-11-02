@@ -81,4 +81,9 @@ public class DeltaShieldItem extends ShieldItem {
     public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
         return false;
     }
+
+    @Override
+    public boolean shouldCauseBlockBreakReset(ItemStack oldStack, ItemStack newStack) {
+        return super.shouldCauseBlockBreakReset(oldStack, newStack);
+    }
 }

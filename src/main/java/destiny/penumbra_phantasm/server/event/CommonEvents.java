@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.event;
 
 import destiny.penumbra_phantasm.ServerConfig;
+import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.client.render.dimension.DepthsSkyLightning;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
@@ -11,10 +12,7 @@ import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.item.FractalMirrorItem;
-import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
-import destiny.penumbra_phantasm.server.registry.ItemRegistry;
-import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
-import destiny.penumbra_phantasm.server.registry.SoundRegistry;
+import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.server.transformations.inventory.StorageData;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.telemetry.events.WorldLoadEvent;
@@ -47,6 +45,7 @@ import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
@@ -398,11 +397,20 @@ public class CommonEvents {
 
             attacker.setDeltaMovement(awayVec.x, awayVec.y, awayVec.z);
 
+            Vec3 eyeVec = player.getEyePosition();
+            Vec3 lookVec = player.getLookAngle();
+            eyeVec = eyeVec.add(lookVec);
+
+            PacketHandlerRegistry.INSTANCE.send(
+                    PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(player.getX(), player.getY(), player.getZ(),
+                            32, player.level().dimension())),
+                    new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.SHIELD_PARRY.get()),
+                            eyeVec.x, eyeVec.y, eyeVec.z, 0, 0, 0, 1)
+            );
+
             shield.getOrCreateTag().putInt(PARRY_TICKER, -1);
             player.getCooldowns().addCooldown(shield.getItem(), 20);
             player.releaseUsingItem();
-
-            level.playSound(null, player.blockPosition(), SoundRegistry.SHIELD_PARRY.get(), SoundSource.PLAYERS, 1, 1);
         }
 
         shield.hurtAndBreak(1, player, player1 -> player1.broadcastBreakEvent(hand));
