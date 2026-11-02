@@ -17,9 +17,6 @@ import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 
-//TODO:
-// - Make parry mechanic
-
 public class DeltaShieldItem extends ShieldItem {
     public static final String PARRY_TICKER = "parryTicker";
 
