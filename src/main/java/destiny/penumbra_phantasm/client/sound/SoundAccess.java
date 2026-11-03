@@ -19,7 +19,7 @@ public class SoundAccess {
     protected static Minecraft minecraft = Minecraft.getInstance();
 
     public static SoundEvent getFountainMusic() {
-        return SoundRegistry.FOUNTAIN_MUSIC.get();
+        return SoundRegistry.TWILIGHT_REVERIE.get();
     }
 
     public static SoundEvent getFountainMusicDepths() {

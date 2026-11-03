@@ -14,6 +14,8 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> FIELD_OF_HOPES_AND_DREAMS = registerSoundEvent("field_of_hopes_and_dreams");
     public static RegistryObject<SoundEvent> EVERLASTING_AUTUMN = registerSoundEvent("everlasting_autumn");
     public static RegistryObject<SoundEvent> AN_OUTSTANDING_MOVE = registerSoundEvent("an_outstanding_move");
+    public static RegistryObject<SoundEvent> BLINDING_DARKNESS = registerSoundEvent("blinding_darkness");
+    public static RegistryObject<SoundEvent> TWILIGHT_REVERIE = registerSoundEvent("twilight_reverie");
 
     public static RegistryObject<SoundEvent> FOUNTAIN_MAKE = registerSoundEvent("fountain_make");
     public static RegistryObject<SoundEvent> FOUNTAIN_TARGET = registerSoundEvent("fountain_target");

@@ -399,5 +399,11 @@
     [
       "penumbra_phantasm:blinding_darkness"
     ]
+  },
+  "twilight_reverie": {
+    "sounds":
+    [
+      "penumbra_phantasm:twilight_reverie"
+    ]
   }
 }
