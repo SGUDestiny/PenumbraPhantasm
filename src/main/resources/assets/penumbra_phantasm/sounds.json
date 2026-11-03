@@ -393,5 +393,11 @@
     [
       "penumbra_phantasm:shield_parry"
     ]
+  },
+  "blinding_darkness": {
+    "sounds":
+    [
+      "penumbra_phantasm:blinding_darkness"
+    ]
   }
 }
