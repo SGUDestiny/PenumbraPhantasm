@@ -689,21 +689,21 @@ public class DarkWorldUtil {
 	}
 
 	public static boolean isDarkWorld(Level level) {
-		return isDarkWorldPath(level.dimension().location().getPath());
+		return isDarkWorldKey(level.dimension());
 	}
 
 	public static boolean isDarkWorldKey(ResourceKey<Level> levelResourceKey) {
-		return isDarkWorldPath(levelResourceKey.location().getPath());
+		return isDarkWorldPath(levelResourceKey.location().getNamespace(), levelResourceKey.location().getPath());
 	}
 
-	private static boolean isDarkWorldPath(String path) {
-		return path.contains("dark_world") || path.contains("egg_room") || path.contains("depths");
+	private static boolean isDarkWorldPath(String modid, String path) {
+		return modid.contains("penumbra_phantasm") && (path.contains("dark_world") || path.contains("egg_room") || path.contains("depths"));
 	}
 
 	public static List<ServerLevel> getAllDarkWorlds(MinecraftServer server) {
 		List<ServerLevel> darkWorlds = new ArrayList<>();
 		for(ServerLevel level : server.getAllLevels()) {
-			if(isDarkWorldPath(level.dimension().location().getPath()))
+			if(isDarkWorldPath(level.dimension().location().getNamespace(), level.dimension().location().getPath()))
 				darkWorlds.add(level);
 		}
 
@@ -715,7 +715,7 @@ public class DarkWorldUtil {
 	}
 
 	public static boolean isDepthsKey(ResourceKey<Level> levelResourceKey) {
-		return levelResourceKey.location().getPath().contains("depths");
+		return levelResourceKey.location().getNamespace().contains("penumbra_phantasm") && levelResourceKey.location().getPath().contains("depths");
 	}
 
 	public static boolean isMindscape(Level level) {
@@ -723,7 +723,7 @@ public class DarkWorldUtil {
 	}
 
 	public static boolean isMindscapeKey(ResourceKey<Level> levelResourceKey) {
-		return levelResourceKey.location().getPath().contains("mindscape");
+		return levelResourceKey.location().getNamespace().contains("penumbra_phantasm") && levelResourceKey.location().getPath().contains("mindscape");
 	}
 
 	@Nullable
