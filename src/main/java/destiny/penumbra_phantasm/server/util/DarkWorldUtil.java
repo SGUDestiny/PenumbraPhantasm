@@ -1,7 +1,6 @@
 package destiny.penumbra_phantasm.server.util;
 
 import commoble.infiniverse.api.InfiniverseAPI;
-import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.server.block.entity.GreatDoorShapeBlockEntity;
 import destiny.penumbra_phantasm.server.capability.DarkFountainCapability;
@@ -42,8 +41,6 @@ import net.minecraft.world.level.levelgen.FlatLevelSource;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.RandomState;
-import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorPresets;
-import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -58,6 +55,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
+
+import static destiny.penumbra_phantasm.PenumbraPhantasm.MODID;
 
 public class DarkWorldUtil {
 	public record GreatDoorStructureResult(BlockPos anchorPos, Direction facing) {}
@@ -300,7 +299,7 @@ public class DarkWorldUtil {
 	}
 
 	public static Optional<GreatDoorStructureResult> tryPlaceGreatDoorStructure(ServerLevel level, BlockPos fountainPos, RandomSource random) {
-		ResourceLocation structureLocation = new ResourceLocation(PenumbraPhantasm.MODID, "great_door");
+		ResourceLocation structureLocation = new ResourceLocation(MODID, "great_door");
 		Optional<StructureTemplate> templateOptional = level.getStructureManager().get(structureLocation);
 
 		if (templateOptional.isEmpty()) {
@@ -640,7 +639,7 @@ public class DarkWorldUtil {
 		ResourceLocation typeKey = server.registryAccess().registryOrThrow(DarkWorldType.REGISTRY_KEY).getKey(type);
 		if(typeKey == null) return null;
 
-		ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID,
+		ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(MODID,
 						("dark_world_"+pos.asLong()+"_"+originKey.location()+"_"+typeKey).replace(':', '-')));
 
 		ServerLevel existingLevel = server.getLevel(key);
@@ -697,7 +696,7 @@ public class DarkWorldUtil {
 	}
 
 	private static boolean isDarkWorldPath(String modid, String path) {
-		return modid.contains("penumbra_phantasm") && (path.contains("dark_world") || path.contains("egg_room") || path.contains("depths"));
+		return modid.contains(MODID) && (path.contains("dark_world") || path.contains("egg_room") || path.contains("depths"));
 	}
 
 	public static List<ServerLevel> getAllDarkWorlds(MinecraftServer server) {
@@ -715,7 +714,7 @@ public class DarkWorldUtil {
 	}
 
 	public static boolean isDepthsKey(ResourceKey<Level> levelResourceKey) {
-		return levelResourceKey.location().getNamespace().contains("penumbra_phantasm") && levelResourceKey.location().getPath().contains("depths");
+		return levelResourceKey.location().getNamespace().contains(MODID) && levelResourceKey.location().getPath().contains("depths");
 	}
 
 	public static boolean isMindscape(Level level) {
@@ -723,12 +722,12 @@ public class DarkWorldUtil {
 	}
 
 	public static boolean isMindscapeKey(ResourceKey<Level> levelResourceKey) {
-		return levelResourceKey.location().getNamespace().contains("penumbra_phantasm") && levelResourceKey.location().getPath().contains("mindscape");
+		return levelResourceKey.location().getNamespace().contains(MODID) && levelResourceKey.location().getPath().contains("mindscape");
 	}
 
 	@Nullable
 	public static ServerLevel getDepths(MinecraftServer server) {
-		ResourceKey<Level> depthsKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(PenumbraPhantasm.MODID, "depths"));
+		ResourceKey<Level> depthsKey = ResourceKey.create(Registries.DIMENSION, new ResourceLocation(MODID, "depths"));
 
 		return server.getLevel(depthsKey);
 	}
@@ -755,7 +754,7 @@ public class DarkWorldUtil {
 
 	public static boolean canUseRecipe(RegistryAccess registryAccess, ResourceLocation recipeID) {
 		List<ResourceLocation> allowedRecipes = getAllDarkWorldAllowedRecipes(registryAccess);
-		if(recipeID.getNamespace().equals(PenumbraPhantasm.MODID))
+		if(recipeID.getNamespace().equals(MODID))
 			allowedRecipes.add(recipeID);
 
 		List<ResourceLocation> blockedRecipes = getAllDarkWorldBlockedRecipes(registryAccess);
