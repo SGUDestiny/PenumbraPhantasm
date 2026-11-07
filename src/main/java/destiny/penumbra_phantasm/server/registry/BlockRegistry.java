@@ -641,12 +641,12 @@ public class BlockRegistry {
                     .mapColor(MapColor.TERRACOTTA_WHITE).requiresCorrectToolForDrops().noCollission(), IVORY_BLOCKSET));
 
     public static final RegistryObject<LiquidBlock> LUMINESCENT_WATER = BLOCKS.register("luminescent_water",
-            () -> new LuminescentWaterFluidBlock(FluidRegistry.SOURCE_LUMINESCENT_WATER, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()
+            () -> new LuminescentWaterFluidBlock(FluidRegistry.SOURCE_LUMINESCENT_WATER, BlockBehaviour.Properties.copy(Blocks.WATER).mapColor(DyeColor.CYAN).noLootTable()
                     .lightLevel(state -> 15).randomTicks()));
     public static final RegistryObject<LiquidBlock> PURE_DARKNESS = BLOCKS.register("pure_darkness",
-            () -> new LiquidBlock(FluidRegistry.SOURCE_PURE_DARKNESS, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+            () -> new LiquidBlock(FluidRegistry.SOURCE_PURE_DARKNESS, BlockBehaviour.Properties.copy(Blocks.WATER).mapColor(DyeColor.GRAY).noLootTable()));
     public static final RegistryObject<LiquidBlock> NEGATIVE_PHOTONS = BLOCKS.register("negative_photons",
-            () -> new NegativePhotonsFluidBlock(FluidRegistry.SOURCE_NEGATIVE_PHOTONS, BlockBehaviour.Properties.copy(Blocks.WATER).noLootTable()));
+            () -> new NegativePhotonsFluidBlock(FluidRegistry.SOURCE_NEGATIVE_PHOTONS, BlockBehaviour.Properties.copy(Blocks.WATER).mapColor(DyeColor.BLACK).noLootTable()));
 
 
 
