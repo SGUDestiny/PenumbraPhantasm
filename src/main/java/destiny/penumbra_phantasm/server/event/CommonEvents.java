@@ -1,11 +1,13 @@
 package destiny.penumbra_phantasm.server.event;
 
+import destiny.penumbra_phantasm.PenumbraPhantasm;
 import destiny.penumbra_phantasm.ServerConfig;
 import destiny.penumbra_phantasm.client.network.ClientBoundParticlePacket;
 import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.client.render.dimension.DepthsSkyLightning;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.capability.AnchorOfLightCapability;
+import destiny.penumbra_phantasm.server.capability.KnifingCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomManager;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
@@ -17,6 +19,7 @@ import destiny.penumbra_phantasm.server.transformations.inventory.StorageData;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.client.telemetry.events.WorldLoadEvent;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -24,6 +27,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.jfr.event.WorldLoadFinishedEvent;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -39,8 +43,10 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.level.ChunkEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -51,36 +57,43 @@ import java.util.*;
 
 import static destiny.penumbra_phantasm.server.item.DeltaShieldItem.PARRY_TICKER;
 
-public class CommonEvents {
+public class CommonEvents
+{
     private static final Map<ResourceKey<Level>, Set<ChunkPos>> pendingGreatDoorSpawnerChunks = new HashMap<>();
     private static final int GREAT_DOOR_SPAWNER_CHUNK_DRAIN_PER_TICK = 20;
 
-    private static void bootPlayerFromDarkWorldsWithoutFountain(ServerPlayer player) {
-        if (player.level().isClientSide) return;
-        if (!(player.level() instanceof ServerLevel level)) return;
-        if (!DarkWorldUtil.isDarkWorld(level)) return;
-        if (CardKingdomEggRoomUtil.isEggRoom(level)) return;
-        if (DarkWorldUtil.isDepths(level)) return;
+    private static void bootPlayerFromDarkWorldsWithoutFountain(ServerPlayer player)
+    {
+        if(player.level().isClientSide) return;
+        if(!(player.level() instanceof ServerLevel level)) return;
+        if(!DarkWorldUtil.isDarkWorld(level)) return;
+        if(CardKingdomEggRoomUtil.isEggRoom(level)) return;
+        if(DarkWorldUtil.isDepths(level)) return;
 
         boolean noFountain = !DarkWorldUtil.levelHasDarkFountain(level);
-        if (!noFountain) return;
-        if (player.getServer() == null) return;
+        if(!noFountain) return;
+        if(player.getServer() == null) return;
 
         ServerLevel overworld = player.getServer().overworld();
         BlockPos spawnPos = overworld.getSharedSpawnPos();
 
-        player.teleportTo(overworld, spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5, overworld.getSharedSpawnAngle(), 0);
+        player.teleportTo(overworld, spawnPos.getX() + 0.5, spawnPos.getY(), spawnPos.getZ() + 0.5,
+                overworld.getSharedSpawnAngle(), 0);
 
-        player.displayClientMessage(Component.translatable("message.penumbra_phantasm.dark_world_without_fountain"), true);
+        player.displayClientMessage(Component.translatable("message.penumbra_phantasm.dark_world_without_fountain"),
+                true);
     }
 
-    private static void enqueueGreatDoorSpawnerChunkCheck(ServerLevel level, ChunkPos pos) {
+    private static void enqueueGreatDoorSpawnerChunkCheck(ServerLevel level, ChunkPos pos)
+    {
         pendingGreatDoorSpawnerChunks.computeIfAbsent(level.dimension(), k -> new HashSet<>()).add(pos);
     }
 
-    private static void drainGreatDoorSpawnerChunkQueue(ServerLevel level) {
+    private static void drainGreatDoorSpawnerChunkQueue(ServerLevel level)
+    {
         Set<ChunkPos> set = pendingGreatDoorSpawnerChunks.get(level.dimension());
-        if (set == null || set.isEmpty()) {
+        if(set == null || set.isEmpty())
+        {
             return;
         }
 
@@ -88,28 +101,34 @@ public class CommonEvents {
         ArrayList<ChunkPos> batch = new ArrayList<>(Math.min(budget, set.size()));
 
         Iterator<ChunkPos> iterator = set.iterator();
-        while (budget > 0 && iterator.hasNext()) {
+        while(budget > 0 && iterator.hasNext())
+        {
             batch.add(iterator.next());
             iterator.remove();
             budget--;
         }
 
-        for (ChunkPos pos : batch) {
+        for(ChunkPos pos : batch)
+        {
             ChunkAccess chunk = level.getChunkSource().getChunkNow(pos.x, pos.z);
 
-            if (chunk != null) {
+            if(chunk != null)
+            {
                 DarkWorldUtil.convertGreatDoorSpawnerInChunk(level, chunk);
             }
         }
     }
 
     @SubscribeEvent
-    public void chunkLoad(ChunkEvent.Load event) {
-        if (!(event.getLevel() instanceof ServerLevel serverLevel)) {
+    public void chunkLoad(ChunkEvent.Load event)
+    {
+        if(!(event.getLevel() instanceof ServerLevel serverLevel))
+        {
             return;
         }
 
-        if (!DarkWorldUtil.isDarkWorld(serverLevel)) {
+        if(!DarkWorldUtil.isDarkWorld(serverLevel))
+        {
             return;
         }
 
@@ -117,42 +136,53 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void attackEvent(LivingAttackEvent event) {
+    public void attackEvent(LivingAttackEvent event)
+    {
         Level level = event.getEntity().level();
         Entity attacker = event.getSource().getEntity();
         LivingEntity target = event.getEntity();
         float damage = event.getAmount();
 
-        if (attacker instanceof Player player) {
-            if (target.getHealth() <= damage) {
+        if(attacker instanceof Player player)
+        {
+            if(target.getHealth() <= damage)
+            {
                 ItemStack stack = player.getMainHandItem();
 
-                if (stack.getItem() == ItemRegistry.NETHERITE_KNIFE.get()) {
-                    if (stack.getTag() == null || stack.getTag().get("LV") == null) {
-                        level.playSound(null, player.getOnPos().above(), SoundRegistry.LEVEL_UP.get(), SoundSource.PLAYERS, 0.7f, 1f);
+                if(stack.getItem() == ItemRegistry.NETHERITE_KNIFE.get())
+                {
+                    if(stack.getTag() == null || stack.getTag().get("LV") == null)
+                    {
+                        level.playSound(null, player.getOnPos().above(), SoundRegistry.LEVEL_UP.get(),
+                                SoundSource.PLAYERS, 0.7f, 1f);
                         System.out.println("Played sound");
 
                         stack.getOrCreateTag().putInt("LV", 1);
                         stack.getOrCreateTag().putInt("EXP", 0);
-                    } else {
+                    } else
+                    {
                         int lv = stack.getTag().getInt("LV");
                         int exp = stack.getTag().getInt("EXP");
                         int nextexp = (20 * lv) - 1;
 
-                        if (exp >= nextexp) {
+                        if(exp >= nextexp)
+                        {
                             lv = lv + 1;
                             exp = 0;
 
-                            level.playSound(null, player.getOnPos().above(), SoundRegistry.LEVEL_UP.get(), SoundSource.PLAYERS, 1f, 1f);
+                            level.playSound(null, player.getOnPos().above(), SoundRegistry.LEVEL_UP.get(),
+                                    SoundSource.PLAYERS, 1f, 1f);
 
-                            if (lv >= 20) {
+                            if(lv >= 20)
+                            {
                                 ItemStack realKnife = new ItemStack(ItemRegistry.REAL_KNIFE.get());
                                 realKnife.setTag(stack.getTag());
 
                                 stack.setCount(0);
                                 player.setItemInHand(InteractionHand.MAIN_HAND, realKnife);
                             }
-                        } else {
+                        } else
+                        {
                             exp = exp + 1;
                         }
 
@@ -165,84 +195,102 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void levelTick(TickEvent.LevelTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) {
+    public void levelTick(TickEvent.LevelTickEvent event)
+    {
+        if(event.phase == TickEvent.Phase.END)
+        {
             Level level = event.level;
-            if (level.isClientSide) return;
+            if(level.isClientSide) return;
 
-            if (level instanceof ServerLevel serverLevel && DarkWorldUtil.isDarkWorld(serverLevel)) {
+            if(level instanceof ServerLevel serverLevel && DarkWorldUtil.isDarkWorld(serverLevel))
+            {
                 drainGreatDoorSpawnerChunkQueue(serverLevel);
             }
 
-            level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
-                for (DarkFountain fountain : new ArrayList<>(cap.darkFountains.values())) {
-                    fountain.tick(level);
-                }
-            });
+            level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap ->
+                {
+                    for(DarkFountain fountain : new ArrayList<>(cap.darkFountains.values()))
+                    {
+                        fountain.tick(level);
+                    }
+                });
 
-            if (level instanceof ServerLevel serverLevel) {
+            if(level instanceof ServerLevel serverLevel)
+            {
                 DepthsSkyLightning.tick(serverLevel);
                 CardKingdomEggRoomManager.tickPendingDoors(serverLevel);
 
-                level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
-                    for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
-                        ChunkPos doorChunk = new ChunkPos(greatDoor.greatDoorPos);
+                level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap ->
+                    {
+                        for(GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values()))
+                        {
+                            ChunkPos doorChunk = new ChunkPos(greatDoor.greatDoorPos);
 
-                        if (serverLevel.getChunkSource().getChunkNow(doorChunk.x, doorChunk.z) != null) {
-                            greatDoor.tick(level);
+                            if(serverLevel.getChunkSource().getChunkNow(doorChunk.x, doorChunk.z) != null)
+                            {
+                                greatDoor.tick(level);
+                            }
                         }
-                    }
-                });
+                    });
             }
         }
     }
 
     @SubscribeEvent
-    public void deathEvent(LivingDeathEvent event) {
+    public void deathEvent(LivingDeathEvent event)
+    {
         LivingEntity living = event.getEntity();
 
-        if(living instanceof ServerPlayer serverPlayer) {
-            serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
-				cap.diedWithSoulHearth = SoulCapability.hasOwnSoulHearth(serverPlayer);
+        if(living instanceof ServerPlayer serverPlayer)
+        {
+            serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap ->
+                {
+                    cap.diedWithSoulHearth = SoulCapability.hasOwnSoulHearth(serverPlayer);
 
-                PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-                        new ClientBoundSoulBreakPacket(cap.diedWithSoulHearth, cap.soulType));
-            });
+                    PacketHandlerRegistry.INSTANCE.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
+                            new ClientBoundSoulBreakPacket(cap.diedWithSoulHearth, cap.soulType));
+                });
         }
     }
 
     @SubscribeEvent
-    public void cloneEvent(PlayerEvent.Clone event) {
+    public void cloneEvent(PlayerEvent.Clone event)
+    {
         Player original = event.getOriginal();
         Player player = event.getEntity();
 
         original.reviveCaps();
 
-        original.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> player.getCapability(CapabilityRegistry.SOUL)
-                .ifPresent(copyCap -> copyCap.sync(cap)));
+        original.getCapability(CapabilityRegistry.SOUL).ifPresent(
+                cap -> player.getCapability(CapabilityRegistry.SOUL).ifPresent(copyCap -> copyCap.sync(cap)));
 
-        original.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap ->
-                player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(copyCap -> copyCap.sync(cap)));
+        original.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(
+                cap -> player.getCapability(CapabilityRegistry.SCREEN_ANIMATION)
+                             .ifPresent(copyCap -> copyCap.sync(cap)));
 
-        original.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(oldInv ->
-                player.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(newInv -> newInv.deserializeNBT(oldInv.serializeNBT())));
+        original.getCapability(CapabilityRegistry.CHESHIRE_CHEST).ifPresent(
+                oldInv -> player.getCapability(CapabilityRegistry.CHESHIRE_CHEST)
+                                .ifPresent(newInv -> newInv.deserializeNBT(oldInv.serializeNBT())));
 
-        original.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(cap ->
-                player.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(copyCap -> copyCap.sync(cap)));
+        original.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(
+                cap -> player.getCapability(CapabilityRegistry.FIRE_DOORS).ifPresent(copyCap -> copyCap.sync(cap)));
 
-        original.getCapability(CapabilityRegistry.ABILITY).ifPresent(cap -> player.getCapability(CapabilityRegistry.ABILITY)
-                .ifPresent(copyCap -> copyCap.sync(cap)));
+        original.getCapability(CapabilityRegistry.ABILITY).ifPresent(
+                cap -> player.getCapability(CapabilityRegistry.ABILITY).ifPresent(copyCap -> copyCap.sync(cap)));
 
         original.invalidateCaps();
 
-        if(event.getEntity() instanceof ServerPlayer serverPlayer) {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
             Level level = serverPlayer.level();
             ResourceKey<Level> sourceDim = original.level().dimension();
             ResourceKey<Level> targetDim = serverPlayer.level().dimension();
 
-            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem)) return;
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
+                return;
 
-            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim)) {
+            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
+            {
                 StorageData data = StorageData.get(level);
 
                 data.getInventory(serverPlayer.getUUID()).swap(serverPlayer);
@@ -252,23 +300,29 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void playerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+    public void playerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event)
+    {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
             ChangedDimensionContainsTrigger.INSTANCE.trigger(serverPlayer, event.getFrom(), event.getTo());
 
-            if (CardKingdomEggRoomUtil.isEggRoomKey(event.getTo())) {
+            if(CardKingdomEggRoomUtil.isEggRoomKey(event.getTo()))
+            {
                 CardKingdomEggRoomManager.onChangedToEggRoom(serverPlayer);
             }
         }
 
-        if(event.getEntity() instanceof ServerPlayer serverPlayer) {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
             Level level = serverPlayer.level();
             ResourceKey<Level> sourceDim = event.getFrom();
             ResourceKey<Level> targetDim = event.getTo();
 
-            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem)) return;
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
+                return;
 
-            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim)) {
+            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
+            {
                 StorageData data = StorageData.get(level);
 
                 data.getInventory(serverPlayer.getUUID()).swap(serverPlayer, true, true);
@@ -278,15 +332,19 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void entityChangedDimension(EntityTravelToDimensionEvent event) {
-        if(event.getEntity() instanceof ServerPlayer serverPlayer) {
+    public void entityChangedDimension(EntityTravelToDimensionEvent event)
+    {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
             Level level = serverPlayer.level();
             ResourceKey<Level> sourceDim = serverPlayer.level().dimension();
             ResourceKey<Level> targetDim = event.getDimension();
 
-            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem)) return;
+            if(serverPlayer.getInventory().hasAnyMatching(stack -> stack.getItem() instanceof FractalMirrorItem))
+                return;
 
-            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim)) {
+            if(DarkWorldUtil.isDarkWorldKey(targetDim) ^ DarkWorldUtil.isDarkWorldKey(sourceDim))
+            {
                 StorageData data = StorageData.get(level);
 
                 data.getInventory(serverPlayer.getUUID()).swap(serverPlayer, true, false);
@@ -297,95 +355,121 @@ public class CommonEvents {
     }
 
     @SubscribeEvent
-    public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+    public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
+    {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
             bootPlayerFromDarkWorldsWithoutFountain(serverPlayer);
 
-            if (CardKingdomEggRoomUtil.isEggRoom(serverPlayer.level())) {
+            if(CardKingdomEggRoomUtil.isEggRoom(serverPlayer.level()))
+            {
                 CardKingdomEggRoomManager.onChangedToEggRoom(serverPlayer);
             }
 
-            if (ServerConfig.skipIntroScreen) {
-                serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> {
-                    if (!cap.seenIntro) {
-                        cap.soulType = serverPlayer.level().random.nextInt(7) + 1;
-                        cap.seenIntro = true;
-                    }
-                });
+            if(ServerConfig.skipIntroScreen)
+            {
+                serverPlayer.getCapability(CapabilityRegistry.SOUL).ifPresent(cap ->
+                    {
+                        if(!cap.seenIntro)
+                        {
+                            cap.soulType = serverPlayer.level().random.nextInt(7) + 1;
+                            cap.seenIntro = true;
+                        }
+                    });
             }
         }
     }
 
     @SubscribeEvent
-    public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+    public void playerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event)
+    {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
             CardKingdomEggRoomManager.onLoggedOut(serverPlayer.getUUID());
         }
     }
 
     @SubscribeEvent
-    public void playerRespawn(PlayerEvent.PlayerRespawnEvent event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+    public void playerRespawn(PlayerEvent.PlayerRespawnEvent event)
+    {
+        if(event.getEntity() instanceof ServerPlayer serverPlayer)
+        {
             bootPlayerFromDarkWorldsWithoutFountain(serverPlayer);
         }
     }
 
     @SubscribeEvent
-    public void onLevelLoad(LevelEvent.Load event) {
-        if (event.getLevel() instanceof ServerLevel serverLevel) {
-            AnchorOfLightCapability anchorCapability = serverLevel.getCapability(CapabilityRegistry.ANCHOR_OF_LIGHT).resolve().orElse(null);
+    public void onLevelLoad(LevelEvent.Load event)
+    {
+        if(event.getLevel() instanceof ServerLevel serverLevel)
+        {
+            AnchorOfLightCapability anchorCapability = serverLevel.getCapability(CapabilityRegistry.ANCHOR_OF_LIGHT)
+                                                                  .resolve().orElse(null);
 
-            if (anchorCapability == null) return;
+            if(anchorCapability == null) return;
 
             anchorCapability.revalidateAnchorsForLevel(serverLevel, anchorCapability);
         }
     }
 
     @SubscribeEvent
-    public void playerTick(TickEvent.PlayerTickEvent event) {
-        if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof ServerPlayer player) {
-            event.player.getCapability(CapabilityRegistry.SOUL).ifPresent(cap -> cap.tick(event.player.level(), player));
-            event.player.getCapability(CapabilityRegistry.VERTICAL_BAR).ifPresent(cap -> cap.tick(event.player.level(), player));
-            event.player.getCapability(CapabilityRegistry.ABILITY).ifPresent(cap -> cap.tick(event.player.level(), player));
-            event.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION).ifPresent(cap -> cap.tick(event.player.level(), player));
+    public void playerTick(TickEvent.PlayerTickEvent event)
+    {
+        if(event.phase == TickEvent.Phase.END && event.side.isServer() && event.player instanceof ServerPlayer player)
+        {
+            event.player.getCapability(CapabilityRegistry.SOUL)
+                        .ifPresent(cap -> cap.tick(event.player.level(), player));
+            event.player.getCapability(CapabilityRegistry.VERTICAL_BAR)
+                        .ifPresent(cap -> cap.tick(event.player.level(), player));
+            event.player.getCapability(CapabilityRegistry.ABILITY)
+                        .ifPresent(cap -> cap.tick(event.player.level(), player));
+            event.player.getCapability(CapabilityRegistry.SCREEN_ANIMATION)
+                        .ifPresent(cap -> cap.tick(event.player.level(), player));
             bootPlayerFromDarkWorldsWithoutFountain(player);
             CardKingdomEggRoomManager.tickPlayer(player);
         }
     }
 
     @SubscribeEvent
-    public void shieldBlock(ShieldBlockEvent event) {
+    public void shieldBlock(ShieldBlockEvent event)
+    {
         LivingEntity blocker = event.getEntity();
         Level level = blocker.level();
 
-        if (level.isClientSide()) return;
-        if (!(blocker instanceof ServerPlayer player)) return;
+        if(level.isClientSide()) return;
+        if(!(blocker instanceof ServerPlayer player)) return;
 
         ItemStack mainHand = player.getMainHandItem();
         ItemStack offHand = player.getOffhandItem();
 
-        if (mainHand.getItem() != ItemRegistry.DELTA_SHIELD.get() && offHand.getItem() != ItemRegistry.DELTA_SHIELD.get()) return;
+        if(mainHand.getItem() != ItemRegistry.DELTA_SHIELD.get() && offHand.getItem() != ItemRegistry.DELTA_SHIELD.get())
+            return;
 
         ItemStack shield = mainHand.getItem() == ItemRegistry.DELTA_SHIELD.get() ? mainHand : offHand;
         InteractionHand hand = mainHand.getItem() == ItemRegistry.DELTA_SHIELD.get() ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND;
         int parryTicker = shield.getOrCreateTag().getInt(PARRY_TICKER);
 
-        if (parryTicker == -1) {
+        if(parryTicker == -1)
+        {
             level.playSound(null, player.blockPosition(), SoundRegistry.SHIELD_BLOCK.get(), SoundSource.PLAYERS, 1, 1);
-        } else {
+        } else
+        {
             DamageSource damageSource = event.getDamageSource();
             Entity attacker = damageSource.getEntity();
 
-            if (attacker instanceof Projectile projectile) {
+            if(attacker instanceof Projectile projectile)
+            {
                 Entity owner = projectile.getOwner();
 
-                if (owner == null) return;
+                if(owner == null) return;
 
                 owner.hurt(damageSource, event.getOriginalBlockedDamage());
-            } else if (attacker instanceof LivingEntity livingEntity) {
+            } else if(attacker instanceof LivingEntity livingEntity)
+            {
                 livingEntity.hurt(damageSource, event.getOriginalBlockedDamage());
-            } else {
-                if (attacker == null) return;
+            } else
+            {
+                if(attacker == null) return;
 
                 attacker.hurt(damageSource, event.getOriginalBlockedDamage());
             }
@@ -401,12 +485,11 @@ public class CommonEvents {
             Vec3 lookVec = player.getLookAngle();
             eyeVec = eyeVec.add(lookVec);
 
-            PacketHandlerRegistry.INSTANCE.send(
-                    PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(player.getX(), player.getY(), player.getZ(),
-                            32, player.level().dimension())),
-                    new ClientBoundParticlePacket(ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.SHIELD_PARRY.get()),
-                            eyeVec.x, eyeVec.y, eyeVec.z, 0, 0, 0, 1)
-            );
+            PacketHandlerRegistry.INSTANCE.send(PacketDistributor.NEAR.with(
+                    () -> new PacketDistributor.TargetPoint(player.getX(), player.getY(), player.getZ(), 32,
+                            player.level().dimension())), new ClientBoundParticlePacket(
+                    ForgeRegistries.PARTICLE_TYPES.getKey(ParticleTypeRegistry.SHIELD_PARRY.get()), eyeVec.x, eyeVec.y,
+                    eyeVec.z, 0, 0, 0, 1));
 
             shield.getOrCreateTag().putInt(PARRY_TICKER, -1);
             player.getCooldowns().addCooldown(shield.getItem(), 20);
@@ -414,5 +497,102 @@ public class CommonEvents {
         }
 
         shield.hurtAndBreak(1, player, player1 -> player1.broadcastBreakEvent(hand));
+    }
+
+    //KnifePort 3000
+
+    @SubscribeEvent
+    public void onRightClickItem(PlayerInteractEvent.RightClickItem event)
+    {
+        Player player = event.getEntity();
+        ItemStack stack = event.getItemStack();
+
+        if(stack.is(PenumbraPhantasm.KNIFE) && !player.level().isClientSide())
+        {
+            player.getCapability(CapabilityRegistry.KNIFING_CAP).ifPresent(cap ->
+                {
+                    if (cap.isUsing()) {
+                        event.setCancellationResult(InteractionResultHolder.pass(stack).getResult());
+                        event.setCanceled(true);
+                        return;
+                    }
+
+                    InteractionResultHolder<ItemStack> result = cap.use(player.level(), player, event.getHand());
+                    if (result.getResult().consumesAction()) {
+                        cap.startUsing(stack, 72000);
+                        System.out.println("Start");
+                        event.setCancellationResult(result.getResult());
+                        event.setCanceled(true);
+                    } else {
+                        event.setCancellationResult(result.getResult());
+                        event.setCanceled(true);
+                    }
+                });
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerTick(TickEvent.PlayerTickEvent event)
+    {
+        if (event.phase == TickEvent.Phase.END)
+        {
+            Player player = event.player;
+            Level level = player.level();
+
+            for(InteractionHand hand : InteractionHand.values())
+            {
+                ItemStack stack = player.getItemInHand(hand);
+                if(stack.is(PenumbraPhantasm.KNIFE))
+                {
+                    if(!level.isClientSide())
+                    {
+                        CompoundTag tag = stack.getOrCreateTag();
+
+                        KnifingCapability.ensureTagDefaults(tag);
+
+                        int makingTick = tag.getInt(KnifingCapability.MAKING_TICK);
+
+                        if(makingTick >= 0)
+                        {
+                            boolean isStillCharging = player.isUsingItem() && player.getUseItem() == stack;
+
+                            if(isStillCharging)
+                            {
+                                return;
+                            }
+
+                            if(makingTick >= KnifingCapability.JUMP_DURATION && !tag.getBoolean(KnifingCapability.STAB_STARTED))
+                            {
+                                KnifingCapability.startStabPhase(player, tag);
+                                makingTick = tag.getInt(KnifingCapability.MAKING_TICK);
+                            }
+
+                            if(makingTick >= KnifingCapability.JUMP_DURATION + KnifingCapability.STAB_DELAY)
+                            {
+                                if(!level.isClientSide())
+                                {
+                                    KnifingCapability.makeFountain(tag, player, level, stack);
+                                }
+                            } else
+                            {
+                                tag.putInt(KnifingCapability.MAKING_TICK, makingTick + 1);
+                            }
+                        }
+                    }
+                }
+            }
+
+            player.getCapability(CapabilityRegistry.KNIFING_CAP).ifPresent(cap -> {
+                if (cap.isUsing())
+                {
+                    boolean stillHoldingItem = player.getMainHandItem() == cap.activeItemStack ||
+                                                       player.getOffhandItem() == cap.activeItemStack;
+
+                    if (!stillHoldingItem)
+                        cap.stopUsingEarly(player);
+                    else cap.tick(player);
+                }
+            });
+        }
     }
 }
