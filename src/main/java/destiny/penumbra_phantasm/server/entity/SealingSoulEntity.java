@@ -38,6 +38,7 @@ public class SealingSoulEntity extends Entity {
         this.noPhysics = true;
         this.setNoGravity(true);
         this.noCulling = true;
+        this.setInvulnerable(true);
     }
 
     @Override

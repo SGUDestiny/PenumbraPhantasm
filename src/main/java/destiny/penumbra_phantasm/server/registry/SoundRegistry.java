@@ -86,6 +86,8 @@ public class SoundRegistry {
     public static RegistryObject<SoundEvent> SHIELD_BLOCK = registerSoundEvent("shield_block");
     public static RegistryObject<SoundEvent> SHIELD_PARRY = registerSoundEvent("shield_parry");
 
+    public static RegistryObject<SoundEvent> DEVICE_FRIEND_LAUGH = registerSoundEvent("device_friend_laugh");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String sound) {
         return SOUNDS.register(sound, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(PenumbraPhantasm.MODID, sound)));
     }

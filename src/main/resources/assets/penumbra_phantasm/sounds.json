@@ -405,5 +405,11 @@
     [
       "penumbra_phantasm:twilight_reverie"
     ]
+  },
+  "device_friend_laugh": {
+    "sounds":
+    [
+      "penumbra_phantasm:device_friend_laugh"
+    ]
   }
 }

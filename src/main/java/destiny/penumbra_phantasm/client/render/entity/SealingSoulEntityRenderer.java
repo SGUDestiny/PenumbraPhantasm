@@ -24,7 +24,7 @@ public class SealingSoulEntityRenderer extends EntityRenderer<SealingSoulEntity>
 
     @Override
     public void render(@NotNull SealingSoulEntity sealingSoulEntity, float entity, float partialTick, @NotNull PoseStack pose, @NotNull MultiBufferSource buffer, int packedLight) {
-        float tick = sealingSoulEntity.getTick() + partialTick;;
+        float tick = sealingSoulEntity.getTick() + partialTick;
 
         float soulAlpha = 0f;
         float soulSize = 0.5f;

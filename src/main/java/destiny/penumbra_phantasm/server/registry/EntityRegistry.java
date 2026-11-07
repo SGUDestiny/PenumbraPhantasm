@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.registry;
 
 import destiny.penumbra_phantasm.PenumbraPhantasm;
+import destiny.penumbra_phantasm.server.entity.DEVICE_FRIEND;
 import destiny.penumbra_phantasm.server.entity.SealingSoulEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -18,6 +19,12 @@ public class EntityRegistry {
                     () -> EntityType.Builder.of(SealingSoulEntity::new, MobCategory.MISC)
                             .sized(1f, 1f)
                             .build(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "sealing_soul").toString()));
+
+    public static final RegistryObject<EntityType<DEVICE_FRIEND>> DEVICE_FRIEND =
+            ENTITY_TYPES.register("device_friend",
+                    () -> EntityType.Builder.of(DEVICE_FRIEND::new, MobCategory.MISC)
+                            .sized(1f, 1f)
+                            .build(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "device_friend").toString()));
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);

@@ -4,6 +4,7 @@ import destiny.penumbra_phantasm.client.ClientConfig;
 import destiny.penumbra_phantasm.client.KeyBindings;
 import destiny.penumbra_phantasm.client.render.blockentity.*;
 import destiny.penumbra_phantasm.client.render.dimension.*;
+import destiny.penumbra_phantasm.client.render.entity.DEVICE_FRIEND_RENDERER;
 import destiny.penumbra_phantasm.client.render.entity.SealingSoulEntityRenderer;
 import destiny.penumbra_phantasm.client.render.model.block.CheshireChestModel;
 import destiny.penumbra_phantasm.client.render.model.fountain.*;
@@ -196,6 +197,7 @@ public class PenumbraPhantasm {
                 ItemBlockRenderTypes.setRenderLayer(FluidRegistry.FLOWING_LUMINESCENT_WATER.get(), RenderType.translucent());
 
                 EntityRenderers.register(EntityRegistry.SEALING_SOUL.get(), SealingSoulEntityRenderer::new);
+                EntityRenderers.register(EntityRegistry.DEVICE_FRIEND.get(), DEVICE_FRIEND_RENDERER::new);
 
                 ItemProperties.register(ItemRegistry.FRIEND.get(), new ResourceLocation(MODID, "animation"), new FriendItemProperty());
                 ItemProperties.register(ItemRegistry.SOUL_HEARTH.get(), new ResourceLocation(MODID, SOUL_TYPE), new SoulHearthItemProperty());
