@@ -4,11 +4,13 @@ import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
 import destiny.penumbra_phantasm.server.registry.ItemRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ToolActions;
 import org.spongepowered.asm.mixin.Mixin;
@@ -64,10 +66,20 @@ public abstract class LivingEntityMixin {
 		ci.cancel();
 	}
 
-	@ModifyArg(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"), index = 1)
-	private byte penumbraPhantasm$deltaShieldBlockSound(byte pState)
-	{
-		return 1;
+	@Redirect(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"))
+	private void test(Level instance, Entity pEntity, byte pState) {
+		if (!(pEntity instanceof LivingEntity livingEntity)) {
+			instance.broadcastEntityEvent(pEntity, pState);
+			return;
+		}
+
+		ItemStack shieldItem = livingEntity.getUseItem();
+
+		if (shieldItem.getItem() == ItemRegistry.DELTA_SHIELD.get()) {
+			instance.broadcastEntityEvent(pEntity, (byte) 1);
+		} else {
+			instance.broadcastEntityEvent(pEntity, pState);
+		}
 	}
 
 	@Redirect(method = "isDamageSourceBlocked", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isBlocking()Z"))
