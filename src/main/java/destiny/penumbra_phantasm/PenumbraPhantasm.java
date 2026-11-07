@@ -31,6 +31,9 @@ import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.registries.DataPackRegistryEvent;
@@ -61,6 +64,8 @@ public class PenumbraPhantasm {
     public static final Logger LOGGER = LogUtils.getLogger();
     public static final ResourceLocation EMPTY_LOCATION = new ResourceLocation(MODID, "empty");
     public static final String EMPTY = EMPTY_LOCATION.toString();
+
+    public static final TagKey<Item> KNIFE = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "piercing_knives"));
 
     public PenumbraPhantasm() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
@@ -186,6 +191,9 @@ public class PenumbraPhantasm {
                 ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCARLET_DOOR.get(), RenderType.cutout());
                 ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCARLET_TRAPDOOR.get(), RenderType.cutout());
                 ItemBlockRenderTypes.setRenderLayer(BlockRegistry.SCARLET_LOG_MYSTERIOUS_DOOR.get(), RenderType.cutout());
+
+                ItemBlockRenderTypes.setRenderLayer(FluidRegistry.SOURCE_LUMINESCENT_WATER.get(), RenderType.translucent());
+                ItemBlockRenderTypes.setRenderLayer(FluidRegistry.FLOWING_LUMINESCENT_WATER.get(), RenderType.translucent());
 
                 EntityRenderers.register(EntityRegistry.SEALING_SOUL.get(), SealingSoulEntityRenderer::new);
 
