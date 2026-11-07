@@ -245,7 +245,7 @@ public class ClientEvents {
 						}
 
 						if(fade > 0) {
-							FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, fade, camera.getPosition());
+							FountainRenderUtil.renderOpenFountainOptimized(fountain, length, pose, buffer, fade, camera.getPosition(), fountain.getFountainPos());
 						}
 
 						pose.popPose();

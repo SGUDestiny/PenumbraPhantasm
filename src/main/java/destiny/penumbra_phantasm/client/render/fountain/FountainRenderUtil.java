@@ -35,6 +35,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import static destiny.penumbra_phantasm.server.fountain.DarkFountain.*;
 
@@ -160,9 +162,12 @@ public class FountainRenderUtil {
 		};
 
 		for (float[] plane : planes) {
-			float x1 = plane[0], z1 = plane[1];
-			float x2 = -plane[0], z2 = -plane[1];
-			float nx = plane[2] * offset, nz = plane[3] * offset;
+			float x1 = plane[0];
+			float z1 = plane[1];
+			float x2 = -plane[0];
+			float z2 = -plane[1];
+			float nx = plane[2] * offset;
+			float nz = plane[3] * offset;
 
 			for (int tile = 0; tile < tileCount; tile++) {
 				float yBot = tile * tileHeight;
@@ -184,7 +189,7 @@ public class FountainRenderUtil {
 	}
 
 	private static void renderFountainCrossFading(PoseStack poseStack, VertexConsumer consumer, float r, float g, float b, float a, float halfWidthPixels,
-											float tileHeightPixels, float deformation, float vOffset) {
+											float tileHeightPixels, float deformation) {
 		Matrix4f matrix = poseStack.last().pose();
 		float halfWidth = (halfWidthPixels + deformation) / 16f;
 		float tileHeight = tileHeightPixels / 16f;
@@ -200,9 +205,12 @@ public class FountainRenderUtil {
 		};
 
 		for (float[] plane : planes) {
-			float x1 = plane[0], z1 = plane[1];
-			float x2 = -plane[0], z2 = -plane[1];
-			float nx = plane[2] * offset, nz = plane[3] * offset;
+			float x1 = plane[0];
+			float z1 = plane[1];
+			float x2 = -plane[0];
+			float z2 = -plane[1];
+			float nx = plane[2] * offset;
+			float nz = plane[3] * offset;
 
             consumer.vertex(matrix, x1 + nx, tileHeight, z1 + nz).color(r, g, b, -1).uv(0f, 0).endVertex();
 			consumer.vertex(matrix, x2 + nx, tileHeight, z2 + nz).color(r, g, b, -1).uv(0.5f, 0).endVertex();
@@ -223,119 +231,40 @@ public class FountainRenderUtil {
 		return Mth.frac((fountain.getFrameTick() + partialTick) / (27f * 3f));
 	}
 
-	private static void renderFountainCrossSorted(PoseStack poseStack, VertexConsumer consumer, float r, float g, float b, float a, float halfWidthPixels,
-												  float tileHeightPixels, int tileCount, float deformation, Vec3 cameraPos, BlockPos fountainPos) {
+	private static void renderFountainBillboard(PoseStack poseStack, VertexConsumer consumer, float r, float g, float b, float a, float halfWidthPixels,
+												float tileHeightPixels, int tileCount, float deformation, Vec3 cameraPos, BlockPos fountainPos) {
 		Matrix4f matrix = poseStack.last().pose();
+
+		Vector3f toCamera = fountainPos.getCenter().vectorTo(cameraPos).toVector3f();
+		toCamera = new Vector3f(toCamera.x, 0, toCamera.z);
+
+		Quaternionf billboardRotation = new Quaternionf().lookAlong(toCamera, new Vector3f(0, 1, 0)).conjugate();
+
+		poseStack.mulPose(billboardRotation);
+		poseStack.mulPose(Axis.YP.rotationDegrees(180));
+
 		float halfWidth = (halfWidthPixels + deformation) / 16f;
 		float tileHeight = tileHeightPixels / 16f;
-		float offset = deformation / 16f;
 
-		float[][] faces = {
-				{
-					halfWidth * COS45, -halfWidth * COS45, COS45, COS45, 1f
-				},
-				{
-					halfWidth * COS45, -halfWidth * COS45, COS45, COS45, -1f
-				},
-				{
-					halfWidth * COS45, halfWidth * COS45, -COS45, COS45, 1f
-				},
-				{
-					halfWidth * COS45, halfWidth * COS45, -COS45, COS45, -1f
-				}
-		};
+		for (int tile = 0; tile < tileCount; tile++) {
+			float yBot = tile * tileHeight;
+			float yTop = (tile + 1) * tileHeight;
 
-		float fountainCenterX = fountainPos.getX() + 0.5f;
-		float fountainCenterZ = fountainPos.getZ() + 0.5f;
-		float localX = (float) (cameraPos.x - fountainCenterX);
-		float localZ = (float) (cameraPos.z - fountainCenterZ);
-		float vLen = Mth.sqrt(localX * localX + localZ * localZ);
-		if (vLen < 0.01) {
-			localX = 0f;
-			localZ = 1f;
-		} else {
-			localX /= vLen;
-			localZ /= vLen;
-		}
-
-		float[] faceDepth = new float[4];
-		int[] order = {0, 1, 2, 3};
-		for (int i = 0; i < 4; i++) {
-			float nx = faces[i][2] * offset;
-			float nz = faces[i][3] * offset;
-			float sign = faces[i][4];
-			float cx = sign * nx;
-			float cz = sign * nz;
-			faceDepth[i] = cx * localX + cz * localZ;
-		}
-		for (int i = 0; i < order.length - 1; i++) {
-			for (int j = i + 1; j < order.length; j++) {
-				if (faceDepth[order[i]] > faceDepth[order[j]]) {
-					int tmp = order[i];
-					order[i] = order[j];
-					order[j] = tmp;
-				}
-			}
-		}
-
-		for (int index = 0; index < order.length; index++) {
-			float[] face = faces[order[index]];
-			float x1 = face[0], z1 = face[1];
-			float x2 = -face[0], z2 = -face[1];
-			float nx = face[2] * offset;
-			float nz = face[3] * offset;
-			float sign = face[4];
-			float sx = sign * nx;
-			float sz = sign * nz;
-			float rankBias = (index - 1.5f) * 0.0025f;
-			float bx = localX * rankBias;
-			float bz = localZ * rankBias;
-
-			for (int tile = 0; tile < tileCount; tile++) {
-				float yBot = tile * tileHeight;
-				float yTop = (tile + 1) * tileHeight;
-
-				if (tile == 0) {
-					if (sign > 0f) {
-						consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(r, g, b, a).uv(0f, 0f).endVertex();
-						consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(r, g, b, a).uv(0.5f, 0f).endVertex();
-						consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(0, 0, 0, 0).uv(0.5f, 1f).endVertex();
-						consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(0, 0, 0, 0).uv(0f, 1f).endVertex();
-					} else {
-						consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(r, g, b, a).uv(0f, 0f).endVertex();
-						consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(r, g, b, a).uv(0.5f, 0f).endVertex();
-						consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(0, 0, 0, 0).uv(0.5f, 1f).endVertex();
-						consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(0, 0, 0, 0).uv(0f, 1f).endVertex();
-					}
-					continue;
-				}
-
-				if (tile == tileCount - 1) {
-					if (sign > 0f) {
-						consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(0, 0, 0, 0).uv(0f, 0f).endVertex();
-						consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(0, 0, 0, 0).uv(0.5f, 0f).endVertex();
-						consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(r, g, b, a).uv(0.5f, 1f).endVertex();
-						consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(r, g, b, a).uv(0f, 1f).endVertex();
-					} else {
-						consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(0, 0, 0, 0).uv(0f, 0f).endVertex();
-						consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(0, 0, 0, 0).uv(0.5f, 0f).endVertex();
-						consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(r, g, b, a).uv(0.5f, 1f).endVertex();
-						consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(r, g, b, a).uv(0f, 1f).endVertex();
-					}
-					continue;
-				}
-
-				if (sign > 0f) {
-					consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(r, g, b, a).uv(0f, 0f).endVertex();
-					consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(r, g, b, a).uv(0.5f, 0f).endVertex();
-					consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(r, g, b, a).uv(0.5f, 1f).endVertex();
-					consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(r, g, b, a).uv(0f, 1f).endVertex();
-				} else {
-					consumer.vertex(matrix, x2 + sx + bx, yTop, z2 + sz + bz).color(r, g, b, a).uv(0f, 0f).endVertex();
-					consumer.vertex(matrix, x1 + sx + bx, yTop, z1 + sz + bz).color(r, g, b, a).uv(0.5f, 0f).endVertex();
-					consumer.vertex(matrix, x1 + sx + bx, yBot, z1 + sz + bz).color(r, g, b, a).uv(0.5f, 1f).endVertex();
-					consumer.vertex(matrix, x2 + sx + bx, yBot, z2 + sz + bz).color(r, g, b, a).uv(0f, 1f).endVertex();
-				}
+			if (tile == 0) {
+				consumer.vertex(matrix, halfWidth, yTop, 0).color(r, g, b, a).uv(0f, 0f).endVertex();
+				consumer.vertex(matrix, -halfWidth, yTop, 0).color(r, g, b, a).uv(0.5f, 0f).endVertex();
+				consumer.vertex(matrix, -halfWidth, yBot, 0).color(0, 0, 0, 0).uv(0.5f, 1f).endVertex();
+				consumer.vertex(matrix, halfWidth, yBot, 0).color(0, 0, 0, 0).uv(0f, 1f).endVertex();
+			} else if (tile == tileCount - 1) {
+				consumer.vertex(matrix, halfWidth, yTop, 0).color(0, 0, 0, 0).uv(0f, 0f).endVertex();
+				consumer.vertex(matrix, -halfWidth, yTop, 0).color(0, 0, 0, 0).uv(0.5f, 0f).endVertex();
+				consumer.vertex(matrix, -halfWidth, yBot, 0).color(r, g, b, a).uv(0.5f, 1f).endVertex();
+				consumer.vertex(matrix, halfWidth, yBot, 0).color(r, g, b, a).uv(0f, 1f).endVertex();
+			} else {
+				consumer.vertex(matrix, halfWidth, yTop, 0).color(r, g, b, a).uv(0f, 0f).endVertex();
+				consumer.vertex(matrix, -halfWidth, yTop, 0).color(r, g, b, a).uv(0.5f, 0f).endVertex();
+				consumer.vertex(matrix, -halfWidth, yBot, 0).color(r, g, b, a).uv(0.5f, 1f).endVertex();
+				consumer.vertex(matrix, halfWidth, yBot, 0).color(r, g, b, a).uv(0f, 1f).endVertex();
 			}
 		}
 	}
@@ -380,7 +309,7 @@ public class FountainRenderUtil {
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
-		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureCrack)),
+		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureCrack)),
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F);
 		poseStack.popPose();
 
@@ -390,17 +319,17 @@ public class FountainRenderUtil {
 		poseStack.translate(0f, 6f, 0f);
 		poseStack.scale(scaleXZ, 1.0f, scaleXZ);
 
-		getOpeningStartModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureFountainOpeningStart)),
+		getOpeningStartModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureFountainOpeningStart)),
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, 1F);
-		getOpeningStartModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureFountainOpeningStartShadow)),
+		getOpeningStartModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureFountainOpeningStartShadow)),
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, alphaDark);
 
         poseStack.translate(0f, 2f - (1f / 16) * 8, 0f);
 
-		VertexConsumer endConsumer = buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureFountainOpeningEnd));
-		renderFountainCrossFading(poseStack, endConsumer, 1f, 1f, 1f, 1f, 48, 160, 0, 0);
-		VertexConsumer endShadowConsumer = buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureFountainOpeningEndShadow));
-		renderFountainCrossFading(poseStack, endShadowConsumer, 1f, 1f, 1f, alphaDark, 48, 160, 0, 0);
+		VertexConsumer endConsumer = buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureFountainOpeningEnd));
+		renderFountainCrossFading(poseStack, endConsumer, 1f, 1f, 1f, 1f, 48, 160, 0);
+		VertexConsumer endShadowConsumer = buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureFountainOpeningEndShadow));
+		renderFountainCrossFading(poseStack, endShadowConsumer, 1f, 1f, 1f, alphaDark, 48, 160, 0);
 
 		poseStack.popPose();
 	}
@@ -409,21 +338,21 @@ public class FountainRenderUtil {
 		ResourceLocation textureFountainTarget = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_shockwave.png");
 		List<Integer> shockwaveTickers = fountain.shockwaveTickers;
 
-		for (int i = 0; i < shockwaveTickers.size(); i++) {
-			float ticker = shockwaveTickers.get(i) + partialTick;
-			float shockwaveDelta = Mth.clamp(ticker / 5, 0f, 1f);
-			float alpha = Mth.lerp(shockwaveDelta, 1f, 0f);
-			float size = Mth.lerp(shockwaveDelta, 0f, 4f);
-			float y = Mth.lerp(shockwaveDelta, -1.90f, -1.94f);
+        for (Integer shockwaveTicker : shockwaveTickers) {
+            float ticker = shockwaveTicker + partialTick;
+            float shockwaveDelta = Mth.clamp(ticker / 5, 0f, 1f);
+            float alpha = Mth.lerp(shockwaveDelta, 1f, 0f);
+            float size = Mth.lerp(shockwaveDelta, 0f, 4f);
+            float y = Mth.lerp(shockwaveDelta, -1.90f, -1.94f);
 
-			pose.pushPose();
-			pose.translate(0.5f, 0.5f, 0.5f);
-			pose.translate(0f, y, 0f);
-			pose.scale(size, 1f, size);
-			getCrackModel().renderToBuffer(pose, buffer.getBuffer(RenderTypeRegistry.getFountainShockwaveRenderType(textureFountainTarget)),
-					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, alpha);
-			pose.popPose();
-		}
+            pose.pushPose();
+            pose.translate(0.5f, 0.5f, 0.5f);
+            pose.translate(0f, y, 0f);
+            pose.scale(size, 1f, size);
+            getCrackModel().renderToBuffer(pose, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureFountainTarget)),
+                    LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1F, 1F, 1F, alpha);
+            pose.popPose();
+        }
 	}
 
 	public static void renderOpenFountain(DarkFountain fountain, Level level, int length, ResourceLocation textureCrack, float partialTick, PoseStack poseStack,
@@ -509,7 +438,7 @@ public class FountainRenderUtil {
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
-		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureCrack)),
+		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureCrack)),
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 		poseStack.popPose();
 
@@ -520,7 +449,7 @@ public class FountainRenderUtil {
 		VertexConsumer bottomVertexConsumer = buffer.getBuffer(RenderTypeRegistry.getFountainMaskedRenderType(textureBottom, imageDepth, depthWrite));
 		getMiddleModel().renderToBuffer(poseStack, bottomVertexConsumer,
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
-		getMiddleModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureBottomEdges)),
+		getMiddleModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureBottomEdges)),
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 		poseStack.popPose();
 
@@ -530,7 +459,7 @@ public class FountainRenderUtil {
 		renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainMaskedRenderType(textureMiddle, imageDepth, depthWrite)),
 				middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.1f, middleUvOffset);
-		renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleEdges)),
+		renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleEdges)),
 				middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.1f, middleUvOffset);
 		poseStack.popPose();
@@ -542,7 +471,7 @@ public class FountainRenderUtil {
 		renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainMaskedRenderType(textureMiddle, imageDepth, depthWrite)),
 				backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.0f, middleUvOffset);
-		renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleEdges)),
+		renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleEdges)),
 				backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.0f, middleUvOffset);
 		poseStack.popPose();
@@ -554,7 +483,7 @@ public class FountainRenderUtil {
 		renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainMaskedRenderType(textureMiddle, imageDepth, depthWrite)),
 				frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.2f, middleUvOffset);
-		renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleEdges)),
+		renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleEdges)),
 				frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha,
 				48f, 140f, length, 0.2f, middleUvOffset);
 		poseStack.popPose();
@@ -676,7 +605,7 @@ public class FountainRenderUtil {
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
-		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureCrack)),
+		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureCrack)),
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 		poseStack.popPose();
 
@@ -688,7 +617,7 @@ public class FountainRenderUtil {
 			VertexConsumer bottomVertexConsumer = buffer.getBuffer(RenderTypeRegistry.getFountainMaskedRenderType(textureBottom, imageDepth, depthWrite));
 			getMiddleModel().renderToBuffer(poseStack, bottomVertexConsumer,
 					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
-			getMiddleModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureBottomEdges)),
+			getMiddleModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureBottomEdges)),
 					LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha);
 			poseStack.popPose();
 		}
@@ -706,7 +635,7 @@ public class FountainRenderUtil {
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureBottomEdges)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureBottomEdges)),
 					1f, 1f, 1f, 1f,
 					48f, 140f, 1, 0.01f);
 			poseStack.popPose();
@@ -715,14 +644,14 @@ public class FountainRenderUtil {
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureBottomSealing)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureBottomSealing)),
 					0f, 0f, 0f, 1f,
 					48f, 140f, 1, 0.0f);
 			poseStack.popPose();
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(edgePulse, 1.0f, edgePulse);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleSealing)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleSealing)),
 					0f, 0f, 0f, 1f,
 					48f, 140f, length, 0.0f, middleUvOffset);
 			poseStack.popPose();
@@ -731,21 +660,21 @@ public class FountainRenderUtil {
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureBottomSealing)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureBottomSealing)),
 					1f, 1f, 1f, Mth.clamp(flashDelta, 0f, 1f),
 					48f, 140f, 1, 0.01f);
 			poseStack.popPose();
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureBottomSealing)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureBottomSealing)),
 					1f, 1f, 1f, Mth.clamp(flashDelta, 0f, 1f),
 					48f, 140f, 1, 0.01f);
 			poseStack.popPose();
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureBottomSealing)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureBottomSealing)),
 					1f, 1f, 1f, Mth.clamp(flashDelta, 0f, 1f),
 					48f, 140f, 1, 0.01f);
 			poseStack.popPose();
@@ -753,21 +682,21 @@ public class FountainRenderUtil {
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(edgePulse, 1.0f, edgePulse);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleSealing)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleSealing)),
 					1f, 1f, 1f, flashDelta,
 					48f, 140f, length, 0.01f, middleUvOffset);
 			poseStack.popPose();
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleSealing)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleSealing)),
 					1f, 1f, 1f, flashDelta,
 					48f, 140f, length, 0.02f, middleUvOffset);
 			poseStack.popPose();
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(edgePulseFront, 1.0f, edgePulseFront);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleSealing)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleSealing)),
 					1f, 1f, 1f, flashDelta,
 					48f, 140f, length, 0.03f, middleUvOffset);
 			poseStack.popPose();
@@ -776,14 +705,14 @@ public class FountainRenderUtil {
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleEdges)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleEdges)),
 					1f, 1f, 1f, 1f,
 					48f, 140f, length, 0.1f, middleUvOffset);
 			poseStack.popPose();
 			poseStack.pushPose();
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(edgePulse, 1.0f, edgePulse);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleEdges)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleEdges)),
 					1f, 1f, 1f, 1f,
 					48f, 140f, length, 0.0f, middleUvOffset);
 			poseStack.popPose();
@@ -791,7 +720,7 @@ public class FountainRenderUtil {
 			poseStack.translate(0.5f, 0.74f, 0.5f);
 			poseStack.scale(1.0f, 1.0f, 1.0f);
 			poseStack.scale(edgePulseFront, 1.0f, edgePulseFront);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleEdges)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleEdges)),
 					1f, 1f, 1f, 1f,
 					48f, 140f, length, 0.2f, middleUvOffset);
 			poseStack.popPose();
@@ -804,7 +733,7 @@ public class FountainRenderUtil {
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainMaskedRenderType(textureMiddle, imageDepth, depthWrite)),
 					middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.1f, middleUvOffset);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleEdges)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleEdges)),
 					middleEdgesColor.getRed() / 255f, middleEdgesColor.getGreen() / 255f, middleEdgesColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.1f, middleUvOffset);
 		}
@@ -818,7 +747,7 @@ public class FountainRenderUtil {
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainMaskedRenderType(textureMiddle, imageDepth, depthWrite)),
 					backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.0f, middleUvOffset);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleEdges)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleEdges)),
 					backColor.getRed() / 255f, backColor.getGreen() / 255f, backColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.0f, middleUvOffset);
 		}
@@ -832,15 +761,14 @@ public class FountainRenderUtil {
 			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainMaskedRenderType(textureMiddle, imageDepth, depthWrite)),
 					frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.2f, middleUvOffset);
-			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleEdges)),
+			renderFountainCross(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleEdges)),
 					frontColor.getRed() / 255f, frontColor.getGreen() / 255f, frontColor.getBlue() / 255f, alpha,
 					48f, 140f, length, 0.2f, middleUvOffset);
 		}
 		poseStack.popPose();
 	}
 
-	public static void renderOpenFountainOptimized(DarkFountain fountain, int length, PoseStack poseStack, MultiBufferSource buffer, float alpha,
-												   Vec3 cameraPos) {
+	public static void renderOpenFountainOptimized(DarkFountain fountain, int length, PoseStack poseStack, MultiBufferSource buffer, float alpha, Vec3 cameraPos, BlockPos fountainPos) {
 		int frameOptimized = fountain.frameOptimized;
 		ResourceLocation textureMiddleOptimized = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/fountain_middle_" + frameOptimized + ".png");
 		ResourceLocation textureVortexLower = new ResourceLocation(PenumbraPhantasm.MODID, "textures/fountain/fountain_middle/optimized/vortex/fountain_vortex_lower.png");
@@ -855,7 +783,7 @@ public class FountainRenderUtil {
 		poseStack.translate(0.5f, pixelLength + 8f, 0.5f);
 		poseStack.mulPose(Axis.YN.rotationDegrees(topRotation));
 		poseStack.scale(1.5f, 1, 1.5f);
-		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainNoCullRenderType(textureVortexTop)),
+		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureVortexTop)),
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, alpha);
 		poseStack.popPose();
 
@@ -863,14 +791,14 @@ public class FountainRenderUtil {
 		poseStack.translate(0.5f, pixelLength, 0.5f);
 		poseStack.mulPose(Axis.YN.rotationDegrees(lowerRotation));
 		poseStack.scale(2, 1, 2);
-		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainNoCullRenderType(textureVortexLower)),
+		getVortexModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureVortexLower)),
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, alpha);
 		poseStack.popPose();
 
 		poseStack.pushPose();
-		poseStack.translate(0.5f, 0.75f, 0.5f);
-		renderFountainCrossSorted(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureMiddleOptimized)),
-				1F, 1F, 1F, alpha, 48f, 240f, length, 0.1f, cameraPos, fountain.getFountainPos());
+		poseStack.translate(0.5f, 0f, 0.5f);
+		renderFountainBillboard(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureMiddleOptimized)),
+				1F, 1F, 1F, alpha, 48f, 240f, length, 0.1f, cameraPos, fountainPos);
 		poseStack.popPose();
 	}
 
@@ -878,7 +806,7 @@ public class FountainRenderUtil {
 		poseStack.pushPose();
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 		poseStack.translate(0f, -1.95f, 0f);
-		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainRenderType(textureCrack)),
+		getCrackModel().renderToBuffer(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveRenderType(textureCrack)),
 				LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);
 		poseStack.popPose();
 	}
@@ -906,7 +834,7 @@ public class FountainRenderUtil {
 
 		poseStack.translate(0.5f, 0.5f, 0.5f);
 
-		renderDepthsHorizontalPlane(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainNoCullRenderType(DEPTHS_OPENING)),
+		renderDepthsHorizontalPlane(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveNoCullRenderType(DEPTHS_OPENING)),
 				openingSize / 16f, 0f, 1f, 1f, 1f, dimming);
 
 		if (distance2d < DEPTHS_SWIRL_CULL_DISTANCE) {
@@ -934,10 +862,6 @@ public class FountainRenderUtil {
 					float fadeOut = Mth.clamp((1f - lifeTime) / 0.3f, 0f, 1f);
 					float alpha = fadeIn * fadeOut * swirlDim;
 
-					if (alpha <= 0.01f) {
-						continue;
-					}
-
 					float baseSize = DEPTHS_SWIRL_SIZE;
 
 					if (openingTick >= 0 && openingTick < OPENING_SHADOW_DURATION_FULL) {
@@ -952,9 +876,6 @@ public class FountainRenderUtil {
 					}
 
 					float size = (1f - lifeTime) * (DEPTHS_SWIRL_PIXELS / 16f) * baseSize;
-					if (size <= 0.01f) {
-						continue;
-					}
 
 					float y = -Mth.lerp(lifeTime, swirl.startYOffset, 0f);
 					float yaw;
@@ -977,7 +898,7 @@ public class FountainRenderUtil {
 					poseStack.mulPose(Axis.YP.rotationDegrees(yaw));
 					ResourceLocation swirlTex = swirl.small ? DEPTHS_SWIRL_SMALL : DEPTHS_SWIRL;
 
-					renderDepthsHorizontalPlane(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainNoCullRenderType(swirlTex)),
+					renderDepthsHorizontalPlane(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveNoCullRenderType(swirlTex)),
 							size, 0f, 1f, 1f, 1f, alpha * dimming);
 
 					poseStack.popPose();
@@ -1010,7 +931,7 @@ public class FountainRenderUtil {
 					poseStack.translate(0f, DEPTHS_VORTEX_Y, 0f);
 					poseStack.mulPose(Axis.YP.rotationDegrees(vortexYaw));
 
-					renderDepthsHorizontalPlane(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainNoCullRenderType(DEPTHS_VORTEX)),
+					renderDepthsHorizontalPlane(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveNoCullRenderType(DEPTHS_VORTEX)),
 							vortexSize / 16f, 0f, 1f, 1f, 1f, swirlDim);
 
 					poseStack.popPose();
@@ -1039,7 +960,7 @@ public class FountainRenderUtil {
 					poseStack.translate(0f, DEPTHS_VORTEX_Y * 2, 0f);
 					poseStack.mulPose(Axis.YP.rotationDegrees(largerVortexYaw));
 
-					renderDepthsHorizontalPlane(poseStack, buffer.getBuffer(RenderTypeRegistry.getFountainNoCullRenderType(DEPTHS_VORTEX_LARGER)),
+					renderDepthsHorizontalPlane(poseStack, buffer.getBuffer(RenderTypeRegistry.getEmissiveNoCullRenderType(DEPTHS_VORTEX_LARGER)),
 							largerVortexSize / 16f, 0f, 1f, 1f, 1f, swirlDim);
 
 					poseStack.popPose();
