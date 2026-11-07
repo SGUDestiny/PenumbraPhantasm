@@ -1,6 +1,7 @@
 package destiny.penumbra_phantasm.server.fluid;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraftforge.fluids.FluidType;
 
 import com.mojang.blaze3d.shaders.FogShape;
@@ -31,6 +32,11 @@ public class LuminescentWaterFluidType extends FluidType {
         this.overlayTexture = overlayTexture;
         this.tintColor = tintColor;
         this.fogColor = fogColor;
+    }
+
+    @Override
+    public boolean supportsBoating(Boat boat) {
+        return true;
     }
 
     @Override

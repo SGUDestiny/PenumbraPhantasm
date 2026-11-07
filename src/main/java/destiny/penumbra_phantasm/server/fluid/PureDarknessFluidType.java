@@ -7,6 +7,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
@@ -30,6 +31,11 @@ public class PureDarknessFluidType extends FluidType {
         this.overlayTexture = overlayTexture;
         this.tintColor = tintColor;
         this.fogColor = fogColor;
+    }
+
+    @Override
+    public boolean supportsBoating(Boat boat) {
+        return false;
     }
 
     @Override
