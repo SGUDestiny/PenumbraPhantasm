@@ -43,7 +43,7 @@ plugins {
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
-version = '1.20.1-1.0-BE42'
+version = '1.20.1-1.0-BE43'
 group = 'destiny.penumbra_phantasm'
 
 base {
