@@ -27,7 +27,7 @@ public class AbilityCapability implements INBTSerializable<CompoundTag> {
         List<DelayTicker> tickersToRemove = new ArrayList<>();
 
         for (DelayTicker delayTicker : delayTickers) {
-            if (delayTicker.delayTicker == -1) {
+            if (delayTicker.delayTicker <= -1) {
                 tickersToRemove.add(delayTicker);
             } else {
                 delayTicker.tick(level, attacker);
@@ -64,8 +64,8 @@ public class AbilityCapability implements INBTSerializable<CompoundTag> {
         return false;
     }
 
-    public void createDelayTicker(UUID targetEntity, ItemStack weaponStack, int delayGoal) {
-        DelayTicker delayTicker = new DelayTicker(targetEntity, weaponStack, delayGoal, 0);
+    public void createDelayTicker(UUID targetEntity, ItemStack weaponStack, int delayGoal, boolean wasInvulnerable) {
+        DelayTicker delayTicker = new DelayTicker(targetEntity, weaponStack, delayGoal, 0, wasInvulnerable);
 
         delayTickers.add(delayTicker);
     }

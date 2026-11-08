@@ -8,11 +8,9 @@ import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.network.PacketDistributor;
@@ -24,16 +22,18 @@ public class DelayTicker {
     public static final int REAL_KNIFE_DELAY = 10;
     public static final int SWOON_DELAY = 55;
 
-    UUID targetEntity;
-    ItemStack weaponStack;
-    int delayGoal;
-    int delayTicker;
+    public UUID targetEntity;
+    public ItemStack weaponStack;
+    public int delayGoal;
+    public int delayTicker;
+    public boolean wasInvulnerable;
 
-    public DelayTicker(UUID targetEntity, ItemStack weaponStack, int delayGoal, int delayTicker) {
+    public DelayTicker(UUID targetEntity, ItemStack weaponStack, int delayGoal, int delayTicker, boolean wasInvulnerable) {
         this.targetEntity = targetEntity;
         this.weaponStack = weaponStack;
         this.delayGoal = delayGoal;
         this.delayTicker = delayTicker;
+        this.wasInvulnerable = wasInvulnerable;
     }
 
     public void tick(Level level, Player attacker) {
@@ -47,8 +47,6 @@ public class DelayTicker {
             delayTicker = -1;
             return;
         }
-
-        boolean wasInvulnerable = attacker.isCreative() || attacker.isSpectator();
 
         if (weaponStack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
             if (target instanceof Mob mob) {
@@ -76,7 +74,7 @@ public class DelayTicker {
             if (weaponStack.getItem() == ItemRegistry.REAL_KNIFE.get()) {
                 finishAttackWithRealKnife(level, attacker, target);
             } else if (weaponStack.getItem() == ItemRegistry.BLACK_KNIFE.get()) {
-                finishAttackWithBlackKnife(level, target, attacker, wasInvulnerable);
+                finishAttackWithBlackKnife(level, target, attacker);
             }
 
             delayTicker = -1;
@@ -108,7 +106,7 @@ public class DelayTicker {
         target.hurt(DamageTypeRegistry.getSourceCaused(level, DamageTypeRegistry.REAL_KNIFE, target, attacker), damage);
     }
 
-    public void finishAttackWithBlackKnife(Level level, Entity target, Player attacker, boolean wasInvulnerable) {
+    public void finishAttackWithBlackKnife(Level level, Entity target, Player attacker) {
         PacketHandlerRegistry.INSTANCE.send(
                 PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(target.getX(), target.getY(), target.getZ(),
                         32, target.level().dimension())),

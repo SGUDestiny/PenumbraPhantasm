@@ -215,7 +215,7 @@ public class ForgeEvents {
         if (abilityCap == null) return;
         if (abilityCap.hasDelayTicker(target.getUUID(), weaponStack)) return;
 
-        abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.SWOON_DELAY);
+        abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.SWOON_DELAY, attacker.isInvulnerable());
 
         AABB playerBox = new AABB(attacker.blockPosition()).inflate(16);
         for (ServerPlayer serverPlayer : level.getEntitiesOfClass(ServerPlayer.class, playerBox)) {
@@ -233,7 +233,7 @@ public class ForgeEvents {
         if (abilityCap == null) return;
         if (abilityCap.hasDelayTicker(target.getUUID(), weaponStack)) return;
 
-        abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.REAL_KNIFE_DELAY);
+        abilityCap.createDelayTicker(target.getUUID(), weaponStack, DelayTicker.REAL_KNIFE_DELAY, attacker.isInvulnerable());
 
         Vec3 particleVec = new Vec3(target.getX(), target.getEyeY(), target.getZ());
 
