@@ -39,8 +39,8 @@ public class BlackKnifeItem extends KnifeItem implements GeoItem {
 
     public final int damage;
 
-    public BlackKnifeItem(Tier tier, int damage, float speed, Properties properties) {
-        super(tier, damage, speed, properties);
+    public BlackKnifeItem(Tier tier, int damage, float speed, int useAmount, Properties properties) {
+        super(tier, damage, speed, useAmount, properties);
         this.damage = damage;
     }
 
@@ -129,4 +129,6 @@ public class BlackKnifeItem extends KnifeItem implements GeoItem {
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.cache;
     }
+
+
 }

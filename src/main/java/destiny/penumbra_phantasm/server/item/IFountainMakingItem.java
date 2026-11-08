@@ -1,6 +1,6 @@
 package destiny.penumbra_phantasm.server.item;
 
-import destiny.penumbra_phantasm.server.capability.KnifingCapability;
+import destiny.penumbra_phantasm.server.capability.FountainMakingCapability;
 import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.fountain.RoomScanner;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
@@ -22,7 +22,7 @@ public interface IFountainMakingItem
 			player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_not_enough_determination"), true);
 			return false;
 		}
-		if (!KnifingCapability.isStandingOnFullFace(level, player))
+		if (!FountainMakingCapability.isStandingOnFullFace(level, player))
 		{
 			player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
 			return false;
@@ -40,7 +40,7 @@ public interface IFountainMakingItem
 		return false;
 	}
 
-	default boolean checkForSoulHearth(Level level, ItemStack stack, Player player)
+	default boolean shouldCheckForSoulHearth(Level level, ItemStack stack, Player player)
 	{
 		return true;
 	}
@@ -72,5 +72,9 @@ public interface IFountainMakingItem
 	static int getPlayerDetermination(Player player)
 	{
 		return player.getCapability(CapabilityRegistry.SOUL).map(cap -> cap.determination).orElse(0);
+	}
+
+	default int useAmount() {
+		return 1;
 	}
 }

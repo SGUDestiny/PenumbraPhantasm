@@ -74,8 +74,8 @@ public class ForgeEvents {
                     new VerticalBarCapability()));
             event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "ability"), new GenericProvider<>(CapabilityRegistry.ABILITY,
                     new AbilityCapability()));
-            event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "knifing"), new GenericProvider<>(CapabilityRegistry.KNIFING_CAP,
-                    new KnifingCapability()));
+            event.addCapability(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "fountain_making"), new GenericProvider<>(CapabilityRegistry.FOUNTAIN_MAKING,
+                    new FountainMakingCapability()));
         }
     }
 

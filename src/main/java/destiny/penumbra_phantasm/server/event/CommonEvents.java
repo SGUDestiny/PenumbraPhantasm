@@ -7,7 +7,7 @@ import destiny.penumbra_phantasm.client.network.ClientBoundSoulBreakPacket;
 import destiny.penumbra_phantasm.client.render.dimension.DepthsSkyLightning;
 import destiny.penumbra_phantasm.server.advancement.ChangedDimensionContainsTrigger;
 import destiny.penumbra_phantasm.server.capability.AnchorOfLightCapability;
-import destiny.penumbra_phantasm.server.capability.KnifingCapability;
+import destiny.penumbra_phantasm.server.capability.FountainMakingCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomManager;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
@@ -18,7 +18,6 @@ import destiny.penumbra_phantasm.server.item.FractalMirrorItem;
 import destiny.penumbra_phantasm.server.registry.*;
 import destiny.penumbra_phantasm.server.transformations.inventory.StorageData;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
-import net.minecraft.client.telemetry.events.WorldLoadEvent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -26,12 +25,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.profiling.jfr.event.WorldLoadFinishedEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -44,7 +41,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityTravelToDimensionEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.ShieldBlockEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -502,9 +498,9 @@ public class CommonEvents
         Player player = event.getEntity();
         ItemStack stack = event.getItemStack();
 
-        if(stack.is(PenumbraPhantasm.KNIFE) && !player.level().isClientSide())
+        if((stack.is(PenumbraPhantasm.SHARP_OBJECT_MULTIUSE) ||  stack.is(PenumbraPhantasm.SHARP_OBJECT_SINGLE_USE)) && !player.level().isClientSide())
         {
-            player.getCapability(CapabilityRegistry.KNIFING_CAP).ifPresent(cap ->
+            player.getCapability(CapabilityRegistry.FOUNTAIN_MAKING).ifPresent(cap ->
                 {
                     if (cap.isUsing()) {
                         event.setCancellationResult(InteractionResultHolder.pass(stack).getResult());
@@ -515,13 +511,9 @@ public class CommonEvents
                     InteractionResultHolder<ItemStack> result = cap.use(player.level(), player, event.getHand());
                     if (result.getResult().consumesAction()) {
                         cap.startUsing(stack, 72000);
-                        System.out.println("Start");
-                        event.setCancellationResult(result.getResult());
-                        event.setCanceled(true);
-                    } else {
-                        event.setCancellationResult(result.getResult());
-                        event.setCanceled(true);
                     }
+                    event.setCancellationResult(result.getResult());
+                    event.setCanceled(true);
                 });
         }
     }
@@ -537,15 +529,15 @@ public class CommonEvents
             for(InteractionHand hand : InteractionHand.values())
             {
                 ItemStack stack = player.getItemInHand(hand);
-                if(stack.is(PenumbraPhantasm.KNIFE))
+                if(stack.is(PenumbraPhantasm.SHARP_OBJECT_MULTIUSE) || stack.is(PenumbraPhantasm.SHARP_OBJECT_SINGLE_USE))
                 {
                     if(!level.isClientSide())
                     {
                         CompoundTag tag = stack.getOrCreateTag();
 
-                        KnifingCapability.ensureTagDefaults(tag);
+                        FountainMakingCapability.ensureTagDefaults(tag);
 
-                        int makingTick = tag.getInt(KnifingCapability.MAKING_TICK);
+                        int makingTick = tag.getInt(FountainMakingCapability.MAKING_TICK);
 
                         if(makingTick >= 0)
                         {
@@ -556,35 +548,35 @@ public class CommonEvents
                                 return;
                             }
 
-                            if(makingTick >= KnifingCapability.JUMP_DURATION && !tag.getBoolean(KnifingCapability.STAB_STARTED))
+                            if(makingTick >= FountainMakingCapability.JUMP_DURATION && !tag.getBoolean(FountainMakingCapability.STAB_STARTED))
                             {
-                                KnifingCapability.startStabPhase(player, tag);
-                                makingTick = tag.getInt(KnifingCapability.MAKING_TICK);
+                                FountainMakingCapability.startStabPhase(player, tag);
+                                makingTick = tag.getInt(FountainMakingCapability.MAKING_TICK);
                             }
 
-                            if(makingTick >= KnifingCapability.JUMP_DURATION + KnifingCapability.STAB_DELAY)
+                            if(makingTick >= FountainMakingCapability.JUMP_DURATION + FountainMakingCapability.STAB_DELAY)
                             {
                                 if(!level.isClientSide())
                                 {
-                                    KnifingCapability.makeFountain(tag, player, level, stack);
+                                    FountainMakingCapability.makeFountain(tag, player, level, stack);
                                 }
                             } else
                             {
-                                tag.putInt(KnifingCapability.MAKING_TICK, makingTick + 1);
+                                tag.putInt(FountainMakingCapability.MAKING_TICK, makingTick + 1);
                             }
                         }
                     }
                 }
             }
 
-            player.getCapability(CapabilityRegistry.KNIFING_CAP).ifPresent(cap -> {
+            player.getCapability(CapabilityRegistry.FOUNTAIN_MAKING).ifPresent(cap -> {
                 if (cap.isUsing())
                 {
                     boolean stillHoldingItem = player.getMainHandItem() == cap.activeItemStack ||
                                                        player.getOffhandItem() == cap.activeItemStack;
 
-                    int makingTick = cap.activeItemStack.getOrCreateTag().getInt(KnifingCapability.MAKING_TICK);
-                    if (!stillHoldingItem || makingTick >= KnifingCapability.JUMP_DURATION + KnifingCapability.STAB_DELAY)
+                    int makingTick = cap.activeItemStack.getOrCreateTag().getInt(FountainMakingCapability.MAKING_TICK);
+                    if (!stillHoldingItem || makingTick >= FountainMakingCapability.JUMP_DURATION + FountainMakingCapability.STAB_DELAY)
                         cap.stopUsingEarly(player);
                     else cap.tick(player);
                 }

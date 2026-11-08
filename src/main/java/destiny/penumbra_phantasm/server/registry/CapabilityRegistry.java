@@ -30,7 +30,7 @@ public class CapabilityRegistry {
     });
     public static final Capability<AnchorOfLightCapability> ANCHOR_OF_LIGHT = CapabilityManager.get(new CapabilityToken<>() {
     });
-    public static final Capability<KnifingCapability> KNIFING_CAP = CapabilityManager.get(new CapabilityToken<>() {
+    public static final Capability<FountainMakingCapability> FOUNTAIN_MAKING = CapabilityManager.get(new CapabilityToken<>() {
     });
 
 
@@ -45,6 +45,6 @@ public class CapabilityRegistry {
         event.register(VerticalBarCapability.class);
         event.register(AbilityCapability.class);
         event.register(AnchorOfLightCapability.class);
-        event.register(KnifingCapability.class);
+        event.register(FountainMakingCapability.class);
     }
 }

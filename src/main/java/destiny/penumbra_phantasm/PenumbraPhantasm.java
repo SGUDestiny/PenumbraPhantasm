@@ -66,7 +66,8 @@ public class PenumbraPhantasm {
     public static final ResourceLocation EMPTY_LOCATION = new ResourceLocation(MODID, "empty");
     public static final String EMPTY = EMPTY_LOCATION.toString();
 
-    public static final TagKey<Item> KNIFE = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "piercing_knives"));
+    public static final TagKey<Item> SHARP_OBJECT_MULTIUSE = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "sharp_object_multiuse"));
+    public static final TagKey<Item> SHARP_OBJECT_SINGLE_USE = TagKey.create(Registries.ITEM, new ResourceLocation(MODID, "sharp_object_single_use"));
 
     public PenumbraPhantasm() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();

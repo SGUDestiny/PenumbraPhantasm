@@ -9,7 +9,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 
-public final class CardKingdomEggRoomUtil {
+public class CardKingdomEggRoomUtil {
 	public static final ResourceKey<Level> CARD_KINGDOM_EGG_ROOM = ResourceKey.create(Registries.DIMENSION,
 			new ResourceLocation(PenumbraPhantasm.MODID, "egg_room_card_kingdom"));
 

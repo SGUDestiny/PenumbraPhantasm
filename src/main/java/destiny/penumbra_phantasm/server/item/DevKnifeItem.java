@@ -8,17 +8,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class DevKnifeItem extends Item implements IFountainMakingItem
+public class DevKnifeItem extends KnifeItem implements IFountainMakingItem
 {
 	public static final ResourceKey<DarkWorldType> KEY = ResourceKey.create(DarkWorldType.REGISTRY_KEY,
 			new ResourceLocation(PenumbraPhantasm.MODID, "mindscape"));
 
-	public DevKnifeItem(Properties properties)
-	{
-		super(properties);
+	public DevKnifeItem(Tier tier, int damage, float speed, int useAmount, Properties properties) {
+		super(tier, damage, speed, useAmount, properties);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class DevKnifeItem extends Item implements IFountainMakingItem
 	}
 
 	@Override
-	public boolean checkForSoulHearth(Level level, ItemStack stack, Player player)
+	public boolean shouldCheckForSoulHearth(Level level, ItemStack stack, Player player)
 	{
 		return false;
 	}
