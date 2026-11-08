@@ -39,8 +39,8 @@ public class BlackKnifeItem extends KnifeItem implements GeoItem {
 
     public final int damage;
 
-    public BlackKnifeItem(Tier tier, int damage, float speed, boolean isSingleUse, Properties properties) {
-        super(tier, damage, speed, isSingleUse, properties);
+    public BlackKnifeItem(Tier tier, int damage, float speed, Properties properties) {
+        super(tier, damage, speed, properties);
         this.damage = damage;
     }
 

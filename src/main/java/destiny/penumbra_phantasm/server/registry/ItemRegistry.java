@@ -19,17 +19,19 @@ public class ItemRegistry {
     }
 
     public static final RegistryObject<Item> GOLD_KNIFE = ITEMS.register("gold_knife",
-            () -> new KnifeItem(Tiers.GOLD, 2, -2, true, basicItem()));
+            () -> new KnifeItem(Tiers.GOLD, 2, -2, basicItem()));
     public static final RegistryObject<Item> IRON_KNIFE = ITEMS.register("iron_knife",
-            () -> new KnifeItem(Tiers.IRON, 3, -2, true, basicItem()));
+            () -> new KnifeItem(Tiers.IRON, 3, -2, basicItem()));
     public static final RegistryObject<Item> DIAMOND_KNIFE = ITEMS.register("diamond_knife",
-            () -> new KnifeItem(Tiers.DIAMOND, 4, -2, true, basicItem()));
+            () -> new KnifeItem(Tiers.DIAMOND, 4, -2, basicItem()));
     public static final RegistryObject<Item> NETHERITE_KNIFE = ITEMS.register("netherite_knife",
-            () -> new NetheriteKnifeItem(Tiers.NETHERITE, 5, -2, true, basicItem()));
+            () -> new NetheriteKnifeItem(Tiers.NETHERITE, 5, -2, basicItem()));
     public static final RegistryObject<Item> REAL_KNIFE = ITEMS.register("real_knife",
-            () -> new RealKnifeItem(Tiers.NETHERITE, 4,8, true, basicItem()));
+            () -> new RealKnifeItem(Tiers.NETHERITE, 4,8, basicItem()));
     public static final RegistryObject<Item> BLACK_KNIFE = ITEMS.register("black_knife",
-            () -> new BlackKnifeItem(Tiers.NETHERITE, 11, -2, false, basicItem()));
+            () -> new BlackKnifeItem(Tiers.NETHERITE, 11, -2, basicItem()));
+    public static final RegistryObject<Item> DEVICE_KNIFE = ITEMS.register("device_knife",
+            () -> new DevKnifeItem(basicItem().fireResistant()));
 
     public static final RegistryObject<Item> FAMILIAR_SWORD = ITEMS.register("familiar_sword",
             () -> new FamiliarSwordItem(Tiers.NETHERITE, 3, -2, basicItem()));

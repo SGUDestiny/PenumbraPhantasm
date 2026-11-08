@@ -1,5 +1,11 @@
 {
   "values": [
-    "minecraft:stick"
+    "penumbra_phantasm:iron_knife",
+    "penumbra_phantasm:gold_knife",
+    "penumbra_phantasm:diamond_knife",
+    "penumbra_phantasm:netherite_knife",
+    "penumbra_phantasm:real_knife",
+    "penumbra_phantasm:black_knife",
+    "penumbra_phantasm:device_knife"
   ]
 }

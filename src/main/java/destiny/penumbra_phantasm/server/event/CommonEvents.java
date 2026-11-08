@@ -583,7 +583,8 @@ public class CommonEvents
                     boolean stillHoldingItem = player.getMainHandItem() == cap.activeItemStack ||
                                                        player.getOffhandItem() == cap.activeItemStack;
 
-                    if (!stillHoldingItem)
+                    int makingTick = cap.activeItemStack.getOrCreateTag().getInt(KnifingCapability.MAKING_TICK);
+                    if (!stillHoldingItem || makingTick >= KnifingCapability.JUMP_DURATION + KnifingCapability.STAB_DELAY)
                         cap.stopUsingEarly(player);
                     else cap.tick(player);
                 }

@@ -11,6 +11,7 @@ import destiny.penumbra_phantasm.server.datapack.DarkWorldType;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.DarkRoom;
 import destiny.penumbra_phantasm.server.fountain.RoomScanner;
+import destiny.penumbra_phantasm.server.item.IFountainMakingItem;
 import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import destiny.penumbra_phantasm.server.registry.PacketHandlerRegistry;
 import destiny.penumbra_phantasm.server.registry.ParticleTypeRegistry;
@@ -177,6 +178,10 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 			return InteractionResultHolder.consume(stack);
 		}
 
+		IFountainMakingItem item = null;
+		if(stack.getItem() instanceof IFountainMakingItem)
+			item = (IFountainMakingItem) stack.getItem();
+
 		ensureTagDefaults(tag);
 
 		if (tag.getInt(MAKING_TICK) >= 0) return InteractionResultHolder.pass(stack);
@@ -211,7 +216,8 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 			return InteractionResultHolder.fail(stack);
 		}
 
-		if (!SoulCapability.hasOwnSoulHearth(player)) {
+		boolean checkHearth = item != null && item.checkForSoulHearth(level, stack, player);
+		if (!SoulCapability.hasOwnSoulHearth(player) && checkHearth) {
 			player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_no_soul_hearth"), true);
 			return InteractionResultHolder.pass(stack);
 		}
@@ -220,15 +226,20 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 		SoulCapability soulCap = player.getCapability(CapabilityRegistry.SOUL).orElse(null);
 		int determination = soulCap.determination;
 
-		if (determination < 100) {
-			player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_not_enough_determination"), true);
+		if(item != null && !item.canMakeFountain(level, stack, player))
 			return InteractionResultHolder.pass(stack);
-		}
-
-		//If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
-		if (!isStandingOnFullFace(level, player)) {
-			player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
-			return InteractionResultHolder.fail(stack);
+		else if(item == null)
+		{
+			if(determination < 100)
+			{
+				player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_not_enough_determination"), true);
+				return InteractionResultHolder.pass(stack);
+			}
+			else if (!isStandingOnFullFace(level, player))
+			{
+				player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
+				return InteractionResultHolder.fail(stack);
+			}
 		}
 
 		//Cancel if player isn't inside a valid room
@@ -237,7 +248,9 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 		Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
 		BlockPos scanSeed = player.getOnPos().above();
 		RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, scanSeed, ServerConfig.maxRoomVolume, false, true, otherAnchors, otherRoomCells);
-		if (!roomResult.isValid()) {
+
+		boolean ignoreRoom = item != null && item.shouldIgnoreRoomChecks(level, stack, player);
+		if (!roomResult.isValid() && !ignoreRoom) {
 			if (scanSeedBlockedByExistingFountain(scanSeed, otherAnchors, otherRoomCells)) {
 				player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
 			} else {
@@ -264,6 +277,10 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 				finalDarkWorldType = darkWorldType;
 			}
 		}
+
+		if(item != null && item.canAffectDarkWorldType(level, stack, player))
+			finalDarkWorldType = darkWorldTypeRegistry.get(item.affectDarkWorldType(level, stack, player, roomResult));
+
 		//If not enough key blocks are present, cancel
 		if (finalDarkWorldType == null) {
 			player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_not_enough_key_blocks"), true);
@@ -349,7 +366,7 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 		return otherAnchors != null && otherAnchors.contains(scanSeed);
 	}
 
-	private static boolean isStandingOnFullFace(Level level, Player player) {
+	public static boolean isStandingOnFullFace(Level level, Player player) {
 		if (!player.onGround()) {
 			return false;
 		}
@@ -365,13 +382,22 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 			return;
 		}
 
-		//If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
-		if (!isStandingOnFullFace(level, player)) {
+		IFountainMakingItem item = null;
+		if(stack.getItem() instanceof IFountainMakingItem)
+		{
+			item = (IFountainMakingItem) stack.getItem();
+			if(!item.canMakeFountain(level, stack, player))
+			{
+				resetMakingState(tag);
+				return;
+			}
+		}
+		else if (!isStandingOnFullFace(level, player)) {
 			player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_invalid_position"), true);
 			resetMakingState(tag);
 			return;
 		}
-
+		//If player isn't grounded, player doesn't stand on solid block, or player's feet block isn't air, cancel
 		//Get fountainPos from tag
 		BlockPos fountainPos = NbtUtils.readBlockPos(tag.getCompound(FOUNTAIN_POS));
 
@@ -394,7 +420,9 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 		Set<BlockPos> otherAnchors = DarkFountain.otherFountainAnchors(serverLevel, null);
 		Map<BlockPos, ResourceKey<Level>> otherRoomCells = DarkFountain.otherFountainRoomCellsToDarkWorld(serverLevel, null);
 		RoomScanner.RoomScanResult roomResult = RoomScanner.scan(level, fountainPos, ServerConfig.maxRoomVolume, false, true, otherAnchors, otherRoomCells);
-		if (!roomResult.isValid()) {
+
+		boolean ignoreRoom = item != null && item.shouldIgnoreRoomChecks(level, stack, player);
+		if (!roomResult.isValid() && !ignoreRoom) {
 			if (scanSeedBlockedByExistingFountain(fountainPos, otherAnchors, otherRoomCells)) {
 				player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_room_has_active_fountain"), true);
 			} else {
@@ -424,6 +452,9 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 			}
 		}
 
+		if(item != null && item.canAffectDarkWorldType(level, stack, player))
+			finalDarkWorldType = darkWorldTypeRegistry.get(item.affectDarkWorldType(level, stack, player, roomResult));
+
 		//If not enough key blocks are present, cancel
 		if (finalDarkWorldType == null) {
 			player.displayClientMessage(Component.translatable("message.penumbra_phantasm.making_fountain_not_enough_key_blocks"), true);
@@ -447,7 +478,7 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 		Optional<DarkFountainCapability.PersistentDarkWorldSite> matchedSite =
 				lightCap.findMatchingPersistentSite(level.getServer(), roomResult.getPositions(), typeId);
 
-		ServerLevel targetLevel;
+		ServerLevel targetLevel = null;
 		if (matchedSite.isPresent()) {
 			DarkFountainCapability.PersistentDarkWorldSite site = matchedSite.get();
 			targetLevel = level.getServer().getLevel(site.dimensionKey);
@@ -458,10 +489,12 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 				}
 			}
 		} else {
-			targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
-			if (targetLevel != null) {
+			if(item != null && item.shouldRerouteTargetDarkWorldLevel(level, stack, player, finalDarkWorldType))
+				targetLevel = item.rerouteTargetDarkWorldLevel(level, stack, player, finalDarkWorldType);
+			if(targetLevel == null)
+				targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
+			if (targetLevel != null)
 				lightCap.registerPersistentSite(fountainPos, typeId, targetLevel.dimension());
-			}
 		}
 
 		if (targetLevel == null) {
@@ -471,7 +504,9 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 		}
 
 		if (!DarkFountainCapability.isDarkWorldAvailableForNewFountain(targetLevel)) {
-			targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
+			if(item != null && item.shouldRerouteTargetDarkWorldLevel(level, stack, player, finalDarkWorldType))
+				targetLevel = item.rerouteTargetDarkWorldLevel(level, stack, player, finalDarkWorldType);
+			else targetLevel = DarkWorldUtil.createDarkWorld(level.getServer(), fountainPos, level.dimension(), finalDarkWorldType);
 			if (targetLevel == null) {
 				sendErrorMessage(player);
 				resetMakingState(tag);
@@ -493,6 +528,9 @@ public class KnifingCapability implements INBTSerializable<CompoundTag>
 
 		//Prepare dark world chunk to put the fountain in
 		BlockPos tempDarkFountainPos = new BlockPos(0, fountainPos.getY(), 0);
+		if(item != null)
+			tempDarkFountainPos = item.positionDarkFountain(level, stack, player, tempDarkFountainPos, fountainPos);
+
 		ChunkPos darkChunkPos = new ChunkPos(tempDarkFountainPos);
 		targetLevel.setChunkForced(darkChunkPos.x, darkChunkPos.z, true);
 
