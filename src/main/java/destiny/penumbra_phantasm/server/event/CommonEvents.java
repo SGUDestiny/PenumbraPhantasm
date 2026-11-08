@@ -11,6 +11,7 @@ import destiny.penumbra_phantasm.server.capability.KnifingCapability;
 import destiny.penumbra_phantasm.server.capability.SoulCapability;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomManager;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
+import destiny.penumbra_phantasm.server.entity.CustomEntitySpawning;
 import destiny.penumbra_phantasm.server.fountain.DarkFountain;
 import destiny.penumbra_phantasm.server.fountain.GreatDoor;
 import destiny.penumbra_phantasm.server.item.FractalMirrorItem;
@@ -195,43 +196,37 @@ public class CommonEvents
     }
 
     @SubscribeEvent
-    public void levelTick(TickEvent.LevelTickEvent event)
-    {
-        if(event.phase == TickEvent.Phase.END)
-        {
+    public void levelTick(TickEvent.LevelTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) {
             Level level = event.level;
-            if(level.isClientSide) return;
 
-            if(level instanceof ServerLevel serverLevel && DarkWorldUtil.isDarkWorld(serverLevel))
-            {
+            if (level.isClientSide) return;
+
+            if (level instanceof ServerLevel serverLevel && DarkWorldUtil.isDarkWorld(serverLevel)) {
                 drainGreatDoorSpawnerChunkQueue(serverLevel);
             }
 
-            level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap ->
-                {
-                    for(DarkFountain fountain : new ArrayList<>(cap.darkFountains.values()))
-                    {
-                        fountain.tick(level);
-                    }
-                });
+            level.getCapability(CapabilityRegistry.DARK_FOUNTAIN).ifPresent(cap -> {
+                for (DarkFountain fountain : new ArrayList<>(cap.darkFountains.values())) {
+                    fountain.tick(level);
+                }
+            });
 
-            if(level instanceof ServerLevel serverLevel)
-            {
+            if (level instanceof ServerLevel serverLevel) {
                 DepthsSkyLightning.tick(serverLevel);
                 CardKingdomEggRoomManager.tickPendingDoors(serverLevel);
 
-                level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap ->
-                    {
-                        for(GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values()))
-                        {
-                            ChunkPos doorChunk = new ChunkPos(greatDoor.greatDoorPos);
+                level.getCapability(CapabilityRegistry.GREAT_DOOR).ifPresent(cap -> {
+                    for (GreatDoor greatDoor : new ArrayList<>(cap.greatDoors.values())) {
+                        ChunkPos doorChunk = new ChunkPos(greatDoor.greatDoorPos);
 
-                            if(serverLevel.getChunkSource().getChunkNow(doorChunk.x, doorChunk.z) != null)
-                            {
-                                greatDoor.tick(level);
-                            }
+                        if (serverLevel.getChunkSource().getChunkNow(doorChunk.x, doorChunk.z) != null) {
+                            greatDoor.tick(level);
                         }
-                    });
+                    }
+                });
+
+                CustomEntitySpawning.trySpawnEntities(serverLevel);
             }
         }
     }

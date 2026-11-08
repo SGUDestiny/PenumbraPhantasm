@@ -1,11 +1,13 @@
 package destiny.penumbra_phantasm.server.capability;
 
 import destiny.penumbra_phantasm.server.registry.BlockRegistry;
+import destiny.penumbra_phantasm.server.registry.CapabilityRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -20,6 +22,18 @@ public class AnchorOfLightCapability implements INBTSerializable<CompoundTag> {
     public AnchorOfLightCapability() {}
 
     public boolean isProtectedByAnchor(AnchorOfLightCapability cap, BlockPos pos) {
+        List<BlockPos> anchors = new ArrayList<>(cap.anchors.stream().toList());
+
+        anchors.sort((Comparator.comparingDouble(pos1 -> pos.getCenter().distanceTo(pos.getCenter()))));
+
+        return !anchors.isEmpty() && pos.distSqr(anchors.get(0)) < Mth.square(64);
+    }
+
+    public static boolean isProtectedByAnchorStatic(ServerLevel serverLevel, BlockPos pos) {
+        AnchorOfLightCapability cap = serverLevel.getCapability(CapabilityRegistry.ANCHOR_OF_LIGHT).resolve().orElse(null);
+
+        if (cap == null) return false;
+
         List<BlockPos> anchors = new ArrayList<>(cap.anchors.stream().toList());
 
         anchors.sort((Comparator.comparingDouble(pos1 -> pos.getCenter().distanceTo(pos.getCenter()))));

@@ -24,6 +24,8 @@ public class EntityRegistry {
             ENTITY_TYPES.register("device_friend",
                     () -> EntityType.Builder.of(DEVICE_FRIEND::new, MobCategory.MISC)
                             .sized(1f, 1f)
+                            .setTrackingRange(128)
+                            .clientTrackingRange(128)
                             .build(ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "device_friend").toString()));
 
     public static void register(IEventBus eventBus) {

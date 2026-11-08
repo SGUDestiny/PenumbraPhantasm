@@ -64,8 +64,9 @@ public class DEVICE_FRIEND_RENDERER extends EntityRenderer<DEVICE_FRIEND> {
     @Override
     public ResourceLocation getTextureLocation(DEVICE_FRIEND friend) {
         int animationTicker = friend.getAnimationTicker();
-        int frame = animationTicker < 5 ? 1 : 0;
+        int halftime = friend.getAnimationHalftime();
 
+        int frame = animationTicker < halftime ? 0 : 1;
         String action = friend.getDisappearLaughTicker() > -1 ? "laugh" : "idle";
 
         return ResourceLocation.tryBuild(PenumbraPhantasm.MODID, "textures/entity/device_friend_" + action + "_" + frame + ".png");
