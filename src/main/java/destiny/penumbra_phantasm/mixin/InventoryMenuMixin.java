@@ -1,5 +1,7 @@
 package destiny.penumbra_phantasm.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import destiny.penumbra_phantasm.client.render.menu.DarkWorldInventoryMenu;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
 import net.minecraft.world.Container;
@@ -38,9 +40,10 @@ public class InventoryMenuMixin
 		}
 	}
 
-	@Redirect(method = "quickMoveStack", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;getEquipmentSlotForItem(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/entity/EquipmentSlot;"))
-	public EquipmentSlot penumbraPhantasm$quickMoveStack(ItemStack stack) {
-		EquipmentSlot slot = Mob.getEquipmentSlotForItem(stack);
+	@WrapOperation(method = "quickMoveStack", at = @At(value = "INVOKE",
+					target = "Lnet/minecraft/world/entity/Mob;getEquipmentSlotForItem(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/entity/EquipmentSlot;"))
+	private EquipmentSlot penumbraPhantasm$quickMoveStack(ItemStack stack, Operation<EquipmentSlot> original) {
+		EquipmentSlot slot = original.call(stack);
 
 		if (DarkWorldUtil.isDarkWorld(this.owner.level()) && slot.getType() == EquipmentSlot.Type.ARMOR) {
 			return EquipmentSlot.MAINHAND;
