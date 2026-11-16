@@ -1,5 +1,7 @@
 package destiny.penumbra_phantasm.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import destiny.penumbra_phantasm.server.egg_room.CardKingdomEggRoomUtil;
 import destiny.penumbra_phantasm.server.registry.ItemRegistry;
 import destiny.penumbra_phantasm.server.util.DarkWorldUtil;
@@ -8,7 +10,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -66,28 +67,30 @@ public abstract class LivingEntityMixin {
 		ci.cancel();
 	}
 
-	@Redirect(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"))
-	private void test(Level instance, Entity pEntity, byte pState) {
+	@WrapOperation(method = "hurt",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"))
+	private void test(Level instance, Entity pEntity, byte pState, Operation<Void> original) {
 		if (!(pEntity instanceof LivingEntity livingEntity)) {
-			instance.broadcastEntityEvent(pEntity, pState);
+			original.call(instance, pEntity, pState);
 			return;
 		}
 
 		ItemStack shieldItem = livingEntity.getUseItem();
 
 		if (shieldItem.getItem() == ItemRegistry.DELTA_SHIELD.get()) {
-			instance.broadcastEntityEvent(pEntity, (byte) 1);
+			original.call(instance, pEntity, (byte) 1);
 		} else {
-			instance.broadcastEntityEvent(pEntity, pState);
+			original.call(instance, pEntity, pState);
 		}
 	}
 
-	@Redirect(method = "isDamageSourceBlocked", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isBlocking()Z"))
-	private boolean setShieldUseDelay(LivingEntity instance) {
+	@WrapOperation(method = "isDamageSourceBlocked",
+			at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isBlocking()Z"))
+	private boolean setShieldUseDelay(LivingEntity instance, Operation<Boolean> original) {
 		ItemStack shieldItem = instance.getUseItem();
 
 		if (shieldItem.getItem() == ItemRegistry.DELTA_SHIELD.get()) {
-            return instance.isUsingItem() && !shieldItem.isEmpty();
+			return instance.isUsingItem() && !shieldItem.isEmpty();
 		} else {
 			if (instance.isUsingItem() && !shieldItem.isEmpty()) {
 				if (!shieldItem.canPerformAction(ToolActions.SHIELD_BLOCK)) {

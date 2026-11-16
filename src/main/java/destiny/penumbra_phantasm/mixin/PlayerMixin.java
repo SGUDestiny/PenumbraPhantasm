@@ -1,5 +1,7 @@
 package destiny.penumbra_phantasm.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import destiny.penumbra_phantasm.server.registry.DamageTypeRegistry;
 import destiny.penumbra_phantasm.server.registry.ItemRegistry;
 import destiny.penumbra_phantasm.server.registry.SoundRegistry;
@@ -32,10 +34,11 @@ public abstract class PlayerMixin {
         }
     }
 
-    @Redirect(method = "disableShield(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"))
-    private void disableShieldBreakSound(Level instance, Entity pEntity, byte pState) {
+    @WrapOperation(method = "disableShield(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V"))
+    private void disableShieldBreakSound(Level instance, Entity pEntity, byte pState, Operation<Void> original)
+    {
         if (!(pEntity instanceof LivingEntity livingEntity)) {
-            instance.broadcastEntityEvent(pEntity, pState);
+            original.call(instance, pEntity, pState);
             return;
         }
 
@@ -44,7 +47,7 @@ public abstract class PlayerMixin {
         if (shieldItem.getItem() == ItemRegistry.DELTA_SHIELD.get()) {
             instance.broadcastEntityEvent(pEntity, (byte) 1);
         } else {
-            instance.broadcastEntityEvent(pEntity, pState);
+            original.call(instance, pEntity, pState);
         }
     }
 }
