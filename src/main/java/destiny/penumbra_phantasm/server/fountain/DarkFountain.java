@@ -1140,7 +1140,7 @@ public class DarkFountain {
     }
 
     public static int scaleDepthsAxis(int originAxis) {
-        return -1 * originAxis / DEPTHS_XZ_SCALE;
+        return originAxis / DEPTHS_XZ_SCALE;
     }
 
     public static boolean isDepthsOccupied(MinecraftServer server, Vec2 depthsPos) {
